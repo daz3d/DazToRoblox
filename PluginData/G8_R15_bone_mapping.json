@@ -1,0 +1,13 @@
+{
+    "head": "Head",
+    "abdomenUpper": "UpperTorso",
+    "abdomenLower": "LowerTorso",
+    "lShldrBend": "LeftUpperArm",
+    "lForearmBend": "LeftLowerArm",
+    "rShldrBend": "RightUpperArm",
+    "rForearmBend": "RightLowerArm",
+    "lThighBend": "LeftUpperLeg",
+    "lShin": "LeftLowerLeg",
+    "rThighBend": "RightUpperLeg",
+    "rShin": "RightLowerLeg"
+}

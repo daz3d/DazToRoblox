@@ -1,0 +1,16 @@
+======= UnitTest Details =======
+
+
+======= UnitTest Summary =======
+
+Class Name: DzGodotDialog
+Number of UnitTests: 6
+
+[ 0] _DzBridgeGodotDialog:.................[ PASSED ]
+[ 1] getIntermediateFolderEdit:............[ PASSED ]
+[ 2] resetToDefaults:......................[ PASSED ]
+[ 3] loadSavedSettings:....................[ PASSED ]
+[ 4] HandleSelectIntermediateFolderButton:.[ PASSED ]
+[ 5] HandleAssetTypeComboChange:...........[ PASSED ]
+
+End of Report.

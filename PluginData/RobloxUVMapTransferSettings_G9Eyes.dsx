@@ -1,0 +1,24 @@
+<DAZStudioTextureConverterConfiguration Version="1.0.0.0">
+ <Template Name="Template2" NodeName="Genesis9Eyes">
+  <Options>
+   <ImageType>png</ImageType>
+   <BakingQuality>1</BakingQuality>
+   <PresetID>0</PresetID>
+   <RenderViewport>1</RenderViewport>
+   <AspectConstrain>1</AspectConstrain>
+   <ImageSize SizeX="1024" SizeY="1024"/>
+   <AspectRatio HeightRatio="1" WidthRatio="1"/>
+   <HardwareCutOffSize>32768</HardwareCutOffSize>
+   <BleedFactor>0.01</BleedFactor>
+   <ForceResize>0</ForceResize>
+   <ConvertByProperty>1</ConvertByProperty>
+   <ProjectParentToLines>0</ProjectParentToLines>
+  </Options>
+  <Surfaces>
+   <Surface UVMapName="Combined Head And Body" Name="Eye Left"/>
+   <Surface UVMapName="Combined Head And Body" Name="Eye Right"/>
+   <Surface UVMapName="Combined Head And Body" Name="EyeMoisture Left"/>
+   <Surface UVMapName="Combined Head And Body" Name="EyeMoisture Right"/>
+  </Surfaces>
+ </Template>
+</DAZStudioTextureConverterConfiguration>

@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/DazBridgeRoblox">
+      <file alias="plugindata.zip">plugindata.zip</file>
+        <file alias="icon">Images/Daz to Roblox.png</file>
+        <file alias="banner.png">Images/banner.png</file>
+    </qresource>
+</RCC>
