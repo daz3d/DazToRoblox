@@ -1,0 +1,154 @@
+Executing Script...
+-------------------
+DzTextureConvertorMgr
+-------------------
+	String name // == ""
+	String objectName // == ""
+	activeRendererChanged(DzRenderer)
+	className()
+	deleteLater()
+	destroyed()
+	destroyed(QObject)
+	doConversion()
+	findRenderer(String)
+	getActiveRenderer()
+	getLastSavedRenderPath()
+	getName()
+	getNumRenderers()
+	getRenderer(Number)
+	getRendererList()
+	getTempTextureConvertPath()
+	getTextureConvertorOptions()
+	hasRender()
+	hasRenderChanged(Boolean)
+	inherits(String)
+	iskindof(String)
+	loadConfiguration(String)
+	makePersistent()
+	nameChanged(String)
+	renderFinished(Boolean)
+	renderStarting()
+	rendererAdded(DzRenderer)
+	saveConfiguration(String)
+	saveLastRender()
+	setActiveRenderer(DzRenderer)
+	showTextureConvertorDialog()
+-------------------
+DzTextureConvertorOptions
+-------------------
+	Number ActiveView // == 0
+	Number Box // == 0
+	Number Cartoon // == 1
+	Number CatmullRom // == 2
+	Number DirectToFile // == 2
+	Number GCOff // == 0
+	Number GCOn // == 1
+	Number Gaussian // == 3
+	Number HardwareAssisted // == 1
+	Number ImageSeries // == 1
+	Number MovieFile // == 0
+	Number NewWindow // == 1
+	Number Normal // == 0
+	Number ScreenShot // == 0
+	Number Sinc // == 4
+	Number Software // == 2
+	Number Triangle // == 1
+	Number aspect // == 1.3333333730697632
+	Number aspectHeight // == 3
+	Number aspectWidth // == 4
+	Number bleedFactor // == 0.009999999776482582
+	Boolean convertByProperty // == true
+	String convertImgPath // == "C:/Users/dbui/AppData/Roaming/DAZ 3D/Studio4/temp/textureConvert"
+	Boolean doubleSided // == true
+	Number endTime
+	Boolean forceResize // == false
+	Number gain // == 1
+	Number gamma // == 1
+	Number gammaCorrection // == 0
+	Number getEndTime
+	Number getStartTime
+	Number hardwareCutOffSize // == 32768
+	Size imageSize
+	String imageType // == "jpg"
+	Boolean isAspectConstrained // == true
+	Boolean isCurrentFrameRender // == true
+	String lastRenderImgFilename // == ""
+	String lastRenderMovFilename // == ""
+	String lastRenderSerFilename // == ""
+	Number motionBlurOffset // == 0
+	Number motionBlurPct // == 100
+	Number motionBlurSamples // == 2
+	String name // == ""
+	String objectName // == ""
+	Number openGLPasses // == 1
+	Number pixelFilter // == 4
+	Number presetId // == 0
+	Boolean projectParentToLines // == false
+	Number rayTraceDepth // == 2
+	String renderImgFilename // == ""
+	Number renderImgToId // == 2
+	String renderMovFilename // == ""
+	Number renderMovToId // == 0
+	String renderSerFilename // == ""
+	Number renderStyle // == 0
+	Number renderType // == 2
+	Boolean renderViewport // == true
+	Number shadingRate // == 1
+	Number shadowSamples // == 16
+	Boolean showPreview // == false
+	Number startTime
+	Boolean useGLSL // == false
+	Boolean useMotionBlur // == false
+	Number xFilterWidth // == 6
+	Number xPixelSamples // == 4
+	Number yFilterWidth // == 6
+	Number yPixelSamples // == 4
+	applyChanges()
+	aspectChanged(Number)
+	aspectChanged(Number,Number)
+	aspectConstrainChanged(Boolean)
+	copyFrom(DzRenderOptions)
+	defaultsRestored()
+	deleteLater()
+	destroyed()
+	destroyed(QObject)
+	doubleSidedChanged(Boolean)
+	endTimeChanged(DzTime)
+	gainChanged(Number)
+	gammaChanged(Number)
+	gammaCorrectColor(DzFloatColor)
+	gammaCorrectionChanged(DzRenderOptions::GammaCorrection)
+	imageSizeChanged(Size)
+	imageTypeChanged(String)
+	motionBlurOffsetChanged(Number)
+	motionBlurPctChanged(Number)
+	motionBlurSamplesChanged(Number)
+	openGLPassesChanged(Number)
+	pixelFilterChanged(DzRenderOptions::PixelFilter)
+	rayTraceDepthChanged(Number)
+	renderCurrentFrameChanged(Boolean)
+	renderImgFilenameChanged(String)
+	renderImgTargetChanged(DzRenderOptions::RenderImgTarget)
+	renderMovFilenameChanged(String)
+	renderMovTargetChanged(DzRenderOptions::RenderMovTarget)
+	renderSerFilenameChanged(String)
+	renderStyleChanged(DzRenderOptions::RenderStyle)
+	renderTypeChanged(DzRenderOptions::RenderType)
+	renderViewportChanged(Boolean)
+	resetOptions()
+	restoreDefaultSettings()
+	setAspectRatio(Number,Number)
+	setToDefaults()
+	settingsChanged()
+	shadingRateChanged(Number)
+	shadowSamplesChanged(Number)
+	showPreviewChanged(Boolean)
+	startTimeChanged(DzTime)
+	useGLSLChanged(Boolean)
+	useMotionBlurChanged(Boolean)
+	xFilterWidthChanged(Number)
+	xPixelSamplesChanged(Number)
+	yFilterWidthChanged(Number)
+	yPixelSamplesChanged(Number)
+Result: 
+Script executed in 0 secs 9 msecs.
