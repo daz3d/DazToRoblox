@@ -73,8 +73,8 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 // populate Roblox Asset Types
 	 assetTypeCombo->clear();
 	 assetTypeCombo->addItem("Roblox R15 Avatar (Full modesty covers)", "R15");
-	 assetTypeCombo->addItem("Roblox R15 Avatar (Lower torso modesty)", "R15M");
-	 assetTypeCombo->addItem("Roblox R15 Avatar (No modesty covers)", "R15Z");
+//	 assetTypeCombo->addItem("Roblox R15 Avatar (Lower torso modesty)", "R15M");
+//	 assetTypeCombo->addItem("Roblox R15 Avatar (No modesty covers)", "R15Z");
 
 	 // Remove options
 	 morphsButton->hide();

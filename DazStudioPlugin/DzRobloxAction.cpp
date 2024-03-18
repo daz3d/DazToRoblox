@@ -687,6 +687,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	QString sCombineTextureMaps = "combine_texture_parts.dsa";
 	QString sAssignCombinedTextures = "assign_combined_textures.dsa";
 
+/*
 	if (m_sAssetType == "R15M")
 	{
 		sApplyModestyOverlay = "apply_modesty_overlay_M.dsa";
@@ -695,6 +696,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	{
 		sApplyModestyOverlay = "";
 	}
+*/
 
 	QString sScriptFilename = sPluginFolder + "/" + sRobloxBoneConverter;
 	if (QFileInfo(sScriptFilename).exists() == false) {
