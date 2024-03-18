@@ -34,8 +34,10 @@ global_image_cache = {}
 def scalar_to_vec3(i):
     return [i, i, i]
 
-def load_cached_image_to_material(matName, input_key, output_key, texture_map, texture_value, color_space=None):
+
+def cached_image_load(texture_map, color_space=None):
     global global_image_cache
+    cached_image = None
     # lookup texture_map in cache to see if it's already loaded
     hashed_texture_map = texture_map + str(color_space)
     #hashed_texture_map = texture_map
@@ -48,6 +50,11 @@ def load_cached_image_to_material(matName, input_key, output_key, texture_map, t
         if color_space is not None:
             cached_image.colorspace_settings.name = color_space
         global_image_cache[hashed_texture_map] = cached_image
+    return cached_image    
+
+
+def load_cached_image_to_material(matName, input_key, output_key, texture_map, texture_value, color_space=None):
+    cached_image = cached_image_load(texture_map, color_space)
 
     data = bpy.data.materials[matName]
     # get Principled BSDF Shader inputs
@@ -546,8 +553,14 @@ def process_material(mat, lowres_mode=None):
             # create image texture node
             nodes = data.node_tree.nodes
             node_tex = nodes.new("ShaderNodeTexImage")
-            node_tex.image = bpy.data.images.load(normalMap)
-            node_tex.image.colorspace_settings.name = "Non-Color"
+
+            # uncached normal map load
+            # node_tex.image = bpy.data.images.load(normalMap)
+            # node_tex.image.colorspace_settings.name = "Non-Color"            
+
+            # cached normal map load
+            node_tex.image = cached_image_load(normalMap, "Non-Color")
+
             # create normal map node
             node_normalmap = nodes.new("ShaderNodeNormalMap")
             node_normalmap.space = "TANGENT"
