@@ -9,7 +9,7 @@ project folder, and re-assign the texture paths to the new location.
 - Uses modified blender_tools.py module
 - Requires Blender 3.6 or later
 
-USAGE: blender.exe --background --python blender_dtu_to_godot.py <fbx file>
+USAGE: blender.exe --background --python blender_dtu_to_roblox_blend.py <fbx file>
 
 EXAMPLE:
 
@@ -171,7 +171,7 @@ def _main(argv):
     if (not os.path.exists(destinationPath)):
         os.makedirs(destinationPath)
     fbx_base_name = os.path.basename(fbxPath)
-    fbx_output_name = fbx_base_name.replace(".fbx", "_roblox.fbx")
+    fbx_output_name = fbx_base_name.replace(".fbx", "_reminder_add_cage_att_template.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     try:
@@ -745,8 +745,18 @@ def separate_by_bone_influence():
                     print("ERROR: new_obj.name=" + new_obj.name + " is the same as " + obj.name)
                 else:
                     # Select the new object
-                    print("DEBUG: new_obj.name=" + new_obj.name + " renamed to " + bone_name + "_Geo")
+                    print("DEBUG: new_obj.name=" + new_obj.name + " renaming to " + bone_name + "_Geo ...")
                     new_obj.name = bone_name + "_Geo"
+                    # if "Hand" or "Foot" in bone_name, then set decimate modifier to 0.1
+                    if "Hand" in bone_name or "Foot" in bone_name:
+                        # get decimation modifier
+                        decimate_modifier = None
+                        for mod in new_obj.modifiers:
+                            if mod.type == "DECIMATE":
+                                print("DEBUG: setting decimate ratio to 0.1 for " + new_obj.name)
+                                # change decimate ratio to 0.1
+                                mod.ratio = 0.1
+                                break
                     # deselect all objects
                     bpy.ops.object.select_all(action='DESELECT')
                     bpy.context.view_layer.objects.active = obj
