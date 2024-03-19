@@ -702,7 +702,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	if (QFileInfo(sScriptFilename).exists() == false) {
 		sScriptFilename = dzApp->getTempPath() + "/" + sRobloxBoneConverter;
 	}
-	DzScript* Script = new DzScript();
+	QScopedPointer<DzScript> Script(new DzScript());
 	Script->loadFromFile(sScriptFilename);
 	Script->execute();
 
@@ -726,6 +726,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	if (QFileInfo(sScriptFilename).exists() == false) {
 		sScriptFilename = dzApp->getTempPath() + "/" + sGenerateCombinedTextures;
 	}
+    Script.reset(new DzScript());
 	Script->loadFromFile(sScriptFilename);
 	Script->execute();
 
@@ -736,6 +737,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	if (QFileInfo(sScriptFilename).exists() == false) {
 		sScriptFilename = dzApp->getTempPath() + "/" + sCombineTextureMaps;
 	}
+    Script.reset(new DzScript());
 	Script->loadFromFile(sScriptFilename);
 	Script->execute();
 
@@ -746,6 +748,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	if (QFileInfo(sScriptFilename).exists() == false) {
 		sScriptFilename = dzApp->getTempPath() + "/" + sAssignCombinedTextures;
 	}
+    Script.reset(new DzScript());
 	Script->loadFromFile(sScriptFilename);
 	Script->execute();
 

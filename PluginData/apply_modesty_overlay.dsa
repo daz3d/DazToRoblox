@@ -47,6 +47,10 @@ function replaceColorPropertyWithLayeredTexture(material, colorProperty, overlay
     // Assign the new layered texture to the material's diffuse color property
     colorProperty.setMap(layeredTexture);
 
+    // NECESSARY FOR SCRIPT TO WORK ATOMICLY
+    // getPreviewPixmap is called to force Texture Baking to file
+	layeredTexture.getPreviewPixmap(1,1);
+	
 }
 
 // Function to replace the texture map with a layered texture
