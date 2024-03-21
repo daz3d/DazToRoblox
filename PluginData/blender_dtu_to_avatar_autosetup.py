@@ -108,15 +108,15 @@ def _main(argv):
     move_root_node_to_origin()
 
     daz_generation = dtu_dict["Asset Id"]
-    if (bHasAnimation == False):
-        # if ("Genesis8" in daz_generation):
-        #     blender_tools.apply_tpose_for_g8_g9()
-        # elif ("Genesis9" in daz_generation):
-        #     blender_tools.apply_tpose_for_g8_g9()
-        apply_i_pose()
+    # if (bHasAnimation == False):
+    #     # if ("Genesis8" in daz_generation):
+    #     #     blender_tools.apply_tpose_for_g8_g9()
+    #     # elif ("Genesis9" in daz_generation):
+    #     #     blender_tools.apply_tpose_for_g8_g9()
+    #     apply_i_pose()
 
     # add decimate modifier
-    add_decimate_modifier()
+    # add_decimate_modifier()
 
     # # separate by materials
     # separate_by_materials()
@@ -126,6 +126,10 @@ def _main(argv):
 
     # # separate by bone influence
     # separate_by_bone_influence()
+
+    remove_moisture_materials()
+    merge_and_remove_extra_meshes()
+    remove_extra_materials()
 
     # prepare destination folder path
     blenderFilePath = fbxPath.replace(".fbx", ".blend")
@@ -351,6 +355,80 @@ def add_decimate_modifier():
             bpy.context.view_layer.objects.active = obj
             bpy.ops.object.modifier_add(type='DECIMATE')
             bpy.context.object.modifiers["Decimate"].ratio = 0.2
+
+def merge_and_remove_extra_meshes():
+    # remove extra meshes
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            name = obj.name
+            # if name.lower().contains("eyebrow") or name.lower().contains("eyelash") or name.lower().contains("tear") or name.lower().contains("moisture"):
+            if name.lower() != "genesis9.shape" and name.lower() != "genesis9eyes.shape" and name.lower() != "genesis9mouth.shape":
+                print("DEBUG: Removing object " + name)
+                bpy.ops.object.select_all(action='DESELECT')
+                obj.select_set(True)
+                bpy.ops.object.delete()
+    # merge remaining meshes
+    # 1. deslect all
+    bpy.ops.object.select_all(action='DESELECT')
+    # 2. select all meshes
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+    # rename mesh to "Genesis9_Geo"
+    obj.name = "Genesis9_Geo"
+    # 3. object mode
+    bpy.ops.object.mode_set(mode="OBJECT")
+    # 4. join meshes
+    bpy.ops.object.join()
+
+def remove_moisture_materials():
+    for obj in bpy.data.objects:
+        # query for material names of each obj
+        if obj.type == 'MESH':
+            if obj.name.lower() == "genesis9eyes.shape":
+                mat_indices_to_remove = []
+                # edit mode
+                bpy.context.view_layer.objects.active = obj
+                bpy.ops.object.mode_set(mode="EDIT")
+                # clear selection
+                bpy.ops.mesh.select_all(action='DESELECT')
+                # object mode
+                bpy.ops.object.mode_set(mode="OBJECT")
+                for idx, mat_slot in enumerate(obj.material_slots):
+                    if  mat_slot.material and "moisture" in mat_slot.material.name.lower():
+                        print("DEBUG: Removing vertices with material " + mat_slot.material.name)
+                        mat_indices_to_remove.append(idx)
+                if len(mat_indices_to_remove) > 0:
+                    for poly in obj.data.polygons:
+                        if poly.material_index in mat_indices_to_remove:
+                            # print("DEBUG: Removing poly with material index " + str(poly.material_index) + ", poly.index=" + str(poly.index))
+                            poly.select = True
+                    bpy.ops.object.mode_set(mode="EDIT")
+                    bpy.ops.mesh.delete(type='VERT')
+                    bpy.ops.object.mode_set(mode="OBJECT")
+
+def remove_extra_materials():
+    # object mode
+    bpy.ops.object.mode_set(mode="OBJECT")
+    materials_to_remove = []
+    for obj in bpy.data.objects:
+        # query for material names of each obj
+        if obj.type == 'MESH':
+            obj_materials = obj.data.materials
+            for mat in obj_materials:
+                mat_name = mat.name
+                if mat_name.lower() == "body":
+                    continue
+                print("DEBUG: Removing material " + mat_name + " from object " + obj.name)
+                materials_to_remove.append([obj, mat])
+    for obj, mat in materials_to_remove:
+        # remove material
+        print("DEBUG: Removing material " + mat.name + " from object " + obj.name)
+        bpy.context.view_layer.objects.active = obj
+        bpy.context.object.active_material_index = obj.material_slots.find(mat.name)
+        bpy.ops.object.material_slot_remove()
+
 
 def separate_by_materials():
     # separate by materials
