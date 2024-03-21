@@ -1,30 +1,29 @@
-"""Blender Convert DTU to Roblox Blend
+"""Blender Convert DTU to Roblox Blend (R15)
 
 This is a command-line script to import a dtu/fbx intermediate file pair into
-Blender and convert it to a format compatible with Godot engine, such as GLB,
-GLTF or BLEND. The script will also copy the intermediate files to the Godot
-project folder, and re-assign the texture paths to the new location.
+Blender and convert it to a format compatible with direct import into
+Roblox Studio, aka R15.
 
 - Developed and tested with Blender 3.6.1 (Python 3.10.12)
 - Uses modified blender_tools.py module
 - Requires Blender 3.6 or later
 
-USAGE: blender.exe --background --python blender_dtu_to_roblox_blend.py <fbx file>
+USAGE: blender.exe --background --python blender_dtu_to_roblox_R15.py <fbx file>
 
 EXAMPLE:
 
-    C:/Blender3.6/blender.exe --background --python blender_dtu_to_roblox_blend.py C:/Users/dbui/Documents/DazToGodot/Amelia9YoungAdult/Amelia9YoungAdult.fbx
+    C:/Blender3.6/blender.exe --background --python blender_dtu_to_roblox_R15.py C:/Users/dbui/Documents/DazToRoblox/Amelia9YoungAdult/Amelia9YoungAdult.fbx
 
 """
 do_experimental_remove_materials = True
 
 
-logFilename = "blender_dtu_to_roblox_blend.log"
+logFilename = "blender_dtu_to_roblox_R15.log"
 
 ## Do not modify below
 def _print_usage():
     # print("Python version: " + str(sys.version))
-    print("\nUSAGE: blender.exe --background --python blender_dtu_to_roblox_blend.py <fbx file>\n")
+    print("\nUSAGE: blender.exe --background --python blender_dtu_to_roblox_R15.py <fbx file>\n")
 
 from pathlib import Path
 script_dir = str(Path( __file__ ).parent.absolute())
@@ -171,7 +170,7 @@ def _main(argv):
     if (not os.path.exists(destinationPath)):
         os.makedirs(destinationPath)
     fbx_base_name = os.path.basename(fbxPath)
-    fbx_output_name = fbx_base_name.replace(".fbx", "_reminder_add_cage_att_template.fbx")
+    fbx_output_name = fbx_base_name.replace(".fbx", "_R15_reminder_add_cage_att_template.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     try:

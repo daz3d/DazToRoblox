@@ -1,30 +1,27 @@
-"""Blender Convert DTU to Roblox Blend
+"""Blender Convert DTU to Roblox Blend (S1)
 
 This is a command-line script to import a dtu/fbx intermediate file pair into
-Blender and convert it to a format compatible with Godot engine, such as GLB,
-GLTF or BLEND. The script will also copy the intermediate files to the Godot
-project folder, and re-assign the texture paths to the new location.
+Blender and convert it to a format compatible with Roblox Avatar Autosetup, aka
+S1.
 
 - Developed and tested with Blender 3.6.1 (Python 3.10.12)
 - Uses modified blender_tools.py module
 - Requires Blender 3.6 or later
 
-USAGE: blender.exe --background --python blender_dtu_to_roblox_blend.py <fbx file>
+USAGE: blender.exe --background --python blender_dtu_to_roblox_S1.py <fbx file>
 
 EXAMPLE:
 
-    C:/Blender3.6/blender.exe --background --python blender_dtu_to_roblox_blend.py C:/Users/dbui/Documents/DazToGodot/Amelia9YoungAdult/Amelia9YoungAdult.fbx
+    C:/Blender3.6/blender.exe --background --python blender_dtu_to_roblox_S1.py C:/Users/dbui/Documents/DazToRoblox/Amelia9YoungAdult/Amelia9YoungAdult.fbx
 
 """
-do_experimental_remove_materials = True
 
-
-logFilename = "blender_dtu_to_roblox_blend.log"
+logFilename = "blender_dtu_to_roblox_S1.log"
 
 ## Do not modify below
 def _print_usage():
     # print("Python version: " + str(sys.version))
-    print("\nUSAGE: blender.exe --background --python blender_dtu_to_roblox_blend.py <fbx file>\n")
+    print("\nUSAGE: blender.exe --background --python blender_dtu_to_roblox_S1.py <fbx file>\n")
 
 from pathlib import Path
 script_dir = str(Path( __file__ ).parent.absolute())
@@ -108,24 +105,18 @@ def _main(argv):
     move_root_node_to_origin()
 
     daz_generation = dtu_dict["Asset Id"]
-    # if (bHasAnimation == False):
-    #     # if ("Genesis8" in daz_generation):
-    #     #     blender_tools.apply_tpose_for_g8_g9()
-    #     # elif ("Genesis9" in daz_generation):
-    #     #     blender_tools.apply_tpose_for_g8_g9()
-    #     apply_i_pose()
+    if (bHasAnimation == False):
+        if ("Genesis8" in daz_generation):
+            # blender_tools.apply_tpose_for_g8_g9()
+            pass
+        elif ("Genesis9" in daz_generation):
+            # blender_tools.apply_tpose_for_g8_g9()
+            pass
+        # apply_i_pose()
+        pass
 
     # add decimate modifier
-    # add_decimate_modifier()
-
-    # # separate by materials
-    # separate_by_materials()
-
-    # # separate by loose parts
-    # separate_by_loose_parts()
-
-    # # separate by bone influence
-    # separate_by_bone_influence()
+    add_decimate_modifier()
 
     remove_moisture_materials()
     merge_and_remove_extra_meshes()
@@ -175,7 +166,7 @@ def _main(argv):
     if (not os.path.exists(destinationPath)):
         os.makedirs(destinationPath)
     fbx_base_name = os.path.basename(fbxPath)
-    fbx_output_name = fbx_base_name.replace(".fbx", "_ready_for_avatar_autosetup.fbx")
+    fbx_output_name = fbx_base_name.replace(".fbx", "_S1_ready_for_avatar_autosetup.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     try:
@@ -354,7 +345,7 @@ def add_decimate_modifier():
         if obj.type == 'MESH':
             bpy.context.view_layer.objects.active = obj
             bpy.ops.object.modifier_add(type='DECIMATE')
-            bpy.context.object.modifiers["Decimate"].ratio = 0.2
+            bpy.context.object.modifiers["Decimate"].ratio = 1.0
 
 def merge_and_remove_extra_meshes():
     # remove extra meshes
@@ -429,442 +420,6 @@ def remove_extra_materials():
         bpy.context.object.active_material_index = obj.material_slots.find(mat.name)
         bpy.ops.object.material_slot_remove()
 
-
-def separate_by_materials():
-    # separate by materials
-    bpy.ops.object.mode_set(mode="OBJECT")
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            bpy.context.view_layer.objects.active = obj
-            bpy.ops.object.mode_set(mode="EDIT")
-            bpy.ops.mesh.separate(type='MATERIAL')
-            bpy.ops.object.mode_set(mode="OBJECT")
-
-    # clean up unwanted materials
-    bpy.ops.object.mode_set(mode="OBJECT")
-    fingernail_obj = None
-    arms_obj = None
-    toenails_obj = None
-    legs_obj = None
-    eyes_list = []
-    head_obj = None
-    mouth_list = []
-    for obj in bpy.data.objects:
-        # query for material names of each obj
-        if obj.type == 'MESH':
-            obj_materials = obj.data.materials
-            # if only one material, then rename object to material.name + "_Geo"
-            if len(obj_materials) == 1:
-                obj.name = obj_materials[0].name.replace(" ","") + "_Geo"
-            for mat in obj_materials:
-                # if "Tear" in mat.name or "moisture" in mat.name.lower() or "eyebrows" in mat.name.lower() or "eyelashes" in mat.name.lower() or "teeth" in mat.name.lower() or "mouth" in mat.name.lower():
-                if "Tear" in mat.name or "moisture" in mat.name.lower() or "eyebrows" in mat.name.lower() or "eyelashes" in mat.name.lower():
-                    # remove obj
-                    print("DEBUG: Removing object " + obj.name + " with material: " + mat.name)
-                    # delete heirarchy of object
-                    descendents = obj.children
-                    bpy.ops.object.select_all(action='DESELECT')
-                    for ob in descendents:
-                        ob.select_set(True)
-                    bpy.ops.object.delete()
-                    obj.select_set(True)
-                    bpy.ops.object.delete()
-                    break
-                if "head" in mat.name.lower():
-                    head_obj = obj
-                    # get decimation modifier
-                    decimate_modifier = None
-                    for mod in obj.modifiers:
-                        if mod.type == "DECIMATE":
-                            decimate_modifier = mod
-                            break
-                    if decimate_modifier is not None:
-                        # change decimate ratio to 0.36
-                        decimate_modifier.ratio = 0.36
-                        # apply decimate modifier
-                        bpy.ops.object.select_all(action='DESELECT')
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-                        bpy.ops.object.modifier_apply(modifier=decimate_modifier.name)
-
-                if "eye" in mat.name.lower():
-                    eyes_list.append(obj)
-                    # get decimation modifier
-                    decimate_modifier = None
-                    for mod in obj.modifiers:
-                        if mod.type == "DECIMATE":
-                            decimate_modifier = mod
-                            break
-                    if decimate_modifier is not None:
-                        # change decimate ratio to 0.09
-                        decimate_modifier.ratio = 0.09
-                        # apply decimate modifier
-                        bpy.ops.object.select_all(action='DESELECT')
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-                        bpy.ops.object.modifier_apply(modifier=decimate_modifier.name)
-                if "teeth" in mat.name.lower():
-                    mouth_list.append(obj)
-                    # get decimation modifier
-                    decimate_modifier = None
-                    for mod in obj.modifiers:
-                        if mod.type == "DECIMATE":
-                            decimate_modifier = mod
-                            break
-                    if decimate_modifier is not None:
-                        # change decimate ratio to 0.09
-                        decimate_modifier.ratio = 0.09
-                        # apply decimate modifier
-                        bpy.ops.object.select_all(action='DESELECT')
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-                        bpy.ops.object.modifier_apply(modifier=decimate_modifier.name)
-                if "mouth cavity" in mat.name.lower():
-                    mouth_list.append(obj)
-                    # get decimation modifier
-                    decimate_modifier = None
-                    for mod in obj.modifiers:
-                        if mod.type == "DECIMATE":
-                            decimate_modifier = mod
-                            break
-                    if decimate_modifier is not None:
-                        # change decimate ratio to 0.068
-                        decimate_modifier.ratio = 0.068
-                        # apply decimate modifier
-                        bpy.ops.object.select_all(action='DESELECT')
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-                        bpy.ops.object.modifier_apply(modifier=decimate_modifier.name)
-                elif "mouth" in mat.name.lower():
-                    mouth_list.append(obj)
-                    # get decimation modifier
-                    decimate_modifier = None
-                    for mod in obj.modifiers:
-                        if mod.type == "DECIMATE":
-                            decimate_modifier = mod
-                            break
-                    if decimate_modifier is not None:
-                        # change decimate ratio to 0.036
-                        decimate_modifier.ratio = 0.036
-                        # apply decimate modifier
-                        bpy.ops.object.select_all(action='DESELECT')
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-                        bpy.ops.object.modifier_apply(modifier=decimate_modifier.name)
-                
-                if "fingernails" in mat.name.lower():
-                    fingernail_obj = obj
-                if "arms" in mat.name.lower():
-                    arms_obj = obj
-                if "toenails" in mat.name.lower():
-                    toenails_obj = obj
-                if "legs" in mat.name.lower():
-                    legs_obj = obj
-    
-    # merge objects
-    print("DEBUG: merging objects...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if fingernail_obj is not None and arms_obj is not None:
-        # deselect all objects
-        bpy.ops.object.select_all(action='DESELECT')
-        arms_obj.select_set(True)
-        fingernail_obj.select_set(True)
-        bpy.context.view_layer.objects.active = arms_obj
-        bpy.ops.object.join()
-        if do_experimental_remove_materials:
-            bpy.context.view_layer.objects.active = arms_obj
-            # remove material named "Fingernails"
-            material_name = "Fingernails"
-            material_slot = next((slot for slot in arms_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = arms_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-
-    if toenails_obj is not None and legs_obj is not None:
-        # deselect all objects
-        bpy.ops.object.select_all(action='DESELECT')
-        legs_obj.select_set(True)
-        toenails_obj.select_set(True)
-        bpy.context.view_layer.objects.active = legs_obj
-        bpy.ops.object.join()
-        if do_experimental_remove_materials:
-            bpy.context.view_layer.objects.active = legs_obj
-            # remove material named "Toenails"
-            material_name = "Toenails"
-            material_slot = next((slot for slot in legs_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = legs_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-
-    if len(eyes_list) > 0 and head_obj is not None:
-        # merge eyes
-        print("DEBUG: merging eyes...")
-        bpy.ops.object.select_all(action='DESELECT')
-        head_obj.select_set(True)
-        for obj in eyes_list:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = head_obj
-        bpy.ops.object.mode_set(mode="OBJECT")
-        bpy.ops.object.join()
-        if do_experimental_remove_materials:
-            bpy.context.view_layer.objects.active = head_obj
-            # remove material named "Eye Left" and "Eye Right"
-            material_name = "Eye Left"
-            material_slot = next((slot for slot in head_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = head_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-            material_name = "Eye Right"
-            material_slot = next((slot for slot in head_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = head_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-
-    if len(mouth_list) > 0 and head_obj is not None:
-        # merge mouth, mouth cavity, and teeth
-        print("DEBUG: merging mouth, mouth cavity, and teeth...")
-        bpy.ops.object.select_all(action='DESELECT')
-        head_obj.select_set(True)
-        for obj in mouth_list:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = head_obj
-        bpy.ops.object.mode_set(mode="OBJECT")
-        bpy.ops.object.join()
-        if do_experimental_remove_materials:
-            bpy.context.view_layer.objects.active = head_obj
-            # remove material named "Mouth Cavity" and "Teeth"
-            material_name = "Mouth Cavity"
-            material_slot = next((slot for slot in head_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = head_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-            material_name = "Teeth"
-            material_slot = next((slot for slot in head_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = head_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-            # remove material named "Mouth"
-            material_name = "Mouth"
-            material_slot = next((slot for slot in head_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = head_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-
-    print("DEBUG: done separating by materials")
-
-def separate_by_loose_parts():
-    print("DEBUG: separate_by_loose_parts()")
-    # separate by loose parts
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            bpy.context.view_layer.objects.active = obj
-            bpy.ops.object.mode_set(mode="EDIT")
-            bpy.ops.mesh.separate(type='LOOSE')
-            bpy.ops.object.mode_set(mode="OBJECT")
-
-    # clean up loose parts
-    right_arm = []
-    left_arm = []
-    right_leg = []
-    left_leg = []
-    head_list = []
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            obj_materials = obj.data.materials
-            for mat in obj_materials:
-                if "Head" in mat.name:
-                    head_list.append(obj)
-                    # break to next obj
-                    break
-                if "Arms" in mat.name:
-                    # check vertices of obj, if x position is less than 0 then collect into right_arm array to merge together
-                    for v in obj.data.vertices:
-                        if v.co.x > 0:
-                            left_arm.append(obj)
-                            break
-                        else:
-                            right_arm.append(obj)
-                            break
-                    # break to next obj
-                    break
-                if "Legs" in mat.name:
-                    # check vertices of obj, if x position is less than 0 then collect into right_leg array to merge together
-                    for v in obj.data.vertices:
-                        if v.co.x > 0:
-                            left_leg.append(obj)
-                            break
-                        else:
-                            right_leg.append(obj)
-                            break
-                    # break to next obj
-                    break
-
-    # merge right_arm
-    print("DEBUG: merging right_arm...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if len(right_arm) > 0:
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in right_arm:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = right_arm[0]
-        bpy.ops.object.join()
-        right_arm[0].name = "RightArm_Geo"
-    # merge left_arm
-    print("DEBUG: merging left_arm...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if len(left_arm) > 0:
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in left_arm:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = left_arm[0]
-        bpy.ops.object.join()
-        left_arm[0].name = "LeftArm_Geo"
-    # merge right_leg
-    print("DEBUG: merging right_leg...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if len(right_leg) > 0:
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in right_leg:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = right_leg[0]
-        bpy.ops.object.join()
-        right_leg[0].name = "RightLeg_Geo"
-    # merge left_leg
-    print("DEBUG: merging left_leg...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if len(left_leg) > 0:
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in left_leg:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = left_leg[0]
-        bpy.ops.object.join()
-        left_leg[0].name = "LeftLeg_Geo"
-
-    # merge head
-    print("DEBUG: merging head...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if len(head_list) > 0:
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in head_list:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = head_list[0]
-        bpy.ops.object.join()
-        head_list[0].name = "Head_Geo"
-
-    print("DEBUG: done separating by loose parts")
-
-
-def separate_by_bone_influence():
-    print("DEBUG: separate_by_bone_influence()")
-    # separate by bone influence
-    bpy.ops.object.mode_set(mode="OBJECT")
-    bone_table = {
-        "RightArm_Geo": ["RightHand", "RightLowerArm", "RightUpperArm"],
-        "LeftArm_Geo": ["LeftHand", "LeftLowerArm", "LeftUpperArm"],
-        "RightLeg_Geo": ["RightFoot", "RightLowerLeg", "RightUpperLeg"],
-        "LeftLeg_Geo": ["LeftFoot", "LeftLowerLeg", "LeftUpperLeg"],
-        "Body_Geo": ["UpperTorso", "LowerTorso"]
-    }
-    # deselect all
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH' and obj.name in bone_table:
-            bone_list = bone_table[obj.name]
-            bpy.context.view_layer.objects.active = obj
-            for bone_name in bone_list:
-                print("DEBUG: beginning vertex separation for bone_name=" + bone_name)
-                bpy.ops.object.mode_set(mode="EDIT")
-                # deselect all vertices
-                bpy.ops.mesh.select_all(action='DESELECT')
-                bpy.ops.object.mode_set(mode="OBJECT")
-                # get list of all objects before separation operation
-                before_list = set(bpy.context.scene.objects)
-                # select vertices by bone group
-                group = obj.vertex_groups.get(bone_name)
-                for v in obj.data.vertices:
-                    for g in v.groups:
-                        if g.group == group.index:
-                            v.select = True                
-                bpy.ops.object.mode_set(mode="EDIT")
-                # separate by selection
-                bpy.ops.mesh.separate(type='SELECTED')
-                # rename newly separated object
-                # find the new object
-                # get list of all objects after separation operation
-                after_list = set(bpy.context.scene.objects)
-                new_obj = None
-                for obj_temp in after_list:
-                    if obj_temp not in before_list:
-                        new_obj = obj_temp
-                        break
-                # Switch to object mode
-                bpy.ops.object.mode_set(mode='OBJECT')
-                # The newly created object is the active object
-                if new_obj == obj:
-                    print("ERROR: new_obj.name=" + new_obj.name + " is the same as " + obj.name)
-                else:
-                    # Select the new object
-                    print("DEBUG: new_obj.name=" + new_obj.name + " renaming to " + bone_name + "_Geo ...")
-                    new_obj.name = bone_name + "_Geo"
-                    # if "Hand" or "Foot" in bone_name, then set decimate modifier to 0.1
-                    if "Hand" in bone_name or "Foot" in bone_name:
-                        # get decimation modifier
-                        decimate_modifier = None
-                        for mod in new_obj.modifiers:
-                            if mod.type == "DECIMATE":
-                                print("DEBUG: setting decimate ratio to 0.1 for " + new_obj.name)
-                                # change decimate ratio to 0.1
-                                mod.ratio = 0.1
-                                break
-                    # deselect all objects
-                    bpy.ops.object.select_all(action='DESELECT')
-                    bpy.context.view_layer.objects.active = obj
-
-    # clean up empty objects without vertices
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH' and len(obj.data.vertices) == 0:
-            print("DEBUG: Removing empty object: " + obj.name)
-            bpy.ops.object.select_all(action='DESELECT')
-            obj.select_set(True)
-            bpy.ops.object.delete()
-
-
-def load_and_merge_cage_meshes_from_template_file(template_filepath_blend):
-    # load and merge cage meshes from template file
-    bpy.ops.wm.append(filename="CageMeshes", directory=template_filepath_blend + "/Object/")
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH' and "CageMesh" in obj.name:
-            obj.select_set(True)
-    bpy.ops.object.join()
-
-def load_and_merge_attachments_from_template_file(template_filepath_blend):
-    # load and merge attachments from template file
-    bpy.ops.wm.append(filename="Attachments", directory=template_filepath_blend + "/Object/")
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH' and "Attachment" in obj.name:
-            obj.select_set(True)
-    bpy.ops.object.join()
 
 # Execute main()
 if __name__=='__main__':
