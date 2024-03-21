@@ -44,7 +44,7 @@ DzRobloxAction::DzRobloxAction() :
 	DzBridgeAction(tr("Daz to &Roblox"), tr("Export the selected node for Roblox Studio."))
 {
 	m_nNonInteractiveMode = 0;
-	m_sAssetType = QString("R15");
+//	m_sAssetType = QString("__");
 
 	//Setup Icon
 	QString iconName = "Daz to Roblox";
@@ -218,7 +218,8 @@ void DzRobloxAction::executeAction()
 		do 
 		{
 			if (m_sRobloxOutputFolderPath != "" && QDir(m_sRobloxOutputFolderPath).exists() &&
-				m_sBlenderExecutablePath != "" && QFileInfo(m_sBlenderExecutablePath).exists())
+				m_sBlenderExecutablePath != "" && QFileInfo(m_sBlenderExecutablePath).exists() &&
+				m_sAssetType != "__")
 			{
 				bSettingsValid = true;
 				break;
@@ -251,6 +252,11 @@ void DzRobloxAction::executeAction()
 					}
 				}
 			}
+			else if (m_sAssetType == "__")
+			{
+				QMessageBox::warning(0, tr("Select Asset Type"), tr("Please select an asset type from the dropdown menu."), QMessageBox::Ok);
+			}
+
 			dlgResult = m_bridgeDialog->exec();
 			if (dlgResult == QDialog::Rejected)
 			{
@@ -334,7 +340,7 @@ void DzRobloxAction::executeAction()
 
 		// 2. attempt copy to plugindata folder, if already exist, use as override
         // search for override files in folder with DLL and copy over extracted files
-		QStringList aOverrideFilenameList = (QStringList() << "blender_tools.py" << "NodeArrange.py" << "blender_dtu_to_roblox_blend.py");
+		QStringList aOverrideFilenameList = (QStringList() << "blender_tools.py" << "NodeArrange.py" << "blender_dtu_to_roblox_blend.py" << "blender_dtu_to_avatar_autosetup.py");
 		if (sPluginFolder.isEmpty() == false)
 		{
 			foreach(QString filename, aOverrideFilenameList)
@@ -407,7 +413,16 @@ void DzRobloxAction::executeAction()
 
 		}
 
-		QString sScriptPath = sScriptFolderPath + "/blender_dtu_to_roblox_blend.py";
+		QString sScriptPath;
+		
+		if (m_sAssetType == "R15")
+		{
+			sScriptPath = sScriptFolderPath + "/blender_dtu_to_roblox_blend.py";
+		}
+		else if (m_sAssetType == "S1")
+		{
+			sScriptPath = sScriptFolderPath + "/blender_dtu_to_avatar_autosetup.py";
+		}
 		QString sCommandArgs = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath).arg(m_sDestinationFBX);
 
 		// 4. Generate manual batch file to launch blender scripts
