@@ -312,19 +312,19 @@ void DzRobloxAction::executeAction()
 		QString sBlenderLogPath = QString("%1/blender.log").arg(m_sDestinationPath);
 
 		// search for override files in folder with DLL and copy over extracted files
-		bool bUseFallbackScriptFolder = false;
-		QString sPluginFolder = dzApp->getPluginsPath() + "/DazToRoblox";
-		if (QDir(sPluginFolder).exists() == false)
-		{
-			QDir dir;
-			bool result = dir.mkpath(sPluginFolder);
-			if (!result)
-			{
-				dzApp->log("ERROR: Unable to create script folder: " + sPluginFolder + ", will fallback to using temp folder to store script files...");
-				sPluginFolder = "";
-				bUseFallbackScriptFolder = true;
-			}
-		}
+		bool bUseFallbackScriptFolder = true;
+		//QString sPluginFolder = dzApp->getPluginsPath() + "/DazToRoblox";
+		//if (QDir(sPluginFolder).exists() == false)
+		//{
+		//	QDir dir;
+		//	bool result = dir.mkpath(sPluginFolder);
+		//	if (!result)
+		//	{
+		//		dzApp->log("ERROR: Unable to create script folder: " + sPluginFolder + ", will fallback to using temp folder to store script files...");
+		//		sPluginFolder = "";
+		//		bUseFallbackScriptFolder = true;
+		//	}
+		//}
 
 		//// 1. extract to temp folder
 		//// 2. attempt copy to plugindata folder
@@ -338,40 +338,41 @@ void DzRobloxAction::executeAction()
 		//srcFile.close();
 		//int result = ::zip_extract(tempPathArchive.toAscii().data(), dzApp->getTempPath().toAscii().data(), nullptr, nullptr);
 
-		// 2. attempt copy to plugindata folder, if already exist, use as override
-        // search for override files in folder with DLL and copy over extracted files
+		//// 2. attempt copy to plugindata folder, if already exist, use as override
+  //      // search for override files in folder with DLL and copy over extracted files
 		QStringList aOverrideFilenameList = (QStringList() << "blender_tools.py" << "NodeArrange.py" << "blender_dtu_to_roblox_blend.py" << "blender_dtu_to_avatar_autosetup.py");
-		if (sPluginFolder.isEmpty() == false)
-		{
-			foreach(QString filename, aOverrideFilenameList)
-			{
-				QString sOverrideFilePath = sPluginFolder + "/" + filename;
-				QString sTempFilePath = dzApp->getTempPath() + "/" + filename;
-				// if doesn't exist in override folder, copy from temp
-				if (QFileInfo(sOverrideFilePath).exists() == false)
-				{
-					dzApp->log(QString("Found override file (%1), copying to temp folder.").arg(sOverrideFilePath));
-					bool result = QFile(sTempFilePath).copy(sOverrideFilePath);
-					if (result)
-					{
-						// if successful, use overridepath as scriptpath
-						sScriptFolderPath = QFileInfo(sOverrideFilePath).path();
-					}
-					else
-					{
-						// script does not exist in override path (plug folder) so fallback to using intermediate folder
-						dzApp->log("ERROR: Unable to copy script files to scriptfolder: " + sOverrideFilePath + ", attempting to use intermediate folder...");
-						bUseFallbackScriptFolder = true;
-						break;
-					}
-				}
-				else
-				{
-					// file exists, so use overridepath as scriptpath
-					sScriptFolderPath = QFileInfo(sOverrideFilePath).path();
-				}
-			}
-		}
+		//if (sPluginFolder.isEmpty() == false)
+		//{
+		//	foreach(QString filename, aOverrideFilenameList)
+		//	{
+		//		QString sOverrideFilePath = sPluginFolder + "/" + filename;
+		//		QString sTempFilePath = dzApp->getTempPath() + "/" + filename;
+		//		// if doesn't exist in override folder, copy from temp
+		//		if (QFileInfo(sOverrideFilePath).exists() == false)
+		//		{
+		//			dzApp->log(QString("Found override file (%1), copying to temp folder.").arg(sOverrideFilePath));
+		//			bool result = QFile(sTempFilePath).copy(sOverrideFilePath);
+		//			if (result)
+		//			{
+		//				// if successful, use overridepath as scriptpath
+		//				sScriptFolderPath = QFileInfo(sOverrideFilePath).path();
+		//			}
+		//			else
+		//			{
+		//				// script does not exist in override path (plug folder) so fallback to using intermediate folder
+		//				dzApp->log("ERROR: Unable to copy script files to scriptfolder: " + sOverrideFilePath + ", attempting to use intermediate folder...");
+		//				bUseFallbackScriptFolder = true;
+		//				break;
+		//			}
+		//		}
+		//		else
+		//		{
+		//			// file exists, so use overridepath as scriptpath
+		//			sScriptFolderPath = QFileInfo(sOverrideFilePath).path();
+		//		}
+		//	}
+		//}
+
 		if (bUseFallbackScriptFolder)
 		{
 			foreach(QString filename, aOverrideFilenameList)
