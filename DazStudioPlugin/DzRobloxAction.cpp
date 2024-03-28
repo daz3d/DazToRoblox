@@ -1,3 +1,5 @@
+#define COMBINED_UVSET_STRING "Combined Head And Body"
+
 #include <QtGui/qcheckbox.h>
 #include <QtGui/QMessageBox>
 #include <QtNetwork/qudpsocket.h>
@@ -26,6 +28,7 @@
 #include "dzfacegroup.h"
 #include "dzprogress.h"
 #include "dzscript.h"
+#include "dzenumproperty.h"
 
 #include "DzRobloxAction.h"
 #include "DzRobloxDialog.h"
@@ -148,6 +151,34 @@ void DzRobloxAction::executeAction()
 			{
 				QMessageBox::warning(0, tr("Error"),
 					tr("Please select one Character or Prop to send."), QMessageBox::Ok);
+			}
+		}
+	}
+
+	// if UV is not default, then issue error and return
+	// 1. get UV of selected node
+	DzNode* testNode = dzScene->getPrimarySelection();
+	if (testNode && testNode->inherits("DzFigure")) {
+		// 2. get UV property
+		DzObject* obj = testNode->getObject();
+		if (obj) {
+			DzShape* shape = obj->getCurrentShape();
+			QObjectList rawList = shape->getAllMaterials();
+			for (int i=0; i < rawList.count(); i++) {
+				DzMaterial* mat = qobject_cast<DzMaterial*>(rawList[i]);
+				if (!mat) continue;
+				DzProperty* prop = mat->findProperty("UV Set");
+				QString debugName = prop->getName();
+				DzEnumProperty* uvset = qobject_cast<DzEnumProperty*>(prop);
+				if (uvset) {
+					int combinedUvVal = uvset->findItemString(COMBINED_UVSET_STRING);
+					int currentVal = uvset->getValue();
+					if (currentVal == combinedUvVal) {
+						QMessageBox::warning(0, tr("Warning"),
+							tr("A non-standard UV Set was detected, overlay will NOT be applied."), QMessageBox::Ok);
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -714,6 +745,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	}
 */
 
+	/// BONE CONVERSION OPERATION
 	QString sScriptFilename = sPluginFolder + "/" + sRobloxBoneConverter;
 	if (QFileInfo(sScriptFilename).exists() == false) {
 		sScriptFilename = dzApp->getTempPath() + "/" + sRobloxBoneConverter;
@@ -725,6 +757,45 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
 
+	/// CHECK FOR ALTERED UV SET, IF FOUND SKIP TEXTURE OPERATIONS
+	if (!parentNode || !parentNode->inherits("DzFigure")) {
+		// TODO: add gui error message
+		dzApp->debug("ERROR: DzRobloxAction: preProcessScene(): invalid parentNode. Returning false.");
+		return false;
+	}
+
+	// 2. get UV property
+	DzObject* obj = parentNode->getObject();
+	if (!obj) {
+		// TODO: add gui error message
+		dzApp->debug("ERROR: DzRobloxAction: preProcessScene(): invalid parentNode->getObject(). Returning false.");
+		return false;
+	}
+	DzShape* shape = obj->getCurrentShape();
+	if (!shape) {
+		// TODO: add gui error message
+		dzApp->debug("ERROR: DzRobloxAction: preProcessScene(): invalid obj->getCurrentShape(). Returning false.");
+		return false;
+	}
+	QObjectList rawList = shape->getAllMaterials();
+	for (int i = 0; i < rawList.count(); i++) {
+		DzMaterial* mat = qobject_cast<DzMaterial*>(rawList[i]);
+		if (!mat) continue;
+		DzProperty* prop = mat->findProperty("UV Set");
+		QString debugName = prop->getName();
+		DzEnumProperty* uvset = qobject_cast<DzEnumProperty*>(prop);
+		if (uvset) {
+			int combinedUvVal = uvset->findItemString(COMBINED_UVSET_STRING);
+			int currentVal = uvset->getValue();
+			if (currentVal == combinedUvVal) {
+				dzApp->debug("WARNING: DzRobloxAction: preProcessScene(): Combined UV already set, skipping texture operations. Returning false.");
+				return false;
+			}
+		}
+	}
+
+
+	/// TEXTURE OPERATIONS (MODESTY OVERLAY, UV CONVERSION, ETC)
 	if (!sApplyModestyOverlay.isEmpty())
 	{
 		sScriptFilename = sPluginFolder + "/" + sApplyModestyOverlay;
