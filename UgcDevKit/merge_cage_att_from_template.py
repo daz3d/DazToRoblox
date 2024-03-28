@@ -13,10 +13,12 @@ Usage:
 
 REPOSITION_ATTACHMENTS = True
 REPOSITION_CAGES = True
+USE_SHRINKWRAP_TARGET = True
 
 import os
 import bpy
 from mathutils import Matrix
+from mathutils import Vector
 
 # Path to the .blend template file
 try:
@@ -112,6 +114,79 @@ def calc_local_bone_offset(obj, bone):
 
     return local_matrix
 
+def create_shrinkwrap_target():
+    # prepare lists
+    geo_list = []
+    all_objects_list = []
+    for obj in bpy.data.objects:
+        all_objects_list.append(obj)
+        if obj.type == 'MESH' and obj.name.lower().endswith('_geo'):
+            geo_list.append(obj)
+    
+    # object mode
+    bpy.ops.object.mode_set(mode='OBJECT')
+    # deselect all
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in geo_list:
+        obj.select_set(True)
+    # set geo_list[0] to active
+    bpy.context.view_layer.objects.active = geo_list[0]
+    # duplicate selected objects
+    bpy.ops.object.duplicate()
+    # deselect geo_list objects
+    for obj in geo_list:
+        obj.select_set(False)
+    # create new object list
+    new_geo_list = []
+    for obj in bpy.data.objects:
+        if obj not in all_objects_list:
+            new_geo_list.append(obj)
+    # set new_geo_list[0] to active
+    bpy.context.view_layer.objects.active = new_geo_list[0]
+    # join all selected objects    
+    bpy.ops.object.join()
+
+    # find new object not in all_objects_list
+    new_obj = None
+    for obj in bpy.data.objects:
+        if obj not in all_objects_list:
+            new_obj = obj
+            break
+    # rename new object to shrinkwrap_target
+    new_obj.name = 'shrinkwrap_target'
+    # hide new object
+    new_obj.hide_set(True)
+    # remove all materials from new object
+    new_obj.data.materials.clear()
+    # remove all modifiers from new object
+    new_obj.modifiers.clear()
+    # remove all vertex groups from new object
+    new_obj.vertex_groups.clear()
+    return new_obj
+
+def add_shrinkwrap_modifier(obj, target_obj):
+    # add shrinkwrap modifier to obj
+    mod = obj.modifiers.new(name='Shrinkwrap', type='SHRINKWRAP')
+    mod.target = target_obj
+    mod.wrap_method = 'NEAREST_SURFACEPOINT'
+    mod.wrap_mode = 'OUTSIDE_SURFACE'
+    mod.offset = 0.5    
+    return mod
+
+def calculate_geometric_center(obj_geo):
+    # calculate geometric center of obj_geo from vertices
+    # get vertices
+    vertices = obj_geo.data.vertices
+    # calculate geometric center
+    geometric_center = sum([v.co for v in vertices], Vector()) / len(vertices)
+    # convert to world space
+    geometric_center = obj_geo.matrix_world @ geometric_center
+    return geometric_center
+
+def calculate_bounding_box(obj_geo):
+    return
+
+
 def main():
     # Load the objects
     import_list = load_objects_from_blend(blend_file_path, blend_directory)
@@ -191,6 +266,52 @@ def main():
             obj.matrix_world = new_world_matrix
         else:
             obj.matrix_world = world_matrix
+
+    if USE_SHRINKWRAP_TARGET:
+        shrinkwrap_target = create_shrinkwrap_target()
+    for obj in loaded_objects:
+        if obj.name.endswith('_OuterCage'):
+            # object mode
+            bpy.ops.object.mode_set(mode='OBJECT')
+            # deselect all
+            bpy.ops.object.select_all(action='DESELECT')
+            # apply all transforms
+            obj.select_set(True)
+            bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+            # calculate cage center
+            cage_center = calculate_geometric_center(obj)
+
+            # find corresponding geo object
+            geo_name = obj.name.replace('_OuterCage', '_Geo')
+            geo_obj = bpy.data.objects[geo_name]
+            # calculate geometric center
+            geometric_center = calculate_geometric_center(geo_obj)
+
+            # # set 3d cursor to geometric center
+            # bpy.context.scene.cursor.location = geometric_center
+
+            # # debugging visualization
+            # # create cube at geometric center, named after geo_obj
+            # bpy.ops.mesh.primitive_cube_add(size=0.01, location=geometric_center)
+            # cube = bpy.context.active_object
+            # cube.name = geo_name.replace('_Geo', '_Geo_Center')
+            # bpy.ops.mesh.primitive_cube_add(size=0.01, location=cage_center)
+            # cube = bpy.context.active_object
+            # cube.name = geo_name.replace('_Geo', '_Cage_Center')
+
+            # calculate offset
+            offset = cage_center - geometric_center
+            strength = 0.25
+            # apply offset to cage world matrix translation
+            obj.matrix_world.translation -= (offset * strength)
+            # apply transform
+            bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+
+            if USE_SHRINKWRAP_TARGET:
+                add_shrinkwrap_modifier(obj, shrinkwrap_target)
+            else:
+                add_shrinkwrap_modifier(obj, geo_obj)
+
 
     # cleanup all unused and unlinked data blocks
     # print("DEBUG: main(): cleaning up unused data blocks...")
