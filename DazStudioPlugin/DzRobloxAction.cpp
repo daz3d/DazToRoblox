@@ -371,7 +371,9 @@ void DzRobloxAction::executeAction()
 
 		//// 2. attempt copy to plugindata folder, if already exist, use as override
   //      // search for override files in folder with DLL and copy over extracted files
-		QStringList aOverrideFilenameList = (QStringList() << "blender_tools.py" << "NodeArrange.py" << "blender_dtu_to_roblox_blend.py" << "blender_dtu_to_avatar_autosetup.py");
+		QStringList aOverrideFilenameList = (QStringList() << "blender_tools.py" << "NodeArrange.py" << 
+			"blender_dtu_to_roblox_blend.py" << "blender_dtu_to_avatar_autosetup.py" <<
+			"roblox_tools.py" << "Daz_Cage_Att_Template_v4b.blend");
 		//if (sPluginFolder.isEmpty() == false)
 		//{
 		//	foreach(QString filename, aOverrideFilenameList)
@@ -422,24 +424,22 @@ void DzRobloxAction::executeAction()
 				}
 				QString sOverrideFilePath = sFallbackFolder + "/" + filename;
 				QString sTempFilePath = dzApp->getTempPath() + "/" + filename;
-				// if doesn't exist in override folder, copy from temp
-				if (QFileInfo(sOverrideFilePath).exists() == false)
+				// delete file if it already exists
+				if (QFileInfo(sOverrideFilePath).exists() == true)
 				{
-					dzApp->log(QString("Found override file (%1), copying to temp folder.").arg(sOverrideFilePath));
-					bool result = QFile(sTempFilePath).copy(sOverrideFilePath);
-					if (result)
-					{
-						// if successful, use overridepath as scriptpath
-						sScriptFolderPath = QFileInfo(sOverrideFilePath).path();
-					}
-					else
-					{
-						dzApp->log("ERROR: Unable to copy script files to scriptfolder: " + sOverrideFilePath);
-					}
+					dzApp->log(QString("Removing existing override file (%1)...").arg(sOverrideFilePath));
+					QFile(sOverrideFilePath).remove();
+				}
+				dzApp->log(QString("Found override file (%1), copying from temp folder.").arg(sOverrideFilePath));
+				bool result = QFile(sTempFilePath).copy(sOverrideFilePath);
+				if (result)
+				{
+					// if successful, use overridepath as scriptpath
+					sScriptFolderPath = QFileInfo(sOverrideFilePath).path();
 				}
 				else
 				{
-					sScriptFolderPath = QFileInfo(sOverrideFilePath).path();
+					dzApp->log("ERROR: Unable to copy script files to scriptfolder: " + sOverrideFilePath);
 				}
 			}
 

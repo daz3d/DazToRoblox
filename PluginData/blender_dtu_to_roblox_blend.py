@@ -41,9 +41,11 @@ except:
 try:
     import blender_tools
     blender_tools.logFilename = logFilename
+    import roblox_tools
 except:
     sys.path.append(script_dir)
     import blender_tools
+    import roblox_tools
 
 def _add_to_log(sMessage):
     print(str(sMessage))
@@ -159,10 +161,20 @@ def _main(argv):
     # set active object
     bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
 
-    # switch to object mode before saving
+    # switch to object mode before saving (pre-processing save)
     bpy.ops.object.mode_set(mode="OBJECT")
     bpy.ops.wm.save_as_mainfile(filepath=blenderFilePath)
-    
+
+    # select all
+    bpy.ops.object.select_all(action="SELECT")
+    # scale to 0.0333
+    bpy.ops.transform.resize(value=(0.0333, 0.0333, 0.0333))
+    # apply using "All Transforms to Deltas"
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+
+    # add cage and attachments
+    roblox_tools.add_cage_and_attachments()
+
     # export to fbx
     roblox_asset_name = dtu_dict["Asset Name"]
     roblox_output_path = dtu_dict["Output Folder"]
@@ -170,21 +182,25 @@ def _main(argv):
     if (not os.path.exists(destinationPath)):
         os.makedirs(destinationPath)
     fbx_base_name = os.path.basename(fbxPath)
-    fbx_output_name = fbx_base_name.replace(".fbx", "_R15_reminder_add_cage_att_template.fbx")
+    fbx_output_name = fbx_base_name.replace(".fbx", "_R15_reminder_adjust_cage_and_attachments.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     try:
         bpy.ops.export_scene.fbx(filepath=fbx_output_file_path, 
-                                 global_scale = 0.0333,
+                                #  global_scale = 0.0333,
                                  add_leaf_bones = False,
                                  path_mode = "COPY",
                                  embed_textures = True,
+                                 use_visible = True,
                                  )
         _add_to_log("DEBUG: save completed.")
     except Exception as e:
         _add_to_log("ERROR: unable to save Roblox FBX file: " + fbx_output_file_path)
         _add_to_log("EXCEPTION: " + str(e))
 
+    # save blender file to destination
+    blender_output_file_path = fbx_output_file_path.replace(".fbx", ".blend")
+    bpy.ops.wm.save_as_mainfile(filepath=blender_output_file_path)
 
     _add_to_log("DEBUG: main(): completed conversion for: " + str(fbxPath))
 
