@@ -47,6 +47,26 @@ except:
     import game_readiness_tools
     from game_readiness_roblox_data import *
 
+decimation_lookup = {
+                    "Skullcap_DecimationGroup": 0.976,
+                    "NonFace_DecimationGroup": 0.89,
+                    "Face_DecimationGroup": 0.95,
+                    "UpperTorso_DecimationGroup": 0.87,
+                    "LowerTorso_DecimationGroup": 0.94,
+                    "RightUpperArm_DecimationGroup": 0.979,
+                    "LeftUpperArm_DecimationGroup": 0.979,
+                    "RightLowerArm_DecimationGroup": 0.969,
+                    "LeftLowerArm_DecimationGroup": 0.969,
+                    "RightHand_DecimationGroup": 0.82,
+                    "LeftHand_DecimationGroup": 0.78,
+                    "RightUpperLeg_DecimationGroup": 0.95,
+                    "LeftUpperLeg_DecimationGroup": 0.95,
+                    "RightLowerLeg_DecimationGroup": 0.94,
+                    "LeftLowerLeg_DecimationGroup": 0.936,
+                    "RightFoot_DecimationGroup": 0.746,
+                    "LeftFoot_DecimationGroup": 0.65,
+}
+
 
 def _add_to_log(sMessage):
     print(str(sMessage))
@@ -134,24 +154,64 @@ def _main(argv):
         vertex_index_buffer = globals()[group_name]
         game_readiness_tools.create_vertex_group(main_obj, group_name, vertex_index_buffer)
 
+    # decimate mouth
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and obj.name == "Genesis9Mouth.Shape":
+            print("DEBUG: main(): obj.name=" + obj.name)
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            new_modifier = obj.modifiers.new(name="Mouth", type='DECIMATE')
+            new_modifier.name = "Mouth"
+            new_modifier.decimate_type = 'COLLAPSE'
+            new_modifier.ratio = 0.05
+            new_modifier.use_collapse_triangulate = True
+            new_modifier.use_symmetry = True
+            bpy.ops.object.modifier_apply(modifier="Mouth")
+            break
+
+    # decimate eyes
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and obj.name == "Genesis9Eyes.Shape":
+            print("DEBUG: main(): obj.name=" + obj.name)
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            new_modifier = obj.modifiers.new(name="Eyes", type='DECIMATE')
+            new_modifier.name = "Eyes"
+            new_modifier.decimate_type = 'COLLAPSE'
+            new_modifier.ratio = 0.05
+            new_modifier.use_collapse_triangulate = True
+            new_modifier.use_symmetry = True
+            bpy.ops.object.modifier_apply(modifier="Eyes")
+            break
+
     remove_moisture_materials()
     merge_and_remove_extra_meshes()
     remove_extra_materials()
 
     # add decimation modifier
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            for decimation_group_name in decimation_group_names:
-                bpy.context.view_layer.objects.active = obj
-                print("DEBUG: main(): adding decimation modifier for group: " + decimation_group_name + " to object: " + obj.name)
-                new_modifier = obj.modifiers.new(name=decimation_group_name, type='DECIMATE')
-                new_modifier.name = decimation_group_name
-                new_modifier.decimate_type = 'COLLAPSE'
-                new_modifier.ratio = 0.91
-                new_modifier.use_collapse_triangulate = True
-                new_modifier.use_symmetry = True
-                new_modifier.vertex_group = decimation_group_name 
-
+    bpy.context.view_layer.objects.active = main_obj
+    for decimation_group_name in decimation_group_names:
+        print("DEBUG: main(): adding decimation modifier for group: " + decimation_group_name + " to object: " + main_obj.name)
+        new_modifier = main_obj.modifiers.new(name=decimation_group_name, type='DECIMATE')
+        new_modifier.name = decimation_group_name
+        new_modifier.decimate_type = 'COLLAPSE'
+        try:
+            new_modifier.ratio = decimation_lookup[decimation_group_name]
+        except:
+            new_modifier.ratio = 0.91
+        new_modifier.use_collapse_triangulate = True
+        new_modifier.use_symmetry = True
+        new_modifier.vertex_group = decimation_group_name
+        # if (decimation_group_name != "Face_DecimationGroup" 
+        #     and decimation_group_name != "UpperTorso_DecimationGroup"
+        #     and decimation_group_name != "LowerTorso_DecimationGroup"
+        #     and decimation_group_name != "RightHand_DecimationGroup"
+        #     and decimation_group_name != "LeftHand_DecimationGroup"
+        #     and decimation_group_name != "RightFoot_DecimationGroup"
+        #     and decimation_group_name != "LeftFoot_DecimationGroup"):
+        #     bpy.ops.object.modifier_apply(modifier=decimation_group_name)
 
     # prepare destination folder path
     blenderFilePath = fbxPath.replace(".fbx", ".blend")
@@ -378,7 +438,7 @@ def add_decimate_modifier():
             bpy.ops.object.modifier_add(type='DECIMATE')
             bpy.context.object.modifiers["Decimate"].ratio = 1.0
 
-def merge_and_remove_extra_meshes():
+def remove_extra_meshes():
     # remove extra meshes
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
@@ -389,16 +449,24 @@ def merge_and_remove_extra_meshes():
                 bpy.ops.object.select_all(action='DESELECT')
                 obj.select_set(True)
                 bpy.ops.object.delete()
+
+def merge_and_remove_extra_meshes():
+    remove_extra_meshes()   
     # merge remaining meshes
     # 1. deslect all
     bpy.ops.object.select_all(action='DESELECT')
     # 2. select all meshes
+    main_obj = None
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
             obj.select_set(True)
-    bpy.context.view_layer.objects.active = obj
+            if obj.name.lower() == "genesis9.shape":
+                main_obj = obj
+    if main_obj is None:
+        main_obj = bpy.data.objects[0]
+    bpy.context.view_layer.objects.active = main_obj
     # rename mesh to "Genesis9_Geo"
-    obj.name = "Genesis9_Geo"
+    main_obj.name = "Genesis9_Geo"
     # 3. object mode
     bpy.ops.object.mode_set(mode="OBJECT")
     # 4. join meshes
