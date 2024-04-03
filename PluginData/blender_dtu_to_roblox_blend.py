@@ -42,10 +42,14 @@ try:
     import blender_tools
     blender_tools.logFilename = logFilename
     import roblox_tools
+    import game_readiness_tools
+    from game_readiness_roblox_data import *
 except:
     sys.path.append(script_dir)
     import blender_tools
     import roblox_tools
+    import game_readiness_tools
+    from game_readiness_roblox_data import *
 
 def _add_to_log(sMessage):
     print(str(sMessage))
@@ -116,17 +120,42 @@ def _main(argv):
         #     blender_tools.apply_tpose_for_g8_g9()
         apply_i_pose()
 
-    # add decimate modifier
-    add_decimate_modifier()
+    # # add decimate modifier
+    # add_decimate_modifier()
 
-    # separate by materials
-    separate_by_materials()
+    # # separate by materials
+    # separate_by_materials()
 
-    # separate by loose parts
-    separate_by_loose_parts()
+    # # separate by loose parts
+    # separate_by_loose_parts()
 
-    # separate by bone influence
-    separate_by_bone_influence()
+    # # separate by bone influence
+    # separate_by_bone_influence()
+
+    # read from python data file (import vertex_indices_for_daztoroblox.py)
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            if obj.name.lower() == "Genesis9.Shape":
+                print("DEBUG: main(): obj.name=" + obj.name)
+                break
+    for group_name in geo_group_names + decimation_group_names:
+        print("DEBUG: creating vertex group: " + group_name)
+        # evaluate group_name to python variable name
+        vertex_index_buffer = globals()[group_name]
+        game_readiness_tools.create_vertex_group(obj, group_name, vertex_index_buffer)
+    # separate by vertex group
+    for group_name in geo_group_names:
+        print("DEBUG: separating by vertex group: " + group_name)
+        game_readiness_tools.separate_by_vertexgroup(obj, group_name)
+    # add decimation modifier
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            bpy.context.view_layer.objects.active = obj
+            bpy.ops.object.modifier_add(type='DECIMATE')
+            bpy.context.object.modifiers["Decimate"].ratio = 1.0
+            obj_name = obj.name
+            decimation_name = obj_name.replace("_Geo", "_DecimationGroup")
+            bpy.context.object.modifiers["vertex_group"].vertex_group = decimation_name
 
     # prepare destination folder path
     blenderFilePath = fbxPath.replace(".fbx", ".blend")
