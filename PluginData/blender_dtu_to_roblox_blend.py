@@ -155,7 +155,7 @@ def _main(argv):
             bpy.context.object.modifiers["Decimate"].ratio = 1.0
             obj_name = obj.name
             decimation_name = obj_name.replace("_Geo", "_DecimationGroup")
-            bpy.context.object.modifiers["vertex_group"].vertex_group = decimation_name
+            bpy.context.object.modifiers["Decimate"].vertex_group = decimation_name
 
     # prepare destination folder path
     blenderFilePath = fbxPath.replace(".fbx", ".blend")

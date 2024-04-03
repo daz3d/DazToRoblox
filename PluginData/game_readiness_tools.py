@@ -48,8 +48,13 @@ def separate_by_vertexgroup(obj, vertex_group_name):
             bpy.ops.mesh.select_all(action='DESELECT')
             bpy.ops.object.vertex_group_set_active(group=vertex_group_name)
             bpy.ops.object.vertex_group_select()
-            bpy.ops.mesh.separate(type='SELECTED')
-            bpy.ops.object.mode_set(mode='OBJECT')
+            try:
+                bpy.ops.mesh.separate(type='SELECTED')
+                bpy.ops.object.mode_set(mode='OBJECT')
+            except RuntimeError:
+                bpy.ops.object.mode_set(mode='OBJECT')
+                print(f"ERROR: Separation failed. Make sure the vertex group ({vertex_group_name}) is not empty.")
+                return
 
             # look for the new object by checking which object is not in the original objects
             new_obj = None
@@ -59,7 +64,8 @@ def separate_by_vertexgroup(obj, vertex_group_name):
             if new_obj is None:
                 print("ERROR: New object not found after separation")
                 return
-            new_obj.name = f"{vertex_group_name.replace("_GeoGroup", "_Geo")}"
+            geo_name = vertex_group_name.replace("_GeoGroup", "_Geo")
+            new_obj.name = geo_name
 
             # 6. then assign the normal vectors from the arrays to the new mesh and the remaining mesh
             # print("DEBUG: Applying custom normals for vertex group: ", vertex_group_name)
@@ -214,6 +220,7 @@ def create_vertex_groups_from_files(obj, group_names):
 
 
 def create_vertex_group(obj, group_name, vertex_indices):
+    print("DEBUG: obj=" + obj.name + " creating vertex group: " + group_name + ", index count: " + str(len(vertex_indices)))
     # Create a new vertex group
     new_group = obj.vertex_groups.new(name=group_name)
     # Assign the vertex indices to the group

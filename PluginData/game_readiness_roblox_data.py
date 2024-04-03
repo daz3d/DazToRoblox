@@ -53,9 +53,13 @@ geo_group_names = ["UpperTorso_GeoGroup",
                     "Head_GeoGroup",
                    ]
 
-decimation_group_names = ["UpperTorso_DecimationGroup",
-                   "LowerTorso_DecimationGroup",
-                   "RightUpperArm_DecimationGroup",
+decimation_group_names = [
+                    "Skullcap_DecimationGroup",
+                    "NonFace_DecimationGroup",
+                    "Face_DecimationGroup",
+                    "UpperTorso_DecimationGroup",
+                    "LowerTorso_DecimationGroup",
+                    "RightUpperArm_DecimationGroup",
                     "LeftUpperArm_DecimationGroup",
                     "RightLowerArm_DecimationGroup",
                     "LeftLowerArm_DecimationGroup",
@@ -67,10 +71,6 @@ decimation_group_names = ["UpperTorso_DecimationGroup",
                     "LeftLowerLeg_DecimationGroup",
                     "RightFoot_DecimationGroup",
                     "LeftFoot_DecimationGroup",
-                    "Head_DecimationGroup",
-                    "Face_DecimationGroup",
-                    "NonFace_DecimationGroup",
-                    "Skullcap_DecimationGroup",
                    ]
 
 
