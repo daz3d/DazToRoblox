@@ -39,32 +39,34 @@ except:
 try:
     import blender_tools
     blender_tools.logFilename = logFilename
+    import roblox_tools
     import game_readiness_tools
     from game_readiness_roblox_data import *
 except:
     sys.path.append(script_dir)
     import blender_tools
+    import roblox_tools
     import game_readiness_tools
     from game_readiness_roblox_data import *
 
 decimation_lookup = {
-                    "Skullcap_DecimationGroup": 0.976,
-                    "NonFace_DecimationGroup": 0.89,
-                    "Face_DecimationGroup": 0.95,
-                    "UpperTorso_DecimationGroup": 0.87,
-                    "LowerTorso_DecimationGroup": 0.94,
-                    "RightUpperArm_DecimationGroup": 0.979,
-                    "LeftUpperArm_DecimationGroup": 0.979,
-                    "RightLowerArm_DecimationGroup": 0.969,
-                    "LeftLowerArm_DecimationGroup": 0.969,
-                    "RightHand_DecimationGroup": 0.82,
-                    "LeftHand_DecimationGroup": 0.78,
-                    "RightUpperLeg_DecimationGroup": 0.95,
-                    "LeftUpperLeg_DecimationGroup": 0.95,
-                    "RightLowerLeg_DecimationGroup": 0.94,
-                    "LeftLowerLeg_DecimationGroup": 0.936,
-                    "RightFoot_DecimationGroup": 0.746,
-                    "LeftFoot_DecimationGroup": 0.65,
+                    "Skullcap_DecimationGroup": 0.895,
+                    "NonFace_DecimationGroup": 0.5,
+                    "Face_DecimationGroup": 0.6,
+                    "UpperTorso_DecimationGroup": 0.1,
+                    "LowerTorso_DecimationGroup": 0.14,
+                    "RightUpperArm_DecimationGroup": 0.145,
+                    "LeftUpperArm_DecimationGroup": 0.145,
+                    "RightLowerArm_DecimationGroup": 0.145,
+                    "LeftLowerArm_DecimationGroup": 0.145,
+                    "RightHand_DecimationGroup": 0.1,
+                    "LeftHand_DecimationGroup": 0.1,
+                    "RightUpperLeg_DecimationGroup": 0.11,
+                    "LeftUpperLeg_DecimationGroup": 0.11,
+                    "RightLowerLeg_DecimationGroup": 0.11,
+                    "LeftLowerLeg_DecimationGroup": 0.11,
+                    "RightFoot_DecimationGroup": 0.1,
+                    "LeftFoot_DecimationGroup": 0.1,
 }
 
 
@@ -131,28 +133,25 @@ def _main(argv):
 
     daz_generation = dtu_dict["Asset Id"]
     if (bHasAnimation == False):
-        if ("Genesis8" in daz_generation):
-            # blender_tools.apply_tpose_for_g8_g9()
-            pass
-        elif ("Genesis9" in daz_generation):
-            # blender_tools.apply_tpose_for_g8_g9()
-            pass
+        # if ("Genesis8" in daz_generation):
+        #     blender_tools.apply_tpose_for_g8_g9()
+        # elif ("Genesis9" in daz_generation):
+        #     blender_tools.apply_tpose_for_g8_g9()
         # apply_i_pose()
         pass
 
-    # # add decimate modifier
-    # add_decimate_modifier()
 
-    # read from python data file (import vertex_indices_for_daztoroblox.py)
-    for main_obj in bpy.data.objects:
-        if main_obj.type == 'MESH':
-            if main_obj.name == "Genesis9.Shape":
-                print("DEBUG: main(): obj.name=" + main_obj.name)
+    main_obj = None
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            if obj.name == "Genesis9.Shape":
+                print("DEBUG: main(): obj.name=" + obj.name)
+                main_obj = obj
                 break
-    for group_name in geo_group_names + decimation_group_names:
-        # evaluate group_name to python variable name
-        vertex_index_buffer = globals()[group_name]
-        game_readiness_tools.create_vertex_group(main_obj, group_name, vertex_index_buffer)
+    if main_obj is None:
+        _add_to_log("ERROR: main(): main_obj not found.")
+        return
+    bpy.context.view_layer.objects.active = main_obj
 
     # decimate mouth
     bpy.ops.object.select_all(action='DESELECT')
@@ -186,9 +185,19 @@ def _main(argv):
             bpy.ops.object.modifier_apply(modifier="Eyes")
             break
 
-    remove_moisture_materials()
-    merge_and_remove_extra_meshes()
-    remove_extra_materials()
+    # remove moisture materials, extra meshes, extra materials
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            game_readiness_tools.remove_moisture_materials(obj)
+    game_readiness_tools.remove_extra_meshes(["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"])
+    game_readiness_tools.remove_extra_materials(["body"])
+
+    # read from python data file (import vertex_indices_for_daztoroblox.py)
+    for group_name in geo_group_names + decimation_group_names:
+        print("DEBUG: creating vertex group: " + group_name)
+        # evaluate group_name to python variable name
+        vertex_index_buffer = globals()[group_name]
+        game_readiness_tools.create_vertex_group(main_obj, group_name, vertex_index_buffer)
 
     # add decimation modifier
     bpy.context.view_layer.objects.active = main_obj
@@ -204,14 +213,68 @@ def _main(argv):
         new_modifier.use_collapse_triangulate = True
         new_modifier.use_symmetry = True
         new_modifier.vertex_group = decimation_group_name
-        # if (decimation_group_name != "Face_DecimationGroup" 
-        #     and decimation_group_name != "UpperTorso_DecimationGroup"
-        #     and decimation_group_name != "LowerTorso_DecimationGroup"
-        #     and decimation_group_name != "RightHand_DecimationGroup"
-        #     and decimation_group_name != "LeftHand_DecimationGroup"
-        #     and decimation_group_name != "RightFoot_DecimationGroup"
-        #     and decimation_group_name != "LeftFoot_DecimationGroup"):
-        #     bpy.ops.object.modifier_apply(modifier=decimation_group_name)
+
+    # separate by vertex group
+    for group_name in geo_group_names:
+        print("DEBUG: separating by vertex group: " + group_name)
+        game_readiness_tools.separate_by_vertexgroup(main_obj, group_name)
+
+    # add eyes and mouth to head_geo
+    # deselect all
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj_name in ["Genesis9Eyes.Shape", "Genesis9Mouth.Shape", "Head_Geo"]:
+        obj = bpy.data.objects.get(obj_name)
+        if obj is not None:
+            obj.select_set(True)
+    # head_geo to active
+    bpy.context.view_layer.objects.active = bpy.data.objects.get("Head_Geo")
+    bpy.ops.object.join()
+    
+    # delete genesis9.shape
+    bpy.ops.object.select_all(action='DESELECT')
+    obj = bpy.data.objects.get("Genesis9.Shape")
+    if obj is not None:
+        obj.select_set(True)
+        bpy.ops.object.delete()
+
+
+    # apply all decimation modifiers
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            print("DEBUG: main(): applying decimation modifiers to object: " + obj.name)
+            for modifier in obj.modifiers:
+                if modifier.type == 'DECIMATE':
+                    bpy.context.view_layer.objects.active = obj
+                    bpy.ops.object.modifier_apply(modifier=modifier.name)
+
+    # rejoin all remaining meshes
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            obj.select_set(True)
+    # head_geo to active
+    bpy.context.view_layer.objects.active = bpy.data.objects.get("Head_Geo")
+    bpy.ops.object.join()
+
+    # unparent mesh from armature
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            obj.select_set(True)
+    bpy.context.view_layer.objects.active = bpy.data.objects[0]
+    bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+
+    # remove armature modifiers
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            for modifier in obj.modifiers:
+                if modifier.type == 'ARMATURE':
+                    obj.modifiers.remove(modifier)
+
+    # remove armature
+    for obj in bpy.data.objects:
+        if obj.type == 'ARMATURE':
+            bpy.data.objects.remove(obj)
 
     # prepare destination folder path
     blenderFilePath = fbxPath.replace(".fbx", ".blend")
@@ -246,10 +309,18 @@ def _main(argv):
     # set active object
     bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
 
-    # switch to object mode before saving
+    # switch to object mode before saving (pre-processing save)
     bpy.ops.object.mode_set(mode="OBJECT")
     bpy.ops.wm.save_as_mainfile(filepath=blenderFilePath)
-    
+
+    # select all
+    bpy.ops.object.select_all(action="SELECT")
+    # scale to 0.0333
+    bpy.ops.transform.resize(value=(0.0333, 0.0333, 0.0333))
+    # apply using "All Transforms to Deltas"
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+
+
     # export to fbx
     roblox_asset_name = dtu_dict["Asset Name"]
     roblox_output_path = dtu_dict["Output Folder"]
@@ -262,144 +333,23 @@ def _main(argv):
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     try:
         bpy.ops.export_scene.fbx(filepath=fbx_output_file_path, 
-                                 global_scale = 0.0333,
+                                #  global_scale = 0.0333,
                                  add_leaf_bones = False,
                                  path_mode = "COPY",
                                  embed_textures = True,
+                                 use_visible = True,
                                  )
         _add_to_log("DEBUG: save completed.")
     except Exception as e:
         _add_to_log("ERROR: unable to save Roblox FBX file: " + fbx_output_file_path)
         _add_to_log("EXCEPTION: " + str(e))
 
+    # save blender file to destination
+    blender_output_file_path = fbx_output_file_path.replace(".fbx", ".blend")
+    bpy.ops.wm.save_as_mainfile(filepath=blender_output_file_path)
 
     _add_to_log("DEBUG: main(): completed conversion for: " + str(fbxPath))
 
-
-def apply_i_pose():
-    print("DEBUG: apply_i_pose()")
-    # Object Mode
-    bpy.ops.object.mode_set(mode="OBJECT")       
-    #retrieve armature name
-    armature_name = bpy.data.armatures[0].name
-    for arm in bpy.data.armatures:
-        if "genesis" in arm.name.lower():
-            armature_name = arm.name
-            print("DEBUG: armature_name=" + armature_name)
-            break
-
-    # create a list of objects with armature modifier
-    armature_modifier_list = []
-    for obj in bpy.context.scene.objects:
-        if obj.type == "MESH":
-            for mod in obj.modifiers:
-                if mod.type == "ARMATURE" and mod.name == armature_name:
-                    armature_modifier_list.append([obj, mod])
-    print("DEBUG: armature_modifier_list=" + str(armature_modifier_list))
-
-    # apply i-pose
-    for obj in bpy.data.objects:
-        if obj.type == 'ARMATURE':
-            bpy.context.view_layer.objects.active = obj
-            bpy.ops.object.mode_set(mode="POSE")
-            bpy.ops.pose.select_all(action='SELECT')
-            bpy.ops.pose.rot_clear()
-            bpy.ops.object.mode_set(mode="OBJECT")
-
-    # select all objects
-    bpy.ops.object.select_all(action="SELECT")
-    # switch to pose mode
-    bpy.ops.object.mode_set(mode="POSE")
-    # go to frame 0
-    bpy.context.scene.frame_set(0)
-    # clear all pose transforms
-    bpy.ops.pose.transforms_clear()
-    # set tpose values for shoulders and hips
-    if "LeftUpperArm" in bpy.context.object.pose.bones:
-        _add_to_log("DEBUG: applying t-pose rotations...")
-        # rotate hip "LowerTorso"
-        # bpy.context.object.pose.bones["LowerTorso"].rotation_mode= "XYZ"
-        # bpy.context.object.pose.bones["LowerTorso"].rotation_euler[0] = 0.17
-        # UpperTorso
-        # bpy.context.object.pose.bones["UpperTorso"].rotation_mode= "XYZ"
-        # bpy.context.object.pose.bones["UpperTorso"].rotation_euler[0] = -0.17
-        # rotate left shoulder 50 degrees along global y
-        bpy.context.object.pose.bones["LeftUpperArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["LeftUpperArm"].rotation_euler[2] = -0.6
-        bpy.context.object.pose.bones["RightUpperArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["RightUpperArm"].rotation_euler[2] = 0.6
-        # elbows
-        bpy.context.object.pose.bones["LeftLowerArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["LeftLowerArm"].rotation_euler[0] = 0.115
-        bpy.context.object.pose.bones["LeftLowerArm"].rotation_euler[1] = 0.079
-        bpy.context.object.pose.bones["RightLowerArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["RightLowerArm"].rotation_euler[0] = 0.115
-        bpy.context.object.pose.bones["RightLowerArm"].rotation_euler[1] = -0.079
-        # wrists
-        bpy.context.object.pose.bones["LeftHand"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["LeftHand"].rotation_euler[0] = -0.122
-        bpy.context.object.pose.bones["LeftHand"].rotation_euler[1] = -0.084
-        bpy.context.object.pose.bones["RightHand"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["RightHand"].rotation_euler[0] = -0.122
-        bpy.context.object.pose.bones["RightHand"].rotation_euler[1] = 0.084
-        # L and R hips to 5 degrees
-        bpy.context.object.pose.bones["LeftUpperLeg"].rotation_mode= "XYZ"
-        # bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[0] = -0.17
-        bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[2] = -0.026
-        bpy.context.object.pose.bones["RightUpperLeg"].rotation_mode= "XYZ"
-        # bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[0] = -0.17
-        bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[2] = 0.026
-
-
-    # if shapes are present in mesh, then return without baking t-pose since blender can not apply armature modifier
-    for obj, mod in armature_modifier_list:
-        if obj.data.shape_keys is not None:
-            _add_to_log("DEBUG: shape keys found, skipping t-pose bake for G8/G9...")
-            return
-
-    # Object Mode
-    bpy.ops.object.mode_set(mode="OBJECT")
-    # duplicate and apply armature modifier
-    for obj, mod in armature_modifier_list:
-        _add_to_log("DEBUG: Duplicating armature modifier: " + obj.name + "." + mod.name)
-        # select object
-        _add_to_log("DEBUG: Selecting object: " + obj.name)
-        bpy.ops.object.select_all(action="DESELECT")
-        obj.select_set(True)
-        bpy.context.view_layer.objects.active = obj
-        num_mods = len(obj.modifiers)
-        _add_to_log("DEBUG: num_mods = " + str(num_mods))
-        result = bpy.ops.object.modifier_copy(modifier=mod.name)
-        _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + mod.name)
-        if len(obj.modifiers) > num_mods:
-            new_mod = obj.modifiers[num_mods]
-            _add_to_log("DEBUG: Applying armature modifier: " + new_mod.name)
-            try:
-                result = bpy.ops.object.modifier_apply(modifier=new_mod.name)
-            except Exception as e:
-                _add_to_log("ERROR: Unable to apply armature modifier: " + str(e))
-                _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + new_mod.name)
-                bpy.ops.object.modifier_remove(modifier=new_mod.name)     
-                return
-            _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + new_mod.name)
-        else:
-            _add_to_log("DEBUG: Unable to retrieve duplicate, applying original: " + mod.name)
-            result = bpy.ops.object.modifier_apply(modifier=mod.name)
-            _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + mod.name)
-
-    # pose mode
-    bpy.ops.object.select_all(action="DESELECT")
-    armature_obj = bpy.data.objects.get(armature_name)
-    armature_obj.select_set(True)
-    bpy.context.view_layer.objects.active = armature_obj
-    bpy.ops.object.mode_set(mode="POSE")
-    # apply pose as rest pose
-    _add_to_log("DEBUG: Applying pose as rest pose...")
-    bpy.ops.pose.armature_apply(selected=False)
-    # Object Mode
-    bpy.ops.object.mode_set(mode="OBJECT")
-    # select all before returning
-    bpy.ops.object.select_all(action="SELECT")
 
 def move_root_node_to_origin():
     print("DEBUG: move_root_node_to_origin(): bpy.data.objects=" + str(bpy.data.objects))
@@ -428,96 +378,6 @@ def move_root_node_to_origin():
             bpy.ops.transform.translate(value=(inverse_bone_head_pos_x, 0, inverse_bone_head_pos_z))
             # apply transformation
             bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-
-
-def add_decimate_modifier():
-    # add decimate modifier
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            bpy.context.view_layer.objects.active = obj
-            bpy.ops.object.modifier_add(type='DECIMATE')
-            bpy.context.object.modifiers["Decimate"].ratio = 1.0
-
-def remove_extra_meshes():
-    # remove extra meshes
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            name = obj.name
-            # if name.lower().contains("eyebrow") or name.lower().contains("eyelash") or name.lower().contains("tear") or name.lower().contains("moisture"):
-            if name.lower() != "genesis9.shape" and name.lower() != "genesis9eyes.shape" and name.lower() != "genesis9mouth.shape":
-                print("DEBUG: Removing object " + name)
-                bpy.ops.object.select_all(action='DESELECT')
-                obj.select_set(True)
-                bpy.ops.object.delete()
-
-def merge_and_remove_extra_meshes():
-    remove_extra_meshes()   
-    # merge remaining meshes
-    # 1. deslect all
-    bpy.ops.object.select_all(action='DESELECT')
-    # 2. select all meshes
-    main_obj = None
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            obj.select_set(True)
-            if obj.name.lower() == "genesis9.shape":
-                main_obj = obj
-    if main_obj is None:
-        main_obj = bpy.data.objects[0]
-    bpy.context.view_layer.objects.active = main_obj
-    # rename mesh to "Genesis9_Geo"
-    main_obj.name = "Genesis9_Geo"
-    # 3. object mode
-    bpy.ops.object.mode_set(mode="OBJECT")
-    # 4. join meshes
-    bpy.ops.object.join()
-
-def remove_moisture_materials():
-    for obj in bpy.data.objects:
-        # query for material names of each obj
-        if obj.type == 'MESH':
-            if obj.name.lower() == "genesis9eyes.shape":
-                mat_indices_to_remove = []
-                # edit mode
-                bpy.context.view_layer.objects.active = obj
-                bpy.ops.object.mode_set(mode="EDIT")
-                # clear selection
-                bpy.ops.mesh.select_all(action='DESELECT')
-                # object mode
-                bpy.ops.object.mode_set(mode="OBJECT")
-                for idx, mat_slot in enumerate(obj.material_slots):
-                    if  mat_slot.material and "moisture" in mat_slot.material.name.lower():
-                        print("DEBUG: Removing vertices with material " + mat_slot.material.name)
-                        mat_indices_to_remove.append(idx)
-                if len(mat_indices_to_remove) > 0:
-                    for poly in obj.data.polygons:
-                        if poly.material_index in mat_indices_to_remove:
-                            # print("DEBUG: Removing poly with material index " + str(poly.material_index) + ", poly.index=" + str(poly.index))
-                            poly.select = True
-                    bpy.ops.object.mode_set(mode="EDIT")
-                    bpy.ops.mesh.delete(type='VERT')
-                    bpy.ops.object.mode_set(mode="OBJECT")
-
-def remove_extra_materials():
-    # object mode
-    bpy.ops.object.mode_set(mode="OBJECT")
-    materials_to_remove = []
-    for obj in bpy.data.objects:
-        # query for material names of each obj
-        if obj.type == 'MESH':
-            obj_materials = obj.data.materials
-            for mat in obj_materials:
-                mat_name = mat.name
-                if mat_name.lower() == "body":
-                    continue
-                print("DEBUG: Removing material " + mat_name + " from object " + obj.name)
-                materials_to_remove.append([obj, mat])
-    for obj, mat in materials_to_remove:
-        # remove material
-        print("DEBUG: Removing material " + mat.name + " from object " + obj.name)
-        bpy.context.view_layer.objects.active = obj
-        bpy.context.object.active_material_index = obj.material_slots.find(mat.name)
-        bpy.ops.object.material_slot_remove()
 
 
 # Execute main()
