@@ -51,6 +51,27 @@ except:
     import game_readiness_tools
     from game_readiness_roblox_data import *
 
+decimation_lookup = {
+                    "Skullcap_DecimationGroup": 0.895,
+                    "NonFace_DecimationGroup": 0.5,
+                    "Face_DecimationGroup": 0.6,
+                    "UpperTorso_DecimationGroup": 0.15,
+                    "LowerTorso_DecimationGroup": 0.19,
+                    "RightUpperArm_DecimationGroup": 0.145,
+                    "LeftUpperArm_DecimationGroup": 0.145,
+                    "RightLowerArm_DecimationGroup": 0.145,
+                    "LeftLowerArm_DecimationGroup": 0.145,
+                    "RightHand_DecimationGroup": 0.1,
+                    "LeftHand_DecimationGroup": 0.1,
+                    "RightUpperLeg_DecimationGroup": 0.14,
+                    "LeftUpperLeg_DecimationGroup": 0.14,
+                    "RightLowerLeg_DecimationGroup": 0.11,
+                    "LeftLowerLeg_DecimationGroup": 0.11,
+                    "RightFoot_DecimationGroup": 0.1,
+                    "LeftFoot_DecimationGroup": 0.1,
+}
+
+
 def _add_to_log(sMessage):
     print(str(sMessage))
     with open(logFilename, "a") as file:
@@ -123,7 +144,7 @@ def _main(argv):
     # # add decimate modifier
     # add_decimate_modifier()
 
-    # # separate by materials
+    # # separate by materials (and delete unwanted meshes)
     # separate_by_materials()
 
     # # separate by loose parts
@@ -132,30 +153,100 @@ def _main(argv):
     # # separate by bone influence
     # separate_by_bone_influence()
 
-    # read from python data file (import vertex_indices_for_daztoroblox.py)
+    main_obj = None
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
-            if obj.name.lower() == "Genesis9.Shape":
+            if obj.name == "Genesis9.Shape":
                 print("DEBUG: main(): obj.name=" + obj.name)
+                main_obj = obj
                 break
+    if main_obj is None:
+        _add_to_log("ERROR: main(): main_obj not found.")
+        return
+    bpy.context.view_layer.objects.active = main_obj
+
+    # decimate mouth
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and obj.name == "Genesis9Mouth.Shape":
+            print("DEBUG: main(): obj.name=" + obj.name)
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            new_modifier = obj.modifiers.new(name="Mouth", type='DECIMATE')
+            new_modifier.name = "Mouth"
+            new_modifier.decimate_type = 'COLLAPSE'
+            new_modifier.ratio = 0.05
+            new_modifier.use_collapse_triangulate = True
+            new_modifier.use_symmetry = True
+            bpy.ops.object.modifier_apply(modifier="Mouth")
+            break
+
+    # decimate eyes
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and obj.name == "Genesis9Eyes.Shape":
+            print("DEBUG: main(): obj.name=" + obj.name)
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            new_modifier = obj.modifiers.new(name="Eyes", type='DECIMATE')
+            new_modifier.name = "Eyes"
+            new_modifier.decimate_type = 'COLLAPSE'
+            new_modifier.ratio = 0.05
+            new_modifier.use_collapse_triangulate = True
+            new_modifier.use_symmetry = True
+            bpy.ops.object.modifier_apply(modifier="Eyes")
+            break
+
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            game_readiness_tools.remove_moisture_materials(obj)
+    game_readiness_tools.remove_extra_meshes(["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"])
+    game_readiness_tools.remove_extra_materials(["body"])
+
+    # read from python data file (import vertex_indices_for_daztoroblox.py)
     for group_name in geo_group_names + decimation_group_names:
         print("DEBUG: creating vertex group: " + group_name)
         # evaluate group_name to python variable name
         vertex_index_buffer = globals()[group_name]
-        game_readiness_tools.create_vertex_group(obj, group_name, vertex_index_buffer)
+        game_readiness_tools.create_vertex_group(main_obj, group_name, vertex_index_buffer)
+
+    # add decimation modifier
+    bpy.context.view_layer.objects.active = main_obj
+    for decimation_group_name in decimation_group_names:
+        print("DEBUG: main(): adding decimation modifier for group: " + decimation_group_name + " to object: " + main_obj.name)
+        new_modifier = main_obj.modifiers.new(name=decimation_group_name, type='DECIMATE')
+        new_modifier.name = decimation_group_name
+        new_modifier.decimate_type = 'COLLAPSE'
+        try:
+            new_modifier.ratio = decimation_lookup[decimation_group_name]
+        except:
+            new_modifier.ratio = 0.91
+        new_modifier.use_collapse_triangulate = True
+        new_modifier.use_symmetry = True
+        new_modifier.vertex_group = decimation_group_name
+
     # separate by vertex group
     for group_name in geo_group_names:
         print("DEBUG: separating by vertex group: " + group_name)
-        game_readiness_tools.separate_by_vertexgroup(obj, group_name)
-    # add decimation modifier
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            bpy.context.view_layer.objects.active = obj
-            bpy.ops.object.modifier_add(type='DECIMATE')
-            bpy.context.object.modifiers["Decimate"].ratio = 1.0
-            obj_name = obj.name
-            decimation_name = obj_name.replace("_Geo", "_DecimationGroup")
-            bpy.context.object.modifiers["Decimate"].vertex_group = decimation_name
+        game_readiness_tools.separate_by_vertexgroup(main_obj, group_name)
+
+    # add eyes and mouth to head_geo
+    # deselect all
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj_name in ["Genesis9Eyes.Shape", "Genesis9Mouth.Shape", "Head_Geo"]:
+        obj = bpy.data.objects.get(obj_name)
+        if obj is not None:
+            obj.select_set(True)
+    # head_geo to active
+    bpy.context.view_layer.objects.active = bpy.data.objects.get("Head_Geo")
+    bpy.ops.object.join()
+    
+    # delete genesis9.shape
+    bpy.ops.object.select_all(action='DESELECT')
+    obj = bpy.data.objects.get("Genesis9.Shape")
+    if obj is not None:
+        obj.select_set(True)
+        bpy.ops.object.delete()
 
     # prepare destination folder path
     blenderFilePath = fbxPath.replace(".fbx", ".blend")
@@ -396,6 +487,7 @@ def add_decimate_modifier():
             bpy.ops.object.modifier_add(type='DECIMATE')
             bpy.context.object.modifiers["Decimate"].ratio = 0.2
 
+# separate by materials, but also delete unwanted meshes and unwanted materials, and remerging some meshes back together
 def separate_by_materials():
     # separate by materials
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -831,6 +923,7 @@ def load_and_merge_attachments_from_template_file(template_filepath_blend):
         if obj.type == 'MESH' and "Attachment" in obj.name:
             obj.select_set(True)
     bpy.ops.object.join()
+
 
 # Execute main()
 if __name__=='__main__':

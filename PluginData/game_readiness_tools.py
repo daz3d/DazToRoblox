@@ -226,3 +226,62 @@ def create_vertex_group(obj, group_name, vertex_indices):
     # Assign the vertex indices to the group
     new_group.add(vertex_indices, 1.0, 'REPLACE')
 
+# remove all mesh objects other than the safe_mesh_names_list
+def remove_extra_meshes(safe_mesh_names_list):
+    # remove extra meshes
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            name = obj.name
+            # if name.lower().contains("eyebrow") or name.lower().contains("eyelash") or name.lower().contains("tear") or name.lower().contains("moisture"):
+            if name.lower() not in safe_mesh_names_list:
+                print("DEBUG: Removing object " + name)
+                bpy.ops.object.select_all(action='DESELECT')
+                obj.select_set(True)
+                bpy.ops.object.delete()
+
+# remove all materials with "moisture" in the name
+def remove_moisture_materials(obj):
+    mat_indices_to_remove = []
+    # edit mode
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.mode_set(mode="EDIT")
+    # clear selection
+    bpy.ops.mesh.select_all(action='DESELECT')
+    # object mode
+    bpy.ops.object.mode_set(mode="OBJECT")
+    for idx, mat_slot in enumerate(obj.material_slots):
+        if  mat_slot.material and "moisture" in mat_slot.material.name.lower():
+            print("DEBUG: Removing vertices with material " + mat_slot.material.name)
+            mat_indices_to_remove.append(idx)
+    if len(mat_indices_to_remove) > 0:
+        for poly in obj.data.polygons:
+            if poly.material_index in mat_indices_to_remove:
+                # print("DEBUG: Removing poly with material index " + str(poly.material_index) + ", poly.index=" + str(poly.index))
+                poly.select = True
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.delete(type='VERT')
+        bpy.ops.object.mode_set(mode="OBJECT")
+
+# remove all materials other than the safe_material_names_list
+def remove_extra_materials(safe_material_names_list):
+    if bpy.context.view_layer.objects.active is None:
+        bpy.context.view_layer.objects.active = bpy.data.objects[0]
+    # object mode
+    bpy.ops.object.mode_set(mode="OBJECT")
+    materials_to_remove = []
+    for obj in bpy.data.objects:
+        # query for material names of each obj
+        if obj.type == 'MESH':
+            obj_materials = obj.data.materials
+            for mat in obj_materials:
+                mat_name = mat.name
+                if mat_name.lower() in safe_material_names_list:
+                    continue
+                print("DEBUG: Removing material " + mat_name + " from object " + obj.name)
+                materials_to_remove.append([obj, mat])
+    for obj, mat in materials_to_remove:
+        # remove material
+        print("DEBUG: Removing material " + mat.name + " from object " + obj.name)
+        bpy.context.view_layer.objects.active = obj
+        bpy.context.object.active_material_index = obj.material_slots.find(mat.name)
+        bpy.ops.object.material_slot_remove()
