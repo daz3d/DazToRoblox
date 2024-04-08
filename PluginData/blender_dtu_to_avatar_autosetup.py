@@ -199,20 +199,20 @@ def _main(argv):
         vertex_index_buffer = globals()[group_name]
         game_readiness_tools.create_vertex_group(main_obj, group_name, vertex_index_buffer)
 
-    # add decimation modifier
-    bpy.context.view_layer.objects.active = main_obj
-    for decimation_group_name in decimation_group_names:
-        print("DEBUG: main(): adding decimation modifier for group: " + decimation_group_name + " to object: " + main_obj.name)
-        new_modifier = main_obj.modifiers.new(name=decimation_group_name, type='DECIMATE')
-        new_modifier.name = decimation_group_name
-        new_modifier.decimate_type = 'COLLAPSE'
-        try:
-            new_modifier.ratio = decimation_lookup[decimation_group_name]
-        except:
-            new_modifier.ratio = 0.91
-        new_modifier.use_collapse_triangulate = True
-        new_modifier.use_symmetry = True
-        new_modifier.vertex_group = decimation_group_name
+    # # add decimation modifier
+    # bpy.context.view_layer.objects.active = main_obj
+    # for decimation_group_name in decimation_group_names:
+    #     print("DEBUG: main(): adding decimation modifier for group: " + decimation_group_name + " to object: " + main_obj.name)
+    #     new_modifier = main_obj.modifiers.new(name=decimation_group_name, type='DECIMATE')
+    #     new_modifier.name = decimation_group_name
+    #     new_modifier.decimate_type = 'COLLAPSE'
+    #     try:
+    #         new_modifier.ratio = decimation_lookup[decimation_group_name]
+    #     except:
+    #         new_modifier.ratio = 0.91
+    #     new_modifier.use_collapse_triangulate = True
+    #     new_modifier.use_symmetry = True
+    #     new_modifier.vertex_group = decimation_group_name
 
     # separate by vertex group
     for group_name in geo_group_names:
@@ -237,6 +237,30 @@ def _main(argv):
         obj.select_set(True)
         bpy.ops.object.delete()
 
+
+    # for each obj, select correct decimation group and add decimate modifier
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            if obj.name == "Head_Geo":
+                # custom add decimate modifier
+                for group_name in ["Skullcap_DecimationGroup", "NonFace_DecimationGroup", "Face_DecimationGroup"]:
+                    try:
+                        decimate_ratio = decimation_lookup[group_name]
+                    except:
+                        decimate_ratio = 0.91
+                    game_readiness_tools.add_decimate_modifier_per_vertex_group(obj, group_name, decimate_ratio)
+                continue
+            for group_name in decimation_group_names:
+                print("DEBUG: decimation check: " + obj.name.lower() + ", group_name=" + group_name.lower())
+                if obj.name.lower().replace("_geo","") in group_name.lower():
+                    print("DEBUG: decimation match: " + obj.name + ", group_name=" + group_name)
+                    print("DEBUG: adding decimate modifier for: " + obj.name + ", group_name=" + group_name)
+                    try:
+                        decimate_ratio = decimation_lookup[group_name]
+                    except:
+                        decimate_ratio = 0.91
+                    game_readiness_tools.add_decimate_modifier_per_vertex_group(obj, group_name, decimate_ratio)
+                    break
 
     # apply all decimation modifiers
     for obj in bpy.data.objects:

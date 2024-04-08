@@ -285,3 +285,25 @@ def remove_extra_materials(safe_material_names_list):
         bpy.context.view_layer.objects.active = obj
         bpy.context.object.active_material_index = obj.material_slots.find(mat.name)
         bpy.ops.object.material_slot_remove()
+
+def add_decimate_modifier_per_vertex_group(obj, vertex_group_name, decimation_ratio):
+    if vertex_group_name not in obj.vertex_groups:
+        print("ERROR: add_decimate_modifier_per_vertex_group(): vertex_group_name not found: " + vertex_group_name + " for object: " + obj.name)
+        return
+    # object mode
+    bpy.ops.object.mode_set(mode="OBJECT")
+    # deselect all
+    bpy.ops.object.select_all(action='DESELECT')
+    # select object
+    obj.select_set(True)
+    # add decimation modifier
+    bpy.context.view_layer.objects.active = obj
+    print("DEBUG: adding decimation modifier for group: " + vertex_group_name + " to object: " + obj.name)
+    new_modifier = obj.modifiers.new(name=vertex_group_name, type='DECIMATE')
+    new_modifier.name = vertex_group_name
+    new_modifier.decimate_type = 'COLLAPSE'
+    new_modifier.ratio = decimation_ratio
+    new_modifier.use_collapse_triangulate = True
+    new_modifier.use_symmetry = True
+    new_modifier.vertex_group = vertex_group_name
+
