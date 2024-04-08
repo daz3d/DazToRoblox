@@ -280,6 +280,19 @@ def _main(argv):
     bpy.context.view_layer.objects.active = bpy.data.objects.get("Head_Geo")
     bpy.ops.object.join()
 
+    # merge all vertices by distance
+    bpy.ops.object.select_all(action='DESELECT')
+    obj = bpy.data.objects.get("Head_Geo")
+    if obj is not None:
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action='SELECT')
+        bpy.ops.mesh.remove_doubles(threshold=0.00005)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    if obj is not None:
+        obj.name = "Genesis9_Geo"
+
     # unparent mesh from armature
     bpy.ops.object.select_all(action='DESELECT')
     for obj in bpy.data.objects:
