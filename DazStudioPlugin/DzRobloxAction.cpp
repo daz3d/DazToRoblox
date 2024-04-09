@@ -58,7 +58,7 @@ DzRobloxAction::DzRobloxAction() :
 
 	m_bConvertToPng = true;
 	m_bConvertToJpg = false;
-	m_bExportAllTextures = false;
+	m_bExportAllTextures = true;
 	m_bCombineDiffuseAndAlphaMaps = false;
 	m_bResizeTextures = true;
 	m_qTargetTextureSize = QSize(1024, 1024);
@@ -448,11 +448,11 @@ void DzRobloxAction::executeAction()
 
 		QString sScriptPath;
 		
-		if (m_sAssetType == "R15")
+		if (m_sAssetType.contains("R15"))
 		{
 			sScriptPath = sScriptFolderPath + "/blender_dtu_to_roblox_blend.py";
 		}
-		else if (m_sAssetType == "S1")
+		else if (m_sAssetType.contains("S1"))
 		{
 			sScriptPath = sScriptFolderPath + "/blender_dtu_to_avatar_autosetup.py";
 		}
@@ -735,16 +735,16 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	QString sCombineTextureMaps = "combine_texture_parts.dsa";
 	QString sAssignCombinedTextures = "assign_combined_textures.dsa";
 
-/*
-	if (m_sAssetType == "R15M")
+
+	if (m_sAssetType.contains("_M"))
 	{
 		sApplyModestyOverlay = "apply_modesty_overlay_M.dsa";
 	}
-	else if (m_sAssetType == "R15Z")
-	{
-		sApplyModestyOverlay = "";
-	}
-*/
+	//else if (m_sAssetType == "R15Z")
+	//{
+	//	sApplyModestyOverlay = "";
+	//}
+
 
 	/// BONE CONVERSION OPERATION
 	QString sScriptFilename = sPluginFolder + "/" + sRobloxBoneConverter;

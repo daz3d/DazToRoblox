@@ -75,8 +75,9 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 assetTypeCombo->addItem("Please select an asset type...", "__");
 	 assetTypeCombo->addItem("Roblox R15 Avatar", "R15");
 	 assetTypeCombo->addItem("Roblox S1 for Avatar Auto Setup", "S1");
-//	 assetTypeCombo->addItem("Roblox R15 Avatar (Lower torso modesty)", "R15M");
-//	 assetTypeCombo->addItem("Roblox R15 Avatar (No modesty covers)", "R15Z");
+	 assetTypeCombo->addItem("Roblox R15 Avatar (tanktop)", "R15_M");
+	 assetTypeCombo->addItem("Roblox S1 for Avatar Auto Setup (tanktop)", "S1_M");
+	 //	 assetTypeCombo->addItem("Roblox R15 Avatar (No modesty covers)", "R15Z");
 	 assetTypeCombo->setCurrentIndex(0);
 
 	 // Remove options
