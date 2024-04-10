@@ -1,0 +1,42 @@
+# Blender 3.6.8 MTL File: 'make_eye_geograft.blend'
+# www.blender.org
+
+newmtl EyeMoisture_Left
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 0.000000
+illum 1
+
+newmtl EyeMoisture_Right
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 0.000000
+illum 1
+
+newmtl Eye_Left
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/dbui/AppData/Roaming/DAZ 3D/Studio4/temp/d6_Eye Color 2.png
+
+newmtl Eye_Right
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:/Users/dbui/AppData/Roaming/DAZ 3D/Studio4/temp/d6_Eye Color 2.png

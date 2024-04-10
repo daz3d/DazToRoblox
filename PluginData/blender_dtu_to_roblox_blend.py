@@ -175,7 +175,7 @@ def _main(argv):
             new_modifier = obj.modifiers.new(name="Mouth", type='DECIMATE')
             new_modifier.name = "Mouth"
             new_modifier.decimate_type = 'COLLAPSE'
-            new_modifier.ratio = 0.05
+            new_modifier.ratio = 0.08
             new_modifier.use_collapse_triangulate = True
             new_modifier.use_symmetry = True
             bpy.ops.object.modifier_apply(modifier="Mouth")
@@ -191,7 +191,7 @@ def _main(argv):
             new_modifier = obj.modifiers.new(name="Eyes", type='DECIMATE')
             new_modifier.name = "Eyes"
             new_modifier.decimate_type = 'COLLAPSE'
-            new_modifier.ratio = 0.05
+            new_modifier.ratio = 0.182
             new_modifier.use_collapse_triangulate = True
             new_modifier.use_symmetry = True
             bpy.ops.object.modifier_apply(modifier="Eyes")

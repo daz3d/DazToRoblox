@@ -1,0 +1,18 @@
+newmtl EyeMoisture_Left
+d 0.995
+Kd 1 1 1
+
+newmtl Eye_Left
+d 1
+Kd 1 1 1
+map_Kd "C:/Users/dbui/AppData/Roaming/DAZ 3D/Studio4/temp/d6_Eye Color 2.png"
+
+newmtl Eye_Right
+d 1
+Kd 1 1 1
+map_Kd "C:/Users/dbui/AppData/Roaming/DAZ 3D/Studio4/temp/d6_Eye Color 2.png"
+
+newmtl EyeMoisture_Right
+d 0.995
+Kd 1 1 1
+
