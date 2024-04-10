@@ -9,14 +9,17 @@ var sIncludePath = includeDir_oFILE.path();
 var diffuseOverlayImagePath = [
     sIncludePath + "/genesis9_torso_modesty_overlay_d_M.png",
     sIncludePath + "/genesis9_legs_modesty_overlay_d.png",
+    sIncludePath + "/genesis9_head_modesty_overlay_d_M.png",
     ];
 var normalOverlayImagePath = [
     sIncludePath + "/genesis9_torso_modesty_overlay_nm_M.png",
     sIncludePath + "/genesis9_legs_modesty_overlay_nm.png",
+    sIncludePath + "/genesis9_head_modesty_overlay_nm_M.png",
 ];
 var roughnessOverlayImagePath = [
     sIncludePath + "/genesis9_torso_modesty_overlay_r_M.png",
     sIncludePath + "/genesis9_legs_modesty_overlay_r.png",
+    sIncludePath + "/genesis9_head_modesty_overlay_r_M.png",
     ];
 // // TODO: make specular overlay if needed
 // var specularOverlayImagePath = sIncludePath + "/genesis9_torso_modesty_overlay_r.png"
@@ -139,10 +142,13 @@ function main() {
                 print("Material " + (i + 1) + ": " + material.name);
                 if (material.name == "Body") {
                     // Process selected ColorMaps of each body material
-                    replaceMaterialWithLayeredTextures(material, 0);    
+                    replaceMaterialWithLayeredTextures(material, 0);
                 }
                 else if (material.name == "Legs") {
-                    replaceMaterialWithLayeredTextures(material, 1);                    
+                    replaceMaterialWithLayeredTextures(material, 1);
+                }
+                else if (material.name == "Head") {
+                    replaceMaterialWithLayeredTextures(material, 2);
                 }
             }
         } else {

@@ -52,17 +52,17 @@ except:
     from game_readiness_roblox_data import *
 
 decimation_lookup = {
-                    "Skullcap_DecimationGroup": 0.9,
-                    "NonFace_DecimationGroup": 0.5,
+                    "Skullcap_DecimationGroup": 0.905,
+                    "NonFace_DecimationGroup": 0.4619,
                     "Face_DecimationGroup": 0.6,
-                    "UpperTorso_DecimationGroup": 0.15,
+                    "UpperTorso_DecimationGroup": 0.1382,
                     "LowerTorso_DecimationGroup": 0.19,
                     "RightUpperArm_DecimationGroup": 0.145,
                     "LeftUpperArm_DecimationGroup": 0.145,
                     "RightLowerArm_DecimationGroup": 0.145,
                     "LeftLowerArm_DecimationGroup": 0.145,
-                    "RightHand_DecimationGroup": 0.1,
-                    "LeftHand_DecimationGroup": 0.1,
+                    "RightHand_DecimationGroup": 0.09,
+                    "LeftHand_DecimationGroup": 0.09,
                     "RightUpperLeg_DecimationGroup": 0.14,
                     "LeftUpperLeg_DecimationGroup": 0.14,
                     "RightLowerLeg_DecimationGroup": 0.11,
