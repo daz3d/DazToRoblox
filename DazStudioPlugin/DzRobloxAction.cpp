@@ -373,7 +373,7 @@ void DzRobloxAction::executeAction()
   //      // search for override files in folder with DLL and copy over extracted files
 		QStringList aOverrideFilenameList = (QStringList() << "blender_tools.py" << "NodeArrange.py" << 
 			"blender_dtu_to_roblox_blend.py" << "blender_dtu_to_avatar_autosetup.py" <<
-			"roblox_tools.py" << "Daz_Cage_Att_Template_v4b.blend" <<
+			"roblox_tools.py" << "Daz_Cage_Att_Template.blend" <<
 			"game_readiness_tools.py" << "game_readiness_roblox_data.py");
 		//if (sPluginFolder.isEmpty() == false)
 		//{
@@ -429,7 +429,10 @@ void DzRobloxAction::executeAction()
 				if (QFileInfo(sOverrideFilePath).exists() == true)
 				{
 					dzApp->log(QString("Removing existing override file (%1)...").arg(sOverrideFilePath));
-					QFile(sOverrideFilePath).remove();
+					bool result = QFile(sOverrideFilePath).remove();
+					if (!result) {
+						dzApp->debug("DazToRoblox: ERROR: unable to remove existing script from intermediate folder: " + sOverrideFilePath);
+					}
 				}
 				dzApp->log(QString("Found override file (%1), copying from temp folder.").arg(sOverrideFilePath));
 				bool result = QFile(sTempFilePath).copy(sOverrideFilePath);

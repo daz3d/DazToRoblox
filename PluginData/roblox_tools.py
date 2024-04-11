@@ -11,14 +11,15 @@ script_dir = str(Path( __file__ ).parent.absolute())
 
 REPOSITION_ATTACHMENTS = True
 REPOSITION_CAGES = True
-USE_SHRINKWRAP_TARGET = True
+ADD_SHRINKWRAP = False
+USE_SHRINKWRAP_TARGET = False
 
 import os
 import bpy
 from mathutils import Matrix
 from mathutils import Vector
 
-template_file_name = "/Daz_Cage_Att_Template_v4b.blend"
+template_file_name = "/Daz_Cage_Att_Template.blend"
 blend_file_path = script_dir + template_file_name
 
 # Directory inside the blend file (use '/' for root)
@@ -283,10 +284,11 @@ def add_cage_and_attachments():
             # apply transform
             bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
-            if USE_SHRINKWRAP_TARGET:
-                add_shrinkwrap_modifier(obj, shrinkwrap_target)
-            else:
-                add_shrinkwrap_modifier(obj, geo_obj)
+            if ADD_SHRINKWRAP:
+                if USE_SHRINKWRAP_TARGET:
+                    add_shrinkwrap_modifier(obj, shrinkwrap_target)
+                else:
+                    add_shrinkwrap_modifier(obj, geo_obj)
 
 
     # cleanup all unused and unlinked data blocks
