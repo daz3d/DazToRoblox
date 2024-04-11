@@ -52,6 +52,8 @@ protected:
 	Q_INVOKABLE virtual bool isAssetMeshCompatible(QString sAsseType) override;
 	Q_INVOKABLE virtual bool isAssetAnimationCompatible(QString sAssetType) override;
 
+	Q_INVOKABLE virtual bool applyGeograft(DzNode* pBaseNode, QString geograftFilename, QString geograftNodeName = "");
+
 #ifdef UNITTEST_DZBRIDGE
 	friend class UnitTest_DzRobloxAction;
 #endif

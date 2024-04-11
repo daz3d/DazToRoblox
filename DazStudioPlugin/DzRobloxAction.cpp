@@ -29,6 +29,8 @@
 #include "dzprogress.h"
 #include "dzscript.h"
 #include "dzenumproperty.h"
+#include "dzcontentmgr.h"
+#include "dzfigure.h"
 
 #include "DzRobloxAction.h"
 #include "DzRobloxDialog.h"
@@ -730,6 +732,23 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 {
 	DzBridgeAction::preProcessScene(parentNode);
 
+	// apply geografts
+	QString tempPath = dzApp->getTempPath();
+
+	// check if geograft present
+	if (dzScene->findNodeByLabel("game_engine_mouth_geograft") == NULL) {	
+		DzNode* mouthNode = dzScene->findNode("Genesis9Mouth");
+		//DzNode* mouthNode = dzScene->findNodeByLabel("Genesis 9 Mouth");
+		QString mouthNodeName = mouthNode->getName();
+		applyGeograft(mouthNode, tempPath + "/game_engine_mouth_geograft.duf");
+	}
+	if (dzScene->findNodeByLabel("game_engine_eye_geograft") == NULL) {
+		DzNode* eyesNode = dzScene->findNode("Genesis9Eyes");
+		//DzNode* eyesNode = dzScene->findNodeByLabel("Genesis 9 Eyes");
+		QString eyesNodeName = eyesNode->getName();
+		applyGeograft(eyesNode, tempPath + "/game_engine_eye_geograft.duf");
+	}
+
 	QString sPluginFolder = dzApp->getPluginsPath() + "/DazToRoblox";
 
 	QString sRobloxBoneConverter = "bone_converter.dsa";
@@ -849,5 +868,43 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	return true;
 }
 
+
+bool DzRobloxAction::applyGeograft(DzNode* pBaseNode, QString geograftFilename, QString geograftNodeName)
+{
+	DzContentMgr* contentMgr = dzApp->getContentMgr();
+//	QString tempPath = dzApp->getTempPath() + "/" + geograftFilename;
+	QFile srcFile(geograftFilename);
+	if (geograftNodeName == "")
+	{
+		geograftNodeName = QFileInfo(geograftFilename).baseName();
+	}
+	QString node_name;
+	// copy to temp folder and merge tpose into scene
+	if (srcFile.exists())
+	{
+//		DzBridgeAction::copyFile(&srcFile, &tempPath, true);
+	//	if (contentMgr->openFile(tempPath, true))
+
+		// deselect all ndoes
+		dzScene->setPrimarySelection(NULL);
+		if (contentMgr->openFile(geograftFilename, true))
+		{
+			// parent geograft
+			//DzNode* generic_geograft_node = dzScene->findNode(geograftNodeName);
+			DzNode* generic_geograft_node = dzScene->findNodeByLabel(geograftNodeName);
+			QString geograftNodeName = generic_geograft_node->getName();
+			DzFigure* geograft_node = qobject_cast<DzFigure*>(generic_geograft_node);
+			if (geograft_node && pBaseNode)
+			{
+				geograft_node->setFollowTarget(pBaseNode->getSkeleton());
+				// DB: Do NOT parent node, since this will cause duplicate geo on export and other issues
+//				pBaseNode->addNodeChild(geograft_node);
+				node_name = geograft_node->getName();
+			}
+		}
+	}
+	dzApp->debug("Geografting done: geograft node = " + node_name);
+	return true;
+}
 
 #include "moc_DzRobloxAction.cpp"
