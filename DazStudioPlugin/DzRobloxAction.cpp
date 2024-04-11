@@ -896,6 +896,27 @@ bool DzRobloxAction::applyGeograft(DzNode* pBaseNode, QString geograftFilename, 
 			DzFigure* geograft_node = qobject_cast<DzFigure*>(generic_geograft_node);
 			if (geograft_node && pBaseNode)
 			{
+				// copy base materials to geograft
+				DzShape *geograftShape = geograft_node->getObject()->getCurrentShape();
+				auto dstMatList = geograftShape->getAllMaterials();
+				DzShape* baseShape = pBaseNode->getObject()->getCurrentShape();
+				auto srcMatList = baseShape->getAllMaterials();
+				foreach( QObject *dobj, dstMatList ) {
+					DzMaterial* dstMat = qobject_cast<DzMaterial*>(dobj);
+					foreach(QObject * sobj, srcMatList) {
+						DzMaterial *srcMat = qobject_cast<DzMaterial*>(sobj);
+						if (dstMat && srcMat) {
+							QString cleanedDestMatName = QString(dstMat->getName()).replace(" ","").replace("_","").toLower();
+							QString cleanedSrcMatName = QString(srcMat->getName()).replace(" ", "").replace("_", "").toLower();
+							if (cleanedDestMatName == cleanedSrcMatName) {
+								dstMat->copyFrom(srcMat);
+								break;
+							}
+						}
+					}
+				}
+
+
 				geograft_node->setFollowTarget(pBaseNode->getSkeleton());
 				// DB: Do NOT parent node, since this will cause duplicate geo on export and other issues
 //				pBaseNode->addNodeChild(geograft_node);
