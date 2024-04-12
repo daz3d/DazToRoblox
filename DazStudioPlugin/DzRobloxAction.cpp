@@ -736,13 +736,15 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	QString tempPath = dzApp->getTempPath();
 
 	// check if geograft present
-	if (dzScene->findNodeByLabel("game_engine_mouth_geograft") == NULL) {	
+	if (dzScene->findNodeByLabel("game_engine_mouth_geograft") == NULL &&
+		dzScene->findNode("game_engine_mouth_geograft_0") == NULL) {
 		DzNode* mouthNode = dzScene->findNode("Genesis9Mouth");
 		//DzNode* mouthNode = dzScene->findNodeByLabel("Genesis 9 Mouth");
 		QString mouthNodeName = mouthNode->getName();
 		applyGeograft(mouthNode, tempPath + "/game_engine_mouth_geograft.duf", "game_engine_mouth_geograft_0");
 	}
-	if (dzScene->findNodeByLabel("game_engine_eye_geograft") == NULL) {
+	if (dzScene->findNodeByLabel("game_engine_eye_geograft") == NULL &&
+		dzScene->findNode("game_engine_eye_geograft_0") == NULL) {
 		DzNode* eyesNode = dzScene->findNode("Genesis9Eyes");
 		//DzNode* eyesNode = dzScene->findNodeByLabel("Genesis 9 Eyes");
 		QString eyesNodeName = eyesNode->getName();
@@ -892,7 +894,7 @@ bool DzRobloxAction::applyGeograft(DzNode* pBaseNode, QString geograftFilename, 
 			// parent geograft
 			DzNode* generic_geograft_node = dzScene->findNode(geograftNodeName);
 			if (!generic_geograft_node)
-				generic_geograft_node = dzScene->findNodeByLabel(geograftNodeName);
+				generic_geograft_node = dzScene->findNodeByLabel(QString(geograftNodeName).replace("_0", ""));
 			//QString debug_geograftNodeName = generic_geograft_node->getName();
 			DzFigure* geograft_node = qobject_cast<DzFigure*>(generic_geograft_node);
 			if (geograft_node && pBaseNode)
