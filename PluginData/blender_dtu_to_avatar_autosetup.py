@@ -54,7 +54,7 @@ decimation_lookup = {
                     "NonFace_DecimationGroup": 0.4619,
                     "Face_DecimationGroup": 0.6,
                     "UpperTorso_DecimationGroup": 0.1382,
-                    "LowerTorso_DecimationGroup": 0.14,
+                    "LowerTorso_DecimationGroup": 0.12,
                     "RightUpperArm_DecimationGroup": 0.145,
                     "LeftUpperArm_DecimationGroup": 0.145,
                     "RightLowerArm_DecimationGroup": 0.145,
