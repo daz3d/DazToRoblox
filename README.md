@@ -35,9 +35,12 @@ The Daz To Roblox UGC Developer Kit can assist Roblox UGC developers to convert 
 
 ## 3. How to Download and Manually Install
 1. Download the developer kit zip file from the [Release Page][ReleasesURL].
-2. Unzip the contents and find the `dzroblox.dll` plugin file.  Copy this to the plugins folder of Daz Studio, example: `C:\Program Files\DAZ 3D\DAZStudio4\plugins\`.
-3. Find the `DazLibraryFiles.zip` and unzip the contents into your Daz Studio Library contents folder, example: `C:\Users\<username>\Documents\DAZ 3D\Studio\My Library\`.
-4. Save the contents of the `UgcDevKit` folder to use later.
+2. Move the `DazToRobloxUGCDevKit.zip` file to your `DAZ 3D\InstallManager\Downloads\` folder.  This is commonly located in `C:\Users\Public\Documents\DAZ 3D\InstallManager\Downloads`.
+3. Run the Daz Install Manager, go to the Ready to Install tab.
+4. Find `DazToRoblox UGC Dev Kit` and click `Install`.
+5. The product entry for `DazToRoblox UGC Dev Kit` should move from the Ready to Intall tab to the Installed tab.
+6. You may click the 3 dots next to `DazToRoblox UGC Dev Kit` to open additional menu options, then click `Show Installed Files` to find where your installed files are located.
+7. To uninstall, click the `Uninstall` button from the Daz Install Manager.  You can delete the `DazToRobloxUGCDevKit.zip` by clicking the 3 dots and selecting `Delete the "DazToRoblox UGC Dev Kit" package`.
 
 
 ## 4. How to Use
@@ -51,11 +54,10 @@ The Daz To Roblox UGC Developer Kit can assist Roblox UGC developers to convert 
 8. Click the `Open Intermediate Folder` to work with the intermediate .blend file or other intermediate assets.
 9. Click Accept, then wait for a dialog popup to notify the conversion is complete.
 10. A window to the Roblox Output Folder should automatically open.
-11. You may now open the final FBX output file in your preferred editor, such as Blender or Maya.  Add cages and attachments and make any desired modifications.  This FBX file is in the correct scale and orientation for import into Roblox Studio.
-12. Alternatively, open the .blend file located in the intermediate folder in Blender.  Add cages and attachments and make desired modifications.  
+11. You may now open the final FBX output file in your preferred editor, such as Blender or Maya.  Adjust cages and attachments and make any desired modifications.  This FBX file is in the correct scale and orientation for import into Roblox Studio.
+12. Alternatively, open the .blend file located in the intermediate folder in Blender.  Adjust cages and attachments and make desired modifications.  
 13. If using the .blend intermediate file, use the following settings when exporting to FBX:
 - Path Mode: `Copy`, click icon to enable `Embed Textures`.
-- In the Transform section, set Scale to `0.0333`.
 - In the Armature section, disable `Add Leaf Bones`.
 
 
