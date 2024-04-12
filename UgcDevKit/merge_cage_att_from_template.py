@@ -42,7 +42,7 @@ else:
     # If the script is being run from the console, use the directory of the python file
     script_path = os.path.dirname(os.path.realpath(__file__))
 
-template_file_name = "/Daz_Cage_Att_Template_2.blend"
+template_file_name = "/Daz_Cage_Att_Template.blend"
 blend_file_path = script_path + template_file_name
 
 # Directory inside the blend file (use '/' for root)
