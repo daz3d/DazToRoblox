@@ -35,7 +35,7 @@ The Daz To Roblox UGC Developer Kit can assist Roblox UGC developers to convert 
 
 ## 3. How to Download and Manually Install
 1. Download the developer kit zip file from the [Release Page][ReleasesURL].
-2. Move the `DazToRobloxUGCDevKit.zip` file to your `DAZ 3D\InstallManager\Downloads\` folder.  This is commonly located in `C:\Users\Public\Documents\DAZ 3D\InstallManager\Downloads`.
+2. Move the `DazToRobloxUGCDevKitWin64.zip` file to your `DAZ 3D\InstallManager\Downloads\` folder.  This is commonly located in `C:\Users\Public\Documents\DAZ 3D\InstallManager\Downloads`.  Mac users should use `DazToRobloxUGCDevKitMac64.zip`.
 3. Run the Daz Install Manager, go to the Ready to Install tab.
 4. Find `DazToRoblox UGC Dev Kit` and click `Install`.
 5. The product entry for `DazToRoblox UGC Dev Kit` should move from the Ready to Intall tab to the Installed tab.
