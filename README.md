@@ -51,15 +51,14 @@ The Daz To Roblox UGC Developer Kit can assist Roblox UGC developers to convert 
 5. Enable the Advanced Settings section if it is disabled, then make sure the `Blender Executable` line is set to the location of your blender executable. Example: `C:\Program Files\Blender Foundation\Blender 3.6\blender.exe`.
 6. Set the desired asset name for the output.
 7. Click the Asset Type dropdown and select the desired modesty coverings for your avatar.  WARNING: Please make sure you adhere to Roblox Community Standards, especially prohibited Sexual Content.
-8. Click the `Open Intermediate Folder` to work with the intermediate .blend file or other intermediate assets.
-9. Click Accept, then wait for a dialog popup to notify the conversion is complete.
-10. A window to the Roblox Output Folder should automatically open.
-11. You may now open the final FBX output file in your preferred editor, such as Blender or Maya.  Adjust cages and attachments and make any desired modifications.  This FBX file is in the correct scale and orientation for import into Roblox Studio.
-12. Alternatively, open the .blend file located in the intermediate folder in Blender.  Adjust cages and attachments and make desired modifications.  
-13. If using the .blend intermediate file, use the following settings when exporting to FBX:
+8. Click Accept, then wait for a dialog popup to notify the conversion is complete.
+9. A window to the Roblox Output Folder should automatically open.
+10. You may now open the final FBX output file in your preferred editor, such as Blender or Maya.  Adjust cages and attachments and make any desired modifications.  This FBX file is in the correct scale and orientation for import into Roblox Studio.
+11. Alternatively, open the .blend file in the output folder to adjust cages and attachments and make desired modifications.
+12. If using the .blend file from the final output folder, use the following settings when exporting to FBX:
 - Path Mode: `Copy`, click icon to enable `Embed Textures`.
 - In the Armature section, disable `Add Leaf Bones`.
-
+13. If you want to work with intermediate files, click the `Open Intermediate Folder` in the Advanced Settings of the Send To -> Daz To Roblox dialog popup.
 
 
 ## 5. How to Build
