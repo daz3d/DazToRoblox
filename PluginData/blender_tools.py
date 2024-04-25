@@ -688,6 +688,9 @@ def switch_to_layout_mode():
 
 
 def center_all_viewports():
+    # if Blender version is 4.0 or higher, then return
+    if bpy.app.version[0] >= 4:
+        return
     for wm in bpy.data.window_managers:
         for window in wm.windows:
             areas = [a for a in window.screen.areas if a.type == "VIEW_3D"]
