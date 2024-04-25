@@ -2,6 +2,7 @@
 #include <dzaction.h>
 #include <dznode.h>
 #include <dzjsonwriter.h>
+#include <dzactivationpolicy.h>
 #include <QtCore/qfile.h>
 #include <QtCore/qtextstream.h>
 #include <DzBridgeAction.h>
@@ -16,11 +17,25 @@ namespace DZ_BRIDGE_NAMESPACE
 	class DzBridgeDialog;
 }
 
+class DzRobloxActivationPolicy : public DzNoEvaluationActivationPolicy {
+    int m_counter=-1;
+    DzGuid m_guid;
+    void initialize(const DzGuid &guid) override { m_guid = guid;}
+    bool activated() override { if (m_counter < 0) return false; return true; }
+    bool usesRegistration() override { return true; }
+    
+public:
+    void decrement_counter() { m_counter--;}
+};
+
+
 class DzRobloxAction : public DZ_BRIDGE_NAMESPACE::DzBridgeAction {
 	Q_OBJECT
 	Q_PROPERTY(QString sRobloxOutputFolderPath READ getRobloxOutputFolderPath WRITE setRobloxOutputFolderPath)
 	Q_PROPERTY(QString sBlenderExecutablePath READ getBlenderExecutablePath WRITE setBlenderExecutablePath)
 public:
+    static DzRobloxActivationPolicy s_ActivationPolicy;
+    
 	DzRobloxAction();
 
 	Q_INVOKABLE virtual DZ_BRIDGE_NAMESPACE::DzBridgeDialog* getBridgeDialog() override;
