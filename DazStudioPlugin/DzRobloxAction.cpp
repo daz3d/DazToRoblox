@@ -1,4 +1,6 @@
 #define COMBINED_UVSET_STRING "Combined Head And Body"
+#define R15_POSTFIX_STRING "_R15_reminder_adjust_cage_and_attachments"
+#define S1_POSTFIX_STRING "_S1_ready_for_avatar_autosetup"
 
 #include <QtGui/qcheckbox.h>
 #include <QtGui/QMessageBox>
@@ -514,7 +516,15 @@ void DzRobloxAction::executeAction()
 				args << "-e";
 				args << "activate";
 				args << "-e";
-				args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/." + "\"";
+                if (m_sAssetType.contains("R15")) {
+                    args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/" + m_sExportFilename + R15_POSTFIX_STRING + ".fbx" + "\"";
+                }
+                else if (m_sAssetType.contains("S1")) {
+                    args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/" + m_sExportFilename + S1_POSTFIX_STRING + ".fbx" + "\"";
+                }
+                else {
+                    args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/." + "\"";
+                }
 				args << "-e";
 				args << "end tell";
 				QProcess::startDetached("osascript", args);
