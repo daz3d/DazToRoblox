@@ -7,14 +7,14 @@
 
 #include "dzbridge.h"
 
-CPP_PLUGIN_DEFINITION("Daz To Roblox Exporter");
+CPP_PLUGIN_DEFINITION("Roblox Avatar Exporter");
 
 DZ_PLUGIN_AUTHOR("Daz 3D, Inc");
 
 DZ_PLUGIN_VERSION(PLUGIN_MAJOR, PLUGIN_MINOR, PLUGIN_REV, PLUGIN_BUILD);
 
 DZ_PLUGIN_DESCRIPTION(QString(
-"This plugin provides the ability to send assets to Roblox Studio. \
+"This plugin provides the ability to convert Genesis 9 characters into avatars for Roblox Studio. \
 Documentation and source code are available on <a href = \"https://github.com/daz3d/DazToRoblox\">Github</a>.<br>"
 ));
 

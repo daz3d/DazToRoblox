@@ -48,7 +48,7 @@
 #include "dzbridge.h"
 
 DzRobloxAction::DzRobloxAction() :
-	DzBridgeAction(tr("Daz to &Roblox"), tr("Export the selected node for Roblox Studio."))
+	DzBridgeAction(tr("&Roblox Avatar Exporter"), tr("Export the selected character for Roblox Studio."))
 {
 	m_nNonInteractiveMode = 0;
 //	m_sAssetType = QString("__");
@@ -89,7 +89,7 @@ bool DzRobloxAction::createUI()
 	if (dzScene->getNumSelectedNodes() != 1)
 	{
 		if (m_nNonInteractiveMode == 0) QMessageBox::warning(0, tr("Error"),
-			tr("Please select one Character or Prop to send."), QMessageBox::Ok);
+			tr("Please select one Character to send."), QMessageBox::Ok);
 
 		return false;
 	}
@@ -154,7 +154,7 @@ void DzRobloxAction::executeAction()
 			if (m_nNonInteractiveMode == 0)
 			{
 				QMessageBox::warning(0, tr("Error"),
-					tr("Please select one Character or Prop to send."), QMessageBox::Ok);
+					tr("Please select one Character to send."), QMessageBox::Ok);
 			}
 		}
 	}
@@ -334,7 +334,7 @@ void DzRobloxAction::executeAction()
 
 		if (!bExportResult)
 		{
-			QMessageBox::information(0, "Daz To Roblox Exporter",
+			QMessageBox::information(0, "Roblox Avatar Exporter",
 				tr("Export cancelled."), QMessageBox::Ok);
 			exportProgress->finish();
 			return;
@@ -422,7 +422,7 @@ void DzRobloxAction::executeAction()
 					bool result = dir.mkpath(sFallbackFolder);
 					if (!result)
 					{
-						dzApp->log("ERROR: Unable to create fallback folder: " + sFallbackFolder + ", will fallback to using temp folder to store script files...");
+						dzApp->log("Roblox Avatar Exporter: ERROR: Unable to create fallback folder: " + sFallbackFolder + ", will fallback to using temp folder to store script files...");
 						sScriptFolderPath = dzApp->getTempPath();
 						break;
 					}
@@ -432,13 +432,13 @@ void DzRobloxAction::executeAction()
 				// delete file if it already exists
 				if (QFileInfo(sOverrideFilePath).exists() == true)
 				{
-					dzApp->log(QString("Removing existing override file (%1)...").arg(sOverrideFilePath));
+					dzApp->log(QString("Roblox Avatar Exporter: Removing existing override file (%1)...").arg(sOverrideFilePath));
 					bool result = QFile(sOverrideFilePath).remove();
 					if (!result) {
-						dzApp->debug("DazToRoblox: ERROR: unable to remove existing script from intermediate folder: " + sOverrideFilePath);
+						dzApp->debug("Roblox Avatar Exporter: ERROR: unable to remove existing script from intermediate folder: " + sOverrideFilePath);
 					}
 				}
-				dzApp->log(QString("Found override file (%1), copying from temp folder.").arg(sOverrideFilePath));
+				dzApp->log(QString("Roblox Avatar Exporter: Found override file (%1), copying from temp folder.").arg(sOverrideFilePath));
 				bool result = QFile(sTempFilePath).copy(sOverrideFilePath);
 				if (result)
 				{
@@ -447,7 +447,7 @@ void DzRobloxAction::executeAction()
 				}
 				else
 				{
-					dzApp->log("ERROR: Unable to copy script files to scriptfolder: " + sOverrideFilePath);
+					dzApp->log("Roblox Avatar Exporter: ERROR: Unable to copy script files to scriptfolder: " + sOverrideFilePath);
 				}
 			}
 
@@ -488,7 +488,7 @@ void DzRobloxAction::executeAction()
 		exportProgress->setInfo("Starting Blender Processing...");
 		bool retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs);
 
-        exportProgress->setInfo("Daz To Roblox: Export Phase Completed.");
+        exportProgress->setInfo("Roblox Avatar Exporter: Export Phase Completed.");
 		// DB 2021-10-11: Progress Bar
 		exportProgress->finish();
 
@@ -497,7 +497,7 @@ void DzRobloxAction::executeAction()
 		{
 			if (retCode)
 			{
-				QMessageBox::information(0, "Daz To Roblox Exporter",
+				QMessageBox::information(0, "Roblox Avatar Exporter",
 					tr("Export from Daz Studio complete. Ready to import into Roblox Studio."), QMessageBox::Ok);
 
 #ifdef WIN32
@@ -532,7 +532,7 @@ void DzRobloxAction::executeAction()
 			}
 			else
 			{
-				QMessageBox::critical(0, "Daz To Roblox Exporter",
+				QMessageBox::critical(0, "Roblox Avatar Exporter",
 					tr(QString("An error occured during the export process (ExitCode=%1).  Please check log files at: %2").arg(m_nBlenderExitCode).arg(m_sDestinationPath).toLocal8Bit()), QMessageBox::Ok);
 			}
 
@@ -651,7 +651,7 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 	else
 	{
 		// TODO: issue error and fail gracefully
-		dzApp->log("ERROR: DazToRoblox: Roblox Dialog was not initialized.  Cancelling operation...");
+		dzApp->log("Roblox Avatar Exporter: ERROR: Roblox Dialog was not initialized.  Cancelling operation...");
 
 		return false;
 	}
@@ -695,11 +695,11 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
     {
 		if (m_nBlenderExitCode == m_nPythonExceptionExitCode)
 		{
-			dzApp->log(QString("ERROR: DazToRoblox: Python error:.... %1").arg(m_nBlenderExitCode));
+			dzApp->log(QString("Roblox Avatar Exporter: ERROR: Python error:.... %1").arg(m_nBlenderExitCode));
 		}
 		else
 		{
-            dzApp->log(QString("ERROR: DazToRoblox: exit code = %1").arg(m_nBlenderExitCode));
+            dzApp->log(QString("Roblox Avatar Exporter: ERROR: exit code = %1").arg(m_nBlenderExitCode));
 		}
 		return false;
 	}
@@ -761,7 +761,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		applyGeograft(eyesNode, tempPath + "/game_engine_eye_geograft.duf", "game_engine_eye_geograft_0");
 	}
 
-	QString sPluginFolder = dzApp->getPluginsPath() + "/DazToRoblox";
+	//QString sPluginFolder = dzApp->getPluginsPath() + "/DazToRoblox";
+    QString sPluginFolder = tempPath;
 
 	QString sRobloxBoneConverter = "bone_converter.dsa";
 	QString sApplyModestyOverlay = "apply_modesty_overlay.dsa";
