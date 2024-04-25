@@ -162,30 +162,54 @@ void DzRobloxAction::executeAction()
 	// if UV is not default, then issue error and return
 	// 1. get UV of selected node
 	DzNode* testNode = dzScene->getPrimarySelection();
-	if (testNode && testNode->inherits("DzFigure")) {
-		// 2. get UV property
-		DzObject* obj = testNode->getObject();
-		if (obj) {
-			DzShape* shape = obj->getCurrentShape();
-			QObjectList rawList = shape->getAllMaterials();
-			for (int i=0; i < rawList.count(); i++) {
-				DzMaterial* mat = qobject_cast<DzMaterial*>(rawList[i]);
-				if (!mat) continue;
-				DzProperty* prop = mat->findProperty("UV Set");
-				QString debugName = prop->getName();
-				DzEnumProperty* uvset = qobject_cast<DzEnumProperty*>(prop);
-				if (uvset) {
-					int combinedUvVal = uvset->findItemString(COMBINED_UVSET_STRING);
-					int currentVal = uvset->getValue();
-					if (currentVal == combinedUvVal) {
-						QMessageBox::warning(0, tr("Warning"),
-							tr("A non-standard UV Set was detected, overlay will NOT be applied."), QMessageBox::Ok);
-						break;
+	if (testNode) {
+		if (testNode->inherits("DzFigure")) {
+			// hardcode check for Genesis 9, fail gracefully if Genesis 8
+			if (testNode->getName() != "Genesis9") {
+				if (m_nNonInteractiveMode == 0)
+				{
+					QMessageBox::warning(0, tr("Error"),
+						tr("Please make sure you have selected the root node of a Genesis 9 character. ") +
+						tr("Only Genesis 9 characters are currently supported."), QMessageBox::Ok);
+				}
+				return;
+			}
+
+			// 2. get UV property
+			DzObject* obj = testNode->getObject();
+			if (obj) {
+				DzShape* shape = obj->getCurrentShape();
+				QObjectList rawList = shape->getAllMaterials();
+				for (int i = 0; i < rawList.count(); i++) {
+					DzMaterial* mat = qobject_cast<DzMaterial*>(rawList[i]);
+					if (!mat) continue;
+					DzProperty* prop = mat->findProperty("UV Set");
+					QString debugName = prop->getName();
+					DzEnumProperty* uvset = qobject_cast<DzEnumProperty*>(prop);
+					if (uvset) {
+						int combinedUvVal = uvset->findItemString(COMBINED_UVSET_STRING);
+						int currentVal = uvset->getValue();
+						if (currentVal == combinedUvVal) {
+							QMessageBox::warning(0, tr("Warning"),
+								tr("A non-standard UV Set was detected, overlay will NOT be applied."), QMessageBox::Ok);
+							break;
+						}
 					}
 				}
 			}
 		}
-	}
+		else {
+			// gracefully exit, primary selection must be character (DzFigure)
+			if (m_nNonInteractiveMode == 0)
+			{
+				QMessageBox::warning(0, tr("Error"),
+					tr("Please make sure you have selected the root node of a Genesis 9 character. ") +
+					tr("Only Genesis 9 characters are currently supported."), QMessageBox::Ok);
+			}
+			return;
+
+		}
+	} 
 
 	// Create the dialog
 	if (m_bridgeDialog == nullptr)
