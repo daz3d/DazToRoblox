@@ -21,6 +21,9 @@ Documentation and source code are available on <a href = \"https://github.com/da
 DZ_PLUGIN_CLASS_GUID(DzRobloxAction, cffcd78e-3917-4b77-a60f-c559753226ee);
 NEW_PLUGIN_CUSTOM_CLASS_GUID(DzRobloxDialog, 0ab8fdb4-6575-4a7c-ad4b-456a687c1c81);
 
+DZ_PLUGIN_ACTIVATION_POLICY(c9346f33-f576-4003-813a-fb1e63798114, new DzTrialDaysActivationPolicy(28));
+DZ_PLUGIN_REGISTRATION_PREFIX(DZRBLX, "010", "Roblox Exporter");
+
 #ifdef UNITTEST_DZBRIDGE
 
 #include "UnitTest_DzRobloxAction.h"
