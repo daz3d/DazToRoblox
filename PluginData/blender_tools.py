@@ -64,6 +64,10 @@ def load_cached_image_to_material(matName, input_key, output_key, texture_map, t
     node_tex = nodes.new("ShaderNodeTexImage")
     node_tex.image = cached_image
 
+    # if input_key == "Specular" and blender version > 4, use roughness instead of specular
+    if input_key == "Specular" and bpy.app.version[0] >= 4:
+        _add_to_log("DEBUG: load_cached_image_to_material(): using IOR Level instead of specular for blender version 4")
+        input_key = "Specular IOR Level"
     bsdf_inputs[input_key].default_value = texture_value
     links = data.node_tree.links
     link = links.new(node_tex.outputs[output_key], bsdf_inputs[input_key])
@@ -506,7 +510,11 @@ def process_material(mat, lowres_mode=None):
             # link = links.new(node_tex.outputs["Color"], bsdf_inputs["Specular"])
             load_cached_image_to_material(matName, "Specular", "Color", glossy_weight_map, glossy_weight, "Non-Color")
     elif (reflectivity_value != 0.0):
-        bsdf_inputs["Specular"].default_value = reflectivity_value
+        # if blender version 4, use roughness instead of specular
+        if bpy.app.version[0] >= 4:
+            bsdf_inputs["Specular IOR Level"].default_value = reflectivity_value
+        else:
+            bsdf_inputs["Specular"].default_value = reflectivity_value
     elif (dual_lobe_specular_weight != 0.0):
         bsdf_inputs["Specular"].default_value = dual_lobe_specular_weight
     elif (glossy_weight != 0.0):
@@ -542,9 +550,20 @@ def process_material(mat, lowres_mode=None):
             # node_tex.image.colorspace_settings.name = "Non-Color"
             # links = data.node_tree.links
             # link = links.new(node_tex.outputs["Color"], bsdf_inputs["Emission"])
-            load_cached_image_to_material(matName, "Emission", "Color", emissionMap, [0, 0, 0, 0], "Non-Color")
+            
+            # if blender version 4, use Emission Strength instead of Emission
+            if bpy.app.version[0] >= 4:
+                _add_to_log("DEBUG: process_dtu(): using Emission Strength instead of emission for blender version 4")
+                load_cached_image_to_material(matName, "Emission Strength", "Color", emissionMap, 0.0, "Non-Color")
+            else:
+                load_cached_image_to_material(matName, "Emission", "Color", emissionMap, [0, 0, 0, 0], "Non-Color")
     else:
-        bsdf_inputs["Emission"].default_value = [0, 0, 0, 0]
+        # if blender version 4, use emission strength instead of emission
+        if bpy.app.version[0] >= 4:
+            _add_to_log("DEBUG: process_dtu(): using Emission Strength instead of emission for blender version 4")
+            bsdf_inputs["Emission Strength"].default_value = 0.0
+        else:
+            bsdf_inputs["Emission"].default_value = [0, 0, 0, 0]
 
     if (normalMap != ""):
         if (not os.path.exists(normalMap)):
@@ -603,7 +622,12 @@ def process_material(mat, lowres_mode=None):
             bsdf_inputs["Alpha"].default_value = new_value
         _add_to_log("DEBUG: process_dtu(): refraction weight = " + str(refraction_weight) + ", alpha = " + str(bsdf_inputs["Alpha"].default_value))
         bsdf_inputs["Roughness"].default_value = bsdf_inputs["Roughness"].default_value * (1-refraction_weight)
-        bsdf_inputs["Specular"].default_value = bsdf_inputs["Specular"].default_value * (1-refraction_weight)
+        # if blender version 4, use ior level instead of specular
+        if bpy.app.version[0] >= 4:
+            _add_to_log("DEBUG: process_dtu(): using IOR Level instead of specular for blender version 4")
+            bsdf_inputs["Specular IOR Level"].default_value = bsdf_inputs["Specular IOR Level"].default_value * (1-refraction_weight)
+        else:
+            bsdf_inputs["Specular"].default_value = bsdf_inputs["Specular"].default_value * (1-refraction_weight)
         if bsdf_inputs["Metallic"].default_value < refraction_weight:
             bsdf_inputs["Metallic"].default_value = refraction_weight
         if (cutoutMap != ""):
@@ -659,6 +683,9 @@ def process_dtu(jsonPath, lowres_mode=None):
             process_material(mat, lowres_mode)
         except Exception as e:
             _add_to_log("ERROR: exception caught while processing material: " + mat["Material Name"] + ", " + str(e))
+            if "moisture" not in mat["Material Name"].lower():
+#                raise e
+                pass
 
     _add_to_log("DEBUG: process_dtu(): done processing DTU: " + jsonPath)
     return jsonObj
