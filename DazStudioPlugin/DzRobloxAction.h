@@ -33,6 +33,9 @@ public:
 	Q_INVOKABLE void setBlenderExecutablePath(QString arg_Filename) { this->m_sBlenderExecutablePath = arg_Filename; };
 
 	Q_INVOKABLE bool executeBlenderScripts(QString sFilePath, QString sCommandlineArguments);
+	
+	Q_INVOKABLE bool deepCopyNode(FbxNode* pDestinationRoot, FbxNode* pSourceNode);
+	Q_INVOKABLE bool mergeScenes(FbxScene* pDestinationScene, FbxScene* pSourceScene);
 
 protected:
 	unsigned char m_nPythonExceptionExitCode = 11; // arbitrary exit code to check for blener python exceptions

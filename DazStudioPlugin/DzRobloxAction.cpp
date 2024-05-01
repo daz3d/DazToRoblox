@@ -46,6 +46,9 @@
 #include "zip.h"
 
 #include "dzbridge.h"
+#include "OpenFBXInterface.h"
+#include "FbxTools.h"
+#include "MvcTools.h"
 
 DzRobloxAction::DzRobloxAction() :
 	DzBridgeAction(tr("&Roblox Avatar Exporter"), tr("Export the selected character for Roblox Studio."))
@@ -111,6 +114,119 @@ bool DzRobloxAction::createUI()
 
 	if (!m_subdivisionDialog) m_subdivisionDialog = DZ_BRIDGE_NAMESPACE::DzBridgeSubdivisionDialog::Get(m_bridgeDialog);
 	if (!m_morphSelectionDialog) m_morphSelectionDialog = DZ_BRIDGE_NAMESPACE::DzBridgeMorphSelectionDialog::Get(m_bridgeDialog);
+
+	return true;
+}
+
+#include <vector>
+
+bool DzRobloxAction::mergeScenes(FbxScene* pDestinationScene, FbxScene* pSourceScene)
+{
+
+	deepCopyNode(pDestinationScene->GetRootNode(), pSourceScene->GetRootNode());
+
+	pSourceScene->GetRootNode()->DisconnectAllSrcObject();
+
+	int lNumSceneObjects = pSourceScene->GetSrcObjectCount();
+	for (int i = 0; i < lNumSceneObjects; i++) {
+		FbxObject* lObj = pSourceScene->GetSrcObject(i);
+		if (lObj == pSourceScene->GetRootNode() || *lObj == pSourceScene->GetGlobalSettings()) {
+			// Don't move the root node or the scene's global settings; these
+			// objects are created for every scene.
+			continue;
+		}
+		/*************************/
+		// DEBUG
+		FbxObject* pObjGlobalSettings = &pSourceScene->GetGlobalSettings();
+		QString globalSettingsName = QString(pObjGlobalSettings->GetName());
+		QString objName = QString(lObj->GetName());
+		if (objName == "GlobalSettings")
+			continue;
+		if (lObj->GetClassId() == FbxAnimCurveNode::ClassId ||
+			lObj->GetClassId() == FbxAnimCurve::ClassId ||
+			lObj->GetClassId() == FbxAnimLayer::ClassId ||
+			lObj->GetClassId() == FbxAnimStack::ClassId ||
+			lObj->GetClassId() == FbxAnimEvalClassic::ClassId ||
+			lObj->GetClassId() == FbxSkeleton::ClassId)
+		{
+			printf("DEBUG: skipping FbxAnimCurve, FbxAnimCurveNode");
+			continue;
+		}
+		FbxClassId classID = lObj->GetClassId();
+		QString className = classID.GetName();
+		dzApp->log("DzRoblox DEBUG: adding object=" + objName + " [" + className + "]  to destination scene.");
+		/*************************/
+
+		// Attach the object to the reference scene.
+		lObj->ConnectDstObject(pDestinationScene);
+
+	}
+
+	pSourceScene->DisconnectAllSrcObject();
+
+	return true;
+}
+
+bool DzRobloxAction::deepCopyNode(FbxNode* pDestinationRoot, FbxNode* pSourceNode)
+{
+	// get children
+	if (!pSourceNode)
+	{
+		dzApp->log("DzRoblox-MvcTest: deepCopyNode: pSourceNode is null.");
+		return false;
+	}
+	if (!pDestinationRoot)
+	{
+		dzApp->log("DzRoblox-MvcTest: deepCopyNode: pDestinationRoot is null.");
+		return false;
+	}
+
+	std::vector<FbxNode*> lChildren;
+	int lNumChildren = pSourceNode->GetChildCount();
+	int debug_pdestinationroot_numchildren = pDestinationRoot->GetChildCount();
+	for (int i = 0; i < lNumChildren; i++) {
+
+		// Obtain a child node from the currently loaded scene.
+		lChildren.push_back(pSourceNode->GetChild(i));
+
+		// Attach the child node to the reference scene's root node.
+//		int debug_lchildren_size = lChildren.size();
+//		for (int c = 0; c < lChildren.size(); c++)
+//			pDestinationRoot->AddChild(lChildren[c]);
+	}
+	int debug_lchildren_size = lChildren.size();
+	for (int c = 0; c < lChildren.size(); c++)
+		pDestinationRoot->AddChild(lChildren[c]);
+
+	int debug_pdestinationroot_numchildren_2 = pDestinationRoot->GetChildCount();
+
+	/*
+	{
+		FbxGeometry* pCageGeo = openFbx->FindGeometry(pTemplateScene, sNodeName);
+		if (!pCageGeo)
+		{
+			bFailed = true;
+			dzApp->log("DzRoblox-MvcTest: Unable to extract cage mesh from template scene.");
+		}
+		else
+		{
+			// copy geo
+			bResult = pDestinationRoot->AddGeometry(pCageGeo);
+			if (!bResult)
+			{
+				bFailed = true;
+				dzApp->log("DzRoblox-MvcTest: Unable to copy cage mesh to template scene.");
+			}
+			// copy node
+			bResult = pDestinationRoot->AddNode(pCageNode);
+			if (!bResult)
+			{
+				bFailed = true;
+				dzApp->log("DzRoblox-MvcTest: Unable to copy cage node to template scene.");
+			}
+		}
+	}
+	*/
 
 	return true;
 }
@@ -449,6 +565,143 @@ void DzRobloxAction::executeAction()
 		batchFileOut.write(sBatchString.toAscii().constData());
 		batchFileOut.close();
 
+		/*****************************************************************************************************/
+
+		dzApp->log("DzRoblox-MvcTest: Hello, World.");
+		OpenFBXInterface* openFbx = OpenFBXInterface::GetInterface();
+		bool bFailed = false;
+		bool bResult = false;
+		// 1a. read template fbx
+		QString templateFbxFile = "V9_Cage_Att_MVC_Template.fbx";
+		QString tempFilePath = dzApp->getTempPath() + "/" + templateFbxFile;
+		FbxScene* pTemplateScene = openFbx->CreateScene("My Scene");
+		if (openFbx->LoadScene(pTemplateScene, tempFilePath.toLocal8Bit().data() ) == false)
+		{
+			bFailed = true;
+			dzApp->log("DzRoblox-MvcTest: Load Fbx Scene failed.");
+		}
+		// 1b. read morphed fbx
+		FbxScene* pMorphedSourceScene = openFbx->CreateScene("My Scene");
+		if (openFbx->LoadScene(pMorphedSourceScene, m_sDestinationFBX.toLocal8Bit().data()) == false)
+		{
+			bFailed = true;
+			dzApp->log("DzRoblox-MvcTest: Load Fbx Scene failed.");
+		}
+		// 2a. extract template mesh
+		FbxNode* pTemplateMesh = pTemplateScene->FindNodeByName("OriginalGenesis9");
+		if (!pTemplateMesh) 
+		{
+			pTemplateMesh = pTemplateScene->FindNodeByName("Genesis9");
+			if (!pTemplateMesh)
+			{
+				bFailed = true;
+				dzApp->log("DzRoblox-MvcTest: Unable to extract template mesh.");
+			}
+		}
+		// 2b. extract morphed mesh
+		FbxNode* pSourceNode = pMorphedSourceScene->FindNodeByName("Genesis9.Shape");
+		if (!pSourceNode)
+		{
+			bFailed = true;
+			dzApp->log("DzRoblox-MvcTest: Unable to extract source mesh.");
+		}
+		FbxGeometry* pSourceGeo = openFbx->FindGeometry(pMorphedSourceScene, "Genesis9.Shape");
+/*
+		// add to templatescene
+		bResult = pTemplateScene->AddGeometry(pSourceGeo);
+		if (!bResult)
+		{
+			bFailed = true;
+			dzApp->log("DzRoblox-MvcTest: Unable to copy source mesh to template scene.");
+		}
+		bResult = pTemplateScene->AddNode(pSourceNode);
+		if (!bResult)
+		{
+			bFailed = true;
+			dzApp->log("DzRoblox-MvcTest: Unable to copy source mesh to template scene.");
+		}
+*/
+
+		/****************************************************************************************/
+
+		// unparent mesh
+		for (int i = 0; i < pMorphedSourceScene->GetNodeCount(); i++)
+		{
+			FbxNode* pChildNode = pMorphedSourceScene->GetNode(i);
+			if (pChildNode->GetNodeAttribute() && 
+				pChildNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eMesh)
+			{
+				// reparent to root node
+				if (pChildNode->GetParent() != pMorphedSourceScene->GetRootNode())
+				{
+					pMorphedSourceScene->GetRootNode()->AddChild(pChildNode);
+				}
+			}
+		}
+		FbxNode* characterRoot = pMorphedSourceScene->FindNodeByName("Genesis9");
+		// local transform
+		FbxDouble3 scale = characterRoot->LclScaling.Get();
+		FbxDouble3 newScale = FbxDouble3(scale[0]/30, scale[1]/30, scale[2]/30);
+		characterRoot->LclScaling.Set(newScale);
+
+		// causes original skeleton to be piled up at origin
+		mergeScenes(pMorphedSourceScene, pTemplateScene);
+
+		/****************************************************************************************/
+
+		// 3a. for each cage or att...
+		QStringList aCageNames;
+		aCageNames << "Head_OuterCage" << "LeftFoot_OuterCage" << "LeftHand_OuterCage" <<
+			"LeftLowerArm_OuterCage" << "LeftLowerLeg_OuterCage" << "LeftUpperArm_OuterCage" <<
+			"LeftUpperLeg_OuterCage" << "LowerTorso_OuterCage" << "RightFoot_OuterCage" <<
+			"RightHand_OuterCage" << "RightLowerArm_OuterCage" << "RightLowerLeg_OuterCage" <<
+			"RightUpperArm_OuterCage" << "RightUpperLeg_OuterCage" << "UpperTorso_OuterCage";
+		foreach (QString sNodeName, aCageNames)
+		{
+//			FbxNode* pCageNode = pTemplateScene->FindNodeByName(sNodeName.toLocal8Bit().data());
+//			deepCopyNode(pMorphedSourceScene->GetRootNode(), pCageNode);
+
+			FbxNode* pCageNode = pMorphedSourceScene->FindNodeByName(sNodeName.toLocal8Bit().data());
+			if (pCageNode)
+			{
+				// TODO: Remap cages using Mvc deform
+				printf("TODO: Remap cages using Mvc deform");
+				// make weights with originalgenesis9 + cage
+				// get cage vertexbuffer
+				FbxMesh* pCageMesh = pCageNode->GetMesh();
+				MvcCageRetargeter* pCageRetargeter = new MvcCageRetargeter();
+				pCageRetargeter->createMvcWeights(pTemplateMesh->GetMesh(), pCageMesh, exportProgress);
+				// make new cage with weights * newgenesis9
+				int numCageVerts = pCageMesh->GetControlPointsCount();
+				FbxVector4* pTempCageBuffer = pCageMesh->GetControlPoints();
+				FbxVector4* pMorphedCageBuffer = new FbxVector4[numCageVerts];
+				memcpy(pMorphedCageBuffer, pTempCageBuffer, sizeof(FbxVector4) * numCageVerts);
+				pCageRetargeter->deformCage(pSourceNode->GetMesh(), pCageMesh, pMorphedCageBuffer);
+				// update cage with verts from new cage
+				memcpy(pTempCageBuffer, pMorphedCageBuffer, sizeof(FbxVector4) * numCageVerts);
+			}
+
+		}
+		// 3b. for each vertex of cage or att
+		// 3c. calculate f(original mesh, vertex) == mvcweights
+		// 4a. calculate deformation for each vertex:
+		// 4b. mvcweights * morphed mesh ==> deformed vertex
+		// 5. replace vertex in morphed fbx
+		// 6. save morphed fbx as morphed fbx with deformed cage/att
+		QString morphedOutputFilename = "morphedFile.fbx";
+		QString morphedOutputPath = m_sDestinationPath + "/" + morphedOutputFilename;
+		// type 1 == ascii
+		if (openFbx->SaveScene(pMorphedSourceScene, morphedOutputPath.toLocal8Bit().data()) == false)
+		{
+			bFailed = true;
+			dzApp->log("DzRoblox-MvcTest: Load Source Fbx Scene failed.");
+		}
+
+		exportProgress->finish();
+		return;
+
+		/*****************************************************************************************************/
+
 		exportProgress->setInfo("Starting Blender Processing...");
 		bool retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs);
 
@@ -673,7 +926,7 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 
 bool DzRobloxAction::isAssetMorphCompatible(QString sAssetType)
 {
-	return true;
+	return false;
 }
 
 bool DzRobloxAction::isAssetMeshCompatible(QString sAssetType)
@@ -683,7 +936,7 @@ bool DzRobloxAction::isAssetMeshCompatible(QString sAssetType)
 
 bool DzRobloxAction::isAssetAnimationCompatible(QString sAssetType)
 {
-	return true;
+	return false;
 }
 
 DZ_BRIDGE_NAMESPACE::DzBridgeDialog* DzRobloxAction::getBridgeDialog()
