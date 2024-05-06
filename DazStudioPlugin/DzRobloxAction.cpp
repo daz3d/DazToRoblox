@@ -378,6 +378,7 @@ void DzRobloxAction::executeAction()
 	int dlgResult = -1;
 	if (m_nNonInteractiveMode == 0)
 	{
+		qobject_cast<DzRobloxDialog*>(m_bridgeDialog)->disableAcceptUntilAllRequirementsValid();
 		dlgResult = m_bridgeDialog->exec();
 	}
 	if (m_nNonInteractiveMode == 1 || dlgResult == QDialog::Accepted)
@@ -432,6 +433,7 @@ void DzRobloxAction::executeAction()
 				QMessageBox::warning(0, tr("Select Asset Type"), tr("Please select an asset type from the dropdown menu."), QMessageBox::Ok);
 			}
 
+			qobject_cast<DzRobloxDialog*>(m_bridgeDialog)->disableAcceptUntilAllRequirementsValid();
 			dlgResult = m_bridgeDialog->exec();
 			if (dlgResult == QDialog::Rejected)
 			{

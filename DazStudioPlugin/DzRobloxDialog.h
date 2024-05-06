@@ -17,6 +17,11 @@ class UnitTest_DzRobloxDialog;
 
 #include "dzbridge.h"
 
+class DzFileValidator : public QValidator {
+public:
+	State validate(QString& input, int& pos) const;
+};
+
 class DzRobloxDialog : public DZ_BRIDGE_NAMESPACE::DzBridgeDialog{
 	friend DzRobloxAction;
 	Q_OBJECT
@@ -33,6 +38,14 @@ public:
 	Q_INVOKABLE void resetToDefaults() override;
 	Q_INVOKABLE bool loadSavedSettings() override;
 	Q_INVOKABLE void saveSettings() override;
+
+	DzFileValidator m_dzValidatorFileExists;
+	Q_INVOKABLE bool disableAcceptUntilBlenderValid(const QString& text="");
+	Q_INVOKABLE bool disableAcceptUntilAssetTypeValid();
+	Q_INVOKABLE bool disableAcceptUntilAllRequirementsValid();
+
+public slots:
+	void HandleTextChanged( const QString &text);
 
 protected slots:
 	void HandleSelectIntermediateFolderButton();

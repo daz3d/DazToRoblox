@@ -15,6 +15,7 @@
 #include <QtGui/qcheckbox.h>
 #include <QtGui/qlistwidget.h>
 #include <QtGui/qgroupbox.h>
+#include <QtGui/qvalidator.h>
 
 #include "dzapp.h"
 #include "dzscene.h"
@@ -37,6 +38,16 @@ Local definitions
 #define DAZ_BRIDGE_PLUGIN_NAME "Roblox Avatar Exporter"
 
 #include "dzbridge.h"
+
+QValidator::State DzFileValidator::validate(QString& input, int& pos) const {
+	QFileInfo fi(input);
+	if (fi.exists() == false) {
+		dzApp->log("DzBridge: DzFileValidator: DEBUG: file does not exist: " + input);
+		return QValidator::Intermediate;
+	}
+
+	return QValidator::Acceptable;
+};
 
 DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 DzBridgeDialog(parent, DAZ_BRIDGE_PLUGIN_NAME)
@@ -102,10 +113,12 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 // Add Project Folder
 	 QHBoxLayout* robloxOutputFolderLayout = new QHBoxLayout();
 	 m_wRobloxOutputFolderEdit = new QLineEdit(this);
+	 m_wRobloxOutputFolderEdit->setValidator(&m_dzValidatorFileExists);
 	 m_wRobloxOutputFolderButton = new QPushButton("...", this);
 	 robloxOutputFolderLayout->addWidget(m_wRobloxOutputFolderEdit);
 	 robloxOutputFolderLayout->addWidget(m_wRobloxOutputFolderButton);
 	 connect(m_wRobloxOutputFolderButton, SIGNAL(released()), this, SLOT(HandleSelectRobloxOutputFolderButton()));
+	 connect(m_wRobloxOutputFolderEdit, SIGNAL(textChanged(const QString&)), this, SLOT(HandleTextChanged(const QString&)));
 
 	 // Add GUI
 	 mainLayout->insertRow(1, "Roblox Output Folder", robloxOutputFolderLayout);
@@ -116,19 +129,23 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 // Select Blender Executable Path GUI
 	 QHBoxLayout* blenderExecutablePathLayout = new QHBoxLayout();
 	 m_wBlenderExecutablePathEdit = new QLineEdit(this);
+	 m_wBlenderExecutablePathEdit->setValidator(&m_dzValidatorFileExists);
 	 m_wBlenderExecutablePathButton = new QPushButton("...", this);
 	 blenderExecutablePathLayout->addWidget(m_wBlenderExecutablePathEdit);
 	 blenderExecutablePathLayout->addWidget(m_wBlenderExecutablePathButton);
 	 connect(m_wBlenderExecutablePathButton, SIGNAL(released()), this, SLOT(HandleSelectBlenderExecutablePathButton()));
+	 connect(m_wBlenderExecutablePathEdit, SIGNAL(textChanged(const QString&)), this, SLOT(HandleTextChanged(const QString&)));
 
 
 	 // Intermediate Folder
 	 QHBoxLayout* intermediateFolderLayout = new QHBoxLayout();
 	 intermediateFolderEdit = new QLineEdit(this);
+	 intermediateFolderEdit->setValidator(&m_dzValidatorFileExists);
 	 intermediateFolderButton = new QPushButton("...", this);
 	 intermediateFolderLayout->addWidget(intermediateFolderEdit);
 	 intermediateFolderLayout->addWidget(intermediateFolderButton);
 	 connect(intermediateFolderButton, SIGNAL(released()), this, SLOT(HandleSelectIntermediateFolderButton()));
+	 connect(intermediateFolderEdit, SIGNAL(textChanged(const QString&)), this, SLOT(HandleTextChanged(const QString&)));
 
 	 //  Add Intermediate Folder to Advanced Settings container as a new row with specific headers
 	 QFormLayout* advancedLayout = qobject_cast<QFormLayout*>(advancedWidget->layout());
@@ -174,6 +191,9 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 
 	 // Load Settings
 	 loadSavedSettings();
+
+	 // ACCEPT BUTTON DEFAULTS TO DISABLED (ENABLED THROUGH VALIDATORS)
+	 disableAcceptUntilAllRequirementsValid();
 
 }
 
@@ -272,11 +292,6 @@ void DzRobloxDialog::HandleSelectIntermediateFolderButton()
 	 }
 }
 
-void DzRobloxDialog::HandleAssetTypeComboChange(int state)
-{
-
-}
-
 #include <QProcessEnvironment>
 
 
@@ -366,6 +381,75 @@ void DzRobloxDialog::HandleSelectBlenderExecutablePathButton()
 			settings->setValue("BlenderExecutablePath", fileName);
 		}
 	}
+}
+
+void DzRobloxDialog::HandleTextChanged(const QString& text)
+{
+	QObject* senderWidget = sender();
+
+	if (senderWidget == m_wBlenderExecutablePathEdit) {
+		// check if blender exe is valid
+		printf("DEBUG: check stuff here...");
+//		disableAcceptUntilBlenderValid(text);
+		disableAcceptUntilAllRequirementsValid();
+	}
+	dzApp->log("DzRoblox: DEBUG: HandleTextChanged: text = " + text);
+}
+
+void DzRobloxDialog::HandleAssetTypeComboChange(int state)
+{
+	disableAcceptUntilAllRequirementsValid();
+}
+
+bool DzRobloxDialog::disableAcceptUntilBlenderValid(const QString& arg_text)
+{
+	QString temp_text(arg_text);
+
+	if (temp_text == "") {
+		// check widget text
+		temp_text = m_wBlenderExecutablePathEdit->text();
+	}
+
+	// validate blender executable
+	QFileInfo fi(temp_text);
+	if (fi.exists() == false) {
+		dzApp->log("DzBridge: disableAcceptUntilBlenderValid: DEBUG: file does not exist: " + temp_text);
+		return false;
+	}
+
+	return true;
+}
+
+bool DzRobloxDialog::disableAcceptUntilAssetTypeValid()
+{
+	if (assetTypeCombo->currentIndex() == 0)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool DzRobloxDialog::disableAcceptUntilAllRequirementsValid()
+{
+	if (dzScene->getPrimarySelection() == NULL)
+	{
+		this->setAcceptButtonEnabled(false);
+		return true;
+	}
+	// otherwise, enable accept button so we can show feedback dialog to help user
+	this->setAcceptButtonEnabled(true);
+
+	if (!disableAcceptUntilBlenderValid() || !disableAcceptUntilAssetTypeValid())
+	{
+//		this->setAcceptButtonEnabled(false);
+		this->setAcceptButtonText("Unable to Proceed");
+		return false;
+	}
+	this->setAcceptButtonText("Accept");
+//	this->setAcceptButtonEnabled(true);
+	return true;
+
 }
 
 #include "moc_DzRobloxDialog.cpp"
