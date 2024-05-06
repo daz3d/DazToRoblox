@@ -26,6 +26,7 @@ public:
 	Q_INVOKABLE virtual DZ_BRIDGE_NAMESPACE::DzBridgeDialog* getBridgeDialog() override;
 
 	virtual bool preProcessScene(DzNode* parentNode = nullptr) override;
+	virtual bool undoPreProcessScene() override;
 
 	Q_INVOKABLE QString getRobloxOutputFolderPath() { return this->m_sRobloxOutputFolderPath; };
 	Q_INVOKABLE void setRobloxOutputFolderPath(QString arg_Filename) { this->m_sRobloxOutputFolderPath = arg_Filename; };
@@ -36,6 +37,8 @@ public:
 	
 	Q_INVOKABLE bool deepCopyNode(FbxNode* pDestinationRoot, FbxNode* pSourceNode);
 	Q_INVOKABLE bool mergeScenes(FbxScene* pDestinationScene, FbxScene* pSourceScene);
+
+	QList<DzNode*> m_aGeograftConversionHelpers;
 
 protected:
 	unsigned char m_nPythonExceptionExitCode = 11; // arbitrary exit code to check for blener python exceptions

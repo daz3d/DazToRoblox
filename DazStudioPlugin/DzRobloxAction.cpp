@@ -1129,6 +1129,9 @@ bool DzRobloxAction::applyGeograft(DzNode* pBaseNode, QString geograftFilename, 
 			DzFigure* geograft_node = qobject_cast<DzFigure*>(generic_geograft_node);
 			if (geograft_node && pBaseNode)
 			{
+				// track geograft_node for removal in undoPreprocessScene()
+				m_aGeograftConversionHelpers.append(geograft_node);
+
 				// copy base materials to geograft
 				DzShape *geograftShape = geograft_node->getObject()->getCurrentShape();
 				auto dstMatList = geograftShape->getAllMaterials();
@@ -1161,6 +1164,24 @@ bool DzRobloxAction::applyGeograft(DzNode* pBaseNode, QString geograftFilename, 
 	}
 	dzApp->debug("Geografting done: geograft node = " + node_name);
 	return true;
+}
+
+bool DzRobloxAction::undoPreProcessScene()
+{
+	foreach(DzNode *pNode, m_aGeograftConversionHelpers)
+	{
+		DzFigure* geograft_node = qobject_cast<DzFigure*>(pNode);
+		if (geograft_node)
+		{
+			geograft_node->setFollowTarget(NULL);
+			dzScene->removeNode(geograft_node);
+		}
+	}
+	m_aGeograftConversionHelpers.clear();
+
+	bool result = DzBridgeAction::undoPreProcessScene();
+
+	return result;
 }
 
 #include "moc_DzRobloxAction.cpp"
