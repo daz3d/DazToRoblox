@@ -1151,8 +1151,10 @@ bool DzRobloxAction::applyGeograft(DzNode* pBaseNode, QString geograftFilename, 
 
 
 				geograft_node->setFollowTarget(pBaseNode->getSkeleton());
-				// DB: Do NOT parent node, since this will cause duplicate geo on export and other issues
-//				pBaseNode->addNodeChild(geograft_node);
+				// DB: must parent with in-place=false, then unparent with in-place=true in order to position geograft correctly
+				// while also working-around FBX exporter geograft mesh duplication
+				pBaseNode->addNodeChild(geograft_node, false);
+				pBaseNode->removeNodeChild(geograft_node, true);
 				node_name = geograft_node->getName();
 			}
 		}
