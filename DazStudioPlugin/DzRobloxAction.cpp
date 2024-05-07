@@ -569,138 +569,263 @@ void DzRobloxAction::executeAction()
 
 		/*****************************************************************************************************/
 
-		dzApp->log("DzRoblox-MvcTest: Hello, World.");
-		OpenFBXInterface* openFbx = OpenFBXInterface::GetInterface();
-		bool bFailed = false;
-		bool bResult = false;
-		// 1a. read template fbx
-		QString templateFbxFile = "V9_Cage_Att_MVC_Template.fbx";
-		QString tempFilePath = dzApp->getTempPath() + "/" + templateFbxFile;
-		FbxScene* pTemplateScene = openFbx->CreateScene("My Scene");
-		if (openFbx->LoadScene(pTemplateScene, tempFilePath.toLocal8Bit().data() ) == false)
+		if (m_sAssetType.contains("R15"))
 		{
-			bFailed = true;
-			dzApp->log("DzRoblox-MvcTest: Load Fbx Scene failed.");
-		}
-		// 1b. read morphed fbx
-		FbxScene* pMorphedSourceScene = openFbx->CreateScene("My Scene");
-		if (openFbx->LoadScene(pMorphedSourceScene, m_sDestinationFBX.toLocal8Bit().data()) == false)
-		{
-			bFailed = true;
-			dzApp->log("DzRoblox-MvcTest: Load Fbx Scene failed.");
-		}
-		// 2a. extract template mesh
-		FbxNode* pTemplateMesh = pTemplateScene->FindNodeByName("OriginalGenesis9");
-		if (!pTemplateMesh) 
-		{
-			pTemplateMesh = pTemplateScene->FindNodeByName("Genesis9");
-			if (!pTemplateMesh)
+			dzApp->log("DzRoblox-MvcTest: Hello, World.");
+			OpenFBXInterface* openFbx = OpenFBXInterface::GetInterface();
+			bool bFailed = false;
+			bool bResult = false;
+			// 1a. read template fbx
+			QString templateFbxFile = "V9_Cage_Att_MVC_Template.fbx";
+			QString tempFilePath = dzApp->getTempPath() + "/" + templateFbxFile;
+			FbxScene* pTemplateScene = openFbx->CreateScene("My Scene");
+			if (openFbx->LoadScene(pTemplateScene, tempFilePath.toLocal8Bit().data()) == false)
 			{
 				bFailed = true;
-				dzApp->log("DzRoblox-MvcTest: Unable to extract template mesh.");
+				dzApp->log("DzRoblox-MvcTest: Load Fbx Scene failed.");
 			}
-		}
-		// 2b. extract morphed mesh
-		FbxNode* pSourceNode = pMorphedSourceScene->FindNodeByName("Genesis9.Shape");
-		if (!pSourceNode)
-		{
-			bFailed = true;
-			dzApp->log("DzRoblox-MvcTest: Unable to extract source mesh.");
-		}
-		FbxGeometry* pSourceGeo = openFbx->FindGeometry(pMorphedSourceScene, "Genesis9.Shape");
-/*
-		// add to templatescene
-		bResult = pTemplateScene->AddGeometry(pSourceGeo);
-		if (!bResult)
-		{
-			bFailed = true;
-			dzApp->log("DzRoblox-MvcTest: Unable to copy source mesh to template scene.");
-		}
-		bResult = pTemplateScene->AddNode(pSourceNode);
-		if (!bResult)
-		{
-			bFailed = true;
-			dzApp->log("DzRoblox-MvcTest: Unable to copy source mesh to template scene.");
-		}
-*/
-
-		/****************************************************************************************/
-
-		// unparent mesh
-		for (int i = 0; i < pMorphedSourceScene->GetNodeCount(); i++)
-		{
-			FbxNode* pChildNode = pMorphedSourceScene->GetNode(i);
-			if (pChildNode->GetNodeAttribute() && 
-				pChildNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eMesh)
+			// 1b. read morphed fbx
+			FbxScene* pMorphedSourceScene = openFbx->CreateScene("My Scene");
+			if (openFbx->LoadScene(pMorphedSourceScene, m_sDestinationFBX.toLocal8Bit().data()) == false)
 			{
-				// reparent to root node
-				if (pChildNode->GetParent() != pMorphedSourceScene->GetRootNode())
+				bFailed = true;
+				dzApp->log("DzRoblox-MvcTest: Load Fbx Scene failed.");
+			}
+			// 2a. extract template mesh
+			FbxNode* pTemplateMesh = pTemplateScene->FindNodeByName("OriginalGenesis9");
+			if (!pTemplateMesh)
+			{
+				pTemplateMesh = pTemplateScene->FindNodeByName("Genesis9");
+				if (!pTemplateMesh)
 				{
-					pMorphedSourceScene->GetRootNode()->AddChild(pChildNode);
+					bFailed = true;
+					dzApp->log("DzRoblox-MvcTest: Unable to extract template mesh.");
 				}
 			}
-		}
-		FbxNode* characterRoot = pMorphedSourceScene->FindNodeByName("Genesis9");
-		// local transform
-		FbxDouble3 scale = characterRoot->LclScaling.Get();
-		FbxDouble3 newScale = FbxDouble3(scale[0]/30, scale[1]/30, scale[2]/30);
-		characterRoot->LclScaling.Set(newScale);
-
-		// causes original skeleton to be piled up at origin
-		mergeScenes(pMorphedSourceScene, pTemplateScene);
-
-		/****************************************************************************************/
-
-		// 3a. for each cage or att...
-		QStringList aCageNames;
-		aCageNames << "Head_OuterCage" << "LeftFoot_OuterCage" << "LeftHand_OuterCage" <<
-			"LeftLowerArm_OuterCage" << "LeftLowerLeg_OuterCage" << "LeftUpperArm_OuterCage" <<
-			"LeftUpperLeg_OuterCage" << "LowerTorso_OuterCage" << "RightFoot_OuterCage" <<
-			"RightHand_OuterCage" << "RightLowerArm_OuterCage" << "RightLowerLeg_OuterCage" <<
-			"RightUpperArm_OuterCage" << "RightUpperLeg_OuterCage" << "UpperTorso_OuterCage";
-		foreach (QString sNodeName, aCageNames)
-		{
-//			FbxNode* pCageNode = pTemplateScene->FindNodeByName(sNodeName.toLocal8Bit().data());
-//			deepCopyNode(pMorphedSourceScene->GetRootNode(), pCageNode);
-
-			FbxNode* pCageNode = pMorphedSourceScene->FindNodeByName(sNodeName.toLocal8Bit().data());
-			if (pCageNode)
+			// 2b. extract morphed mesh
+			FbxNode* pSourceNode = pMorphedSourceScene->FindNodeByName("Genesis9.Shape");
+			if (!pSourceNode)
 			{
-				// TODO: Remap cages using Mvc deform
-				printf("TODO: Remap cages using Mvc deform");
-				// make weights with originalgenesis9 + cage
-				// get cage vertexbuffer
-				FbxMesh* pCageMesh = pCageNode->GetMesh();
-				MvcCageRetargeter* pCageRetargeter = new MvcCageRetargeter();
-				pCageRetargeter->createMvcWeights(pTemplateMesh->GetMesh(), pCageMesh, exportProgress);
-				// make new cage with weights * newgenesis9
-				int numCageVerts = pCageMesh->GetControlPointsCount();
-				FbxVector4* pTempCageBuffer = pCageMesh->GetControlPoints();
-				FbxVector4* pMorphedCageBuffer = new FbxVector4[numCageVerts];
-				memcpy(pMorphedCageBuffer, pTempCageBuffer, sizeof(FbxVector4) * numCageVerts);
-				pCageRetargeter->deformCage(pSourceNode->GetMesh(), pCageMesh, pMorphedCageBuffer);
-				// update cage with verts from new cage
-				memcpy(pTempCageBuffer, pMorphedCageBuffer, sizeof(FbxVector4) * numCageVerts);
+				bFailed = true;
+				dzApp->log("DzRoblox-MvcTest: Unable to extract source mesh.");
+			}
+			FbxGeometry* pSourceGeo = openFbx->FindGeometry(pMorphedSourceScene, "Genesis9.Shape");
+			/*
+					// add to templatescene
+					bResult = pTemplateScene->AddGeometry(pSourceGeo);
+					if (!bResult)
+					{
+						bFailed = true;
+						dzApp->log("DzRoblox-MvcTest: Unable to copy source mesh to template scene.");
+					}
+					bResult = pTemplateScene->AddNode(pSourceNode);
+					if (!bResult)
+					{
+						bFailed = true;
+						dzApp->log("DzRoblox-MvcTest: Unable to copy source mesh to template scene.");
+					}
+			*/
+
+			/****************************************************************************************/
+
+			// unparent mesh
+			for (int i = 0; i < pMorphedSourceScene->GetNodeCount(); i++)
+			{
+				FbxNode* pChildNode = pMorphedSourceScene->GetNode(i);
+				if (pChildNode->GetNodeAttribute() &&
+					pChildNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eMesh)
+				{
+					// reparent to root node
+					if (pChildNode->GetParent() != pMorphedSourceScene->GetRootNode())
+					{
+						pMorphedSourceScene->GetRootNode()->AddChild(pChildNode);
+					}
+				}
+			}
+			FbxNode* characterRoot = pMorphedSourceScene->FindNodeByName("Genesis9");
+			// local transform
+			FbxDouble3 scale = characterRoot->LclScaling.Get();
+			FbxDouble3 newScale = FbxDouble3(scale[0] / 30, scale[1] / 30, scale[2] / 30);
+			characterRoot->LclScaling.Set(newScale);
+
+			// causes original skeleton to be piled up at origin
+			mergeScenes(pMorphedSourceScene, pTemplateScene);
+
+			/****************************************************************************************/
+
+			// 3a. for each cage or att...
+			QStringList aCageNames;
+			aCageNames << "Head_OuterCage" << "LeftFoot_OuterCage" << "LeftHand_OuterCage" <<
+				"LeftLowerArm_OuterCage" << "LeftLowerLeg_OuterCage" << "LeftUpperArm_OuterCage" <<
+				"LeftUpperLeg_OuterCage" << "LowerTorso_OuterCage" << "RightFoot_OuterCage" <<
+				"RightHand_OuterCage" << "RightLowerArm_OuterCage" << "RightLowerLeg_OuterCage" <<
+				"RightUpperArm_OuterCage" << "RightUpperLeg_OuterCage" << "UpperTorso_OuterCage";
+			QStringList aAttachmentNames;
+			aAttachmentNames << "Hair_Att" << "Hat_Att" << "FaceCenter_Att" << "FaceFront_Att" <<
+				"Neck_Att" << "LeftCollar_Att" << "RightCollar_Att" << "BodyBack_Att" << "BodyFront_Att" <<
+				"Root_Att" << "WaistFront_Att" << "WaistBack_Att" << "WaistCenter_Att" <<
+				"LeftShoulder_Att" << "RightShoulder_Att" << "LeftGrip_Att" << "RightGrip_Att" <<
+				"LeftFoot_Att" << "RightFoot_Att";
+			foreach(QString sNodeName, aCageNames)
+			{
+				// 3b. for each vertex of cage or att
+				// 3c. calculate f(original mesh, vertex) == mvcweights
+				// 4a. calculate deformation for each vertex:
+				// 4b. mvcweights * morphed mesh ==> deformed vertex
+				// 5. replace vertex in morphed fbx
+
+				FbxNode* pCageNode = pMorphedSourceScene->FindNodeByName(sNodeName.toLocal8Bit().data());
+				if (pCageNode)
+				{
+					// make weights with originalgenesis9 + cage
+					// get cage vertexbuffer
+					FbxMesh* pCageMesh = pCageNode->GetMesh();
+					MvcCustomCageRetargeter* pCageRetargeter = new MvcCustomCageRetargeter();
+					pCageRetargeter->createMvcWeights(pTemplateMesh->GetMesh(), pCageMesh, exportProgress);
+
+					// make new cage with weights * newgenesis9
+					int numCageVerts = pCageMesh->GetControlPointsCount();
+					FbxVector4* pFinalCageBuffer = pCageMesh->GetControlPoints();
+					FbxVector4* pWorkInProgressCageBuffer = new FbxVector4[numCageVerts];
+					memcpy(pWorkInProgressCageBuffer, pFinalCageBuffer, sizeof(FbxVector4) * numCageVerts);
+
+					bool bUseHardCodeWorkaround = false;
+					if (sNodeName == "Head_OuterCage") {
+						bUseHardCodeWorkaround = true;
+					}
+					pCageRetargeter->deformCage(pSourceNode->GetMesh(), pCageMesh, pWorkInProgressCageBuffer, bUseHardCodeWorkaround);
+					// update cage with verts from new cage
+					memcpy(pFinalCageBuffer, pWorkInProgressCageBuffer, sizeof(FbxVector4) * numCageVerts);
+					delete[] pWorkInProgressCageBuffer;
+				}
+
+			}
+
+			// Attachments
+			foreach(QString sNodeName, aAttachmentNames)
+			{
+				FbxNode* pAttNode = pMorphedSourceScene->FindNodeByName(sNodeName.toLocal8Bit().data());
+				if (pAttNode)
+				{
+					// make weights with originalgenesis9 + cage
+					// get cage vertexbuffer
+					FbxMesh* pAttMesh = pAttNode->GetMesh();
+					MvcCustomCageRetargeter* pCageRetargeter = new MvcCustomCageRetargeter();
+					pCageRetargeter->createMvcWeights(pTemplateMesh->GetMesh(), pAttMesh, exportProgress);
+
+					// make new cage with weights * newgenesis9
+					int numAttVerts = pAttMesh->GetControlPointsCount();
+					FbxVector4* pFinalAttBuffer = pAttMesh->GetControlPoints();
+					FbxVector4 original_cloudCenter = FbxTools::CalculatePointCloudCenter(pFinalAttBuffer, numAttVerts);
+
+					FbxVector4* pWorkInProgressAttBuffer = new FbxVector4[numAttVerts];
+					memcpy(pWorkInProgressAttBuffer, pFinalAttBuffer, sizeof(FbxVector4) * numAttVerts);
+
+					pCageRetargeter->deformCage(pSourceNode->GetMesh(), pAttMesh, pWorkInProgressAttBuffer);
+					FbxVector4 new_cloudCenter = FbxTools::CalculatePointCloudCenter(pWorkInProgressAttBuffer, numAttVerts);
+
+					FbxVector4 deformOffset = new_cloudCenter - original_cloudCenter;
+					// create matrix transform and bake to final buffer
+					FbxAMatrix transform;
+					transform.SetT(deformOffset);
+					FbxTools::BakePoseToVertexBuffer(pFinalAttBuffer, &transform, nullptr, pAttMesh);
+
+					delete[] pWorkInProgressAttBuffer;
+				}
+
+			}
+
+			/*
+			QList<FbxAMatrix> aAttachmentGlobalTransforms;
+			foreach(QString sNodeName, aAttachmentNames)
+			{
+				FbxNode* pNode = pMorphedSourceScene->FindNodeByName(sNodeName.toLocal8Bit().data());
+				if (pNode)
+				{
+					QList<int> vertexIndices;
+					for (int i = 0; i < pNode->GetMesh()->GetControlPointsCount(); i++)
+					{
+						vertexIndices.append(i);
+					}
+					FbxVector4 globalPosition = FbxTools::CalculatePointCloudCenter(pNode->GetMesh(), &vertexIndices);
+					FbxAMatrix globalTransform;
+					globalTransform.SetT(globalPosition);
+					aAttachmentGlobalTransforms.append(globalTransform);
+				}
+			}
+			MvcTransformRetargeter* attachmentRetargeter = new MvcTransformRetargeter();
+			attachmentRetargeter->createMvcWeights(pTemplateMesh->GetMesh(), aAttachmentGlobalTransforms, exportProgress);
+			attachmentRetargeter->calibrate_nodes(pSourceNode->GetMesh());
+			*/
+
+
+
+
+			////////////////////////////////////////////////////////////////
+			//memcpy(pTemplateMesh->GetMesh()->GetControlPoints(), pSourceNode->GetMesh()->GetControlPoints(), sizeof(FbxVector4)* pSourceNode->GetMesh()->GetControlPointsCount());
+			//FbxAMatrix rescale;
+			//rescale.SetS(FbxVector4(1/30, 1/30, 1/30));
+			//FbxTools::BakePoseToVertexBuffer(pTemplateMesh->GetMesh()->GetControlPoints(), &rescale, nullptr, pTemplateMesh->GetMesh());
+
+			// Remove Template Mesh ( OriginalGenesis9 )
+			//pTemplateMesh
+			int numChildren = pTemplateMesh->GetChildCount(true);
+			for (int i = numChildren - 1; i >= 0; i--)
+			{
+				FbxNode* pChild = pTemplateMesh->GetChild(i);
+				if (!pChild) continue;
+				int numMats = pChild->GetMaterialCount();
+				for (int matIndex = numMats - 1; matIndex >= 0; matIndex--)
+				{
+					FbxSurfaceMaterial* pMat = pChild->GetMaterial(matIndex);
+					pChild->RemoveMaterial(pMat);
+					pMat->Destroy();
+				}
+				pChild->RemoveAllMaterials();
+				pMorphedSourceScene->RemoveGeometry(pChild->GetGeometry());
+				pMorphedSourceScene->RemoveNode(pChild);
+				pChild->GetGeometry()->Destroy();
+				pChild->Destroy();
+			}
+			int numMats = pTemplateMesh->GetMaterialCount();
+			for (int matIndex = numMats - 1; matIndex >= 0; matIndex--)
+			{
+				FbxSurfaceMaterial* pMat = pTemplateMesh->GetMaterial(matIndex);
+				pTemplateMesh->RemoveMaterial(pMat);
+				pMat->Destroy();
+			}
+			pTemplateMesh->RemoveAllMaterials();
+			pMorphedSourceScene->RemoveGeometry(pTemplateMesh->GetGeometry());
+			pMorphedSourceScene->RemoveNode(pTemplateMesh);
+			pTemplateMesh->GetGeometry()->Destroy();
+			pTemplateMesh->Destroy();
+
+			// 6. save morphed fbx as morphed fbx with deformed cage/att
+			//QString morphedOutputFilename = "morphedFile.fbx";
+			//QString morphedOutputPath = m_sDestinationPath + "/" + morphedOutputFilename;
+			QString morphedOutputPath = m_sDestinationFBX;
+			// backup original Destination FBX
+			QFile rawFBX(m_sDestinationFBX);
+			QString rawFbxFilename = QString(m_sDestinationFBX).replace(".fbx", "_raw.fbx", Qt::CaseInsensitive);
+			QFileInfo rawFi(rawFbxFilename);
+			if (rawFi.exists()) {
+				QFile existingFile(rawFbxFilename);
+				existingFile.remove();
+			}
+			rawFBX.copy(rawFbxFilename);
+			rawFBX.remove();
+
+			// type 1 == ascii
+			if (openFbx->SaveScene(pMorphedSourceScene, morphedOutputPath.toLocal8Bit().data()) == false)
+			{
+				bFailed = true;
+				dzApp->log("DzRoblox-MvcTest: Load Source Fbx Scene failed.");
 			}
 
 		}
-		// 3b. for each vertex of cage or att
-		// 3c. calculate f(original mesh, vertex) == mvcweights
-		// 4a. calculate deformation for each vertex:
-		// 4b. mvcweights * morphed mesh ==> deformed vertex
-		// 5. replace vertex in morphed fbx
-		// 6. save morphed fbx as morphed fbx with deformed cage/att
-		QString morphedOutputFilename = "morphedFile.fbx";
-		QString morphedOutputPath = m_sDestinationPath + "/" + morphedOutputFilename;
-		// type 1 == ascii
-		if (openFbx->SaveScene(pMorphedSourceScene, morphedOutputPath.toLocal8Bit().data()) == false)
-		{
-			bFailed = true;
-			dzApp->log("DzRoblox-MvcTest: Load Source Fbx Scene failed.");
-		}
 
-		exportProgress->finish();
-		return;
+//		exportProgress->finish();
+//		return;
 
 		/*****************************************************************************************************/
 
@@ -1182,6 +1307,60 @@ bool DzRobloxAction::undoPreProcessScene()
 	bool result = DzBridgeAction::undoPreProcessScene();
 
 	return result;
+}
+
+bool MvcCustomCageRetargeter::deformCage(const FbxMesh* pMorphedMesh, const FbxMesh* pCage, FbxVector4* pVertexBuffer, bool bUseHardCodeWorkaround)
+{
+	if (pMorphedMesh == nullptr || pCage == nullptr)
+		return false;
+
+	int numCageVerts = pCage->GetControlPointsCount();
+	for (int i = 0; i < numCageVerts; i++)
+	{
+#define HARDCODE_WORKAROUND_1
+#ifdef HARDCODE_WORKAROUND_1
+		if (bUseHardCodeWorkaround && i == 11)
+//		if (i == 11 && QString(pCage->GetName()) == "Head_OuterCage")
+		{
+			int hard_code_index_lookup = 21;
+			auto results = m_MvcWeightsTable.find(hard_code_index_lookup);
+			if (results == m_MvcWeightsTable.end()) continue;
+			QVector<double>* pMvcWeights = results.value();
+			FbxVector4* pMorphedVertexBuffer = pMorphedMesh->GetControlPoints();
+			FbxVector4 newVertexPosition = MvcTools::deform_using_mean_value_coordinates(pMorphedMesh, pMorphedVertexBuffer, pMvcWeights);
+			newVertexPosition[0] *= -1.0;
+			pVertexBuffer[i] = newVertexPosition;
+			continue;
+		}
+#endif
+
+		auto results = m_MvcWeightsTable.find(i);
+		if (results == m_MvcWeightsTable.end())
+		{
+			pVertexBuffer[i] = FbxVector4(NAN, NAN, NAN);
+			continue;
+		}
+		QVector<double>* pMvcWeights = results.value();
+		FbxVector4* pMorphedVertexBuffer = pMorphedMesh->GetControlPoints();
+
+		//QString name = QString(pCage->GetName());
+		//if (i == 11 && name == "Head_OuterCage") {
+		//	int break_here = 0;
+		//}
+		FbxVector4 newVertexPosition = MvcTools::deform_using_mean_value_coordinates(pMorphedMesh, pMorphedVertexBuffer, pMvcWeights);
+		//if (newVertexPosition[1] > 215 && name == "Head_OuterCage") {
+		//	int break_here = 0;
+		//}
+		//FbxVector4 findThisVertex(-1.81834, 152.583, 9.08465);
+		//double distance = FbxTools::getDistance(newVertexPosition, findThisVertex);
+		//if (distance < 1.0 && name == "Head_OuterCage") {
+		//	int break_here = 0;
+		//}
+
+		pVertexBuffer[i] = newVertexPosition;
+	}
+
+	return true;
 }
 
 #include "moc_DzRobloxAction.cpp"

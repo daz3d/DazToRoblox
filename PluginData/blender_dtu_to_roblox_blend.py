@@ -104,6 +104,22 @@ def _main(argv):
     # load FBX
     _add_to_log("DEBUG: main(): loading fbx file: " + str(fbxPath))
     blender_tools.import_fbx(fbxPath)
+
+    # fix scale, scale by 30x
+    bpy.ops.object.select_all(action="SELECT")
+    bpy.ops.transform.resize(value=(30, 30, 30))
+    # Loop through all objects in the scene
+    cage_obj_list = []
+    for obj in bpy.data.objects:
+        print(f"Processing object: {obj.name}")
+        # if cage, transfer weights and parent to armature
+        if obj.type == 'MESH' and "_OuterCage" in obj.name:
+            cage_obj_list.append(obj)
+            transfer_weights("Genesis9.Shape", obj.name)
+        # if attachment, parent to bone
+        if obj.type == 'MESH' and "_Att" in obj.name:
+            roblox_tools.bind_attachment_to_bone_inplace(obj)
+
     blender_tools.fix_eyes()
     blender_tools.fix_scalp()
 
@@ -197,11 +213,20 @@ def _main(argv):
             bpy.ops.object.modifier_apply(modifier="Eyes")
             break
 
+    figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"]
+    cage_list = []
+    att_list = []
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
             game_readiness_tools.remove_moisture_materials(obj)
-    game_readiness_tools.remove_extra_meshes(["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"])
-    game_readiness_tools.remove_extra_materials(["body"])
+            if "_OuterCage" in obj.name:
+                print("DEBUG: cage obj.name=" + obj.name)
+                cage_list.append(obj.name.lower())
+            elif "_Att" in obj.name:
+                print("DEBUG: attachment obj.name=" + obj.name)
+                att_list.append(obj.name.lower())
+    game_readiness_tools.remove_extra_meshes(figure_list + cage_list + att_list)
+    game_readiness_tools.remove_extra_materials(["body", "cage_material", "attachment_material"])
 
     # read from python data file (import vertex_indices_for_daztoroblox.py)
     for group_name in geo_group_names + decimation_group_names:
@@ -294,15 +319,36 @@ def _main(argv):
     bpy.ops.object.mode_set(mode="OBJECT")
     bpy.ops.wm.save_as_mainfile(filepath=blenderFilePath)
 
+    # unparent attachments
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and "_Att" in obj.name:
+            bpy.context.view_layer.objects.active = obj
+            bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
     # select all
     bpy.ops.object.select_all(action="SELECT")
-    # scale to 0.0333
-    bpy.ops.transform.resize(value=(0.0333, 0.0333, 0.0333))
+    # set origin to 3d cursor
+    bpy.context.scene.cursor.location = (0.0, 0.0, 0.0)
+    bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+
+    # # scale to 0.0333 ==> for future, use 1/30 for exact conversion
+    # bpy.ops.transform.resize(value=(0.0333, 0.0333, 0.0333))
+    #
+    # NEW SCALING CODE
+    bpy.context.scene.unit_settings.scale_length = 1/30
+
     # apply using "All Transforms to Deltas"
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
+    # re-bind attachments to bones
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and "_Att" in obj.name:
+            roblox_tools.bind_attachment_to_bone_inplace(obj)
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and "_Att" in obj.name:
+            roblox_tools.relocalize_attachment(obj)
+
     # add cage and attachments
-    roblox_tools.add_cage_and_attachments()
+    #roblox_tools.add_cage_and_attachments()
 
     # export to fbx
     roblox_asset_name = dtu_dict["Asset Name"]
@@ -931,6 +977,73 @@ def load_and_merge_attachments_from_template_file(template_filepath_blend):
         if obj.type == 'MESH' and "Attachment" in obj.name:
             obj.select_set(True)
     bpy.ops.object.join()
+
+def transfer_weights(source_mesh_name, target_mesh_name):
+    # Ensure objects exist
+    if source_mesh_name not in bpy.data.objects or target_mesh_name not in bpy.data.objects:
+        raise ValueError(f"One or both of the specified meshes do not exist in the scene: {source_mesh_name}, {target_mesh_name}")
+
+    # Get source and target objects
+    source_obj = bpy.data.objects[source_mesh_name]
+    target_obj = bpy.data.objects[target_mesh_name]
+
+    # Switch to Object Mode
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+    # Deselect all objects
+    bpy.ops.object.select_all(action='DESELECT')
+
+    # Select and activate the target mesh
+    target_obj.select_set(True)
+    bpy.context.view_layer.objects.active = target_obj
+
+    # Delete existing vertex groups on the target mesh
+    if target_obj.vertex_groups:
+        bpy.ops.object.vertex_group_remove(all=True)
+
+    # Create corresponding vertex groups in the target mesh
+    for src_vg in source_obj.vertex_groups:
+        target_obj.vertex_groups.new(name=src_vg.name)
+
+    # Ensure both objects are selected and source is active
+    source_obj.select_set(True)
+    target_obj.select_set(True)
+    bpy.context.view_layer.objects.active = source_obj
+
+    # Use data_transfer operator to transfer vertex group weights
+    bpy.ops.object.data_transfer(
+        data_type='VGROUP_WEIGHTS',
+        use_create=True,
+        vert_mapping='POLYINTERP_NEAREST',
+        layers_select_src='ALL',
+        layers_select_dst='NAME',
+        mix_mode='REPLACE',
+        mix_factor=1.0
+    )
+
+    # Switch back to Object Mode
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+    # get armature from source_obj and parent target_obj to same armature
+    armature_name = None
+    for mod in source_obj.modifiers:
+        if mod.type == "ARMATURE":
+            armature_name = mod.object.name
+            break
+    if armature_name is not None:
+        # deselect all
+        bpy.ops.object.select_all(action='DESELECT')
+        # select target_obj
+        target_obj.select_set(True)
+        bpy.data.objects[armature_name].select_set(True)
+        bpy.context.view_layer.objects.active = bpy.data.objects[armature_name]
+        bpy.ops.object.parent_set(type='ARMATURE')
+        for mod in target_obj.modifiers:
+            if mod.type == "ARMATURE":
+                mod.name = armature_name
+        
+
+    print(f"Weights transferred successfully from {source_mesh_name} to {target_mesh_name}!")
 
 
 # Execute main()

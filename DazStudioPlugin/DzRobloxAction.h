@@ -16,6 +16,18 @@ namespace DZ_BRIDGE_NAMESPACE
 	class DzBridgeDialog;
 }
 
+#include "MvcTools.h"
+class MvcCustomCageRetargeter : public MvcCageRetargeter
+{
+public:
+	virtual bool deformCage(const FbxMesh* pMorphedMesh, const FbxMesh* pCage, FbxVector4* pVertexBuffer) override 
+	{
+		return deformCage(pMorphedMesh, pCage, pVertexBuffer, false);
+	};
+	virtual bool deformCage(const FbxMesh* pMorphedMesh, const FbxMesh* pCage, FbxVector4* pVertexBuffer, bool bUseHardCodeWorkaround );
+};
+
+
 class DzRobloxAction : public DZ_BRIDGE_NAMESPACE::DzBridgeAction {
 	Q_OBJECT
 	Q_PROPERTY(QString sRobloxOutputFolderPath READ getRobloxOutputFolderPath WRITE setRobloxOutputFolderPath)

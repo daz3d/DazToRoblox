@@ -151,6 +151,7 @@ def add_shrinkwrap_modifier(obj, target_obj):
     mod.offset = 0.0005
     return mod
 
+# returns the geometric center of obj_geo in worldspace
 def calculate_geometric_center(obj_geo):
     # calculate geometric center of obj_geo from vertices
     # get vertices
@@ -164,6 +165,10 @@ def calculate_geometric_center(obj_geo):
 def calculate_bounding_box(obj_geo):
     return
 
+# DB-2024-05-10: Old function to add cage and attachments, uses separate blend template file.
+#      New export from Daz Studio adds cage and attachments in C++ with FbxTools and MvcTools,
+#      and relies on blender python to reposition cages and attachments.  See functions below:
+#      bind_attachment_to_bone_inplace() and relocalize_attachment()
 def add_cage_and_attachments():
     # Load the objects
     import_list = load_objects_from_blend(blend_file_path, blend_directory)
@@ -290,7 +295,73 @@ def add_cage_and_attachments():
                 else:
                     add_shrinkwrap_modifier(obj, geo_obj)
 
-
     # cleanup all unused and unlinked data blocks
     # print("DEBUG: main(): cleaning up unused data blocks...")
     bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)            
+
+# DB-2024-05-10: New function to bind attachments to bones in place, and relocalize attachments
+def bind_attachment_to_bone_inplace(obj):
+    if obj.name not in lookup_table:
+        return
+
+    arm = bpy.data.armatures[0]
+    arm_obj = bpy.data.objects[arm.name]
+
+    world_matrix = obj.matrix_world.copy()
+    # calc local bone offset
+    bone_name = lookup_table[obj.name]
+    bone = arm_obj.pose.bones[bone_name]
+    # reparent to destination armature
+    obj.parent = arm_obj
+    obj.parent_bone = bone_name
+    obj.parent_type = 'BONE'
+    obj.matrix_world = world_matrix
+
+# DB-2024-05-10: New function to relocalize attachments. Specifically,
+#      this function will calculate the worldspace center of the attachment,
+#      and reposition vertices to use the local object origin and then
+#      reposition the object to the calculated center.
+def relocalize_attachment(obj):
+    if obj.name not in lookup_table:
+        return
+    print("DEBUG: relocalizing :" + obj.name)
+
+    center = calculate_geometric_center(obj)
+    # Decompose matrix for object's parent_bone
+    parent_bone_name = obj.parent_bone
+    if parent_bone_name is None:
+        return
+    print("DEBUG: parent_bone = " + parent_bone_name)
+    parent_bone_matrix = obj.parent.pose.bones[parent_bone_name].matrix
+    parent_bone_translation, parent_bone_rotation, parent_bone_scale = parent_bone_matrix.decompose()
+    # Decompose the matrix
+    translation, rotation, scale = obj.matrix_world.decompose()
+
+    # set worldspace geometric center as new worldspace position
+    new_translation = center
+    # Create new rotation, zero local rotation is equal to parent bone world rotation
+    new_rotation = parent_bone_rotation
+    # Create new scale, multiply desired local scale by parent bone scale
+    new_scale = parent_bone_scale * 0.1
+    # Construct new matrix
+    new_matrix = Matrix.Translation(new_translation) @ new_rotation.to_matrix().to_4x4() @ Matrix.Diagonal(new_scale).to_4x4()
+
+    # In order to keep same worldspace position and orientation of vertices...
+    # ...bake inverse of new matrix to vertices
+    bake_transform_to_vertices(obj, new_matrix.inverted())
+    # Assign the new matrix to the object
+    obj.matrix_world = new_matrix
+
+# DB-2024-05-10: New function to bake worldspace offset to vertex buffer
+def bake_transform_to_vertices(obj, transform_matrix):
+    if obj is None:
+        return
+    # if offset is not matrix, return
+    if not isinstance(transform_matrix, Matrix):
+        return   
+    print("DEBUG: baking offset to vertices for: " + obj.name)
+
+    # iterate through all vertices and multiply by offset matrix
+    vertices = obj.data.vertices
+    for v in vertices:
+        v.co = transform_matrix @ v.co
