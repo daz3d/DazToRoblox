@@ -576,7 +576,7 @@ void DzRobloxAction::executeAction()
 			bool bFailed = false;
 			bool bResult = false;
 			// 1a. read template fbx
-			QString templateFbxFile = "V9_Cage_Att_MVC_Template.fbx";
+			QString templateFbxFile = "G9_Cage_Att_MVC_Template.fbx";
 			QString tempFilePath = dzApp->getTempPath() + "/" + templateFbxFile;
 			FbxScene* pTemplateScene = openFbx->CreateScene("My Scene");
 			if (openFbx->LoadScene(pTemplateScene, tempFilePath.toLocal8Bit().data()) == false)
@@ -610,23 +610,6 @@ void DzRobloxAction::executeAction()
 				dzApp->log("DzRoblox-MvcTest: Unable to extract source mesh.");
 			}
 			FbxGeometry* pSourceGeo = openFbx->FindGeometry(pMorphedSourceScene, "Genesis9.Shape");
-			/*
-					// add to templatescene
-					bResult = pTemplateScene->AddGeometry(pSourceGeo);
-					if (!bResult)
-					{
-						bFailed = true;
-						dzApp->log("DzRoblox-MvcTest: Unable to copy source mesh to template scene.");
-					}
-					bResult = pTemplateScene->AddNode(pSourceNode);
-					if (!bResult)
-					{
-						bFailed = true;
-						dzApp->log("DzRoblox-MvcTest: Unable to copy source mesh to template scene.");
-					}
-			*/
-
-			/****************************************************************************************/
 
 			// unparent mesh
 			for (int i = 0; i < pMorphedSourceScene->GetNodeCount(); i++)
@@ -735,38 +718,6 @@ void DzRobloxAction::executeAction()
 
 			}
 
-			/*
-			QList<FbxAMatrix> aAttachmentGlobalTransforms;
-			foreach(QString sNodeName, aAttachmentNames)
-			{
-				FbxNode* pNode = pMorphedSourceScene->FindNodeByName(sNodeName.toLocal8Bit().data());
-				if (pNode)
-				{
-					QList<int> vertexIndices;
-					for (int i = 0; i < pNode->GetMesh()->GetControlPointsCount(); i++)
-					{
-						vertexIndices.append(i);
-					}
-					FbxVector4 globalPosition = FbxTools::CalculatePointCloudCenter(pNode->GetMesh(), &vertexIndices);
-					FbxAMatrix globalTransform;
-					globalTransform.SetT(globalPosition);
-					aAttachmentGlobalTransforms.append(globalTransform);
-				}
-			}
-			MvcTransformRetargeter* attachmentRetargeter = new MvcTransformRetargeter();
-			attachmentRetargeter->createMvcWeights(pTemplateMesh->GetMesh(), aAttachmentGlobalTransforms, exportProgress);
-			attachmentRetargeter->calibrate_nodes(pSourceNode->GetMesh());
-			*/
-
-
-
-
-			////////////////////////////////////////////////////////////////
-			//memcpy(pTemplateMesh->GetMesh()->GetControlPoints(), pSourceNode->GetMesh()->GetControlPoints(), sizeof(FbxVector4)* pSourceNode->GetMesh()->GetControlPointsCount());
-			//FbxAMatrix rescale;
-			//rescale.SetS(FbxVector4(1/30, 1/30, 1/30));
-			//FbxTools::BakePoseToVertexBuffer(pTemplateMesh->GetMesh()->GetControlPoints(), &rescale, nullptr, pTemplateMesh->GetMesh());
-
 			// Remove Template Mesh ( OriginalGenesis9 )
 			//pTemplateMesh
 			int numChildren = pTemplateMesh->GetChildCount(true);
@@ -823,9 +774,6 @@ void DzRobloxAction::executeAction()
 			}
 
 		}
-
-//		exportProgress->finish();
-//		return;
 
 		/*****************************************************************************************************/
 
