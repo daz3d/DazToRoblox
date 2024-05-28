@@ -85,6 +85,13 @@ function main() {
     if (oMouthGeograft) {
         assignCombinedTextures(oMouthGeograft);
     }
+    var oGroinGeograft = Scene.findNodeByLabel("game_engine_groin_geograft");
+    if (!oGroinGeograft) {
+        oGroinGeograft = Scene.findNode("game_engine_groin_geograft_0");
+    }
+    if (oGroinGeograft) {
+        assignCombinedTextures(oGroinGeograft);
+    }
 
 }
 

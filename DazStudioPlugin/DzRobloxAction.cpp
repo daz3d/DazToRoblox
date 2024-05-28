@@ -1134,6 +1134,14 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		Script->execute();
 	}
 
+	// anti-crack-tool
+	if (dzScene->findNodeByLabel("game_engine_groin_geograft") == NULL)
+	{
+		DzNode* baseFigureNode = dzScene->findNode("Genesis9");
+		QString baseFigureNodeName = baseFigureNode->getName();
+		applyGeograft(baseFigureNode, tempPath + "/game_engine_groin_geograft.duf", "game_engine_groin_geograft_0");
+	}
+
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
 
