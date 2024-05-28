@@ -1117,6 +1117,13 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 			int currentVal = uvset->getValue();
 			if (currentVal == combinedUvVal) {
 				dzApp->debug("WARNING: DzRobloxAction: preProcessScene(): Combined UV already set, skipping texture operations. Returning false.");
+				// DB 2024-05-28, MVC Crash-FIX: apply groin geograft before returning (see groin geograft notes below)
+				if (dzScene->findNodeByLabel("game_engine_groin_geograft") == NULL)
+				{
+					DzNode* baseFigureNode = dzScene->findNode("Genesis9");
+					QString baseFigureNodeName = baseFigureNode->getName();
+					applyGeograft(baseFigureNode, tempPath + "/game_engine_groin_geograft.duf", "game_engine_groin_geograft_0");
+				}
 				return false;
 			}
 		}
@@ -1134,7 +1141,9 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		Script->execute();
 	}
 
-	// anti-crack-tool
+	// groin geograft (no butt cleavage mod)
+	// NOTE: groin geograft added after modesty overlay operation to prevent visual artifacts due to DS viewport not fully updating
+	// NOTE 2: be sure to add geograft if preProcessScene() must return early and continue in order to avoid MVC crash from vertex buffer inconsistency
 	if (dzScene->findNodeByLabel("game_engine_groin_geograft") == NULL)
 	{
 		DzNode* baseFigureNode = dzScene->findNode("Genesis9");
