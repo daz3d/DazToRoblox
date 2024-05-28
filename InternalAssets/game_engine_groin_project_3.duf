@@ -4,7 +4,7 @@
 		"id" : "/C%3A/GitHub/DazToRoblox-daz3d/InternalAssets/game_engine_groin_project_3.duf",
 		"type" : "scene",
 		"contributor" : {
-			"author" : "danielbui78",
+			"author" : "Daz 3D",
 			"email" : "",
 			"website" : ""
 		},
@@ -13,8 +13,8 @@
 	},
 	"geometry_library" : [
 		{
-			"id" : "ButtCrack_Remesh",
-			"name" : "ButtCrack_Remesh",
+			"id" : "ButtCleavage_Remesh",
+			"name" : "ButtCleavage_Remesh",
 			"type" : "subdivision_surface",
 			"edge_interpolation_mode" : "edges_only",
 			"subd_normal_smoothing_mode" : "smooth_all_normals",
@@ -8995,10 +8995,10 @@
 		{
 			"id" : "SkinBinding",
 			"name" : "SkinBinding",
-			"parent" : "#ButtCrack_Remesh",
+			"parent" : "#ButtCleavage_Remesh",
 			"skin" : {
 				"node" : "#game_engine_groin_geograft_0",
-				"geometry" : "#ButtCrack_Remesh",
+				"geometry" : "#ButtCleavage_Remesh",
 				"vertex_count" : 1100,
 				"joints" : [
 					{
@@ -18073,9 +18073,9 @@
 				"label" : "game_engine_groin_geograft",
 				"geometries" : [
 					{
-						"id" : "ButtCrack_Remesh-1",
-						"url" : "#ButtCrack_Remesh",
-						"name" : "ButtCrack_Remesh",
+						"id" : "ButtCleavage_Remesh-1",
+						"url" : "#ButtCleavage_Remesh",
+						"name" : "ButtCleavage_Remesh",
 						"label" : "shape",
 						"type" : "subdivision_surface",
 						"current_subdivision_level" : 1,
@@ -18364,7 +18364,7 @@
 			{
 				"id" : "SkinBinding-1",
 				"url" : "#SkinBinding",
-				"parent" : "#ButtCrack_Remesh-1",
+				"parent" : "#ButtCleavage_Remesh-1",
 				"extra" : [
 					{
 						"type" : "skin_settings",
@@ -18382,7 +18382,7 @@
 			{
 				"id" : "Body-1",
 				"url" : "#Body",
-				"geometry" : "#ButtCrack_Remesh-1",
+				"geometry" : "#ButtCleavage_Remesh-1",
 				"groups" : [ "Body" ],
 				"diffuse" : {
 					"channel" : {
@@ -18405,7 +18405,7 @@
 			{
 				"id" : "Legs-1",
 				"url" : "#Legs",
-				"geometry" : "#ButtCrack_Remesh-1",
+				"geometry" : "#ButtCleavage_Remesh-1",
 				"groups" : [ "Legs" ],
 				"diffuse" : {
 					"channel" : {
