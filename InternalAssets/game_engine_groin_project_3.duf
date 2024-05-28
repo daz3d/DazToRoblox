@@ -1,15 +1,15 @@
 {
 	"file_version" : "0.6.1.0",
 	"asset_info" : {
-		"id" : "/C%3A/GitHub/DazToRoblox-daz3d/PluginData/game_engine_groin_geograft.duf",
-		"type" : "scene_subset",
+		"id" : "/C%3A/GitHub/DazToRoblox-daz3d/InternalAssets/game_engine_groin_project_3.duf",
+		"type" : "scene",
 		"contributor" : {
-			"author" : "Daz 3D",
+			"author" : "danielbui78",
 			"email" : "",
 			"website" : ""
 		},
 		"revision" : "1.0",
-		"modified" : "2024-05-15T19:57:39Z"
+		"modified" : "2024-05-28T15:25:47Z"
 	},
 	"geometry_library" : [
 		{
@@ -2181,7 +2181,7 @@
 					[ 0, 0, 435, 1072, 1099, 566 ]
 				]
 			},
-			"default_uv_set" : "#default-0xa3938a2",
+			"default_uv_set" : "#default",
 			"root_region" : {
 				"id" : "Actor",
 				"label" : "Actor",
@@ -2229,6 +2229,7 @@
 								"type" : "int",
 								"label" : "View SubD Level",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 2,
 								"clamped" : true,
@@ -2242,6 +2243,7 @@
 								"type" : "int",
 								"label" : "Render SubD Level (Minimum)",
 								"value" : 0,
+								"current_value" : 0,
 								"min" : 0,
 								"max" : 7,
 								"clamped" : true,
@@ -2255,6 +2257,7 @@
 								"type" : "enum",
 								"label" : "SubDivision Algorithm",
 								"value" : 0,
+								"current_value" : 0,
 								"enum_values" : [ "Catmark", "Bilinear", "Loop", "Catmull-Clark (Legacy)" ]
 							},
 							"group" : "/General/Mesh Resolution"
@@ -2265,6 +2268,7 @@
 								"type" : "enum",
 								"label" : "Edge Interpolation",
 								"value" : 2,
+								"current_value" : 2,
 								"enum_values" : [ "Soft Corners And Edges", "Sharp Edges and Corners", "Sharp Edges" ]
 							},
 							"group" : "/General/Mesh Resolution"
@@ -2275,6 +2279,7 @@
 								"type" : "enum",
 								"label" : "SubDivision Normals",
 								"value" : 0,
+								"current_value" : 0,
 								"enum_values" : [ "Smoothed", "Preserve Cage" ]
 							},
 							"group" : "/General/Mesh Resolution"
@@ -2283,13 +2288,13 @@
 				}
 			]
 		}
-	],	
+	],
 	"node_library" : [
 		{
-			"id" : "ButtCrack_Remesh_1100",
-			"name" : "ButtCrack_Remesh_1100",
+			"id" : "game_engine_groin_geograft_0",
+			"name" : "game_engine_groin_geograft_0",
 			"type" : "figure",
-			"label" : "Hip Replacement",
+			"label" : "game_engine_groin_geograft",
 			"rotation_order" : "YXZ",
 			"inherits_scale" : true,
 			"center_point" : [
@@ -2300,6 +2305,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2311,6 +2317,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2322,6 +2329,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2335,6 +2343,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2346,6 +2355,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 103.876,
+					"current_value" : 103.876,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2357,6 +2367,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2370,6 +2381,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2381,6 +2393,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2392,6 +2405,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2404,6 +2418,7 @@
 					"name" : "XRotate",
 					"label" : "X Rotate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.5
@@ -2414,6 +2429,7 @@
 					"name" : "YRotate",
 					"label" : "Y Rotate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.5
@@ -2424,6 +2440,7 @@
 					"name" : "ZRotate",
 					"label" : "Z Rotate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.5
@@ -2436,6 +2453,7 @@
 					"name" : "XTranslate",
 					"label" : "X Translate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -2446,6 +2464,7 @@
 					"name" : "YTranslate",
 					"label" : "Y Translate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -2456,6 +2475,7 @@
 					"name" : "ZTranslate",
 					"label" : "Z Translate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -2469,6 +2489,7 @@
 					"label" : "X Scale",
 					"auto_follow" : true,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -2481,6 +2502,7 @@
 					"label" : "Y Scale",
 					"auto_follow" : true,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -2493,6 +2515,7 @@
 					"label" : "Z Scale",
 					"auto_follow" : true,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -2506,6 +2529,7 @@
 				"label" : "Scale",
 				"auto_follow" : true,
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -2544,7 +2568,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -2554,7 +2579,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -2564,6 +2590,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -2578,7 +2605,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -2587,7 +2615,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -2596,7 +2625,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -2605,7 +2635,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -2614,7 +2645,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -2625,6 +2657,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -2634,7 +2667,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						},
@@ -2644,6 +2678,7 @@
 								"type" : "enum",
 								"label" : "Fit to Mode",
 								"value" : 0,
+								"current_value" : 0,
 								"enum_values" : [ "Redirect Transforms", "Auto Follow Transforms" ]
 							},
 							"group" : "/General/Misc"
@@ -2653,17 +2688,8 @@
 								"id" : "Show Bones",
 								"type" : "bool",
 								"label" : "Show Bones",
-								"value" : false
-							},
-							"group" : "/Display/Scene View/Bones"
-						},
-						{
-							"channel" : {
-								"id" : "Bone Draw Mode",
-								"type" : "enum",
-								"label" : "Bone Draw Mode",
-								"value" : 0,
-								"enum_values" : [ "Orientation", "Hierarchy" ]
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/Display/Scene View/Bones"
 						},
@@ -2673,6 +2699,7 @@
 								"type" : "color",
 								"label" : "Bone Color",
 								"value" : [ 0, 0, 0 ],
+								"current_value" : [ 0, 0, 0 ],
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true
@@ -2685,6 +2712,7 @@
 								"type" : "float",
 								"label" : "Bone Fill Opacity",
 								"value" : 0.1,
+								"current_value" : 0.1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -2699,6 +2727,7 @@
 								"type" : "enum",
 								"label" : "Bone Edge Style",
 								"value" : 0,
+								"current_value" : 0,
 								"enum_values" : [ "Axis Colored", "Single Color" ]
 							},
 							"group" : "/Display/Scene View/Bones"
@@ -2709,6 +2738,7 @@
 								"type" : "float",
 								"label" : "Bone Edge Opacity",
 								"value" : 0.2,
+								"current_value" : 0.2,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -2726,7 +2756,7 @@
 			"name" : "hip",
 			"type" : "bone",
 			"label" : "Hip",
-			"parent" : "#ButtCrack_Remesh_1100",
+			"parent" : "#game_engine_groin_geograft_0",
 			"rotation_order" : "YZX",
 			"inherits_scale" : true,
 			"center_point" : [
@@ -2737,6 +2767,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2748,6 +2779,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 97.13693,
+					"current_value" : 97.13693,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2759,6 +2791,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : 0.4865389,
+					"current_value" : 0.4865389,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2772,6 +2805,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2783,6 +2817,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 80.91573,
+					"current_value" : 80.91573,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2794,6 +2829,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : 0.2278784,
+					"current_value" : 0.2278784,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2807,6 +2843,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2818,6 +2855,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2829,6 +2867,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -2841,6 +2880,7 @@
 					"name" : "XRotate",
 					"label" : "X Rotate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -2852,6 +2892,7 @@
 					"name" : "YRotate",
 					"label" : "Y Rotate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -2863,6 +2904,7 @@
 					"name" : "ZRotate",
 					"label" : "Z Rotate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -2876,6 +2918,7 @@
 					"name" : "XTranslate",
 					"label" : "X Translate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -2886,6 +2929,7 @@
 					"name" : "YTranslate",
 					"label" : "Y Translate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -2896,6 +2940,7 @@
 					"name" : "ZTranslate",
 					"label" : "Z Translate",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -2909,6 +2954,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -2921,6 +2967,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -2933,6 +2980,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -2945,6 +2993,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -2961,7 +3010,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -2971,7 +3021,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -2981,6 +3032,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -2995,7 +3047,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -3004,7 +3057,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -3013,7 +3067,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -3022,7 +3077,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -3031,7 +3087,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -3042,6 +3099,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -3051,7 +3109,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -3075,6 +3134,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3086,6 +3146,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 98.98357,
+					"current_value" : 98.98357,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3097,6 +3158,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -0.28,
+					"current_value" : -0.28,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3110,6 +3172,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3121,6 +3184,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 80.03773,
+					"current_value" : 80.03773,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3132,6 +3196,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -0.28,
+					"current_value" : -0.28,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3145,6 +3210,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3156,6 +3222,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3167,6 +3234,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3179,6 +3247,7 @@
 					"name" : "XRotate",
 					"label" : "Bend",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -3190,6 +3259,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -3201,6 +3271,7 @@
 					"name" : "ZRotate",
 					"label" : "Side-Side",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -3215,6 +3286,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -3226,6 +3298,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -3237,6 +3310,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -3250,6 +3324,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -3262,6 +3337,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -3274,6 +3350,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -3286,6 +3363,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -3302,7 +3380,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -3312,7 +3391,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -3322,6 +3402,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -3336,7 +3417,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -3345,7 +3427,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -3354,7 +3437,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -3363,7 +3447,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -3372,7 +3457,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -3383,6 +3469,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -3392,7 +3479,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -3416,6 +3504,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : 7.641659,
+					"current_value" : 7.641659,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3427,6 +3516,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 88.67098,
+					"current_value" : 88.67098,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3438,6 +3528,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -0.3762165,
+					"current_value" : -0.3762165,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3451,6 +3542,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : 9.341069,
+					"current_value" : 9.341069,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3462,6 +3554,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 48.19873,
+					"current_value" : 48.19873,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3473,6 +3566,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -1.780917,
+					"current_value" : -1.780917,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3486,6 +3580,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 1.921746,
+					"current_value" : 1.921746,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3497,6 +3592,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : 4.950457,
+					"current_value" : 4.950457,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3508,6 +3604,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : 2.478573,
+					"current_value" : 2.478573,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3520,6 +3617,7 @@
 					"name" : "XRotate",
 					"label" : "Bend",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -3531,6 +3629,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -3542,6 +3641,7 @@
 					"name" : "ZRotate",
 					"label" : "Side-Side",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -3556,6 +3656,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -3567,6 +3668,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -3578,6 +3680,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -3591,6 +3694,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -3603,6 +3707,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -3615,6 +3720,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -3627,6 +3733,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -3643,7 +3750,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -3653,7 +3761,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -3663,6 +3772,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -3677,7 +3787,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -3686,7 +3797,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -3695,7 +3807,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -3704,7 +3817,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -3713,7 +3827,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -3724,6 +3839,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -3733,7 +3849,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -3757,6 +3874,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : 9.341069,
+					"current_value" : 9.341069,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3768,6 +3886,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 48.194,
+					"current_value" : 48.194,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3779,6 +3898,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -1.780917,
+					"current_value" : -1.780917,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3792,6 +3912,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : 10.88737,
+					"current_value" : 10.88737,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3803,6 +3924,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 6.44482,
+					"current_value" : 6.44482,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3814,6 +3936,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -4.660287,
+					"current_value" : -4.660287,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3827,6 +3950,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 4.005997,
+					"current_value" : 4.005997,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3838,6 +3962,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : 6.817791,
+					"current_value" : 6.817791,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3849,6 +3974,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : 2.475943,
+					"current_value" : 2.475943,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -3861,6 +3987,7 @@
 					"name" : "XRotate",
 					"label" : "Bend",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -3872,6 +3999,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -3883,6 +4011,7 @@
 					"name" : "ZRotate",
 					"label" : "Side-Side",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -3897,6 +4026,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -3908,6 +4038,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -3919,6 +4050,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -3932,6 +4064,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -3944,6 +4077,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -3956,6 +4090,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -3968,6 +4103,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -3984,7 +4120,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -3994,7 +4131,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -4004,6 +4142,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -4018,7 +4157,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -4027,7 +4167,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -4036,7 +4177,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -4045,7 +4187,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -4054,7 +4197,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -4065,6 +4209,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -4074,7 +4219,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -4098,6 +4244,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : 8.169209,
+					"current_value" : 8.169209,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4109,6 +4256,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 75.60822,
+					"current_value" : 75.60822,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4120,6 +4268,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -0.8132355,
+					"current_value" : -0.8132355,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4133,6 +4282,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : 8.700583,
+					"current_value" : 8.700583,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4144,6 +4294,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 61.92293,
+					"current_value" : 61.92293,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4155,6 +4306,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -2.217936,
+					"current_value" : -2.217936,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4168,6 +4320,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 1.921746,
+					"current_value" : 1.921746,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4179,6 +4332,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : 4.950457,
+					"current_value" : 4.950457,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4190,6 +4344,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : 2.478573,
+					"current_value" : 2.478573,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4203,6 +4358,7 @@
 					"label" : "X Rotate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -4214,6 +4370,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -4226,6 +4383,7 @@
 					"label" : "Z Rotate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -4240,6 +4398,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -4251,6 +4410,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -4262,6 +4422,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -4275,6 +4436,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -4287,6 +4449,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -4299,6 +4462,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -4311,6 +4475,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -4327,7 +4492,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -4337,7 +4503,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -4347,6 +4514,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -4361,7 +4529,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -4370,7 +4539,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -4379,7 +4549,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -4388,7 +4559,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -4397,7 +4569,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -4408,6 +4581,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -4417,7 +4591,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -4441,6 +4616,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : 8.73234,
+					"current_value" : 8.73234,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4452,6 +4628,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 61.66441,
+					"current_value" : 61.66441,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4463,6 +4640,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -1.279731,
+					"current_value" : -1.279731,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4476,6 +4654,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : 9.263715,
+					"current_value" : 9.263715,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4487,6 +4666,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 48.60206,
+					"current_value" : 48.60206,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4498,6 +4678,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -2.684431,
+					"current_value" : -2.684431,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4511,6 +4692,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 1.921746,
+					"current_value" : 1.921746,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4522,6 +4704,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : 4.950457,
+					"current_value" : 4.950457,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4533,6 +4716,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : 2.478573,
+					"current_value" : 2.478573,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4546,6 +4730,7 @@
 					"label" : "X Rotate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -4557,6 +4742,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -4569,6 +4755,7 @@
 					"label" : "Z Rotate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -4583,6 +4770,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -4594,6 +4782,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -4605,6 +4794,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -4618,6 +4808,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -4630,6 +4821,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -4642,6 +4834,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -4654,6 +4847,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -4670,7 +4864,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -4680,7 +4875,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -4690,6 +4886,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -4704,7 +4901,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -4713,7 +4911,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -4722,7 +4921,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -4731,7 +4931,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -4740,7 +4941,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -4751,6 +4953,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -4760,7 +4963,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -4784,6 +4988,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : -7.641659,
+					"current_value" : -7.641659,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4795,6 +5000,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 88.67098,
+					"current_value" : 88.67098,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4806,6 +5012,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -0.3762165,
+					"current_value" : -0.3762165,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4819,6 +5026,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : -9.341069,
+					"current_value" : -9.341069,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4830,6 +5038,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 48.19873,
+					"current_value" : 48.19873,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4841,6 +5050,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -1.780917,
+					"current_value" : -1.780917,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4854,6 +5064,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 1.921746,
+					"current_value" : 1.921746,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4865,6 +5076,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : -4.950457,
+					"current_value" : -4.950457,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4876,6 +5088,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : -2.478573,
+					"current_value" : -2.478573,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -4888,6 +5101,7 @@
 					"name" : "XRotate",
 					"label" : "Bend",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -4899,6 +5113,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -4910,6 +5125,7 @@
 					"name" : "ZRotate",
 					"label" : "Side-Side",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -4924,6 +5140,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -4935,6 +5152,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -4946,6 +5164,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -4959,6 +5178,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -4971,6 +5191,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -4983,6 +5204,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -4995,6 +5217,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -5011,7 +5234,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -5021,7 +5245,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -5031,6 +5256,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -5045,7 +5271,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -5054,7 +5281,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -5063,7 +5291,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -5072,7 +5301,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -5081,7 +5311,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -5092,6 +5323,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -5101,7 +5333,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -5125,6 +5358,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : -9.341069,
+					"current_value" : -9.341069,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5136,6 +5370,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 48.194,
+					"current_value" : 48.194,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5147,6 +5382,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -1.780917,
+					"current_value" : -1.780917,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5160,6 +5396,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : -10.88737,
+					"current_value" : -10.88737,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5171,6 +5408,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 6.44482,
+					"current_value" : 6.44482,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5182,6 +5420,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -4.660287,
+					"current_value" : -4.660287,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5195,6 +5434,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 4.005997,
+					"current_value" : 4.005997,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5206,6 +5446,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : -6.817791,
+					"current_value" : -6.817791,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5217,6 +5458,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : -2.475943,
+					"current_value" : -2.475943,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5229,6 +5471,7 @@
 					"name" : "XRotate",
 					"label" : "Bend",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -5240,6 +5483,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -5251,6 +5495,7 @@
 					"name" : "ZRotate",
 					"label" : "Side-Side",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -5265,6 +5510,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -5276,6 +5522,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -5287,6 +5534,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -5300,6 +5548,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -5312,6 +5561,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -5324,6 +5574,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -5336,6 +5587,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -5352,7 +5604,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -5362,7 +5615,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -5372,6 +5626,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -5386,7 +5641,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -5395,7 +5651,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -5404,7 +5661,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -5413,7 +5671,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -5422,7 +5681,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -5433,6 +5693,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -5442,7 +5703,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -5466,6 +5728,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : -8.169209,
+					"current_value" : -8.169209,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5477,6 +5740,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 75.60822,
+					"current_value" : 75.60822,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5488,6 +5752,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -0.8132355,
+					"current_value" : -0.8132355,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5501,6 +5766,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : -8.700583,
+					"current_value" : -8.700583,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5512,6 +5778,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 61.92293,
+					"current_value" : 61.92293,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5523,6 +5790,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -2.217936,
+					"current_value" : -2.217936,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5536,6 +5804,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 1.921746,
+					"current_value" : 1.921746,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5547,6 +5816,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : -4.950457,
+					"current_value" : -4.950457,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5558,6 +5828,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : -2.478573,
+					"current_value" : -2.478573,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5571,6 +5842,7 @@
 					"label" : "X Rotate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -5582,6 +5854,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -5594,6 +5867,7 @@
 					"label" : "Z Rotate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -5608,6 +5882,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -5619,6 +5894,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -5630,6 +5906,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -5643,6 +5920,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -5655,6 +5933,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -5667,6 +5946,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -5679,6 +5959,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -5695,7 +5976,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -5705,7 +5987,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -5715,6 +5998,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -5729,7 +6013,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -5738,7 +6023,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -5747,7 +6033,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -5756,7 +6043,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -5765,7 +6053,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -5776,6 +6065,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -5785,7 +6075,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -5809,6 +6100,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : -8.73234,
+					"current_value" : -8.73234,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5820,6 +6112,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 61.66441,
+					"current_value" : 61.66441,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5831,6 +6124,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -1.279731,
+					"current_value" : -1.279731,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5844,6 +6138,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : -9.263715,
+					"current_value" : -9.263715,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5855,6 +6150,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 48.60206,
+					"current_value" : 48.60206,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5866,6 +6162,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -2.684431,
+					"current_value" : -2.684431,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5879,6 +6176,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 1.921746,
+					"current_value" : 1.921746,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5890,6 +6188,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : -4.950457,
+					"current_value" : -4.950457,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5901,6 +6200,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : -2.478573,
+					"current_value" : -2.478573,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -5914,6 +6214,7 @@
 					"label" : "X Rotate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -5925,6 +6226,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -5937,6 +6239,7 @@
 					"label" : "Z Rotate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -5951,6 +6254,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -5962,6 +6266,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -5973,6 +6278,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -5986,6 +6292,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -5998,6 +6305,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -6010,6 +6318,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -6022,6 +6331,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -6038,7 +6348,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -6048,7 +6359,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -6058,6 +6370,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -6072,7 +6385,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -6081,7 +6395,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -6090,7 +6405,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -6099,7 +6415,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -6108,7 +6425,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -6119,6 +6437,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -6128,7 +6447,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -6152,6 +6472,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6163,6 +6484,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 98.93428,
+					"current_value" : 98.93428,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6174,6 +6496,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -0.78,
+					"current_value" : -0.78,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6187,6 +6510,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6198,6 +6522,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 106.7338,
+					"current_value" : 106.7338,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6209,6 +6534,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -0.78,
+					"current_value" : -0.78,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6222,6 +6548,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6233,6 +6560,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6244,6 +6572,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6256,6 +6585,7 @@
 					"name" : "XRotate",
 					"label" : "Bend",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -6267,6 +6597,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -6278,6 +6609,7 @@
 					"name" : "ZRotate",
 					"label" : "Side-Side",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -6292,6 +6624,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -6303,6 +6636,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -6314,6 +6648,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -6327,6 +6662,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -6339,6 +6675,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -6351,6 +6688,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -6363,6 +6701,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -6379,7 +6718,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -6389,7 +6729,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -6399,6 +6740,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -6413,7 +6755,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -6422,7 +6765,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -6431,7 +6775,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -6440,7 +6785,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -6449,7 +6795,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -6460,6 +6807,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -6469,7 +6817,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -6493,6 +6842,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6504,6 +6854,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 106.8228,
+					"current_value" : 106.8228,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6515,6 +6866,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -1.1,
+					"current_value" : -1.1,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6528,6 +6880,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6539,6 +6892,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 113.8823,
+					"current_value" : 113.8823,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6550,6 +6904,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -1.1,
+					"current_value" : -1.1,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6563,6 +6918,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6574,6 +6930,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6585,6 +6942,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6597,6 +6955,7 @@
 					"name" : "XRotate",
 					"label" : "Bend",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -6608,6 +6967,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -6619,6 +6979,7 @@
 					"name" : "ZRotate",
 					"label" : "Side-Side",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -6633,6 +6994,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -6644,6 +7006,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -6655,6 +7018,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -6668,6 +7032,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -6680,6 +7045,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -6692,6 +7058,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -6704,6 +7071,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -6720,7 +7088,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -6730,7 +7099,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -6740,6 +7110,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -6754,7 +7125,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -6763,7 +7135,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -6772,7 +7145,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -6781,7 +7155,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -6790,7 +7165,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -6801,6 +7177,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -6810,7 +7187,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -6834,6 +7212,7 @@
 					"label" : "X Origin",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6845,6 +7224,7 @@
 					"label" : "Y Origin",
 					"visible" : false,
 					"value" : 114.326,
+					"current_value" : 114.326,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6856,6 +7236,7 @@
 					"label" : "Z Origin",
 					"visible" : false,
 					"value" : -2.26,
+					"current_value" : -2.26,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6869,6 +7250,7 @@
 					"label" : "X End",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6880,6 +7262,7 @@
 					"label" : "Y End",
 					"visible" : false,
 					"value" : 126.799,
+					"current_value" : 126.799,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6891,6 +7274,7 @@
 					"label" : "Z End",
 					"visible" : false,
 					"value" : -2.26,
+					"current_value" : -2.26,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6904,6 +7288,7 @@
 					"label" : "X Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6915,6 +7300,7 @@
 					"label" : "Y Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6926,6 +7312,7 @@
 					"label" : "Z Orientation",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 0.01
@@ -6938,6 +7325,7 @@
 					"name" : "XRotate",
 					"label" : "Bend",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -6949,6 +7337,7 @@
 					"name" : "YRotate",
 					"label" : "Twist",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -6960,6 +7349,7 @@
 					"name" : "ZRotate",
 					"label" : "Side-Side",
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -180,
 					"max" : 180,
 					"clamped" : true,
@@ -6974,6 +7364,7 @@
 					"label" : "X Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -6985,6 +7376,7 @@
 					"label" : "Y Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -6996,6 +7388,7 @@
 					"label" : "Z Translate",
 					"visible" : false,
 					"value" : 0,
+					"current_value" : 0,
 					"min" : -10000,
 					"max" : 10000,
 					"step_size" : 1
@@ -7009,6 +7402,7 @@
 					"label" : "X Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -7021,6 +7415,7 @@
 					"label" : "Y Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -7033,6 +7428,7 @@
 					"label" : "Z Scale",
 					"visible" : false,
 					"value" : 1,
+					"current_value" : 1,
 					"min" : -10000,
 					"max" : 10000,
 					"display_as_percent" : true,
@@ -7045,6 +7441,7 @@
 				"name" : "Scale",
 				"label" : "Scale",
 				"value" : 1,
+				"current_value" : 1,
 				"min" : -10000,
 				"max" : 10000,
 				"display_as_percent" : true,
@@ -7061,7 +7458,8 @@
 								"type" : "bool",
 								"label" : "Disable Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -7071,7 +7469,8 @@
 								"type" : "bool",
 								"label" : "Ignore Local Transform",
 								"visible" : false,
-								"value" : false
+								"value" : false,
+								"current_value" : false
 							},
 							"group" : "/General/Transforms"
 						},
@@ -7081,6 +7480,7 @@
 								"type" : "numeric_node",
 								"label" : "Point At",
 								"value" : 1,
+								"current_value" : 1,
 								"min" : 0,
 								"max" : 1,
 								"clamped" : true,
@@ -7095,7 +7495,8 @@
 								"id" : "Visible",
 								"type" : "bool",
 								"label" : "Visible",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display"
 						},
@@ -7104,7 +7505,8 @@
 								"id" : "Visible in Viewport",
 								"type" : "bool",
 								"label" : "Visible in Viewport",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -7113,7 +7515,8 @@
 								"id" : "Selectable",
 								"type" : "bool",
 								"label" : "Selectable (in Viewport)",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Scene View"
 						},
@@ -7122,7 +7525,8 @@
 								"id" : "Renderable",
 								"type" : "bool",
 								"label" : "Visible in Render",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -7131,7 +7535,8 @@
 								"id" : "Cast Shadows",
 								"type" : "bool",
 								"label" : "Cast Shadows",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Rendering"
 						},
@@ -7142,6 +7547,7 @@
 								"label" : "Render Priority",
 								"visible" : false,
 								"value" : 3,
+								"current_value" : 3,
 								"enum_values" : [ "Lowest", "Low", "Below Normal", "Normal", "Above Normal", "High", "Highest" ]
 							},
 							"group" : "/Display/Rendering"
@@ -7151,7 +7557,8 @@
 								"id" : "Visible in Simulation",
 								"type" : "bool",
 								"label" : "Visible in Simulation",
-								"value" : true
+								"value" : true,
+								"current_value" : true
 							},
 							"group" : "/Display/Simulation"
 						}
@@ -7162,7 +7569,7 @@
 	],
 	"uv_set_library" : [
 		{
-			"id" : "default-0xa3938a2",
+			"id" : "default",
 			"name" : "default",
 			"label" : "Default UVs",
 			"vertex_count" : 1100,
@@ -8582,1437 +8989,15 @@
 				[ 1006, 1080, 1198 ],
 				[ 1030, 1080, 1198 ]
 			]
-		},
-		{
-			"id" : "Combined Head And Body-0xa3a15d3",
-			"name" : "Combined Head And Body",
-			"label" : "Combined Head And Body",
-			"vertex_count" : 1100,
-			"uvs" : {
-				"count" : 1205,
-				"values" : [
-					[ 0.333403, 0.104204 ],
-					[ 0.333385, 0.122173 ],
-					[ 0.333333, 0.150047 ],
-					[ 0.333401, 0.07969342 ],
-					[ 0.333405, 0.09563011 ],
-					[ 0.333393, 0.0723343 ],
-					[ 0.333382, 0.0654263 ],
-					[ 0.333405, 0.08733591 ],
-					[ 0.333314, 0.159466 ],
-					[ 0.33337, 0.131378 ],
-					[ 0.333353, 0.140663 ],
-					[ 0.333396, 0.113119 ],
-					[ 0.0983467, 0.190052 ],
-					[ 0.144584, 0.170847 ],
-					[ 0.146595, 0.188384 ],
-					[ 0.143318, 0.162042 ],
-					[ 0.153722, 0.161627 ],
-					[ 0.155116, 0.170422 ],
-					[ 0.135891, 0.188767 ],
-					[ 0.134309, 0.17127 ],
-					[ 0.133109, 0.162482 ],
-					[ 0.144308, 0.08473861 ],
-					[ 0.171927, 0.143346 ],
-					[ 0.169463, 0.126086 ],
-					[ 0.168403, 0.11758 ],
-					[ 0.15097, 0.14403 ],
-					[ 0.120609, 0.145482 ],
-					[ 0.130514, 0.144903 ],
-					[ 0.09229351, 0.147947 ],
-					[ 0.0833465, 0.149007 ],
-					[ 0.110923, 0.146178 ],
-					[ 0.101498, 0.146998 ],
-					[ 0.140657, 0.144428 ],
-					[ 0.128085, 0.127493 ],
-					[ 0.148509, 0.126598 ],
-					[ 0.10844, 0.128945 ],
-					[ 0.08964311, 0.131003 ],
-					[ 0.09893571, 0.129897 ],
-					[ 0.08056421, 0.132246 ],
-					[ 0.118163, 0.128144 ],
-					[ 0.138214, 0.126985 ],
-					[ 0.210284, 0.184278 ],
-					[ 0.219675, 0.182731 ],
-					[ 0.316029, 0.104065 ],
-					[ 0.0727525, 0.080312 ],
-					[ 0.08224661, 0.07948261 ],
-					[ 0.113466, 0.0780163 ],
-					[ 0.123536, 0.0773757 ],
-					[ 0.0927679, 0.07897471 ],
-					[ 0.102981, 0.07852501 ],
-					[ 0.133397, 0.07721371 ],
-					[ 0.143527, 0.0765013 ],
-					[ 0.123986, 0.08563131 ],
-					[ 0.103751, 0.0868457 ],
-					[ 0.0837787, 0.0883212 ],
-					[ 0.09371209, 0.0875252 ],
-					[ 0.07428381, 0.08929362 ],
-					[ 0.134057, 0.08519901 ],
-					[ 0.11388, 0.0862029 ],
-					[ 0.239907, 0.177635 ],
-					[ 0.279822, 0.06276 ],
-					[ 0.207237, 0.166939 ],
-					[ 0.217253, 0.165553 ],
-					[ 0.186853, 0.168797 ],
-					[ 0.237046, 0.161597 ],
-					[ 0.313271, 0.122066 ],
-					[ 0.235978, 0.153889 ],
-					[ 0.216034, 0.1573 ],
-					[ 0.20588, 0.158527 ],
-					[ 0.197129, 0.167994 ],
-					[ 0.20071, 0.185323 ],
-					[ 0.174792, 0.160739 ],
-					[ 0.169089, 0.187542 ],
-					[ 0.117078, 0.119586 ],
-					[ 0.147454, 0.118024 ],
-					[ 0.127028, 0.118919 ],
-					[ 0.107326, 0.120413 ],
-					[ 0.137155, 0.1184 ],
-					[ 0.09776609, 0.121403 ],
-					[ 0.088401, 0.122547 ],
-					[ 0.180237, 0.186871 ],
-					[ 0.190848, 0.186088 ],
-					[ 0.176386, 0.169442 ],
-					[ 0.157707, 0.187914 ],
-					[ 0.165761, 0.169971 ],
-					[ 0.0900824, 0.190551 ],
-					[ 0.08751491, 0.174147 ],
-					[ 0.07925722, 0.123869 ],
-					[ 0.238094, 0.0839822 ],
-					[ 0.206932, 0.08476341 ],
-					[ 0.227879, 0.0845803 ],
-					[ 0.158944, 0.126314 ],
-					[ 0.161421, 0.143687 ],
-					[ 0.164255, 0.161209 ],
-					[ 0.165254, 0.08428191 ],
-					[ 0.157883, 0.117758 ],
-					[ 0.154155, 0.07594392 ],
-					[ 0.0950221, 0.164934 ],
-					[ 0.0861759, 0.165789 ],
-					[ 0.10415, 0.16418 ],
-					[ 0.113518, 0.163532 ],
-					[ 0.123183, 0.162971 ],
-					[ 0.0963233, 0.173396 ],
-					[ 0.105373, 0.172753 ],
-					[ 0.114727, 0.172198 ],
-					[ 0.124351, 0.171715 ],
-					[ 0.107351, 0.189654 ],
-					[ 0.116636, 0.189341 ],
-					[ 0.126069, 0.189101 ],
-					[ 0.74747, 0.995794 ],
-					[ 0.154756, 0.0843881 ],
-					[ 0.742587, 0.995076 ],
-					[ 0.737717, 0.99415 ],
-					[ 0.247792, 0.0828419 ],
-					[ 0.28428, 0.149177 ],
-					[ 0.281211, 0.092478 ],
-					[ 0.292578, 0.05533081 ],
-					[ 0.27165, 0.097512 ],
-					[ 0.263199, 0.108936 ],
-					[ 0.252898, 0.111425 ],
-					[ 0.242533, 0.113359 ],
-					[ 0.232044, 0.114792 ],
-					[ 0.210828, 0.116545 ],
-					[ 0.192944, 0.142487 ],
-					[ 0.195822, 0.0767292 ],
-					[ 0.264402, 0.0784843 ],
-					[ 0.256508, 0.08105811 ],
-					[ 0.291768, 0.047941 ],
-					[ 0.255503, 0.07550431 ],
-					[ 0.247454, 0.0767462 ],
-					[ 0.237478, 0.07741451 ],
-					[ 0.227088, 0.07754871 ],
-					[ 0.2628, 0.07344311 ],
-					[ 0.205853, 0.076855 ],
-					[ 0.28833, 0.0527754 ],
-					[ 0.196615, 0.0847026 ],
-					[ 0.27146, 0.0750818 ],
-					[ 0.269174, 0.07040341 ],
-					[ 0.320536, 0.07979462 ],
-					[ 0.283266, 0.06627721 ],
-					[ 0.318072, 0.149927 ],
-					[ 0.301938, 0.149732 ],
-					[ 0.329003, 0.07968851 ],
-					[ 0.327673, 0.104224 ],
-					[ 0.326772, 0.122168 ],
-					[ 0.325832, 0.150004 ],
-					[ 0.310102, 0.14982 ],
-					[ 0.180031, 0.125878 ],
-					[ 0.195622, 0.159463 ],
-					[ 0.185267, 0.16018 ],
-					[ 0.182451, 0.142972 ],
-					[ 0.304894, 0.07458561 ],
-					[ 0.253571, 0.119375 ],
-					[ 0.24332, 0.121175 ],
-					[ 0.232909, 0.122668 ],
-					[ 0.211806, 0.124651 ],
-					[ 0.274543, 0.0669902 ],
-					[ 0.31758, 0.09541741 ],
-					[ 0.277663, 0.07100191 ],
-					[ 0.328152, 0.0955743 ],
-					[ 0.28904, 0.08544771 ],
-					[ 0.288275, 0.0610262 ],
-					[ 0.284656, 0.0580713 ],
-					[ 0.300733, 0.07133291 ],
-					[ 0.293304, 0.149599 ],
-					[ 0.321904, 0.104143 ],
-					[ 0.320091, 0.122111 ],
-					[ 0.322888, 0.0956011 ],
-					[ 0.324724, 0.07997431 ],
-					[ 0.229441, 0.180662 ],
-					[ 0.227202, 0.163779 ],
-					[ 0.2261, 0.155746 ],
-					[ 0.216311, 0.07724931 ],
-					[ 0.21738, 0.0847764 ],
-					[ 0.221453, 0.11584 ],
-					[ 0.222388, 0.123808 ],
-					[ 0.262646, 0.147804 ],
-					[ 0.295395, 0.07825951 ],
-					[ 0.308825, 0.0774885 ],
-					[ 0.299917, 0.0820283 ],
-					[ 0.329209, 0.07276279 ],
-					[ 0.325453, 0.07323942 ],
-					[ 0.321778, 0.0730219 ],
-					[ 0.312795, 0.07118371 ],
-					[ 0.305509, 0.0643792 ],
-					[ 0.309413, 0.0678085 ],
-					[ 0.296514, 0.0492794 ],
-					[ 0.30992, 0.0574238 ],
-					[ 0.314015, 0.0608899 ],
-					[ 0.325923, 0.06844971 ],
-					[ 0.32386, 0.0873927 ],
-					[ 0.31911, 0.0873791 ],
-					[ 0.328609, 0.08744311 ],
-					[ 0.246539, 0.159108 ],
-					[ 0.317711, 0.159282 ],
-					[ 0.325906, 0.159356 ],
-					[ 0.309379, 0.159107 ],
-					[ 0.301129, 0.159052 ],
-					[ 0.291798, 0.159172 ],
-					[ 0.280352, 0.159424 ],
-					[ 0.263133, 0.153834 ],
-					[ 0.295761, 0.102363 ],
-					[ 0.300379, 0.0929848 ],
-					[ 0.304823, 0.08463641 ],
-					[ 0.245524, 0.151801 ],
-					[ 0.293976, 0.090304 ],
-					[ 0.7013029, 0.983885 ],
-					[ 0.696313, 0.9833111 ],
-					[ 0.706017, 0.984634 ],
-					[ 0.710577, 0.985459 ],
-					[ 0.715113, 0.986383 ],
-					[ 0.719663, 0.987336 ],
-					[ 0.7241729, 0.98814 ],
-					[ 0.73348, 0.989876 ],
-					[ 0.7287329, 0.989008 ],
-					[ 0.742837, 0.991588 ],
-					[ 0.814297, 0.980373 ],
-					[ 0.809843, 0.98205 ],
-					[ 0.752417, 0.992561 ],
-					[ 0.768107, 0.992728 ],
-					[ 0.757443, 0.992849 ],
-					[ 0.7627829, 0.992886 ],
-					[ 0.801723, 0.985084 ],
-					[ 0.805657, 0.9835711 ],
-					[ 0.793553, 0.987657 ],
-					[ 0.797793, 0.986433 ],
-					[ 0.784463, 0.990114 ],
-					[ 0.77906, 0.9912429 ],
-					[ 0.789163, 0.9888811 ],
-					[ 0.77351, 0.992124 ],
-					[ 0.738133, 0.990739 ],
-					[ 0.7475601, 0.992157 ],
-					[ 0.175819, 0.08438721 ],
-					[ 0.186293, 0.0845622 ],
-					[ 0.244365, 0.136774 ],
-					[ 0.234377, 0.138403 ],
-					[ 0.200193, 0.116994 ],
-					[ 0.190616, 0.125612 ],
-					[ 0.201213, 0.12523 ],
-					[ 0.21382, 0.140957 ],
-					[ 0.224168, 0.139806 ],
-					[ 0.178975, 0.117432 ],
-					[ 0.189578, 0.117265 ],
-					[ 0.203408, 0.141838 ],
-					[ 0.328963, 0.06606609 ],
-					[ 0.323306, 0.0662156 ],
-					[ 0.0966753, 0.11293 ],
-					[ 0.08723792, 0.114091 ],
-					[ 0.12608, 0.110442 ],
-					[ 0.116111, 0.111117 ],
-					[ 0.136227, 0.109934 ],
-					[ 0.106305, 0.111944 ],
-					[ 0.146522, 0.109558 ],
-					[ 0.0779824, 0.11542 ],
-					[ 0.156948, 0.109316 ],
-					[ 0.305664, 0.05428731 ],
-					[ 0.301296, 0.0612076 ],
-					[ 0.250361, 0.09637289 ],
-					[ 0.259984, 0.09388079 ],
-					[ 0.269109, 0.0904593 ],
-					[ 0.209848, 0.1085 ],
-					[ 0.19923, 0.108827 ],
-					[ 0.277546, 0.08598121 ],
-					[ 0.284889, 0.0803358 ],
-					[ 0.220475, 0.107925 ],
-					[ 0.29114, 0.07421521 ],
-					[ 0.296545, 0.0677745 ],
-					[ 0.167462, 0.109167 ],
-					[ 0.178029, 0.109083 ],
-					[ 0.188619, 0.108991 ],
-					[ 0.309921, 0.103771 ],
-					[ 0.306204, 0.12197 ],
-					[ 0.312135, 0.09515341 ],
-					[ 0.314359, 0.0870122 ],
-					[ 0.317713, 0.07299661 ],
-					[ 0.316295, 0.079785 ],
-					[ 0.306462, 0.0943766 ],
-					[ 0.303334, 0.103317 ],
-					[ 0.318023, 0.06561461 ],
-					[ 0.314365, 0.07452721 ],
-					[ 0.309587, 0.0863783 ],
-					[ 0.312385, 0.0793725 ],
-					[ 0.298766, 0.121945 ],
-					[ 0.0909463, 0.139462 ],
-					[ 0.100181, 0.138432 ],
-					[ 0.109654, 0.137536 ],
-					[ 0.139382, 0.135667 ],
-					[ 0.149691, 0.135279 ],
-					[ 0.11934, 0.136781 ],
-					[ 0.129263, 0.136163 ],
-					[ 0.08193601, 0.140627 ],
-					[ 0.160125, 0.134962 ],
-					[ 0.170643, 0.134689 ],
-					[ 0.181188, 0.134394 ],
-					[ 0.2969151, 0.131117 ],
-					[ 0.304647, 0.131185 ],
-					[ 0.243895, 0.129032 ],
-					[ 0.253889, 0.127293 ],
-					[ 0.326379, 0.131349 ],
-					[ 0.319308, 0.131312 ],
-					[ 0.312085, 0.131236 ],
-					[ 0.23367, 0.130544 ],
-					[ 0.191741, 0.134031 ],
-					[ 0.223278, 0.131815 ],
-					[ 0.212802, 0.132794 ],
-					[ 0.202277, 0.133517 ],
-					[ 0.290799, 0.121999 ],
-					[ 0.28888, 0.131161 ],
-					[ 0.09566081, 0.104476 ],
-					[ 0.0861093, 0.105577 ],
-					[ 0.125267, 0.102084 ],
-					[ 0.115246, 0.102725 ],
-					[ 0.135408, 0.10157 ],
-					[ 0.105381, 0.10353 ],
-					[ 0.145712, 0.10121 ],
-					[ 0.076773, 0.106888 ],
-					[ 0.156131, 0.100965 ],
-					[ 0.208882, 0.100524 ],
-					[ 0.198308, 0.100726 ],
-					[ 0.22997, 0.09934961 ],
-					[ 0.21945, 0.100102 ],
-					[ 0.166636, 0.100848 ],
-					[ 0.177186, 0.100809 ],
-					[ 0.187749, 0.100797 ],
-					[ 0.240311, 0.09815691 ],
-					[ 0.231047, 0.107013 ],
-					[ 0.261808, 0.101093 ],
-					[ 0.251766, 0.103741 ],
-					[ 0.241506, 0.105646 ],
-					[ 0.273789, 0.105577 ],
-					[ 0.102822, 0.15559 ],
-					[ 0.09367941, 0.156439 ],
-					[ 0.112243, 0.15485 ],
-					[ 0.152333, 0.152826 ],
-					[ 0.141977, 0.153228 ],
-					[ 0.131827, 0.153686 ],
-					[ 0.121897, 0.154221 ],
-					[ 0.08475761, 0.157406 ],
-					[ 0.162798, 0.152441 ],
-					[ 0.173316, 0.152043 ],
-					[ 0.183803, 0.151569 ],
-					[ 0.19424, 0.150971 ],
-					[ 0.311024, 0.140505 ],
-					[ 0.30321, 0.140405 ],
-					[ 0.295115, 0.1403 ],
-					[ 0.244852, 0.144388 ],
-					[ 0.235122, 0.146172 ],
-					[ 0.225089, 0.147785 ],
-					[ 0.318622, 0.140577 ],
-					[ 0.204599, 0.150171 ],
-					[ 0.214897, 0.149119 ],
-					[ 0.3260511, 0.140642 ],
-					[ 0.28684, 0.140068 ],
-					[ 0.262858, 0.14096 ],
-					[ 0.285875, 0.100768 ],
-					[ 0.25009, 0.17396 ],
-					[ 0.269326, 0.165775 ],
-					[ 0.28061, 0.131376 ],
-					[ 0.278817, 0.139731 ],
-					[ 0.268634, 0.151687 ],
-					[ 0.276484, 0.147525 ],
-					[ 0.282205, 0.122507 ],
-					[ 0.254146, 0.142551 ],
-					[ 0.254017, 0.135081 ],
-					[ 0.254494, 0.149688 ],
-					[ 0.255396, 0.156443 ],
-					[ 0.259667, 0.170081 ],
-					[ 0.26368, 0.117226 ],
-					[ 0.263607, 0.12551 ],
-					[ 0.263266, 0.133443 ],
-					[ 0.273747, 0.114897 ],
-					[ 0.269763, 0.146742 ],
-					[ 0.270987, 0.139889 ],
-					[ 0.2721, 0.132166 ],
-					[ 0.273055, 0.123782 ],
-					[ 0.135283, 0.180053 ],
-					[ 0.145709, 0.179646 ],
-					[ 0.208694, 0.175503 ],
-					[ 0.218494, 0.173999 ],
-					[ 0.198785, 0.17661 ],
-					[ 0.188649, 0.177454 ],
-					[ 0.17814, 0.178164 ],
-					[ 0.156448, 0.17921 ],
-					[ 0.167342, 0.178757 ],
-					[ 0.08881461, 0.18244 ],
-					[ 0.115758, 0.180838 ],
-					[ 0.125341, 0.180449 ],
-					[ 0.106463, 0.181283 ],
-					[ 0.09746361, 0.181813 ],
-					[ 0.248052, 0.166447 ],
-					[ 0.257203, 0.163104 ],
-					[ 0.228371, 0.172022 ],
-					[ 0.265638, 0.159335 ],
-					[ 0.238345, 0.169469 ],
-					[ 0.2728111, 0.154518 ],
-					[ 0.327206, 0.113082 ],
-					[ 0.320962, 0.113061 ],
-					[ 0.314581, 0.11295 ],
-					[ 0.300828, 0.112605 ],
-					[ 0.307941, 0.112838 ],
-					[ 0.292926, 0.112461 ],
-					[ 0.283835, 0.112667 ],
-					[ 0.301159, 0.0515783 ],
-					[ 0.296962, 0.05811251 ],
-					[ 0.266605, 0.08417441 ],
-					[ 0.258115, 0.08719201 ],
-					[ 0.274318, 0.08024111 ],
-					[ 0.281123, 0.07550231 ],
-					[ 0.287103, 0.07011521 ],
-					[ 0.292337, 0.0643247 ],
-					[ 0.0946857, 0.0960104 ],
-					[ 0.08499851, 0.0970038 ],
-					[ 0.124551, 0.0938032 ],
-					[ 0.114514, 0.09443741 ],
-					[ 0.134713, 0.0933412 ],
-					[ 0.10453, 0.09515921 ],
-					[ 0.144986, 0.09293891 ],
-					[ 0.07555521, 0.09816891 ],
-					[ 0.155414, 0.0926859 ],
-					[ 0.207914, 0.0926175 ],
-					[ 0.197442, 0.0926903 ],
-					[ 0.228875, 0.0918608 ],
-					[ 0.218421, 0.09238049 ],
-					[ 0.16591, 0.0925734 ],
-					[ 0.176449, 0.09259401 ],
-					[ 0.186965, 0.09265761 ],
-					[ 0.248925, 0.0894025 ],
-					[ 0.239113, 0.090909 ],
-					[ 0.0340908, 0.15586 ],
-					[ 0.04017691, 0.18167 ],
-					[ 0.04252061, 0.196477 ],
-					[ 0.0289683, 0.134948 ],
-					[ 0.0122247, 0.0828343 ],
-					[ 0.0305611, 0.14001 ],
-					[ 0.333344, 0.0477759 ],
-					[ 0.0203282, 0.108548 ],
-					[ 0.03875531, 0.173305 ],
-					[ 0.00610809, 0.0671819 ],
-					[ 0.0324298, 0.147308 ],
-					[ 0.0363308, 0.164516 ],
-					[ 0.0415642, 0.189494 ],
-					[ 0.0161195, 0.09517901 ],
-					[ 0.0224993, 0.114852 ],
-					[ 0.0268503, 0.128478 ],
-					[ 0.675253, 0.982493 ],
-					[ 0.68032, 0.984458 ],
-					[ 0.318069, 0.04232691 ],
-					[ 0.824177, 0.979364 ],
-					[ 0.0472071, 0.179902 ],
-					[ 0.0492658, 0.195181 ],
-					[ 0.0562775, 0.193866 ],
-					[ 0.0457321, 0.171734 ],
-					[ 0.32835, 0.0482705 ],
-					[ 0.322299, 0.045563 ],
-					[ 0.0214802, 0.07604431 ],
-					[ 0.683177, 0.982573 ],
-					[ 0.823583, 0.9770851 ],
-					[ 0.676407, 0.980419 ],
-					[ 0.829163, 0.9780861 ],
-					[ 0.321939, 0.0341665 ],
-					[ 0.82868, 0.9758421 ],
-					[ 0.06405661, 0.192618 ],
-					[ 0.0384985, 0.139495 ],
-					[ 0.0420066, 0.15504 ],
-					[ 0.313795, 0.0395552 ],
-					[ 0.0271325, 0.0726921 ],
-					[ 0.318052, 0.031964 ],
-					[ 0.0661605, 0.151412 ],
-					[ 0.06309371, 0.135117 ],
-					[ 0.0615991, 0.127013 ],
-					[ 0.07049961, 0.175981 ],
-					[ 0.06915411, 0.167826 ],
-					[ 0.0728081, 0.191844 ],
-					[ 0.0600829, 0.118776 ],
-					[ 0.324246, 0.0502014 ],
-					[ 0.0293932, 0.07964572 ],
-					[ 0.0559235, 0.09185541 ],
-					[ 0.0228845, 0.08263151 ],
-					[ 0.0558412, 0.08164071 ],
-					[ 0.0402606, 0.146946 ],
-					[ 0.06462771, 0.143249 ],
-					[ 0.0586056, 0.110335 ],
-					[ 0.0438851, 0.163357 ],
-					[ 0.06767371, 0.159626 ],
-					[ 0.05565231, 0.186284 ],
-					[ 0.0634165, 0.185028 ],
-					[ 0.0483981, 0.187764 ],
-					[ 0.0717198, 0.184027 ],
-					[ 0.04482431, 0.130773 ],
-					[ 0.0499021, 0.153924 ],
-					[ 0.0515932, 0.162101 ],
-					[ 0.0532154, 0.170299 ],
-					[ 0.0545835, 0.178392 ],
-					[ 0.04651691, 0.138201 ],
-					[ 0.0482172, 0.14592 ],
-					[ 0.68465, 0.9870721 ],
-					[ 0.0571432, 0.101411 ],
-					[ 0.0310253, 0.08700161 ],
-					[ 0.0364608, 0.0999625 ],
-					[ 0.0390089, 0.107737 ],
-					[ 0.0430356, 0.123269 ],
-					[ 0.041162, 0.115642 ],
-					[ 0.0329699, 0.118804 ],
-					[ 0.08023342, 0.18318 ],
-					[ 0.07892741, 0.175002 ],
-					[ 0.08156921, 0.191167 ],
-					[ 0.0761051, 0.158467 ],
-					[ 0.07316051, 0.141891 ],
-					[ 0.07753111, 0.16676 ],
-					[ 0.07462621, 0.150178 ],
-					[ 0.068951, 0.116987 ],
-					[ 0.07030471, 0.125341 ],
-					[ 0.07172491, 0.133635 ],
-					[ 0.0663367, 0.09959571 ],
-					[ 0.0676065, 0.108419 ],
-					[ 0.06515481, 0.0903571 ],
-					[ 0.692157, 0.986109 ],
-					[ 0.690457, 0.982852 ],
-					[ 0.321995, 0.0568036 ],
-					[ 0.30975, 0.0470974 ],
-					[ 0.31816, 0.0533146 ],
-					[ 0.314082, 0.0499547 ],
-					[ 0.327215, 0.05893201 ],
-					[ 0.333366, 0.0574972 ],
-					[ 0.818867, 0.9785681 ],
-					[ 0.305164, 0.04445621 ],
-					[ 0.819567, 0.980957 ],
-					[ 0.300351, 0.04228931 ],
-					[ 0.0367564, 0.132777 ],
-					[ 0.0348797, 0.12585 ],
-					[ 0.0253058, 0.122267 ],
-					[ 0.0179132, 0.0845168 ],
-					[ 0.0164191, 0.0789751 ],
-					[ 0.0110719, 0.06522711 ],
-					[ 0.0306469, 0.111467 ],
-					[ 0.0282088, 0.104353 ],
-					[ 0.0228096, 0.09023411 ],
-					[ 0.0389448, 0.08426871 ],
-					[ 0.0365386, 0.0762753 ],
-					[ 0.309097, 0.0369255 ],
-					[ 0.303899, 0.03438221 ],
-					[ 0.0137529, 0.0875254 ],
-					[ 0.0186344, 0.0888897 ],
-					[ 0.0152526, 0.0918238 ],
-					[ 0.0278734, 0.0607671 ],
-					[ 0.0328541, 0.0590132 ],
-					[ 0.0332335, 0.067542 ],
-					[ 0.0285069, 0.06527521 ],
-					[ 0.0244721, 0.067464 ],
-					[ 0.0194909, 0.0698859 ],
-					[ 0.0141015, 0.0724155 ],
-					[ 0.009495012, 0.07548951 ],
-					[ 0.06236621, 0.177092 ],
-					[ 0.0610166, 0.169008 ],
-					[ 0.0595189, 0.160839 ],
-					[ 0.05792451, 0.152691 ],
-					[ 0.056315, 0.144615 ],
-					[ 0.0547138, 0.136687 ],
-					[ 0.0530827, 0.128816 ],
-					[ 0.0514503, 0.120898 ],
-					[ 0.04972231, 0.11268 ],
-					[ 0.0478631, 0.103956 ],
-					[ 0.04568, 0.0939052 ],
-					[ 0.0391975, 0.09066861 ],
-					[ 0.0330294, 0.09375229 ],
-					[ 0.0254622, 0.0974231 ],
-					[ 0.0178699, 0.101242 ],
-					[ 0.568294, 0.190055 ],
-					[ 0.522055, 0.170832 ],
-					[ 0.520072, 0.188371 ],
-					[ 0.523335, 0.162035 ],
-					[ 0.5129729, 0.161605 ],
-					[ 0.511555, 0.170399 ],
-					[ 0.530759, 0.188786 ],
-					[ 0.5323049, 0.171265 ],
-					[ 0.533503, 0.162492 ],
-					[ 0.5223079, 0.08479001 ],
-					[ 0.494899, 0.143305 ],
-					[ 0.497387, 0.126052 ],
-					[ 0.498437, 0.117553 ],
-					[ 0.515761, 0.144036 ],
-					[ 0.545974, 0.145583 ],
-					[ 0.5360969, 0.144981 ],
-					[ 0.574326, 0.148035 ],
-					[ 0.5832779, 0.149075 ],
-					[ 0.555658, 0.146288 ],
-					[ 0.565096, 0.147101 ],
-					[ 0.52601, 0.14447 ],
-					[ 0.538523, 0.127646 ],
-					[ 0.5182329, 0.126645 ],
-					[ 0.5581411, 0.129127 ],
-					[ 0.5769899, 0.131134 ],
-					[ 0.567645, 0.130054 ],
-					[ 0.586045, 0.132336 ],
-					[ 0.548408, 0.128323 ],
-					[ 0.528453, 0.127088 ],
-					[ 0.456389, 0.184245 ],
-					[ 0.446951, 0.182722 ],
-					[ 0.350778, 0.104088 ],
-					[ 0.5939221, 0.0803109 ],
-					[ 0.584443, 0.07951411 ],
-					[ 0.553227, 0.07802261 ],
-					[ 0.5431041, 0.0773631 ],
-					[ 0.573891, 0.0789768 ],
-					[ 0.563663, 0.07851221 ],
-					[ 0.533272, 0.07719751 ],
-					[ 0.523127, 0.07649061 ],
-					[ 0.542595, 0.08573191 ],
-					[ 0.562829, 0.08693471 ],
-					[ 0.582831, 0.0883766 ],
-					[ 0.572893, 0.08760391 ],
-					[ 0.592353, 0.08933551 ],
-					[ 0.532527, 0.08528771 ],
-					[ 0.552686, 0.0863212 ],
-					[ 0.426737, 0.177616 ],
-					[ 0.3868791, 0.06275401 ],
-					[ 0.459482, 0.166924 ],
-					[ 0.449459, 0.165543 ],
-					[ 0.479868, 0.168772 ],
-					[ 0.429659, 0.161601 ],
-					[ 0.353501, 0.122091 ],
-					[ 0.430772, 0.153894 ],
-					[ 0.450727, 0.157285 ],
-					[ 0.460888, 0.158504 ],
-					[ 0.469592, 0.167973 ],
-					[ 0.465966, 0.185321 ],
-					[ 0.491968, 0.160703 ],
-					[ 0.497584, 0.187552 ],
-					[ 0.549495, 0.119794 ],
-					[ 0.519276, 0.118089 ],
-					[ 0.539567, 0.119098 ],
-					[ 0.559234, 0.120613 ],
-					[ 0.529503, 0.11853 ],
-					[ 0.56884, 0.12158 ],
-					[ 0.57819, 0.12268 ],
-					[ 0.486434, 0.186868 ],
-					[ 0.47584, 0.186074 ],
-					[ 0.49033, 0.169416 ],
-					[ 0.50895, 0.187874 ],
-					[ 0.500936, 0.169945 ],
-					[ 0.57656, 0.190551 ],
-					[ 0.579108, 0.174161 ],
-					[ 0.587405, 0.12397 ],
-					[ 0.42859, 0.0839868 ],
-					[ 0.459749, 0.08475361 ],
-					[ 0.438805, 0.08458301 ],
-					[ 0.5078621, 0.126312 ],
-					[ 0.505368, 0.143663 ],
-					[ 0.50248, 0.161177 ],
-					[ 0.501409, 0.0842867 ],
-					[ 0.508914, 0.117767 ],
-					[ 0.512494, 0.07592141 ],
-					[ 0.571591, 0.16497 ],
-					[ 0.580456, 0.165823 ],
-					[ 0.562455, 0.164219 ],
-					[ 0.55307, 0.163566 ],
-					[ 0.543413, 0.162996 ],
-					[ 0.570301, 0.173413 ],
-					[ 0.5612299, 0.172767 ],
-					[ 0.551873, 0.172208 ],
-					[ 0.542245, 0.171717 ],
-					[ 0.559312, 0.189643 ],
-					[ 0.550016, 0.189349 ],
-					[ 0.54059, 0.189104 ],
-					[ 0.919197, 0.995794 ],
-					[ 0.511887, 0.0844138 ],
-					[ 0.92408, 0.995076 ],
-					[ 0.92895, 0.99415 ],
-					[ 0.418893, 0.08285 ],
-					[ 0.3824, 0.149194 ],
-					[ 0.385567, 0.0925085 ],
-					[ 0.374068, 0.05533471 ],
-					[ 0.395135, 0.09754391 ],
-					[ 0.403611, 0.108969 ],
-					[ 0.413921, 0.11145 ],
-					[ 0.424294, 0.113374 ],
-					[ 0.434793, 0.114794 ],
-					[ 0.456025, 0.116519 ],
-					[ 0.473903, 0.142444 ],
-					[ 0.470829, 0.07672361 ],
-					[ 0.402265, 0.07849701 ],
-					[ 0.410164, 0.08106961 ],
-					[ 0.374878, 0.0478903 ],
-					[ 0.411128, 0.07553001 ],
-					[ 0.419196, 0.0767673 ],
-					[ 0.429152, 0.07741321 ],
-					[ 0.439565, 0.07753671 ],
-					[ 0.403847, 0.07344971 ],
-					[ 0.460832, 0.07686891 ],
-					[ 0.378308, 0.05276011 ],
-					[ 0.470073, 0.08468941 ],
-					[ 0.395209, 0.07509362 ],
-					[ 0.397481, 0.07041571 ],
-					[ 0.346264, 0.07980501 ],
-					[ 0.383386, 0.0662799 ],
-					[ 0.348597, 0.149939 ],
-					[ 0.36472, 0.149747 ],
-					[ 0.337798, 0.07969221 ],
-					[ 0.339133, 0.104232 ],
-					[ 0.339998, 0.122177 ],
-					[ 0.340831, 0.150009 ],
-					[ 0.356559, 0.149832 ],
-					[ 0.4868391, 0.125831 ],
-					[ 0.471149, 0.159433 ],
-					[ 0.481503, 0.160146 ],
-					[ 0.484393, 0.142926 ],
-					[ 0.361877, 0.07460011 ],
-					[ 0.413254, 0.119403 ],
-					[ 0.423514, 0.121191 ],
-					[ 0.433934, 0.12267 ],
-					[ 0.455056, 0.124625 ],
-					[ 0.392118, 0.0669731 ],
-					[ 0.349231, 0.09543671 ],
-					[ 0.388994, 0.07100481 ],
-					[ 0.338659, 0.0955812 ],
-					[ 0.37773, 0.08547321 ],
-					[ 0.378375, 0.0610296 ],
-					[ 0.382016, 0.0580712 ],
-					[ 0.366015, 0.07134581 ],
-					[ 0.373361, 0.149613 ],
-					[ 0.344902, 0.104159 ],
-					[ 0.34668, 0.122129 ],
-					[ 0.343924, 0.09561461 ],
-					[ 0.342078, 0.07998161 ],
-					[ 0.437213, 0.180655 ],
-					[ 0.439506, 0.163776 ],
-					[ 0.440656, 0.155741 ],
-					[ 0.45036, 0.07725141 ],
-					[ 0.4493, 0.0847733 ],
-					[ 0.445391, 0.115828 ],
-					[ 0.444464, 0.123796 ],
-					[ 0.404092, 0.147829 ],
-					[ 0.371366, 0.07827871 ],
-					[ 0.357961, 0.07750411 ],
-					[ 0.366865, 0.0820501 ],
-					[ 0.337579, 0.072765 ],
-					[ 0.341335, 0.07324392 ],
-					[ 0.345008, 0.07302841 ],
-					[ 0.353978, 0.07119311 ],
-					[ 0.361224, 0.0643859 ],
-					[ 0.357341, 0.0678167 ],
-					[ 0.370122, 0.0492827 ],
-					[ 0.356792, 0.0574251 ],
-					[ 0.352719, 0.0608919 ],
-					[ 0.340852, 0.0684522 ],
-					[ 0.342949, 0.0874031 ],
-					[ 0.3477, 0.08739401 ],
-					[ 0.338201, 0.08744841 ],
-					[ 0.420163, 0.159117 ],
-					[ 0.34895, 0.159256 ],
-					[ 0.340745, 0.159356 ],
-					[ 0.357271, 0.159089 ],
-					[ 0.365566, 0.159041 ],
-					[ 0.374846, 0.159165 ],
-					[ 0.386305, 0.159423 ],
-					[ 0.403571, 0.153851 ],
-					[ 0.371043, 0.102399 ],
-					[ 0.366423, 0.0930143 ],
-					[ 0.361973, 0.08465871 ],
-					[ 0.421221, 0.151813 ],
-					[ 0.372816, 0.0903328 ],
-					[ 0.965363, 0.983885 ],
-					[ 0.970353, 0.9833111 ],
-					[ 0.96065, 0.984634 ],
-					[ 0.95609, 0.985459 ],
-					[ 0.951553, 0.986383 ],
-					[ 0.9470031, 0.987336 ],
-					[ 0.942493, 0.98814 ],
-					[ 0.9331871, 0.989876 ],
-					[ 0.937933, 0.989008 ],
-					[ 0.92383, 0.991588 ],
-					[ 0.85237, 0.980373 ],
-					[ 0.856823, 0.98205 ],
-					[ 0.91425, 0.992561 ],
-					[ 0.89856, 0.992728 ],
-					[ 0.909223, 0.992849 ],
-					[ 0.903883, 0.992886 ],
-					[ 0.864943, 0.985084 ],
-					[ 0.86101, 0.9835711 ],
-					[ 0.873113, 0.987657 ],
-					[ 0.868873, 0.986433 ],
-					[ 0.8822029, 0.990114 ],
-					[ 0.887607, 0.9912429 ],
-					[ 0.877503, 0.9888811 ],
-					[ 0.893157, 0.992124 ],
-					[ 0.928533, 0.990739 ],
-					[ 0.919107, 0.992157 ],
-					[ 0.490859, 0.0843767 ],
-					[ 0.480394, 0.08454861 ],
-					[ 0.422444, 0.13679 ],
-					[ 0.432441, 0.138407 ],
-					[ 0.466667, 0.116957 ],
-					[ 0.476258, 0.125566 ],
-					[ 0.465657, 0.125192 ],
-					[ 0.453015, 0.140934 ],
-					[ 0.442658, 0.139797 ],
-					[ 0.487886, 0.117389 ],
-					[ 0.477287, 0.117221 ],
-					[ 0.463434, 0.141804 ],
-					[ 0.337803, 0.0660667 ],
-					[ 0.343459, 0.0662181 ],
-					[ 0.569893, 0.113104 ],
-					[ 0.579399, 0.11423 ],
-					[ 0.5405, 0.110647 ],
-					[ 0.550439, 0.111336 ],
-					[ 0.530408, 0.11008 ],
-					[ 0.560268, 0.112157 ],
-					[ 0.520185, 0.109641 ],
-					[ 0.58861, 0.115509 ],
-					[ 0.509823, 0.109337 ],
-					[ 0.361026, 0.0542885 ],
-					[ 0.365411, 0.0612132 ],
-					[ 0.416409, 0.0963914 ],
-					[ 0.406778, 0.09390491 ],
-					[ 0.397647, 0.0904852 ],
-					[ 0.456982, 0.108477 ],
-					[ 0.467607, 0.108793 ],
-					[ 0.389203, 0.0860058 ],
-					[ 0.381852, 0.0803561 ],
-					[ 0.446348, 0.107913 ],
-					[ 0.375591, 0.07423051 ],
-					[ 0.370176, 0.0677847 ],
-					[ 0.499353, 0.109149 ],
-					[ 0.488806, 0.109046 ],
-					[ 0.478221, 0.108951 ],
-					[ 0.356887, 0.103799 ],
-					[ 0.360572, 0.122002 ],
-					[ 0.354676, 0.09517761 ],
-					[ 0.352449, 0.08703091 ],
-					[ 0.34907, 0.07300501 ],
-					[ 0.350505, 0.07979842 ],
-					[ 0.360346, 0.0944043 ],
-					[ 0.363473, 0.10335 ],
-					[ 0.348735, 0.06561841 ],
-					[ 0.352422, 0.07453842 ],
-					[ 0.357217, 0.0863997 ],
-					[ 0.3544111, 0.07938781 ],
-					[ 0.368014, 0.121982 ],
-					[ 0.575659, 0.139571 ],
-					[ 0.56642, 0.138569 ],
-					[ 0.556919, 0.137683 ],
-					[ 0.527288, 0.135742 ],
-					[ 0.517049, 0.135305 ],
-					[ 0.547241, 0.136926 ],
-					[ 0.537347, 0.13628 ],
-					[ 0.584712, 0.140713 ],
-					[ 0.5066789, 0.134948 ],
-					[ 0.496202, 0.13465 ],
-					[ 0.485676, 0.134346 ],
-					[ 0.369837, 0.131151 ],
-					[ 0.362099, 0.131214 ],
-					[ 0.422932, 0.129049 ],
-					[ 0.41293, 0.127321 ],
-					[ 0.340361, 0.131357 ],
-					[ 0.347434, 0.131328 ],
-					[ 0.3546591, 0.131259 ],
-					[ 0.433167, 0.130547 ],
-					[ 0.475126, 0.133985 ],
-					[ 0.443567, 0.131804 ],
-					[ 0.454053, 0.132769 ],
-					[ 0.464585, 0.13348 ],
-					[ 0.375987, 0.122039 ],
-					[ 0.37788, 0.131198 ],
-					[ 0.5709379, 0.104644 ],
-					[ 0.580474, 0.105695 ],
-					[ 0.541294, 0.102283 ],
-					[ 0.551298, 0.102951 ],
-					[ 0.531196, 0.101732 ],
-					[ 0.561166, 0.103727 ],
-					[ 0.520962, 0.101299 ],
-					[ 0.589883, 0.106974 ],
-					[ 0.510601, 0.100998 ],
-					[ 0.45791, 0.100504 ],
-					[ 0.46849, 0.100698 ],
-					[ 0.436812, 0.0993505 ],
-					[ 0.447337, 0.100093 ],
-					[ 0.500137, 0.100839 ],
-					[ 0.489608, 0.10078 ],
-					[ 0.4790511, 0.100764 ],
-					[ 0.426465, 0.09816771 ],
-					[ 0.435768, 0.107015 ],
-					[ 0.404985, 0.101122 ],
-					[ 0.415033, 0.103764 ],
-					[ 0.425302, 0.105659 ],
-					[ 0.393015, 0.105613 ],
-					[ 0.563774, 0.155659 ],
-					[ 0.5729379, 0.156502 ],
-					[ 0.554344, 0.15492 ],
-					[ 0.514384, 0.152814 ],
-					[ 0.524682, 0.153243 ],
-					[ 0.5347869, 0.153726 ],
-					[ 0.544689, 0.154281 ],
-					[ 0.581871, 0.157456 ],
-					[ 0.503967, 0.152411 ],
-					[ 0.493481, 0.152003 ],
-					[ 0.483009, 0.151527 ],
-					[ 0.472574, 0.150934 ],
-					[ 0.355682, 0.140524 ],
-					[ 0.363497, 0.140428 ],
-					[ 0.371598, 0.140326 ],
-					[ 0.421929, 0.144403 ],
-					[ 0.431667, 0.146176 ],
-					[ 0.441707, 0.147777 ],
-					[ 0.348085, 0.14059 ],
-					[ 0.46221, 0.150142 ],
-					[ 0.451906, 0.1491 ],
-					[ 0.340654, 0.140649 ],
-					[ 0.379885, 0.140097 ],
-					[ 0.403909, 0.140991 ],
-					[ 0.380923, 0.100804 ],
-					[ 0.416594, 0.173986 ],
-					[ 0.397366, 0.165797 ],
-					[ 0.386162, 0.131415 ],
-					[ 0.387925, 0.139765 ],
-					[ 0.39807, 0.151707 ],
-					[ 0.390224, 0.147548 ],
-					[ 0.384587, 0.122549 ],
-					[ 0.412629, 0.142575 ],
-					[ 0.412784, 0.135109 ],
-					[ 0.412248, 0.149708 ],
-					[ 0.411307, 0.156458 ],
-					[ 0.407009, 0.170079 ],
-					[ 0.403136, 0.117261 ],
-					[ 0.403202, 0.125546 ],
-					[ 0.403527, 0.133477 ],
-					[ 0.393061, 0.114938 ],
-					[ 0.396964, 0.146769 ],
-					[ 0.39577, 0.139923 ],
-					[ 0.394683, 0.132205 ],
-					[ 0.393746, 0.123823 ],
-					[ 0.5313269, 0.180044 ],
-					[ 0.520921, 0.179635 ],
-					[ 0.457974, 0.175497 ],
-					[ 0.448161, 0.173993 ],
-					[ 0.46788, 0.1766 ],
-					[ 0.478018, 0.177443 ],
-					[ 0.488529, 0.17815 ],
-					[ 0.510191, 0.179192 ],
-					[ 0.499314, 0.178744 ],
-					[ 0.5778201, 0.182439 ],
-					[ 0.550843, 0.180834 ],
-					[ 0.541264, 0.18044 ],
-					[ 0.560151, 0.181281 ],
-					[ 0.56916, 0.18181 ],
-					[ 0.418599, 0.16645 ],
-					[ 0.409457, 0.163115 ],
-					[ 0.438282, 0.172023 ],
-					[ 0.40103, 0.159341 ],
-					[ 0.428309, 0.169471 ],
-					[ 0.393864, 0.154531 ],
-					[ 0.339586, 0.113091 ],
-					[ 0.34583, 0.113078 ],
-					[ 0.3522131, 0.112975 ],
-					[ 0.36597, 0.112641 ],
-					[ 0.358855, 0.112869 ],
-					[ 0.373874, 0.112501 ],
-					[ 0.382967, 0.112708 ],
-					[ 0.365504, 0.0515801 ],
-					[ 0.369715, 0.05811701 ],
-					[ 0.40011, 0.08419381 ],
-					[ 0.408607, 0.08720981 ],
-					[ 0.392393, 0.08025901 ],
-					[ 0.38558, 0.07551561 ],
-					[ 0.379592, 0.07012501 ],
-					[ 0.37435, 0.0643318 ],
-					[ 0.571887, 0.09613821 ],
-					[ 0.581629, 0.0971029 ],
-					[ 0.541995, 0.093992 ],
-					[ 0.552031, 0.09461541 ],
-					[ 0.5318789, 0.0934726 ],
-					[ 0.562032, 0.0953315 ],
-					[ 0.5216479, 0.09303001 ],
-					[ 0.59104, 0.0982291 ],
-					[ 0.5112749, 0.0927187 ],
-					[ 0.458828, 0.0926023 ],
-					[ 0.469304, 0.092669 ],
-					[ 0.437862, 0.091862 ],
-					[ 0.448317, 0.0923735 ],
-					[ 0.500811, 0.092574 ],
-					[ 0.490291, 0.0925754 ],
-					[ 0.479783, 0.09263401 ],
-					[ 0.417804, 0.0894163 ],
-					[ 0.427621, 0.0909169 ],
-					[ 0.991413, 0.982493 ],
-					[ 0.986347, 0.984458 ],
-					[ 0.348589, 0.0423185 ],
-					[ 0.84249, 0.979364 ],
-					[ 0.6194121, 0.179906 ],
-					[ 0.617407, 0.195188 ],
-					[ 0.610433, 0.193885 ],
-					[ 0.62088, 0.171735 ],
-					[ 0.338337, 0.0482619 ],
-					[ 0.344373, 0.0455515 ],
-					[ 0.6451251, 0.07602741 ],
-					[ 0.98349, 0.982573 ],
-					[ 0.843083, 0.9770851 ],
-					[ 0.99026, 0.980419 ],
-					[ 0.8375031, 0.9780861 ],
-					[ 0.344694, 0.0341711 ],
-					[ 0.837987, 0.9758421 ],
-					[ 0.602609, 0.192636 ],
-					[ 0.628135, 0.139501 ],
-					[ 0.624614, 0.155037 ],
-					[ 0.352852, 0.0395487 ],
-					[ 0.639474, 0.0726755 ],
-					[ 0.348574, 0.0319722 ],
-					[ 0.600467, 0.151444 ],
-					[ 0.6035141, 0.135153 ],
-					[ 0.605081, 0.127055 ],
-					[ 0.5961211, 0.17599 ],
-					[ 0.5974801, 0.167846 ],
-					[ 0.5938651, 0.19185 ],
-					[ 0.606505, 0.118803 ],
-					[ 0.342449, 0.0501937 ],
-					[ 0.637204, 0.07962621 ],
-					[ 0.61071, 0.0918591 ],
-					[ 0.6437221, 0.0826105 ],
-					[ 0.610875, 0.08165001 ],
-					[ 0.626348, 0.146948 ],
-					[ 0.602034, 0.143289 ],
-					[ 0.6080641, 0.110363 ],
-					[ 0.622731, 0.163358 ],
-					[ 0.5989621, 0.159651 ],
-					[ 0.610972, 0.186284 ],
-					[ 0.603201, 0.185024 ],
-					[ 0.618228, 0.187762 ],
-					[ 0.594903, 0.184031 ],
-					[ 0.621833, 0.130784 ],
-					[ 0.616714, 0.153932 ],
-					[ 0.615032, 0.162108 ],
-					[ 0.613407, 0.170306 ],
-					[ 0.612034, 0.178395 ],
-					[ 0.620086, 0.138209 ],
-					[ 0.618427, 0.145932 ],
-					[ 0.982017, 0.9870721 ],
-					[ 0.609443, 0.101421 ],
-					[ 0.635583, 0.08697721 ],
-					[ 0.630164, 0.09994651 ],
-					[ 0.6275761, 0.107725 ],
-					[ 0.6235511, 0.12327 ],
-					[ 0.625486, 0.115642 ],
-					[ 0.633621, 0.118798 ],
-					[ 0.586392, 0.18318 ],
-					[ 0.587707, 0.175017 ],
-					[ 0.585064, 0.191177 ],
-					[ 0.5905291, 0.158506 ],
-					[ 0.5934611, 0.141948 ],
-					[ 0.589096, 0.166784 ],
-					[ 0.592021, 0.150228 ],
-					[ 0.5977251, 0.117051 ],
-					[ 0.596296, 0.1254 ],
-					[ 0.594946, 0.133702 ],
-					[ 0.600315, 0.09963451 ],
-					[ 0.598982, 0.108463 ],
-					[ 0.601443, 0.0903758 ],
-					[ 0.9745101, 0.986109 ],
-					[ 0.97621, 0.982852 ],
-					[ 0.344729, 0.05680081 ],
-					[ 0.3569191, 0.0470947 ],
-					[ 0.348546, 0.0533104 ],
-					[ 0.352605, 0.04995091 ],
-					[ 0.339521, 0.05893031 ],
-					[ 0.8478001, 0.9785681 ],
-					[ 0.361484, 0.04445491 ],
-					[ 0.8471001, 0.980957 ],
-					[ 0.366273, 0.042288 ],
-					[ 0.629847, 0.132777 ],
-					[ 0.631751, 0.125853 ],
-					[ 0.6486961, 0.08450851 ],
-					[ 0.650197, 0.07895961 ],
-					[ 0.6555911, 0.06525881 ],
-					[ 0.6359789, 0.111453 ],
-					[ 0.638386, 0.10434 ],
-					[ 0.6437891, 0.09021441 ],
-					[ 0.627652, 0.08425331 ],
-					[ 0.630068, 0.07626291 ],
-					[ 0.357537, 0.0369235 ],
-					[ 0.362719, 0.0343808 ],
-					[ 0.647977, 0.08887791 ],
-					[ 0.638779, 0.0607405 ],
-					[ 0.63381, 0.0590186 ],
-					[ 0.633372, 0.06753731 ],
-					[ 0.6381, 0.06526781 ],
-					[ 0.642137, 0.0674558 ],
-					[ 0.6471221, 0.0698745 ],
-					[ 0.652523, 0.07239871 ],
-					[ 0.604261, 0.177099 ],
-					[ 0.605607, 0.169019 ],
-					[ 0.6071091, 0.160856 ],
-					[ 0.6087191, 0.152711 ],
-					[ 0.610299, 0.144635 ],
-					[ 0.611953, 0.136712 ],
-					[ 0.6135111, 0.128831 ],
-					[ 0.615221, 0.120917 ],
-					[ 0.616858, 0.112683 ],
-					[ 0.618784, 0.103956 ],
-					[ 0.620912, 0.0938955 ],
-					[ 0.6274201, 0.09064911 ],
-					[ 0.6335621, 0.0937299 ],
-					[ 0.6411561, 0.09740061 ],
-					[ 0.017996, 0.0635398 ],
-					[ 0.0228003, 0.0620086 ],
-					[ 0.723557, 0.9913 ],
-					[ 0.71914, 0.990372 ],
-					[ 0.71461, 0.989389 ],
-					[ 0.705867, 0.9875191 ],
-					[ 0.710157, 0.988399 ],
-					[ 0.696947, 0.986301 ],
-					[ 0.72811, 0.9922389 ],
-					[ 0.701513, 0.98679 ],
-					[ 0.73294, 0.993202 ],
-					[ 0.773927, 0.995941 ],
-					[ 0.768447, 0.996599 ],
-					[ 0.779833, 0.994974 ],
-					[ 0.785527, 0.993706 ],
-					[ 0.75747, 0.9966769 ],
-					[ 0.7523969, 0.996312 ],
-					[ 0.81069, 0.9845141 ],
-					[ 0.815073, 0.982774 ],
-					[ 0.7902869, 0.9922739 ],
-					[ 0.79476, 0.990808 ],
-					[ 0.79896, 0.989323 ],
-					[ 0.802847, 0.987779 ],
-					[ 0.806667, 0.986178 ],
-					[ 0.7629099, 0.996796 ],
-					[ 0.164629, 0.07582821 ],
-					[ 0.185807, 0.0764613 ],
-					[ 0.175388, 0.07610791 ],
-					[ 0.06424121, 0.0807005 ],
-					[ 0.670197, 0.980882 ],
-					[ 0.6709369, 0.978733 ],
-					[ 0.32848, 0.0367978 ],
-					[ 0.333324, 0.0371669 ],
-					[ 0.687743, 0.98629 ],
-					[ 0.0490501, 0.08311441 ],
-					[ 0.295732, 0.0409695 ],
-					[ 0.307385, 0.0256288 ],
-					[ 0.313443, 0.0292482 ],
-					[ 0.0412136, 0.06443781 ],
-					[ 0.0446668, 0.07354221 ],
-					[ 0.298758, 0.0326993 ],
-					[ 0.0381351, 0.0566703 ],
-					[ 0.30205, 0.0221697 ],
-					[ 0.648675, 0.0635457 ],
-					[ 0.6438751, 0.0619804 ],
-					[ 0.9475271, 0.990372 ],
-					[ 0.9431101, 0.9913 ],
-					[ 0.952057, 0.989389 ],
-					[ 0.9608001, 0.9875191 ],
-					[ 0.9565101, 0.988399 ],
-					[ 0.9697201, 0.986301 ],
-					[ 0.9385571, 0.9922389 ],
-					[ 0.965153, 0.98679 ],
-					[ 0.9337271, 0.993202 ],
-					[ 0.89822, 0.996599 ],
-					[ 0.89274, 0.995941 ],
-					[ 0.886833, 0.994974 ],
-					[ 0.88114, 0.993706 ],
-					[ 0.91427, 0.996312 ],
-					[ 0.909197, 0.9966769 ],
-					[ 0.8559769, 0.9845141 ],
-					[ 0.851593, 0.982774 ],
-					[ 0.87638, 0.9922739 ],
-					[ 0.8719069, 0.990808 ],
-					[ 0.867707, 0.989323 ],
-					[ 0.8638201, 0.987779 ],
-					[ 0.86, 0.986178 ],
-					[ 0.903757, 0.996796 ],
-					[ 0.50201, 0.07582141 ],
-					[ 0.480822, 0.07647841 ],
-					[ 0.491321, 0.07609861 ],
-					[ 0.602415, 0.0807066 ],
-					[ 0.630357, 0.164517 ],
-					[ 0.632567, 0.155854 ],
-					[ 0.627923, 0.173318 ],
-					[ 0.99573, 0.978733 ],
-					[ 0.99647, 0.980882 ],
-					[ 0.338145, 0.0367732 ],
-					[ 0.637702, 0.134988 ],
-					[ 0.636095, 0.139992 ],
-					[ 0.6264769, 0.181665 ],
-					[ 0.6544101, 0.0828713 ],
-					[ 0.652903, 0.08759481 ],
-					[ 0.6605361, 0.0671889 ],
-					[ 0.6571851, 0.07550951 ],
-					[ 0.978923, 0.98629 ],
-					[ 0.634221, 0.147283 ],
-					[ 0.625098, 0.189496 ],
-					[ 0.624145, 0.196507 ],
-					[ 0.617619, 0.0831129 ],
-					[ 0.6505451, 0.09523181 ],
-					[ 0.64878, 0.101255 ],
-					[ 0.6463221, 0.108545 ],
-					[ 0.6441861, 0.114848 ],
-					[ 0.65141, 0.0918824 ],
-					[ 0.639831, 0.128465 ],
-					[ 0.370922, 0.04092401 ],
-					[ 0.353215, 0.0292494 ],
-					[ 0.359265, 0.0256281 ],
-					[ 0.621981, 0.07354581 ],
-					[ 0.625451, 0.0644612 ],
-					[ 0.367905, 0.0326981 ],
-					[ 0.641368, 0.122247 ],
-					[ 0.62853, 0.05668961 ],
-					[ 0.364604, 0.0221541 ]
-				]
-			},
-			"polygon_vertex_indices" : [
-				[ 99, 44, 1107 ],
-				[ 103, 44, 1107 ],
-				[ 102, 45, 1109 ],
-				[ 103, 45, 1109 ],
-				[ 97, 46, 1104 ],
-				[ 100, 46, 1104 ],
-				[ 96, 47, 1103 ],
-				[ 97, 47, 1103 ],
-				[ 98, 48, 1105 ],
-				[ 102, 48, 1105 ],
-				[ 98, 49, 1106 ],
-				[ 100, 49, 1106 ],
-				[ 96, 50, 1102 ],
-				[ 101, 50, 1102 ],
-				[ 101, 51, 1108 ],
-				[ 104, 51, 1108 ],
-				[ 113, 60, 1122 ],
-				[ 115, 60, 1122 ],
-				[ 104, 96, 1110 ],
-				[ 121, 96, 1110 ],
-				[ 125, 109, 1126 ],
-				[ 126, 109, 1126 ],
-				[ 125, 111, 1127 ],
-				[ 127, 111, 1127 ],
-				[ 120, 112, 1125 ],
-				[ 127, 112, 1125 ],
-				[ 108, 124, 1116 ],
-				[ 123, 124, 1116 ],
-				[ 109, 127, 1118 ],
-				[ 112, 127, 1118 ],
-				[ 107, 128, 1114 ],
-				[ 110, 128, 1114 ],
-				[ 106, 129, 1113 ],
-				[ 107, 129, 1113 ],
-				[ 105, 130, 1111 ],
-				[ 106, 130, 1111 ],
-				[ 105, 131, 1112 ],
-				[ 117, 131, 1112 ],
-				[ 110, 132, 1119 ],
-				[ 111, 132, 1119 ],
-				[ 108, 133, 1115 ],
-				[ 118, 133, 1115 ],
-				[ 109, 134, 1117 ],
-				[ 116, 134, 1117 ],
-				[ 111, 137, 1120 ],
-				[ 114, 137, 1120 ],
-				[ 113, 156, 1121 ],
-				[ 114, 156, 1121 ],
-				[ 115, 162, 1123 ],
-				[ 116, 162, 1123 ],
-				[ 117, 172, 1124 ],
-				[ 118, 172, 1124 ],
-				[ 930, 428, 1173 ],
-				[ 952, 428, 1173 ],
-				[ 941, 429, 1180 ],
-				[ 957, 429, 1180 ],
-				[ 958, 430, 1188 ],
-				[ 940, 431, 1178 ],
-				[ 1003, 431, 1178 ],
-				[ 942, 432, 1181 ],
-				[ 1034, 432, 1181 ],
-				[ 940, 433, 1179 ],
-				[ 951, 433, 1179 ],
-				[ 986, 435, 1192 ],
-				[ 1037, 435, 1192 ],
-				[ 931, 436, 1174 ],
-				[ 941, 436, 1174 ],
-				[ 426, 437, 1132 ],
-				[ 943, 437, 1183 ],
-				[ 945, 437, 1132 ],
-				[ 951, 438, 1186 ],
-				[ 952, 438, 1186 ],
-				[ 930, 439, 1172 ],
-				[ 931, 439, 1172 ],
-				[ 957, 440, 1187 ],
-				[ 958, 440, 1187 ],
-				[ 985, 441, 1190 ],
-				[ 1027, 441, 1190 ],
-				[ 986, 442, 1193 ],
-				[ 1020, 442, 1193 ],
-				[ 1003, 443, 1195 ],
-				[ 1021, 443, 1195 ],
-				[ 488, 444, 1138 ],
-				[ 510, 444, 1138 ],
-				[ 488, 445, 1139 ],
-				[ 491, 445, 1139 ],
-				[ 490, 447, 1140 ],
-				[ 511, 447, 1140 ],
-				[ 417, 458, 1129 ],
-				[ 510, 458, 1141 ],
-				[ 511, 458, 1142 ],
-				[ 1, 459, 1100 ],
-				[ 418, 459, 1100 ],
-				[ 417, 460, 1130 ],
-				[ 1, 466, 1101 ],
-				[ 454, 466, 1101 ],
-				[ 431, 478, 1133 ],
-				[ 456, 478, 1133 ],
-				[ 460, 495, 1134 ],
-				[ 489, 495, 1134 ],
-				[ 491, 495, 1134 ],
-				[ 185, 516, 1128 ],
-				[ 430, 516, 1128 ],
-				[ 485, 526, 1135 ],
-				[ 490, 526, 1135 ],
-				[ 1020, 530, 1202 ],
-				[ 1021, 530, 1202 ],
-				[ 419, 533, 1131 ],
-				[ 426, 533, 1131 ],
-				[ 505, 533, 1131 ],
-				[ 942, 541, 1182 ],
-				[ 993, 541, 1182 ],
-				[ 993, 543, 1194 ],
-				[ 1027, 543, 1194 ],
-				[ 487, 544, 1137 ],
-				[ 509, 544, 1137 ],
-				[ 487, 545, 1136 ],
-				[ 511, 545, 1136 ],
-				[ 943, 551, 1184 ],
-				[ 1034, 551, 1184 ],
-				[ 985, 566, 1191 ],
-				[ 1037, 566, 1191 ],
-				[ 618, 599, 1150 ],
-				[ 622, 599, 1150 ],
-				[ 621, 600, 1152 ],
-				[ 622, 600, 1152 ],
-				[ 616, 601, 1147 ],
-				[ 619, 601, 1147 ],
-				[ 615, 602, 1145 ],
-				[ 616, 602, 1145 ],
-				[ 617, 603, 1148 ],
-				[ 621, 603, 1148 ],
-				[ 617, 604, 1149 ],
-				[ 619, 604, 1149 ],
-				[ 615, 605, 1146 ],
-				[ 620, 605, 1146 ],
-				[ 620, 606, 1151 ],
-				[ 623, 606, 1151 ],
-				[ 632, 615, 1165 ],
-				[ 634, 615, 1165 ],
-				[ 623, 651, 1153 ],
-				[ 640, 651, 1153 ],
-				[ 644, 664, 1169 ],
-				[ 645, 664, 1169 ],
-				[ 644, 666, 1170 ],
-				[ 646, 666, 1170 ],
-				[ 639, 667, 1168 ],
-				[ 646, 667, 1168 ],
-				[ 627, 679, 1158 ],
-				[ 642, 679, 1158 ],
-				[ 628, 682, 1161 ],
-				[ 631, 682, 1161 ],
-				[ 626, 683, 1157 ],
-				[ 629, 683, 1157 ],
-				[ 625, 684, 1156 ],
-				[ 626, 684, 1156 ],
-				[ 624, 685, 1155 ],
-				[ 625, 685, 1155 ],
-				[ 624, 686, 1154 ],
-				[ 636, 686, 1154 ],
-				[ 629, 687, 1162 ],
-				[ 630, 687, 1162 ],
-				[ 627, 688, 1159 ],
-				[ 637, 688, 1159 ],
-				[ 628, 689, 1160 ],
-				[ 635, 689, 1160 ],
-				[ 630, 692, 1163 ],
-				[ 633, 692, 1163 ],
-				[ 632, 711, 1164 ],
-				[ 633, 711, 1164 ],
-				[ 634, 717, 1166 ],
-				[ 635, 717, 1166 ],
-				[ 636, 727, 1167 ],
-				[ 637, 727, 1167 ],
-				[ 1007, 983, 1200 ],
-				[ 1029, 983, 1200 ],
-				[ 1007, 984, 1199 ],
-				[ 1010, 984, 1199 ],
-				[ 1009, 986, 1201 ],
-				[ 1030, 986, 1201 ],
-				[ 936, 997, 1176 ],
-				[ 1029, 997, 1203 ],
-				[ 1030, 997, 1204 ],
-				[ 520, 998, 1143 ],
-				[ 937, 998, 1143 ],
-				[ 936, 999, 1175 ],
-				[ 520, 1005, 1144 ],
-				[ 973, 1005, 1144 ],
-				[ 950, 1017, 1185 ],
-				[ 975, 1017, 1185 ],
-				[ 979, 1034, 1189 ],
-				[ 1008, 1034, 1189 ],
-				[ 1010, 1034, 1189 ],
-				[ 704, 1055, 1171 ],
-				[ 949, 1055, 1171 ],
-				[ 1004, 1064, 1196 ],
-				[ 1009, 1064, 1196 ],
-				[ 938, 1070, 1177 ],
-				[ 945, 1070, 1177 ],
-				[ 1024, 1070, 1177 ],
-				[ 1006, 1079, 1197 ],
-				[ 1028, 1079, 1197 ],
-				[ 1006, 1080, 1198 ],
-				[ 1030, 1080, 1198 ]
-			]
 		}
-	],	
+	],
 	"modifier_library" : [
 		{
 			"id" : "SkinBinding",
 			"name" : "SkinBinding",
 			"parent" : "#ButtCrack_Remesh",
 			"skin" : {
-				"node" : "#ButtCrack_Remesh_1100",
+				"node" : "#game_engine_groin_geograft_0",
 				"geometry" : "#ButtCrack_Remesh",
 				"vertex_count" : 1100,
 				"joints" : [
@@ -12832,7 +11817,7 @@
 				],
 				"selection_map" : [
 					{
-						"id" : "ButtCrack_Remesh_1100_selMap",
+						"id" : "game_engine_groin_geograft_0_selMap",
 						"mappings" : [
 							[ "pelvis", "pelvis" ],
 							[ "l_thigh", "l_thigh" ],
@@ -13970,7 +12955,7 @@
 					"type" : "float_color",
 					"name" : "Diffuse Color",
 					"label" : "Base Color",
-					"value" : [ 0.7529412, 0.7529412, 0.7529412 ],
+					"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
 					"current_value" : [ 0.6666667, 0.6666667, 0.6666667 ],
 					"min" : 0,
 					"max" : 1,
@@ -16528,7 +15513,7 @@
 					"type" : "float_color",
 					"name" : "Diffuse Color",
 					"label" : "Base Color",
-					"value" : [ 0.7529412, 0.7529412, 0.7529412 ],
+					"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
 					"current_value" : [ 0.6666667, 0.6666667, 0.6666667 ],
 					"min" : 0,
 					"max" : 1,
@@ -19082,8 +18067,8 @@
 	"scene" : {
 		"nodes" : [
 			{
-				"id" : "ButtCrack_Remesh_1100-1",
-				"url" : "#ButtCrack_Remesh_1100",
+				"id" : "game_engine_groin_geograft_0-1",
+				"url" : "#game_engine_groin_geograft_0",
 				"name" : "game_engine_groin_geograft_0",
 				"label" : "game_engine_groin_geograft",
 				"geometries" : [
@@ -19095,28 +18080,14 @@
 						"type" : "subdivision_surface",
 						"current_subdivision_level" : 1,
 						"edge_interpolation_mode" : "edges_only",
-						"subd_normal_smoothing_mode" : "smooth_all_normals",
-						"extra" : [
-							{
-								"type" : "studio_geometry_channels",
-								"channels" : [
-									{
-										"channel" : {
-											"id" : "SubDRenderLevel",
-											"type" : "int",
-											"current_value" : 0
-										}
-									}
-								]
-							}
-						]
+						"subd_normal_smoothing_mode" : "smooth_all_normals"
 					}
 				],
 				"preview" : {
 					"type" : "figure",
 					"oriented_box" : {
-						"min" : [ -18.123, 6.501, -13.185 ],
-						"max" : [ 18.124, 126.822, 9.157 ]
+						"min" : [ -17.981, 6.317, -13.073 ],
+						"max" : [ 17.982, 126.799, 9.834 ]
 					},
 					"center_point" : [ 0, 0, 0 ],
 					"end_point" : [ 0, 103.876, 0 ],
@@ -19134,7 +18105,7 @@
 				"url" : "#hip",
 				"name" : "hip",
 				"label" : "Hip",
-				"parent" : "#ButtCrack_Remesh_1100-1",
+				"parent" : "#game_engine_groin_geograft_0-1",
 				"preview" : {
 					"type" : "bone",
 					"center_point" : [ 0, 97.13693, 0.4865389 ],
@@ -19418,13 +18389,12 @@
 						"id" : "diffuse",
 						"type" : "float_color",
 						"name" : "Diffuse Color",
-						"label" : "Base Color",
 						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
 						"current_value" : [ 0.6666667, 0.6666667, 0.6666667 ],
 						"image" : null
 					}
 				},
-				"uv_set" : "#default-0xa3938a2",
+				"uv_set" : "#default",
 				"extra" : [
 					{
 						"type" : "studio/material/uber_iray",
@@ -19442,19 +18412,778 @@
 						"id" : "diffuse",
 						"type" : "float_color",
 						"name" : "Diffuse Color",
-						"label" : "Base Color",
 						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
 						"current_value" : [ 0.6666667, 0.6666667, 0.6666667 ],
 						"image" : null
 					}
 				},
-				"uv_set" : "#default-0xa3938a2",
+				"uv_set" : "#default",
 				"extra" : [
 					{
 						"type" : "studio/material/uber_iray",
 						"version" : "1.1.0.0"
 					}
 				]
+			}
+		],
+		"extra" : [
+			{
+				"type" : "studio_scene_settings",
+				"animation_settings" : {
+					"current_time" : 0,
+					"current_frames_per_second" : 30,
+					"animation_range" : [ 0, 1 ],
+					"play_range" : [ 0, 1 ]
+				},
+				"background_color" : [ 1, 1, 1 ],
+				"backdrop_visible" : false,
+				"backdrop_visible_in_render" : true
+			},
+			{
+				"type" : "studio_render_settings",
+				"render_options" : {
+					"active_renderer" : "DzIrayRenderer",
+					"startTime" : 0,
+					"endTime" : 1,
+					"renderMovToId" : "MovieFile",
+					"renderViewport" : true,
+					"renderType" : "Software",
+					"renderStyle" : "Normal",
+					"rayTraceDepth" : 2,
+					"openGLPasses" : 4,
+					"useGLSL" : false,
+					"isCurrentFrameRender" : true,
+					"useMotionBlur" : false,
+					"motionBlurPct" : 100,
+					"motionBlurSamples" : 2,
+					"xPixelSamples" : 4,
+					"yPixelSamples" : 4,
+					"shadowSamples" : 16,
+					"shadingRate" : 1,
+					"doubleSided" : true,
+					"gain" : 1,
+					"gamma" : 1,
+					"pixelFilter" : "Sinc",
+					"xFilterWidth" : 6,
+					"yFilterWidth" : 6,
+					"gammaCorrection" : "GCOff",
+					"render_elements" : [
+						{
+							"id" : "General Render",
+							"channels" : [
+								{
+									"channel" : {
+										"id" : "Auto Headlamp",
+										"type" : "enum",
+										"current_value" : 0
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Post Process Script",
+										"type" : "file",
+										"current_value" : "",
+										"file_type" : "file_open",
+										"file_display_text" : "",
+										"file_filter" : "DAZ Script (*.dsa *.dsb *.dse)"
+									}
+								}
+							]
+						},
+						{
+							"id" : "NVIDIA Iray Render Options",
+							"channels" : [
+								{
+									"channel" : {
+										"id" : "Render Mode",
+										"type" : "enum",
+										"current_value" : 0
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Min Samples",
+										"type" : "int",
+										"current_value" : 5
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Max Samples",
+										"type" : "int",
+										"current_value" : 5000
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Max Time",
+										"type" : "int",
+										"current_value" : 7200
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Rendering Quality Enable",
+										"type" : "bool",
+										"current_value" : true
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Rendering Quality SSIM",
+										"type" : "bool",
+										"visible" : false,
+										"current_value" : false
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Rendering Quality",
+										"type" : "float",
+										"current_value" : 1
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Rendering Converged Ratio",
+										"type" : "float",
+										"current_value" : 0.95,
+										"display_as_percent" : true
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Post SSIM Available",
+										"type" : "bool",
+										"current_value" : false
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Post SSIM Enable",
+										"type" : "bool",
+										"visible" : false,
+										"current_value" : false
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Post SSIM Predict Target",
+										"type" : "float",
+										"visible" : false,
+										"current_value" : 0.98,
+										"display_as_percent" : true
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Post SSIM Max Memory",
+										"type" : "int",
+										"visible" : false,
+										"current_value" : 1024
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Pixel Filter",
+										"type" : "enum",
+										"value" : 2,
+										"current_value" : 2
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Pixel Filter Radius",
+										"type" : "float",
+										"current_value" : 1.5
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Post Denoiser Available",
+										"type" : "bool",
+										"current_value" : false
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Post Denoiser Enable",
+										"type" : "bool",
+										"visible" : false,
+										"current_value" : false
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Post Denoiser Start Iteration",
+										"type" : "int",
+										"visible" : false,
+										"current_value" : 8
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Post Denoiser Max Memory",
+										"type" : "int",
+										"visible" : false,
+										"current_value" : 1024
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Post Denoiser Denoise Alpha",
+										"type" : "bool",
+										"visible" : false,
+										"current_value" : false
+									}
+								},
+								{
+									"channel" : {
+										"id" : "White Mode Enable",
+										"type" : "bool",
+										"current_value" : false
+									}
+								},
+								{
+									"channel" : {
+										"id" : "White Mode Color",
+										"type" : "float_color",
+										"visible" : false,
+										"value" : [ 0.7019608, 0.7019608, 0.7019608 ],
+										"current_value" : [ 0.7019608, 0.7019608, 0.7019608 ]
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Section Caps Enabled",
+										"type" : "bool",
+										"current_value" : false
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Section Caps Color",
+										"type" : "float_color",
+										"visible" : false,
+										"value" : [ 0.8627451, 0.3529412, 0.254902 ],
+										"current_value" : [ 0.8627451, 0.3529412, 0.254902 ]
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Active Canvas",
+										"type" : "enum",
+										"current_value" : 0
+									}
+								}
+							],
+							"children" : [
+								{
+									"id" : "NVIDIA Iray Photoreal Options",
+									"channels" : [
+										{
+											"channel" : {
+												"id" : "Min Update Samples",
+												"type" : "int",
+												"current_value" : 1
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Update Interval",
+												"type" : "float",
+												"current_value" : 5
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Default Alpha LPE",
+												"type" : "enum",
+												"current_value" : 0
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Custom Alpha LPE",
+												"type" : "string",
+												"visible" : false,
+												"current_value" : ""
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Max Path Length",
+												"type" : "int",
+												"current_value" : -1
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Caustic Sampler",
+												"type" : "bool",
+												"current_value" : false
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Guided Sampling",
+												"type" : "bool",
+												"current_value" : false
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Instancing Optimization",
+												"type" : "enum",
+												"value" : 2,
+												"current_value" : 2
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Ray Tracing Low Memory",
+												"type" : "enum",
+												"value" : 1,
+												"current_value" : 1
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Firefly Filter Enable",
+												"type" : "bool",
+												"current_value" : true
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Nominal Luminance",
+												"type" : "float",
+												"current_value" : 0
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Noise Degrain Filtering",
+												"type" : "int",
+												"current_value" : 0
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Noise Degrain Radius",
+												"type" : "int",
+												"visible" : false,
+												"current_value" : 3
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Noise Degrain Blur Difference",
+												"type" : "float",
+												"visible" : false,
+												"current_value" : 0.05
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Bloom Filter Enable",
+												"type" : "bool",
+												"current_value" : false
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Bloom Filter Radius",
+												"type" : "float",
+												"visible" : false,
+												"current_value" : 0.05
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Bloom Filter Threshold",
+												"type" : "float",
+												"visible" : false,
+												"current_value" : 2000
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Bloom Filter Brightness Scale",
+												"type" : "float",
+												"visible" : false,
+												"current_value" : 1
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Spectral Rendering Enable",
+												"type" : "bool",
+												"current_value" : false
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Spectral Conversion Color Space",
+												"type" : "enum",
+												"value" : 1,
+												"current_value" : 1
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Spectral Conversion Intent",
+												"type" : "enum",
+												"current_value" : 0
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Spectral Observer",
+												"type" : "enum",
+												"current_value" : 0
+											}
+										}
+									]
+								},
+								{
+									"id" : "NVIDIA Iray Interactive Options",
+									"channels" : [
+										{
+											"channel" : {
+												"id" : "Occlusion Mode",
+												"type" : "enum",
+												"visible" : false,
+												"current_value" : 0
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Ambient Intensity",
+												"type" : "float_color",
+												"visible" : false,
+												"current_value" : [ 0, 0, 0 ]
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Ambient Falloff Min Distance",
+												"type" : "float",
+												"visible" : false,
+												"current_value" : 100000
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Ambient Falloff Max Distance",
+												"type" : "float",
+												"visible" : false,
+												"current_value" : 100000
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Ambient Falloff",
+												"type" : "float",
+												"visible" : false,
+												"current_value" : 1
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Ambient Falloff Distance Space",
+												"type" : "enum",
+												"visible" : false,
+												"current_value" : 0
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Indirect Light Mode",
+												"type" : "enum",
+												"visible" : false,
+												"value" : 2,
+												"current_value" : 2
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Indirect Outlier Rejection",
+												"type" : "bool",
+												"visible" : false,
+												"current_value" : true
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Ambient Shadow Mode",
+												"type" : "enum",
+												"visible" : false,
+												"value" : 1,
+												"current_value" : 1
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Shadows",
+												"type" : "bool",
+												"visible" : false,
+												"current_value" : true
+											}
+										},
+										{
+											"channel" : {
+												"id" : "IBL Falloff",
+												"type" : "bool",
+												"visible" : false,
+												"current_value" : false
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Refinement Mode",
+												"type" : "enum",
+												"visible" : false,
+												"value" : 1,
+												"current_value" : 1
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Max Ray Bounces",
+												"type" : "int",
+												"visible" : false,
+												"current_value" : 16
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Max Reflection Bounces",
+												"type" : "int",
+												"visible" : false,
+												"current_value" : 8
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Max Refraction Bounces",
+												"type" : "int",
+												"visible" : false,
+												"current_value" : 8
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Ray Importance Threshold",
+												"type" : "float",
+												"visible" : false,
+												"current_value" : 0.02
+											}
+										},
+										{
+											"channel" : {
+												"id" : "First Frame Antialiasing",
+												"type" : "bool",
+												"visible" : false,
+												"current_value" : false
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Area As Point Lights",
+												"type" : "bool",
+												"visible" : false,
+												"current_value" : false
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Environment Max Resolution",
+												"type" : "int",
+												"visible" : false,
+												"current_value" : 2048
+											}
+										},
+										{
+											"channel" : {
+												"id" : "Path Space Filtering (PSF)",
+												"type" : "bool",
+												"visible" : false,
+												"current_value" : false
+											}
+										},
+										{
+											"channel" : {
+												"id" : "PSF Geometry Filter",
+												"type" : "float",
+												"visible" : false,
+												"current_value" : 1
+											}
+										},
+										{
+											"channel" : {
+												"id" : "PSF Lighting Filter",
+												"type" : "float",
+												"visible" : false,
+												"current_value" : 1
+											}
+										},
+										{
+											"channel" : {
+												"id" : "PSF Convergence Frame",
+												"type" : "int",
+												"visible" : false,
+												"current_value" : 50
+											}
+										}
+									]
+								}
+							],
+							"extra" : [
+								{
+									"type" : "studio/element_data/iray_settings",
+									"render_to_canvases" : false,
+									"canvases" : [
+									],
+									"node_lists" : [
+									]
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"type" : "studio_simulation_settings",
+				"simulation_options" : {
+					"active_engine" : "DzDForceEngine",
+					"simulation_elements" : [
+						{
+							"id" : "dForce Simulation Options",
+							"channels" : [
+								{
+									"channel" : {
+										"id" : "Gravity",
+										"type" : "float",
+										"current_value" : 1
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Air Resistance",
+										"type" : "float",
+										"current_value" : 0.15
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Velocity Limit",
+										"type" : "float",
+										"current_value" : 32.2
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Initialization Time",
+										"type" : "float",
+										"current_value" : 0
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Start Bones From Memorized Pose",
+										"type" : "bool",
+										"current_value" : true
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Pose Transition Time",
+										"type" : "float",
+										"current_value" : 1
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Frames To Simulate",
+										"type" : "enum",
+										"current_value" : 0
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Stabilization Time",
+										"type" : "float",
+										"current_value" : 1
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Simulation Range",
+										"type" : "int2",
+										"current_value" : [ 1, 30 ]
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Frames Per Second Multiplier",
+										"type" : "int",
+										"current_value" : 2
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Subframes",
+										"type" : "int",
+										"current_value" : 8
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Iterations",
+										"type" : "int",
+										"current_value" : 32
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Collision Mesh Resolution",
+										"type" : "enum",
+										"current_value" : 0
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Collision Mode",
+										"type" : "enum",
+										"current_value" : 1
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Collision Iterations",
+										"type" : "int",
+										"current_value" : 4
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Repulse Depth Ratio",
+										"type" : "float",
+										"current_value" : 0.1
+									}
+								},
+								{
+									"channel" : {
+										"id" : "Repulse Stiffness Control",
+										"type" : "float",
+										"current_value" : 10000
+									}
+								}
+							]
+						}
+					]
+				}
 			}
 		]
 	}
