@@ -626,6 +626,15 @@ void DzRobloxAction::executeAction()
 				}
 			}
 			FbxNode* characterRoot = pMorphedSourceScene->FindNodeByName("Genesis9");
+			if (!characterRoot)
+			{
+				bFailed = true;
+				QString sCriticalException = "DzRoblox-MvcTest: Critical Exception: Unable to find Genesis9 node in: " + m_sDestinationFBX + ", aborting.";
+				dzApp->log(sCriticalException);
+				exportProgress->setCurrentInfo(sCriticalException);
+				exportProgress->cancel();
+				return;
+			}
 			// local transform
 			FbxDouble3 scale = characterRoot->LclScaling.Get();
 			FbxDouble3 newScale = FbxDouble3(scale[0] / 30, scale[1] / 30, scale[2] / 30);
@@ -1033,6 +1042,27 @@ DZ_BRIDGE_NAMESPACE::DzBridgeDialog* DzRobloxAction::getBridgeDialog()
 bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 {
 	DzBridgeAction::preProcessScene(parentNode);
+
+	// Sanity Check
+	if (!parentNode || !parentNode->inherits("DzFigure")) {
+		// TODO: add gui error message
+		dzApp->debug("ERROR: DzRobloxAction: preProcessScene(): invalid parentNode. Returning false.");
+		return false;
+	}
+	DzObject* obj = parentNode->getObject();
+	if (!obj) {
+		// TODO: add gui error message
+		dzApp->debug("ERROR: DzRobloxAction: preProcessScene(): invalid parentNode->getObject(). Returning false.");
+		return false;
+	}
+	DzShape* shape = obj->getCurrentShape();
+	if (!shape) {
+		// TODO: add gui error message
+		dzApp->debug("ERROR: DzRobloxAction: preProcessScene(): invalid obj->getCurrentShape(). Returning false.");
+		return false;
+	}
+	QString sParentNodeName = parentNode->getName();
+	dzApp->debug("DzRobloxAction::preProcessScene() processing node: " + sParentNodeName);
 
 	// apply geografts
 	QString tempPath = dzApp->getTempPath();
