@@ -1252,26 +1252,7 @@ bool DzRobloxAction::applyGeograft(DzNode* pBaseNode, QString geograftFilename, 
 				// track geograft_node for removal in undoPreprocessScene()
 				m_aGeograftConversionHelpers.append(geograft_node);
 
-				// copy base materials to geograft
-				DzShape *geograftShape = geograft_node->getObject()->getCurrentShape();
-				auto dstMatList = geograftShape->getAllMaterials();
-				DzShape* baseShape = pBaseNode->getObject()->getCurrentShape();
-				auto srcMatList = baseShape->getAllMaterials();
-				foreach( QObject *dobj, dstMatList ) {
-					DzMaterial* dstMat = qobject_cast<DzMaterial*>(dobj);
-					foreach(QObject * sobj, srcMatList) {
-						DzMaterial *srcMat = qobject_cast<DzMaterial*>(sobj);
-						if (dstMat && srcMat) {
-							QString cleanedDestMatName = QString(dstMat->getName()).replace(" ","").replace("_","").toLower();
-							QString cleanedSrcMatName = QString(srcMat->getName()).replace(" ", "").replace("_", "").toLower();
-							if (cleanedDestMatName == cleanedSrcMatName) {
-								dstMat->copyFrom(srcMat);
-								break;
-							}
-						}
-					}
-				}
-
+				bool bResult = copyMaterialsToGeograft(geograft_node, pBaseNode);
 
 				geograft_node->setFollowTarget(pBaseNode->getSkeleton());
 				// DB: must parent with in-place=false, then unparent with in-place=true in order to position geograft correctly
@@ -1353,6 +1334,46 @@ bool MvcCustomCageRetargeter::deformCage(const FbxMesh* pMorphedMesh, const FbxM
 		//}
 
 		pVertexBuffer[i] = newVertexPosition;
+	}
+
+	return true;
+}
+
+bool DzRobloxAction::copyMaterialsToGeograft(DzNode* pGeograftNode, DzNode* pBaseNode)
+{
+	DzFigure* pGeograftAsFigureNode = qobject_cast<DzFigure*>(pGeograftNode);
+	if (pGeograftNode == NULL || pGeograftAsFigureNode == NULL)
+	{
+		dzApp->log("DzRobloxAction::copyMaterialsToGeograft(): ERROR: Geograft node is invalid. Returning false.");
+		return false;
+	}
+
+	if (pBaseNode == NULL) {
+		pBaseNode = pGeograftAsFigureNode->getFollowTarget();
+		if (pBaseNode == NULL) {
+			dzApp->log("DzRobloxAction::copyMaterialsToGeograft(): ERROR: Unable to find base node for Geograft. Returning false.");
+			return false;
+		}
+	}
+
+	// copy base materials to geograft
+	DzShape* geograftShape = pGeograftNode->getObject()->getCurrentShape();
+	auto dstMatList = geograftShape->getAllMaterials();
+	DzShape* baseShape = pBaseNode->getObject()->getCurrentShape();
+	auto srcMatList = baseShape->getAllMaterials();
+	foreach(QObject * dobj, dstMatList) {
+		DzMaterial* dstMat = qobject_cast<DzMaterial*>(dobj);
+		foreach(QObject * sobj, srcMatList) {
+			DzMaterial* srcMat = qobject_cast<DzMaterial*>(sobj);
+			if (dstMat && srcMat) {
+				QString cleanedDestMatName = QString(dstMat->getName()).replace(" ", "").replace("_", "").toLower();
+				QString cleanedSrcMatName = QString(srcMat->getName()).replace(" ", "").replace("_", "").toLower();
+				if (cleanedDestMatName == cleanedSrcMatName) {
+					dstMat->copyFrom(srcMat);
+					break;
+				}
+			}
+		}
 	}
 
 	return true;
