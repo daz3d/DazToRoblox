@@ -1111,6 +1111,29 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	QScopedPointer<DzScript> Script(new DzScript());
 	Script->loadFromFile(sScriptFilename);
 	Script->execute();
+	// run bone conversion each geograft and attached body part
+	QObjectList conversionList;
+	foreach(DzNode *listNode, m_aGeograftConversionHelpers) {
+		conversionList.append(listNode);
+	}
+	conversionList.append(parentNode->getNodeChildren(true));
+	foreach(QObject* listNode, conversionList)
+	{
+		DzFigure *figChild = qobject_cast<DzFigure*>(listNode);
+		if (figChild) {
+			QString sChildName = figChild->getName();
+			QString sChildLabel = figChild->getLabel();
+			dzApp->debug(QString("DzRoblox: DEBUG: converting skeleton for: %1 [%2]").arg(sChildLabel).arg(sChildName));
+			dzScene->selectAllNodes(false);
+			dzScene->setPrimarySelection(figChild);
+			Script.reset(new DzScript());
+			Script->loadFromFile(sScriptFilename);
+			Script->execute();
+			DzSkeleton* pFollowTarget = figChild->getFollowTarget();
+			figChild->setFollowTarget(NULL);
+			figChild->setFollowTarget(pFollowTarget);
+		}
+	}
 
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
