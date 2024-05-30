@@ -1082,6 +1082,13 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		QString eyesNodeName = eyesNode->getName();
 		applyGeograft(eyesNode, tempPath + "/game_engine_eye_geograft.duf", "game_engine_eye_geograft_0");
 	}
+	// groin geograft (no butt cleavage mod)
+	if (dzScene->findNodeByLabel("game_engine_groin_geograft") == NULL &&
+		dzScene->findNode("game_engine_groin_geograft_0") == NULL) {
+		DzNode* baseFigureNode = dzScene->findNode("Genesis9");
+		QString baseFigureNodeName = baseFigureNode->getName();
+		applyGeograft(baseFigureNode, tempPath + "/game_engine_groin_geograft.duf", "game_engine_groin_geograft_0");
+	}
 
 	//QString sPluginFolder = dzApp->getPluginsPath() + "/DazToRoblox";
     QString sPluginFolder = tempPath;
@@ -1091,7 +1098,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	QString sGenerateCombinedTextures = "generate_texture_parts.dsa";
 	QString sCombineTextureMaps = "combine_texture_parts.dsa";
 	QString sAssignCombinedTextures = "assign_combined_textures.dsa";
-
+	QString sScriptFilename = "";
+	QScopedPointer<DzScript> Script(new DzScript());
 
 	if (m_sAssetType.contains("_M"))
 	{
@@ -1102,13 +1110,15 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	//	sApplyModestyOverlay = "";
 	//}
 
-
 	/// BONE CONVERSION OPERATION
-	QString sScriptFilename = sPluginFolder + "/" + sRobloxBoneConverter;
+	sScriptFilename = sPluginFolder + "/" + sRobloxBoneConverter;
 	if (QFileInfo(sScriptFilename).exists() == false) {
 		sScriptFilename = dzApp->getTempPath() + "/" + sRobloxBoneConverter;
 	}
-	QScopedPointer<DzScript> Script(new DzScript());
+	// run bone conversion on main figure
+	dzScene->selectAllNodes(false);
+	dzScene->setPrimarySelection(parentNode);
+	Script.reset(new DzScript());
 	Script->loadFromFile(sScriptFilename);
 	Script->execute();
 	// run bone conversion each geograft and attached body part
@@ -1164,20 +1174,15 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		if (QFileInfo(sScriptFilename).exists() == false) {
 			sScriptFilename = dzApp->getTempPath() + "/" + sApplyModestyOverlay;
 		}
+		Script.reset(new DzScript());
 		Script->loadFromFile(sScriptFilename);
 		Script->execute();
 	}
-
-	// groin geograft (no butt cleavage mod)
-	// NOTE: groin geograft added after modesty overlay operation to prevent visual artifacts due to DS viewport not fully updating
-	// NOTE 2: be sure to add geograft if preProcessScene() must return early and continue in order to avoid MVC crash from vertex buffer inconsistency
-	if (dzScene->findNodeByLabel("game_engine_groin_geograft") == NULL)
+	// copy modesty overlaid materials to geografts
+	foreach(auto geograft_helper, m_aGeograftConversionHelpers)
 	{
-		DzNode* baseFigureNode = dzScene->findNode("Genesis9");
-		QString baseFigureNodeName = baseFigureNode->getName();
-		applyGeograft(baseFigureNode, tempPath + "/game_engine_groin_geograft.duf", "game_engine_groin_geograft_0");
+		copyMaterialsToGeograft(geograft_helper);
 	}
-
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
 
