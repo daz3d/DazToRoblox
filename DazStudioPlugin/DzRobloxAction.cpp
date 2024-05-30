@@ -1116,25 +1116,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	dzScene->setPrimarySelection(parentNode);
 
 	/// CHECK FOR ALTERED UV SET, IF FOUND SKIP TEXTURE OPERATIONS
-	if (!parentNode || !parentNode->inherits("DzFigure")) {
-		// TODO: add gui error message
-		dzApp->debug("ERROR: DzRobloxAction: preProcessScene(): invalid parentNode. Returning false.");
-		return false;
-	}
-
 	// 2. get UV property
-	DzObject* obj = parentNode->getObject();
-	if (!obj) {
-		// TODO: add gui error message
-		dzApp->debug("ERROR: DzRobloxAction: preProcessScene(): invalid parentNode->getObject(). Returning false.");
-		return false;
-	}
-	DzShape* shape = obj->getCurrentShape();
-	if (!shape) {
-		// TODO: add gui error message
-		dzApp->debug("ERROR: DzRobloxAction: preProcessScene(): invalid obj->getCurrentShape(). Returning false.");
-		return false;
-	}
 	QObjectList rawList = shape->getAllMaterials();
 	for (int i = 0; i < rawList.count(); i++) {
 		DzMaterial* mat = qobject_cast<DzMaterial*>(rawList[i]);
@@ -1147,18 +1129,10 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 			int currentVal = uvset->getValue();
 			if (currentVal == combinedUvVal) {
 				dzApp->debug("WARNING: DzRobloxAction: preProcessScene(): Combined UV already set, skipping texture operations. Returning false.");
-				// DB 2024-05-28, MVC Crash-FIX: apply groin geograft before returning (see groin geograft notes below)
-				if (dzScene->findNodeByLabel("game_engine_groin_geograft") == NULL)
-				{
-					DzNode* baseFigureNode = dzScene->findNode("Genesis9");
-					QString baseFigureNodeName = baseFigureNode->getName();
-					applyGeograft(baseFigureNode, tempPath + "/game_engine_groin_geograft.duf", "game_engine_groin_geograft_0");
-				}
 				return false;
 			}
 		}
 	}
-
 
 	/// TEXTURE OPERATIONS (MODESTY OVERLAY, UV CONVERSION, ETC)
 	if (!sApplyModestyOverlay.isEmpty())
