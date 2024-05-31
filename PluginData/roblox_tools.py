@@ -382,18 +382,25 @@ def bake_transform_to_vertices(obj, transform_matrix):
 
 # DB-2024-05-30: Copy facial animations from template file
 def copy_facial_animations(animation_template_filename=""):
+    armature_name = "Genesis9"
+    action_name = "Genesis9Action"
+
     if animation_template_filename == "":
         animation_template_filename = _animation_template_filename
 
     # Load action from template file
     with bpy.data.libraries.load(animation_template_filename, link=False) as (data_from, data_to):
-        data_to.actions = [name for name in data_from.actions if name == 'Genesis9Action']
+        data_to.actions = [name for name in data_from.actions if name == action_name]
 
     # Asign loaded action to existing armature
-    armature_object = bpy.data.objects['Genesis9']
-    action = bpy.data.actions['Genesis9Action']
+    armature_object = bpy.data.objects[armature_name]
+    action = bpy.data.actions[action_name]
     armature_object.animation_data_create()  # Create animation data if not already present
     armature_object.animation_data.action = action
+
+    # # Create a temporary NLA track to ensure the action is exported
+    # nla_track = armature_object.animation_data.nla_tracks.new()
+    # nla_strip = nla_track.strips.new(name=action_name, start=0, action=action)
 
     # Deselect all objects
     bpy.ops.object.select_all(action='DESELECT')
@@ -444,5 +451,8 @@ def copy_facial_animations(animation_template_filename=""):
     head_geo_obj["Frame16"] = "RightLipStretcher"
     head_geo_obj["Frame17"] = "RightLowerLipDepressor"
     head_geo_obj["Frame18"] = "RightUpperLipRaiser"
+
+    bpy.context.scene.frame_start = 0
+    bpy.context.scene.frame_end = 18
 
     _add_to_log("Facial animations copied successfully.")

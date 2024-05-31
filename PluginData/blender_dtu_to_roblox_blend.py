@@ -370,6 +370,9 @@ def _main(argv):
                                  path_mode = "COPY",
                                  embed_textures = True,
                                  use_visible = True,
+                                 use_custom_props = True,
+                                 bake_anim_use_nla_strips = False,
+                                 bake_anim_use_all_actions = False
                                  )
         _add_to_log("DEBUG: save completed.")
     except Exception as e:
