@@ -39,6 +39,7 @@ add_library( ${DZ_PLUGIN_TGT_NAME} SHARED
 	DzRobloxDialog.cpp
 	DzRobloxDialog.h
 	pluginmain.cpp
+	real_version.h
 	version.h
 	Resources/resources.qrc
 	${DPC_IMAGES_CPP}
