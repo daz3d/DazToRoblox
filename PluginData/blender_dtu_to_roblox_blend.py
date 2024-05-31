@@ -350,6 +350,9 @@ def _main(argv):
     # add cage and attachments
     #roblox_tools.add_cage_and_attachments()
 
+    # copy facial animations
+    roblox_tools.copy_facial_animations()
+
     # export to fbx
     roblox_asset_name = dtu_dict["Asset Name"]
     roblox_output_path = dtu_dict["Output Folder"]

@@ -493,7 +493,8 @@ void DzRobloxAction::executeAction()
 		QStringList aOverrideFilenameList = (QStringList() << "blender_tools.py" << "NodeArrange.py" << 
 			"blender_dtu_to_roblox_blend.py" << "blender_dtu_to_avatar_autosetup.py" <<
 			"roblox_tools.py" << "Daz_Cage_Att_Template.blend" <<
-			"game_readiness_tools.py" << "game_readiness_roblox_data.py");
+			"game_readiness_tools.py" << "game_readiness_roblox_data.py" <<
+			"Genesis9Action.blend");
 		if (bUseFallbackScriptFolder)
 		{
 			foreach(QString filename, aOverrideFilenameList)
