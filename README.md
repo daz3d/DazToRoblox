@@ -57,7 +57,9 @@ The Daz To Roblox UGC Developer Kit can assist Roblox UGC developers to convert 
 11. Alternatively, open the .blend file in the output folder to adjust cages and attachments and make desired modifications.
 12. If using the .blend file from the final output folder, use the following settings when exporting to FBX:
 - Path Mode: `Copy`, click icon to enable `Embed Textures`.
+- Below the Object Types section, enable `Custom Properties`.
 - In the Armature section, disable `Add Leaf Bones`.
+- Enable Bake Animation.
 13. If you want to work with intermediate files, click the `Open Intermediate Folder` in the Advanced Settings of the Send To -> Daz To Roblox dialog popup.
 
 
