@@ -120,11 +120,16 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 connect(m_wRobloxOutputFolderButton, SIGNAL(released()), this, SLOT(HandleSelectRobloxOutputFolderButton()));
 	 connect(m_wRobloxOutputFolderEdit, SIGNAL(textChanged(const QString&)), this, SLOT(HandleTextChanged(const QString&)));
 
-	 // Add GUI
+	 // Add No Breast Option
+	 m_wBreastsGoneCheckbox = new QCheckBox("Breasts Gone Morph");
+	 m_wBreastsGoneCheckbox->setToolTip("Optional Remove Breasts. REQUIRES Genesis 9 Body Shapes Add-On");
+
+	 // Add GUI to layout
 	 mainLayout->insertRow(1, "Roblox Output Folder", robloxOutputFolderLayout);
 	 m_wGodotProjectFolderRowLabelWidget = mainLayout->itemAt(1, QFormLayout::LabelRole)->widget();
 	 showRobloxOptions(true);
 	 this->showLodRow(false);
+	 mainLayout->addRow("Sexual Content Reducer", m_wBreastsGoneCheckbox);
 
 	 // Select Blender Executable Path GUI
 	 QHBoxLayout* blenderExecutablePathLayout = new QHBoxLayout();

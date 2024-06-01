@@ -33,6 +33,7 @@
 #include "dzenumproperty.h"
 #include "dzcontentmgr.h"
 #include "dzfigure.h"
+#include "dzfloatproperty.h"
 
 #include "DzRobloxAction.h"
 #include "DzRobloxDialog.h"
@@ -948,7 +949,7 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 		// Collect the values from the dialog fields
 		if (m_sRobloxOutputFolderPath == "" || m_nNonInteractiveMode == 0) m_sRobloxOutputFolderPath = pRobloxDialog->m_wRobloxOutputFolderEdit->text().replace("\\", "/");
 		if (m_sBlenderExecutablePath == "" || m_nNonInteractiveMode == 0) m_sBlenderExecutablePath = pRobloxDialog->m_wBlenderExecutablePathEdit->text().replace("\\", "/");
-
+		m_bEnableBreastsGone = pRobloxDialog->m_wBreastsGoneCheckbox->isChecked();
 	}
 	else
 	{
@@ -1040,6 +1041,9 @@ DZ_BRIDGE_NAMESPACE::DzBridgeDialog* DzRobloxAction::getBridgeDialog()
 	return m_bridgeDialog;
 }
 
+// DB 2024-06-01 ASSUMPTIONS: 
+// This method assumes that it is being run ONCE per export operation, on a single G9 character.
+// It also assumes that only one G9 character is in the scene.
 bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 {
 	DzBridgeAction::preProcessScene(parentNode);
@@ -1064,6 +1068,35 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	}
 	QString sParentNodeName = parentNode->getName();
 	dzApp->debug("DzRobloxAction::preProcessScene() processing node: " + sParentNodeName);
+
+	// apply optional morphs
+	if (m_bEnableBreastsGone)
+	{
+		// obtain selection
+		DzFigure* pFigureNode = qobject_cast<DzFigure*>( dzScene->getPrimarySelection() );
+		if (pFigureNode && pFigureNode->getName() == "Genesis9")
+		{
+			// find Breasts Gone Morph, set to 100%
+			auto result = m_AvailableMorphsTable.find("body_bs_BreastsGone");
+			if (result != m_AvailableMorphsTable.end())
+			{
+				MorphInfo morphInfo = result.value();
+				DzProperty *prop = morphInfo.Property;
+				DzFloatProperty* floatProp = qobject_cast<DzFloatProperty*>(prop);
+				DzNumericProperty* numProp = qobject_cast<DzNumericProperty*>(prop);
+				if (floatProp)
+				{
+					floatProp->setValue(1.0);
+				}
+				else if (numProp)
+				{
+					numProp->setDoubleValue(1.0);
+				}
+			}
+
+
+		}
+	}
 
 	// apply geografts
 	QString tempPath = dzApp->getTempPath();

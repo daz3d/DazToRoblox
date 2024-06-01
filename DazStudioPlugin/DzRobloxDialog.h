@@ -71,6 +71,8 @@ protected:
 	QPushButton* m_wBlenderExecutablePathButton;
 	QWidget* m_wBlenderExecutablePathRowLabelWdiget;
 
+	QCheckBox* m_wBreastsGoneCheckbox;
+
 	virtual void refreshAsset() override;
 
 #ifdef UNITTEST_DZBRIDGE
