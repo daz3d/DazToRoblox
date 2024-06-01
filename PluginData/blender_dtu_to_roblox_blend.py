@@ -33,6 +33,8 @@ import os
 import json
 import re
 import shutil
+import mathutils
+from mathutils import Matrix
 try:
     import bpy
 except:
@@ -346,6 +348,15 @@ def _main(argv):
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and "_Att" in obj.name:
             roblox_tools.relocalize_attachment(obj)
+    # Fix orientation of Grip attachments
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and "_Att" in obj.name and "Grip" in obj.name:
+            # set rotation axes separately with Quaternions to avoid gimbal lock
+            euler_y = mathutils.Euler((0, -1.5708, 0))
+            euler_z = mathutils.Euler((0, 0, -1.5708))
+            new_rotation = mathutils.Quaternion(euler_y) @ mathutils.Quaternion(euler_z)
+            new_matrix = obj.matrix_world @ new_rotation.to_matrix().to_4x4()
+            obj.matrix_world = new_matrix
 
     # add cage and attachments
     #roblox_tools.add_cage_and_attachments()

@@ -19,6 +19,7 @@ USE_SHRINKWRAP_TARGET = False
 logFilename = "roblox_tools.log"
 
 import os
+import mathutils
 from mathutils import Matrix
 from mathutils import Vector
 try:
@@ -354,7 +355,9 @@ def relocalize_attachment(obj):
     # set worldspace geometric center as new worldspace position
     new_translation = center
     # Create new rotation, zero local rotation is equal to parent bone world rotation
-    new_rotation = parent_bone_rotation
+    # DB 2024-06-01: ...but we want zero world rotation? So use identity matrix
+    ###new_rotation = parent_bone_rotation
+    new_rotation = mathutils.Quaternion()
     # Create new scale, multiply desired local scale by parent bone scale
     new_scale = parent_bone_scale * 0.1
     # Construct new matrix
