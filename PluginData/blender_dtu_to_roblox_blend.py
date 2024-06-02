@@ -543,8 +543,13 @@ def move_root_node_to_origin():
             # select all objects in object mode
             bpy.ops.object.select_all(action='SELECT')
             # move all objects by the inverse of bone_head_pos
+
             inverse_bone_head_pos_z = -0.01 * bone_head_pos_y
-            inverse_bone_head_pos_x = -0.01 * bone_head_pos_z
+            # inverse_bone_head_pos_z = 0
+
+            # inverse_bone_head_pos_x = -0.01 * bone_head_pos_z
+            inverse_bone_head_pos_x = 0
+            
             print("DEBUG: move_root_node_to_origin(): inverse_bone_head_pos_x=" + str(inverse_bone_head_pos_x) + ", inverse_bone_head_pos_z=" + str(inverse_bone_head_pos_z))
             bpy.ops.transform.translate(value=(inverse_bone_head_pos_x, 0, inverse_bone_head_pos_z))
             # apply transformation
