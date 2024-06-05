@@ -1,6 +1,6 @@
 {
     "head": "Head",
-    "spine3": "UpperTorso",
+    "spine1": "UpperTorso",
     "hip": "LowerTorso",
     "l_upperarm": "LeftUpperArm",
     "l_forearm": "LeftLowerArm",

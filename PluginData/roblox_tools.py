@@ -459,3 +459,42 @@ def copy_facial_animations(animation_template_filename=""):
     bpy.context.scene.frame_end = 18
 
     _add_to_log("Facial animations copied successfully.")
+
+# DB 2024-06-05: Fix UGC Validation issues
+def ugc_validation_fixes():
+    # switch to bone edit mode
+    bpy.ops.object.mode_set(mode="OBJECT")
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.data.objects["Genesis9"].select_set(True)
+    bpy.context.view_layer.objects.active = bpy.data.objects["Genesis9"]
+    bpy.ops.object.mode_set(mode="EDIT")
+
+    # fix lowertorso
+    bpy.ops.armature.select_all(action='DESELECT')
+    print("DEBUG: FIXING LowerTorso bone...")
+    bpy.data.objects["Genesis9"].data.edit_bones["LowerTorso"].select = True
+    old_z = bpy.data.objects["Genesis9"].data.edit_bones["LowerTorso"].head.z
+    new_z = old_z - 0.1
+    bpy.data.objects["Genesis9"].data.edit_bones["LowerTorso"].head.z = new_z
+
+    # fix left hip
+    bpy.ops.armature.select_all(action='DESELECT')
+    print("DEBUG: FIXING LeftUpperLeg bone...")
+    bpy.data.objects["Genesis9"].data.edit_bones["LeftUpperLeg"].select = True
+    old_z = bpy.data.objects["Genesis9"].data.edit_bones["LeftUpperLeg"].head.z
+    new_z = old_z - 0.05
+    tail_x = bpy.data.objects["Genesis9"].data.edit_bones["LeftLowerLeg"].tail.x
+    bpy.data.objects["Genesis9"].data.edit_bones["LeftUpperLeg"].head.z = new_z
+    bpy.data.objects["Genesis9"].data.edit_bones["LeftUpperLeg"].head.x = tail_x
+
+    # fix right hip
+    bpy.ops.armature.select_all(action='DESELECT')
+    print("DEBUG: FIXING RightUpperLeg bone...")
+    bpy.data.objects["Genesis9"].data.edit_bones["RightUpperLeg"].select = True
+    old_z = bpy.data.objects["Genesis9"].data.edit_bones["RightUpperLeg"].head.z
+    new_z = old_z - 0.05
+    tail_x = bpy.data.objects["Genesis9"].data.edit_bones["RightLowerLeg"].tail.x
+    bpy.data.objects["Genesis9"].data.edit_bones["RightUpperLeg"].head.z = new_z
+    bpy.data.objects["Genesis9"].data.edit_bones["RightUpperLeg"].head.x = tail_x
+
+    bpy.ops.object.mode_set(mode="OBJECT")

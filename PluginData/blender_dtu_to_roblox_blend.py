@@ -364,6 +364,9 @@ def _main(argv):
     # copy facial animations
     roblox_tools.copy_facial_animations()
 
+    # roblox UGC Validation Fixes
+    roblox_tools.ugc_validation_fixes()
+
     # export to fbx
     roblox_asset_name = dtu_dict["Asset Name"]
     roblox_output_path = dtu_dict["Output Folder"]
