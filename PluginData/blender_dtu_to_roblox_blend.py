@@ -183,6 +183,38 @@ def _main(argv):
         return
     bpy.context.view_layer.objects.active = main_obj
 
+    if False:
+        # Create duplicate of original Genesis9.Shape to perform baking later
+        obj = main_obj
+        bpy.ops.object.select_all(action='DESELECT')
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.object.duplicate()
+        if obj != bpy.context.object and obj.name in bpy.context.object.name:
+            bpy.context.object.name = "HD_Genesis9.Shape"
+            # repeat for eyes
+            for obj in bpy.data.objects:
+                if obj.type == 'MESH' and obj.name == "Genesis9Eyes.Shape":
+                    bpy.ops.object.select_all(action='DESELECT')
+                    obj.select_set(True)
+                    bpy.context.view_layer.objects.active = obj
+                    bpy.ops.object.duplicate()
+                    if obj != bpy.context.object and obj.name in bpy.context.object.name:
+                        bpy.context.object.name = "HD_Genesis9Eyes.Shape"
+                        # join to hd body
+                        bpy.ops.object.select_all(action='DESELECT')
+                        bpy.data.objects["HD_Genesis9.Shape"].select_set(True)
+                        bpy.data.objects["HD_Genesis9Eyes.Shape"].select_set(True)
+                        bpy.context.view_layer.objects.active = bpy.data.objects["HD_Genesis9.Shape"]
+                        # join
+                        bpy.ops.object.join()
+                    else:
+                        print(f"DEBUG: HD eyes duplication failed, bpy.context.object.name={bpy.context.object.name}")
+                        exit(-1)
+        else:
+            print(f"DEBUG: HD duplication failed, bpy.context.object.name={bpy.context.object.name}")
+            exit(-1)
+
     # decimate mouth
     bpy.ops.object.select_all(action='DESELECT')
     for obj in bpy.data.objects:
@@ -215,7 +247,7 @@ def _main(argv):
             bpy.ops.object.modifier_apply(modifier="Eyes")
             break
 
-    figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"]
+    figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape", "hd_genesis9.shape"]
     cage_list = []
     att_list = []
     for obj in bpy.data.objects:
