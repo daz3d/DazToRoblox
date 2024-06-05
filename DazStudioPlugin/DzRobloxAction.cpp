@@ -537,39 +537,8 @@ void DzRobloxAction::executeAction()
 			}
 		}
 
-		QString sScriptPath;
-		
-		if (m_sAssetType.contains("R15"))
-		{
-			sScriptPath = sScriptFolderPath + "/blender_dtu_to_roblox_blend.py";
-		}
-		else if (m_sAssetType.contains("S1"))
-		{
-			sScriptPath = sScriptFolderPath + "/blender_dtu_to_avatar_autosetup.py";
-		}
-		QString sCommandArgs = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath).arg(m_sDestinationFBX);
-
-		// 4. Generate manual batch file to launch blender scripts
-		QString sBatchString = QString("\"%1\"").arg(m_sBlenderExecutablePath);
-		foreach (QString arg, sCommandArgs.split(";"))
-		{
-			if (arg.contains(" "))
-			{
-				sBatchString += QString(" \"%1\"").arg(arg);
-			}
-			else
-			{
-				sBatchString += " " + arg;
-			}
-		}
-		// write batch
-		QString batchFilePath = m_sDestinationPath + "/manual_blender_script_1.bat";
-		QFile batchFileOut(batchFilePath);
-		batchFileOut.open(QIODevice::WriteOnly | QIODevice::OpenModeFlag::Truncate);
-		batchFileOut.write(sBatchString.toAscii().constData());
-		batchFileOut.close();
-
 		/*****************************************************************************************************/
+		exportProgress->setInfo("Automatic Cage and Attachment Retargeting...");
 
 		if (m_sAssetType.contains("R15"))
 		{
@@ -788,6 +757,42 @@ void DzRobloxAction::executeAction()
 
 		/*****************************************************************************************************/
 
+		QString sScriptPath;
+
+		if (m_sAssetType.contains("R15"))
+		{
+			sScriptPath = sScriptFolderPath + "/blender_dtu_to_roblox_blend.py";
+		}
+		else if (m_sAssetType.contains("S1"))
+		{
+			sScriptPath = sScriptFolderPath + "/blender_dtu_to_avatar_autosetup.py";
+		}
+		QString sCommandArgs = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath).arg(m_sDestinationFBX);
+
+		// 4. Generate manual batch file to launch blender scripts
+		QString sBatchString = QString("\"%1\"").arg(m_sBlenderExecutablePath);
+		foreach(QString arg, sCommandArgs.split(";"))
+		{
+			if (arg.contains(" "))
+			{
+				sBatchString += QString(" \"%1\"").arg(arg);
+			}
+			else
+			{
+				sBatchString += " " + arg;
+			}
+		}
+		// write batch
+#ifdef WIN32
+		QString batchFilePath = m_sDestinationPath + "/manual_blender_script.bat";
+#elif defined(__APPLE__)
+		QString batchFilePath = m_sDestinationPath + "/manual_blender_script.sh";
+#endif
+		QFile batchFileOut(batchFilePath);
+		batchFileOut.open(QIODevice::WriteOnly | QIODevice::OpenModeFlag::Truncate);
+		batchFileOut.write(sBatchString.toAscii().constData());
+		batchFileOut.close();
+
 		exportProgress->setInfo("Starting Blender Processing...");
 		bool retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs);
 
@@ -835,8 +840,34 @@ void DzRobloxAction::executeAction()
 			}
 			else
 			{
-				QMessageBox::critical(0, "Roblox Avatar Exporter",
-					tr(QString("An error occured during the export process (ExitCode=%1).  Please check log files at: %2").arg(m_nBlenderExitCode).arg(m_sDestinationPath).toLocal8Bit()), QMessageBox::Ok);
+				// custom message for code 11 (Python Error)
+				if (m_nBlenderExitCode == m_nPythonExceptionExitCode) {
+					QString sErrorString;
+					sErrorString += QString("An error occured while running the Blender Python script (ExitCode=%1).\n").arg(m_nBlenderExitCode);
+					sErrorString += QString("\nPlease check log files at : %1\n").arg(m_sDestinationPath);
+					sErrorString += QString("\nYou can rerun the Blender Python script manually using: %1").arg(batchFilePath);
+					QMessageBox::critical(0, "Roblox Avatar Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Ok);
+				}
+				else {
+					QString sErrorString;
+					sErrorString += QString("An error occured during the export process (ExitCode=%1).\n").arg(m_nBlenderExitCode);
+					sErrorString += QString("Please check log files at : %1\n").arg(m_sDestinationPath);
+					QMessageBox::critical(0, "Roblox Avatar Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Ok);
+				}
+#ifdef WIN32
+				ShellExecuteA(NULL, "open", m_sDestinationPath.toLocal8Bit().data(), NULL, NULL, SW_SHOWDEFAULT);
+#elif defined(__APPLE__)
+				QStringList args;
+				args << "-e";
+				args << "tell application \"Finder\"";
+				args << "-e";
+				args << "activate";
+				args << "-e";
+				args << "select POSIX file \"" + batchFilePath + "\"";
+				args << "-e";
+				args << "end tell";
+				QProcess::startDetached("osascript", args);
+#endif
 			}
 
 		}
@@ -957,6 +988,25 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 		dzApp->log("Roblox Avatar Exporter: ERROR: Roblox Dialog was not initialized.  Cancelling operation...");
 
 		return false;
+	}
+
+	// if BreastsGone enabled, check if morph exists
+	if (m_bEnableBreastsGone)
+	{
+		auto result = m_AvailableMorphsTable.find("body_bs_BreastsGone");
+		if (result == m_AvailableMorphsTable.end())
+		{
+			// NOTIFY USER THAT BreastsGone morph not found/notinstalled
+			QString sErrorString;
+			sErrorString += QString("The Breasts Gone Morph was not found.  ");
+			sErrorString += QString("Make sure you have Genesis 9 Body Shapes Add-On installed to use the Breasts Gone option.");
+			sErrorString += QString("\n\nDo you want to continue without the Breasts Gone option?  Please make sure that your character will pass Roblox Moderation before attempting to upload.");
+			sErrorString += QString("\n\nPress Cancel to cancel the export now.");
+			auto result = QMessageBox::warning(0, "Roblox Avatar Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Yes | QMessageBox::Cancel);
+			if (result == QMessageBox::Cancel) {
+				return false;
+			}
+		}
 	}
 
 	return true;
@@ -1093,8 +1143,9 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 					numProp->setDoubleValue(1.0);
 				}
 			}
-
-
+			else {
+				dzApp->log("DazToRoblox: ERROR: preProcessScene(): BreastsGone morph not found.  Continue without it.");
+			}
 		}
 	}
 

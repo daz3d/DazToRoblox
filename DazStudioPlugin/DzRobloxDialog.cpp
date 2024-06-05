@@ -129,7 +129,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wGodotProjectFolderRowLabelWidget = mainLayout->itemAt(1, QFormLayout::LabelRole)->widget();
 	 showRobloxOptions(true);
 	 this->showLodRow(false);
-	 mainLayout->addRow("Sexual Content Reducer", m_wBreastsGoneCheckbox);
+	 mainLayout->addRow("Content Moderation Tools", m_wBreastsGoneCheckbox);
 
 	 // Select Blender Executable Path GUI
 	 QHBoxLayout* blenderExecutablePathLayout = new QHBoxLayout();
