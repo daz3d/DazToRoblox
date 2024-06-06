@@ -654,7 +654,7 @@ void DzRobloxAction::executeAction()
 
 					bool bUseHardCodeWorkaround = false;
 					if (sNodeName == "Head_OuterCage") {
-						bUseHardCodeWorkaround = true;
+//						bUseHardCodeWorkaround = true;
 					}
 					pCageRetargeter->deformCage(pSourceNode->GetMesh(), pCageMesh, pWorkInProgressCageBuffer, bUseHardCodeWorkaround);
 					// update cage with verts from new cage
