@@ -183,7 +183,7 @@ def _main(argv):
         return
     bpy.context.view_layer.objects.active = main_obj
 
-    if False:
+    if True:
         # Create duplicate of original Genesis9.Shape to perform baking later
         obj = main_obj
         bpy.ops.object.select_all(action='DESELECT')
