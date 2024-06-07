@@ -399,6 +399,11 @@ def _main(argv):
     # roblox UGC Validation Fixes
     roblox_tools.ugc_validation_fixes()
 
+    # hide HD_Genesis9.Shape if present
+    obj = bpy.data.objects.get("HD_Genesis9.Shape")
+    if obj is not None:
+        obj.hide_viewport = True
+
     # export to fbx
     roblox_asset_name = dtu_dict["Asset Name"]
     roblox_output_path = dtu_dict["Output Folder"]
