@@ -34,6 +34,7 @@
 #include "dzcontentmgr.h"
 #include "dzfigure.h"
 #include "dzfloatproperty.h"
+#include "dzbone.h"
 
 #include "DzRobloxAction.h"
 #include "DzRobloxDialog.h"
@@ -1206,7 +1207,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	Script.reset(new DzScript());
 	Script->loadFromFile(sScriptFilename);
 	Script->execute();
-	// run bone conversion each geograft and attached body part
+	// run bone conversion each geograft and attached body part (aka, ALL FOLLOWERS)
 	QObjectList conversionList;
 	foreach(DzNode *listNode, m_aGeograftConversionHelpers) {
 		conversionList.append(listNode);

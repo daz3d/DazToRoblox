@@ -383,6 +383,34 @@ def bake_transform_to_vertices(obj, transform_matrix):
     for v in vertices:
         v.co = transform_matrix @ v.co
 
+# DB 2024-06-07: Clone Head to DynamicHead (unused)
+def clone_head_to_dynamichead(armature_object):
+    # Deselect all objects
+    bpy.ops.object.select_all(action='DESELECT')
+    # make armature active object
+    armature_object.select_set(True)
+    bpy.context.view_layer.objects.active = armature_object
+
+    # switch to "Edit Mode"
+    bpy.ops.object.mode_set(mode='EDIT')
+
+    # Get edit bone "Head"
+    head_bone = armature_object.data.edit_bones.get('Head')
+
+    # Duplicate head bone
+    dynamichead_bone = armature_object.data.edit_bones.new(name="DynamicHead")
+    dynamichead_bone.head = head_bone.head
+    dynamichead_bone.tail = head_bone.tail
+    dynamichead_bone.roll = head_bone.roll
+    dynamichead_bone.use_connect = False
+    dynamichead_bone.parent = head_bone
+    # move all children from head to dynamichead
+    for child in head_bone.children:
+        child.parent = dynamichead_bone
+
+    # Switch back to Object Mode
+    bpy.ops.object.mode_set(mode='OBJECT')
+
 # DB-2024-05-30: Copy facial animations from template file
 def copy_facial_animations(animation_template_filename=""):
     armature_name = "Genesis9"
@@ -405,33 +433,7 @@ def copy_facial_animations(animation_template_filename=""):
     # nla_track = armature_object.animation_data.nla_tracks.new()
     # nla_strip = nla_track.strips.new(name=action_name, start=0, action=action)
 
-    # Deselect all objects
-    bpy.ops.object.select_all(action='DESELECT')
-    # make armature active object
-    armature_object.select_set(True)
-    bpy.context.view_layer.objects.active = armature_object
-
-    # switch to "Edit Mode"
-    bpy.ops.object.mode_set(mode='EDIT')
-
-    # Get edit bone "Head"
-    head_bone = armature_object.data.edit_bones.get('Head')
-
-    # Duplicate head bone
-    dynamichead_bone = armature_object.data.edit_bones.new(name="DynamicHead")
-    dynamichead_bone.head = head_bone.head
-    dynamichead_bone.tail = head_bone.tail
-    dynamichead_bone.roll = head_bone.roll
-    dynamichead_bone.use_connect = False
-
-    dynamichead_bone.parent = head_bone
-
-    # move all children from head to dynamichead
-    for child in head_bone.children:
-        child.parent = dynamichead_bone
-
-    # Switch back to Object Mode
-    bpy.ops.object.mode_set(mode='OBJECT')
+    clone_head_to_dynamichead(armature_object)
 
     # set up custom properties for Head_Geo
     head_geo_obj = bpy.data.objects['Head_Geo']
