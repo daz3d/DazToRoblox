@@ -499,4 +499,13 @@ def ugc_validation_fixes():
     bpy.data.objects["Genesis9"].data.edit_bones["RightUpperLeg"].head.z = new_z
     bpy.data.objects["Genesis9"].data.edit_bones["RightUpperLeg"].head.x = tail_x
 
+    # fix head
+    bpy.ops.armature.select_all(action='DESELECT')
+    print("DEBUG: FIXING Head bone...")
+    bpy.data.objects["Genesis9"].data.edit_bones["Head"].select = True
+    old_z = bpy.data.objects["Genesis9"].data.edit_bones["Head"].head.z
+    tail_z = bpy.data.objects["Genesis9"].data.edit_bones["UpperTorso"].tail.z
+    new_z = (old_z + tail_z) / 2   
+    bpy.data.objects["Genesis9"].data.edit_bones["Head"].head.z = new_z
+
     bpy.ops.object.mode_set(mode="OBJECT")
