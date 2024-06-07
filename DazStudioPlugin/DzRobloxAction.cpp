@@ -35,6 +35,8 @@
 #include "dzfigure.h"
 #include "dzfloatproperty.h"
 #include "dzbone.h"
+#include "dzjsonreader.h"
+#include "dzjsondom.h"
 
 #include "DzRobloxAction.h"
 #include "DzRobloxDialog.h"
@@ -235,6 +237,117 @@ bool DzRobloxAction::deepCopyNode(FbxNode* pDestinationRoot, FbxNode* pSourceNod
 
 void DzRobloxAction::executeAction()
 {
+
+	//MvcTools::testMvc(dzScene->getPrimarySelection());
+
+	dzScene->setFrame(1);
+	//DzTimeRange range = dzScene->getPlayRange();
+	DzTimeRange range = dzScene->getAnimRange();
+	DzTime endTime = range.getEnd();
+	DzTime timeStep = dzScene->getTimeStep();
+	float frame = endTime / timeStep;
+	dzScene->setTime(endTime);
+
+	DzTime frame01_time = 1 * timeStep;
+
+	QString jsonFilename = "C:/GitHub/DazToRoblox-daz3d/PluginData/Daz_FACS_List.json";
+	QFile fileFacs(jsonFilename);
+	if (fileFacs.open(QIODevice::ReadOnly) == false)
+	{
+		return;
+	}
+	DzJsonReader jsonReader(&fileFacs);
+	DzJsonDomParser jsonParser;
+	jsonReader.read(&jsonParser);
+	fileFacs.close();
+	DzJsonElement el = jsonParser.getRoot();
+	DzJsonObject obj;
+	DzJsonArray array;
+	if (el.isObject()) {
+		obj = el.toObject();
+		DzJsonElement el2 = obj.getMember("FACS");
+		array = el2.toArray();
+	}
+	else {
+		array = el.toArray();
+	}
+	int numMorphs = array.itemCount() + 2;
+	range.setEnd(numMorphs * timeStep);
+	dzScene->setAnimRange(range);
+	dzScene->setPlayRange(range);
+
+	int nNextFrame = 1;
+	// find Breasts Gone Morph, set to 100%
+	auto morphInfoTable = MorphTools::getAvailableMorphs(dzScene->getPrimarySelection());
+	foreach(DzJsonElement el, array.getItems()) {
+		QString morphName = el.stringValue();
+
+		auto result = morphInfoTable->find(morphName);
+		if (result != morphInfoTable->end())
+		{
+			DzTime tmPrevFrameTime = (nNextFrame - 1) * timeStep;
+			DzTime tmCurrentFrameTime = nNextFrame++ * timeStep;
+			DzTime tmNextFrameTime = nNextFrame * timeStep;
+			MorphInfo morphInfo = result.value();
+			DzProperty* prop = morphInfo.Property;
+			DzFloatProperty* floatProp = qobject_cast<DzFloatProperty*>(prop);
+			DzNumericProperty* numProp = qobject_cast<DzNumericProperty*>(prop);
+			if (floatProp)
+			{
+				floatProp->setValue(tmPrevFrameTime, 0.0);
+				floatProp->setValue(tmCurrentFrameTime, 1.0);
+				floatProp->setValue(tmNextFrameTime, 0.0);
+			}
+			else if (numProp)
+			{
+				numProp->setDoubleValue(tmPrevFrameTime, 0.0);
+				numProp->setDoubleValue(tmCurrentFrameTime, 1.0);
+				numProp->setDoubleValue(tmNextFrameTime, 0.0);
+			}
+			int keyIndex = -1;
+			bool bIsKey = prop->isKey(tmCurrentFrameTime, keyIndex);
+			if (bIsKey) {
+				bool bIsSelected = prop->isKeySelected(keyIndex);
+				if (!bIsSelected) {
+					prop->selectKey(keyIndex);
+				}
+			}
+		}
+	}
+	MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
+
+
+	//// find Breasts Gone Morph, set to 100%
+	//auto morphInfoTable = MorphTools::getAvailableMorphs(dzScene->getPrimarySelection());
+	//auto result = morphInfoTable->find("body_bs_BreastsGone");
+	//if (result != morphInfoTable->end())
+	//{
+	//	MorphInfo morphInfo = result.value();
+	//	DzProperty* prop = morphInfo.Property;
+	//	DzFloatProperty* floatProp = qobject_cast<DzFloatProperty*>(prop);
+	//	DzNumericProperty* numProp = qobject_cast<DzNumericProperty*>(prop);
+	//	if (floatProp)
+	//	{
+	//		floatProp->setValue(frame01_time, 1.0);
+	//	}
+	//	else if (numProp)
+	//	{
+	//		numProp->setDoubleValue(frame01_time,1.0);
+	//	}
+	//	int keyIndex = -1;
+	//	bool bIsKey = prop->isKey(frame01_time, keyIndex);
+	//	if (bIsKey) {
+	//		bool bIsSelected = prop->isKeySelected(keyIndex);
+	//		if (!bIsSelected) {
+	//			prop->selectKey(keyIndex);
+	//		}
+	//	}
+	//}
+	//morphInfoTable->clear();
+	//MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
+
+	return;
+
 	// CreateUI() disabled for debugging -- 2022-Feb-25
 	/*
 		 // Create and show the dialog. If the user cancels, exit early,
