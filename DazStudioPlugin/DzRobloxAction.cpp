@@ -235,6 +235,64 @@ bool DzRobloxAction::deepCopyNode(FbxNode* pDestinationRoot, FbxNode* pSourceNod
 	return true;
 }
 
+bool setMorphKeyFrame(DzProperty* prop, double fStrength, int nFrame) {
+	DzTime timeStep = dzScene->getTimeStep();
+	DzTime tmPrevFrameTime = (nFrame - 1) * timeStep;
+	DzTime tmCurrentFrameTime = nFrame * timeStep;
+	DzTime tmNextFrameTime = (nFrame + 1) * timeStep;
+	DzFloatProperty* floatProp = qobject_cast<DzFloatProperty*>(prop);
+	DzNumericProperty* numProp = qobject_cast<DzNumericProperty*>(prop);
+	if (floatProp)
+	{
+		floatProp->setValue(tmPrevFrameTime, 0.0);
+		floatProp->setValue(tmCurrentFrameTime, fStrength);
+		floatProp->setValue(tmNextFrameTime, 0.0);
+	}
+	else if (numProp)
+	{
+		numProp->setDoubleValue(tmPrevFrameTime, 0.0);
+		numProp->setDoubleValue(tmCurrentFrameTime, fStrength);
+		numProp->setDoubleValue(tmNextFrameTime, 0.0);
+	}
+
+	return true;
+}
+
+DzProperty* loadMorph(QMap<QString, MorphInfo>* morphInfoTable, QString sMorphName) {
+	DzProperty* prop = NULL;
+	auto result = morphInfoTable->find(sMorphName);
+	if (result != morphInfoTable->end())
+	{
+		MorphInfo morphInfo = result.value();
+		prop = morphInfo.Property;
+	}
+
+	return prop;
+}
+
+bool processElementRecursively(QMap<QString,MorphInfo>* morphInfoTable, int nFrame, DzJsonElement el, double &current_fStrength, const double default_fStrength ) {
+
+	if (el.isNumberValue()) {
+		current_fStrength = el.numberValue(default_fStrength);
+	}
+	else if (el.isStringValue()) {
+		QString morphName = el.stringValue();
+		DzProperty* prop = loadMorph(morphInfoTable, morphName);
+		setMorphKeyFrame(prop, current_fStrength, nFrame);
+		// reset fStrength after use
+		current_fStrength = default_fStrength;
+	}
+	else if (el.isArray()) {
+		DzJsonArray array = el.toArray();
+		double sub_fStrength = default_fStrength;
+		foreach(DzJsonElement sub_el, array.getItems()) {
+			processElementRecursively(morphInfoTable, nFrame, sub_el, sub_fStrength, default_fStrength);
+		}
+	}
+
+	return true;
+}
+
 void DzRobloxAction::executeAction()
 {
 
@@ -277,42 +335,12 @@ void DzRobloxAction::executeAction()
 	dzScene->setPlayRange(range);
 
 	int nNextFrame = 1;
-	// find Breasts Gone Morph, set to 100%
-	auto morphInfoTable = MorphTools::getAvailableMorphs(dzScene->getPrimarySelection());
+	double global_fStrength = 1.0;
+	double local_fStrength = global_fStrength;
+	QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(dzScene->getPrimarySelection());
 	foreach(DzJsonElement el, array.getItems()) {
-		QString morphName = el.stringValue();
-
-		auto result = morphInfoTable->find(morphName);
-		if (result != morphInfoTable->end())
-		{
-			DzTime tmPrevFrameTime = (nNextFrame - 1) * timeStep;
-			DzTime tmCurrentFrameTime = nNextFrame++ * timeStep;
-			DzTime tmNextFrameTime = nNextFrame * timeStep;
-			MorphInfo morphInfo = result.value();
-			DzProperty* prop = morphInfo.Property;
-			DzFloatProperty* floatProp = qobject_cast<DzFloatProperty*>(prop);
-			DzNumericProperty* numProp = qobject_cast<DzNumericProperty*>(prop);
-			if (floatProp)
-			{
-				floatProp->setValue(tmPrevFrameTime, 0.0);
-				floatProp->setValue(tmCurrentFrameTime, 1.0);
-				floatProp->setValue(tmNextFrameTime, 0.0);
-			}
-			else if (numProp)
-			{
-				numProp->setDoubleValue(tmPrevFrameTime, 0.0);
-				numProp->setDoubleValue(tmCurrentFrameTime, 1.0);
-				numProp->setDoubleValue(tmNextFrameTime, 0.0);
-			}
-			int keyIndex = -1;
-			bool bIsKey = prop->isKey(tmCurrentFrameTime, keyIndex);
-			if (bIsKey) {
-				bool bIsSelected = prop->isKeySelected(keyIndex);
-				if (!bIsSelected) {
-					prop->selectKey(keyIndex);
-				}
-			}
-		}
+		processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
+		nNextFrame++;
 	}
 	MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
 
