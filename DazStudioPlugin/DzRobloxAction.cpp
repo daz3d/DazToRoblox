@@ -344,6 +344,10 @@ void DzRobloxAction::executeAction()
 	}
 	MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
 
+	m_pSelectedNode = dzScene->getPrimarySelection();
+	readGui(this->getBridgeDialog());
+	m_bAnimationTransferFace = true;
+	exportAnimation();
 
 	return;
 
