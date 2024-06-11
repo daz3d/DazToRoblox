@@ -54,6 +54,211 @@
 #include "FbxTools.h"
 #include "MvcTools.h"
 
+
+
+void FACSexportSkeleton(DzNode* Node, DzNode* Parent, FbxNode* FbxParent, FbxScene* Scene, QMap<DzNode*, FbxNode*>& BoneMap)
+{
+
+	FbxNode* BoneNode;
+
+	// null parent is the root bone
+	if (FbxParent == nullptr)
+	{
+		// Create a root bone.  Always named root so we don't have to fix it in Unreal
+		FbxSkeleton* SkeletonAttribute = FbxSkeleton::Create(Scene, "root");
+		SkeletonAttribute->SetSkeletonType(FbxSkeleton::eRoot);
+		BoneNode = FbxNode::Create(Scene, "root");
+		BoneNode->SetNodeAttribute(SkeletonAttribute);
+
+		FbxNode* RootNode = Scene->GetRootNode();
+		RootNode->AddChild(BoneNode);
+
+		// Looks through the child nodes for more bones
+		for (int ChildIndex = 0; ChildIndex < Node->getNumNodeChildren(); ChildIndex++)
+		{
+			DzNode* ChildNode = Node->getNodeChild(ChildIndex);
+			FACSexportSkeleton(ChildNode, Node, BoneNode, Scene, BoneMap);
+		}
+	}
+	else
+	{
+		// Child nodes need to be bones
+		if (DzBone* Bone = qobject_cast<DzBone*>(Node))
+		{
+			// create the bone
+			FbxSkeleton* SkeletonAttribute = FbxSkeleton::Create(Scene, Node->getName().toLocal8Bit().data());
+			SkeletonAttribute->SetSkeletonType(FbxSkeleton::eLimbNode);
+			BoneNode = FbxNode::Create(Scene, Node->getName().toLocal8Bit().data());
+			BoneNode->SetNodeAttribute(SkeletonAttribute);
+
+			// find the bones position
+			DzVec3 Position = Node->getWSPos(DzTime(0), true);
+			DzVec3 ParentPosition = Parent->getWSPos(DzTime(0), true);
+			DzVec3 LocalPosition = Position - ParentPosition;
+
+			// find the bone's rotation
+			DzQuat Rotation = Node->getWSRot(DzTime(0), true);
+			DzQuat ParentRotation = Parent->getWSRot(DzTime(0), true);
+			DzQuat LocalRotation = Node->getOrientation(true);//Rotation * ParentRotation.inverse();
+			DzVec3 VectorRotation;
+			LocalRotation.getValue(VectorRotation);
+
+			// set the position and rotation properties
+			BoneNode->LclTranslation.Set(FbxVector4(LocalPosition.m_x, LocalPosition.m_y, LocalPosition.m_z));
+			//BoneNode->LclRotation.Set(FbxVector4(VectorRotation.m_x, VectorRotation.m_y, VectorRotation.m_z));
+			VectorRotation = Node->getOrientation(true).inverse().multVec(VectorRotation);
+			BoneNode->PreRotation.Set(FbxVector4(VectorRotation.m_x, VectorRotation.m_y, VectorRotation.m_z));
+			VectorRotation = DzVec3(0, 0, 0);
+			BoneNode->LclRotation.Set(FbxVector4(VectorRotation.m_x, VectorRotation.m_y, VectorRotation.m_z));
+
+			FbxParent->AddChild(BoneNode);
+
+			// Looks through the child nodes for more bones
+			for (int ChildIndex = 0; ChildIndex < Node->getNumNodeChildren(); ChildIndex++)
+			{
+				DzNode* ChildNode = Node->getNodeChild(ChildIndex);
+				FACSexportSkeleton(ChildNode, Node, BoneNode, Scene, BoneMap);
+			}
+		}
+	}
+
+	// Add the bone to the map
+	BoneMap.insert(Node, BoneNode);
+}
+
+void setKey(int& KeyIndex, FbxTime Time, FbxAnimLayer* AnimLayer, FbxPropertyT<FbxDouble3>& Property, const char* pChannel, float Value) {
+	FbxAnimCurve* animCurve = Property.GetCurve(AnimLayer, pChannel, true);
+	animCurve->KeyModifyBegin();
+	KeyIndex = animCurve->KeyAdd(Time);
+	animCurve->KeySet(KeyIndex, Time, Value);
+	animCurve->KeyModifyEnd();
+}
+
+void FACSexportNodeAnimation(DzNode* Bone, QMap<DzNode*, FbxNode*>& BoneMap, FbxAnimLayer* AnimBaseLayer, float FigureScale)
+{
+	DzTimeRange PlayRange = dzScene->getPlayRange();
+
+	QString Name = Bone->getName();
+
+	FbxNode* Node = BoneMap.value(Bone);
+	if (Node == nullptr) return;
+
+	// Create a curve node for this bone
+	FbxAnimCurveNode* AnimCurveNode = Node->LclRotation.GetCurveNode(AnimBaseLayer, true);
+
+	// For each frame, write a key (equivalent of bake)
+	for (DzTime CurrentTime = PlayRange.getStart(); CurrentTime <= PlayRange.getEnd(); CurrentTime += dzScene->getTimeStep())
+	{
+		DzTime Frame = CurrentTime / dzScene->getTimeStep();
+
+		dzScene->setTime(CurrentTime);
+		Bone->finalize();
+		DzVec3 VectorRotation = DzVec3(0, 0, 0);
+		DzVec3 Position = DzVec3(0, 0, 0);
+		DzVec3 ControlScale = DzVec3(1, 1, 1);
+		if (DzNode* ParentBone = Bone->getNodeParent()) {
+			ParentBone->finalize();
+			Position = Bone->getWSPos(CurrentTime, false) - ParentBone->getWSPos(CurrentTime, false);
+			DzMatrix3 ScaleMatrix = Bone->getWSScale(CurrentTime, false) * ParentBone->getWSScale(CurrentTime, false).inverse();
+			ControlScale.m_x = ScaleMatrix.row(0)[0];
+			ControlScale.m_y = ScaleMatrix.row(1)[1];
+			ControlScale.m_z = ScaleMatrix.row(2)[2];
+
+			DzQuat Orientation = Bone->getWSRot(CurrentTime, false) * ParentBone->getWSRot(CurrentTime, false).inverse();
+			Orientation.getValue(Bone->getRotationOrder(), VectorRotation);
+			VectorRotation.m_x = VectorRotation.m_x * FBXSDK_180_DIV_PI;
+			VectorRotation.m_y = VectorRotation.m_y * FBXSDK_180_DIV_PI;
+			VectorRotation.m_z = VectorRotation.m_z * FBXSDK_180_DIV_PI;
+		}
+
+		// Set the frame
+		FbxTime Time;
+		Time.SetFrame(Frame);
+		int KeyIndex = 0;
+
+		// Rotation
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclRotation, "X", VectorRotation.m_x);
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclRotation, "Y", VectorRotation.m_y);
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclRotation, "Z", VectorRotation.m_z);
+
+		// Position
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclTranslation, "X", Position.m_x);
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclTranslation, "Y", Position.m_y);
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclTranslation, "Z", Position.m_z);
+
+		// Scale
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclScaling, "X", ControlScale.m_x);
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclScaling, "Y", ControlScale.m_y);
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclScaling, "Z", ControlScale.m_z);
+	}
+}
+
+void FACSexportAnimation(DzNode* m_pSelectedNode)
+{
+	if (!m_pSelectedNode) return;
+
+	DzSkeleton* Skeleton = m_pSelectedNode->getSkeleton();
+	DzFigure* Figure = Skeleton ? qobject_cast<DzFigure*>(Skeleton) : NULL;
+
+	if (!Figure) return;
+
+	// Setup FBX Exporter
+	FbxManager* SdkManager = FbxManager::Create();
+
+	FbxIOSettings* ios = FbxIOSettings::Create(SdkManager, IOSROOT);
+	SdkManager->SetIOSettings(ios);
+
+	int FileFormat = -1;
+	FileFormat = SdkManager->GetIOPluginRegistry()->GetNativeWriterFormat();
+
+	FbxExporter* Exporter = FbxExporter::Create(SdkManager, "");
+	QString sFacsAnimOutputFilename = "C:/github/FACSanimtest.fbx";
+	if (!Exporter->Initialize(sFacsAnimOutputFilename.toLocal8Bit().data(), FileFormat, SdkManager->GetIOSettings()))
+	{
+		return;
+	}
+
+	// Get the Figure Scale
+	float FigureScale = m_pSelectedNode->getScaleControl()->getValue();
+
+	// Create the Scene
+	FbxScene* Scene = FbxScene::Create(SdkManager, "");
+
+	FbxAnimStack* AnimStack = FbxAnimStack::Create(Scene, "AnimStack");
+	FbxAnimLayer* AnimBaseLayer = FbxAnimLayer::Create(Scene, "Layer0");
+	AnimStack->AddMember(AnimBaseLayer);
+
+	// Add the skeleton to the scene
+	QMap<DzNode*, FbxNode*> BoneMap;
+	FACSexportSkeleton(m_pSelectedNode, nullptr, nullptr, Scene, BoneMap);
+
+	// Get the play range
+	//DzTimeRange PlayRange = dzScene->getPlayRange();
+
+	//
+	FACSexportNodeAnimation(Figure, BoneMap, AnimBaseLayer, FigureScale);
+
+	// Iterate the bones
+	DzBoneList Bones;
+	Skeleton->getAllBones(Bones);
+	for (auto Bone : Bones)
+	{
+		FACSexportNodeAnimation(Bone, BoneMap, AnimBaseLayer, FigureScale);
+	}
+
+	//// Get a list of animated properties
+	//if (m_bAnimationExportActiveCurves)
+	//{
+	//	QList<DzNumericProperty*> animatedProperties = getAnimatedProperties(m_pSelectedNode);
+	//	exportAnimatedProperties(animatedProperties, Scene, AnimBaseLayer);
+	//}
+
+	// Write the FBX
+	Exporter->Export(Scene);
+	Exporter->Destroy();
+}
+
+
 DzRobloxAction::DzRobloxAction() :
 	DzBridgeAction(tr("&Roblox Avatar Exporter"), tr("Export the selected character for Roblox Studio."))
 {
@@ -296,6 +501,8 @@ bool processElementRecursively(QMap<QString,MorphInfo>* morphInfoTable, int nFra
 void DzRobloxAction::executeAction()
 {
 
+	if (dzScene->getPrimarySelection() == NULL) return;
+
 	//MvcTools::testMvc(dzScene->getPrimarySelection());
 
 	dzScene->setFrame(1);
@@ -347,7 +554,8 @@ void DzRobloxAction::executeAction()
 	m_pSelectedNode = dzScene->getPrimarySelection();
 	readGui(this->getBridgeDialog());
 	m_bAnimationTransferFace = true;
-	exportAnimation();
+	//exportAnimation();
+	FACSexportAnimation(m_pSelectedNode);
 
 	return;
 
