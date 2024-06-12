@@ -808,7 +808,7 @@ void DzRobloxAction::executeAction()
 			return;
 		}
 
-        exportProgress->setInfo("Preparing Blender Scripts...");
+        exportProgress->setInfo("Preparing FBX PostProcessing Pipeline...");
         
 		// run blender scripts
 		//QString sBlenderPath = QString("C:/Program Files/Blender Foundation/Blender 3.6/blender.exe");
