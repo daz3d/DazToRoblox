@@ -349,6 +349,18 @@ def _main(argv):
     # set active object
     bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
 
+    if 0:
+        facs50_fbx_file = intermediate_folder_path + "/facs50.fbx"
+        blender_tools.import_fbx(facs50_fbx_file)
+        roblox_tools.copy_facs50_animations()
+        # delete root nodes
+        obj = bpy.data.objects.get("root")
+        while obj is not None:
+            bpy.ops.object.select_all(action='DESELECT')
+            obj.select_set(True)
+            bpy.ops.object.delete()
+            obj = bpy.data.objects.get("root")
+
     # switch to object mode before saving (pre-processing save)
     bpy.ops.object.mode_set(mode="OBJECT")
     bpy.ops.wm.save_as_mainfile(filepath=blenderFilePath)

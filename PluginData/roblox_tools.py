@@ -411,6 +411,41 @@ def clone_head_to_dynamichead(armature_object):
     # Switch back to Object Mode
     bpy.ops.object.mode_set(mode='OBJECT')
 
+# DB 2024-06-12: Copy generated FACS50 animations
+def copy_facs50_animations():
+    armature_name = "Genesis9"
+    action_name = "root|AnimStack|Layer0"
+    # Asign loaded action to existing armature
+    armature_object = bpy.data.objects[armature_name]
+    action = bpy.data.actions[action_name]
+    armature_object.animation_data_create()  # Create animation data if not already present
+    armature_object.animation_data.action = action
+    clone_head_to_dynamichead(armature_object)
+    # set up custom properties for Head_Geo
+    head_geo_obj = bpy.data.objects['Head_Geo']
+    head_geo_obj["RootFaceJoint"] = "DynamicHead"
+    head_geo_obj["Frame0"] = "Neutral"
+    head_geo_obj["Frame1"] = "EyesLookDown"
+    head_geo_obj["Frame2"] = "EyesLookLeft"
+    head_geo_obj["Frame3"] = "EyesLookRight"
+    head_geo_obj["Frame4"] = "EyesLookUp"
+    head_geo_obj["Frame5"] = "JawDrop"
+    head_geo_obj["Frame6"] = "LeftEyeClosed"
+    head_geo_obj["Frame7"] = "LeftLipCornerPuller"
+    head_geo_obj["Frame8"] = "LeftLipStretcher"
+    head_geo_obj["Frame9"] = "LeftLowerLipDepressor"
+    head_geo_obj["Frame10"] = "LeftUpperLipRaiser"
+    head_geo_obj["Frame11"] = "LipsTogether"
+    head_geo_obj["Frame12"] = "Pucker"
+    head_geo_obj["Frame14"] = "RightEyeClosed"
+    head_geo_obj["Frame15"] = "RightLipCornerPuller"
+    head_geo_obj["Frame16"] = "RightLipStretcher"
+    head_geo_obj["Frame17"] = "RightLowerLipDepressor"
+    head_geo_obj["Frame18"] = "RightUpperLipRaiser"
+    bpy.context.scene.frame_start = 0
+    bpy.context.scene.frame_end = 52
+    _add_to_log("FACS-50 animations copied successfully.")
+
 # DB-2024-05-30: Copy facial animations from template file
 def copy_facial_animations(animation_template_filename=""):
     armature_name = "Genesis9"
