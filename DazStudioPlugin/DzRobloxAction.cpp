@@ -134,11 +134,31 @@ void setKey(int& KeyIndex, FbxTime Time, FbxAnimLayer* AnimLayer, FbxPropertyT<F
 	animCurve->KeyModifyEnd();
 }
 
+bool hasAncestorName(DzNode* pNode, QString sAncestorName, bool bCaseInsensitive = false) {
+	if (DzNode* pParentNode = pNode->getNodeParent()) {
+		if (!bCaseInsensitive) {
+			if (pParentNode->getName() == sAncestorName)
+				return true;
+		}
+		else {
+			if (pParentNode->getName().toLower() == sAncestorName.toLower())
+				return true;
+		}
+		if (pParentNode->getNodeParent())
+			return hasAncestorName(pParentNode, sAncestorName, bCaseInsensitive);
+	}
+	return false;
+}
+
 void FACSexportNodeAnimation(DzNode* Bone, QMap<DzNode*, FbxNode*>& BoneMap, FbxAnimLayer* AnimBaseLayer, float FigureScale)
 {
 	DzTimeRange PlayRange = dzScene->getPlayRange();
 
 	QString Name = Bone->getName();
+
+	if (hasAncestorName(Bone, "head", true) == false) {
+		return;
+	}
 
 	FbxNode* Node = BoneMap.value(Bone);
 	if (Node == nullptr) return;
