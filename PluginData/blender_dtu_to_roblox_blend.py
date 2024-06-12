@@ -103,6 +103,10 @@ def _main(argv):
         exit(1)
         return
 
+    # prepare intermediate folder paths
+    blenderFilePath = fbxPath.replace(".fbx", ".blend")
+    intermediate_folder_path = os.path.dirname(fbxPath)
+
     # load FBX
     _add_to_log("DEBUG: main(): loading fbx file: " + str(fbxPath))
     blender_tools.import_fbx(fbxPath)
@@ -316,10 +320,6 @@ def _main(argv):
                     game_readiness_tools.add_decimate_modifier_per_vertex_group(obj, group_name, decimate_ratio)
                     break
 
-    # prepare destination folder path
-    blenderFilePath = fbxPath.replace(".fbx", ".blend")
-    intermediate_folder_path = os.path.dirname(fbxPath)
-
     # remove missing or unused images
     print("DEBUG: deleting missing or unused images...")
     for image in bpy.data.images:
@@ -404,7 +404,7 @@ def _main(argv):
     if obj is not None:
         obj.hide_viewport = True
 
-    # export to fbx
+    # prepare destination folder paths
     roblox_asset_name = dtu_dict["Asset Name"]
     roblox_output_path = dtu_dict["Output Folder"]
     destinationPath = roblox_output_path.replace("\\","/")
@@ -414,6 +414,7 @@ def _main(argv):
     fbx_output_name = fbx_base_name.replace(".fbx", "_R15_ready_to_import.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
+    # export to fbx
     try:
         bpy.ops.export_scene.fbx(filepath=fbx_output_file_path, 
                                 #  global_scale = 0.0333,
