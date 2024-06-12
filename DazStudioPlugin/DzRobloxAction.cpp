@@ -193,11 +193,11 @@ void FACSexportNodeAnimation(DzNode* Bone, QMap<DzNode*, FbxNode*>& BoneMap, Fbx
 	}
 }
 
-void FACSexportAnimation(DzNode* m_pSelectedNode)
+void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename)
 {
-	if (!m_pSelectedNode) return;
+	if (!pNode) return;
 
-	DzSkeleton* Skeleton = m_pSelectedNode->getSkeleton();
+	DzSkeleton* Skeleton = pNode->getSkeleton();
 	DzFigure* Figure = Skeleton ? qobject_cast<DzFigure*>(Skeleton) : NULL;
 
 	if (!Figure) return;
@@ -212,14 +212,14 @@ void FACSexportAnimation(DzNode* m_pSelectedNode)
 	FileFormat = SdkManager->GetIOPluginRegistry()->GetNativeWriterFormat();
 
 	FbxExporter* Exporter = FbxExporter::Create(SdkManager, "");
-	QString sFacsAnimOutputFilename = "C:/github/FACSanimtest.fbx";
+	if (sFacsAnimOutputFilename == "") sFacsAnimOutputFilename = "C:/github/FACSanimtest.fbx";
 	if (!Exporter->Initialize(sFacsAnimOutputFilename.toLocal8Bit().data(), FileFormat, SdkManager->GetIOSettings()))
 	{
 		return;
 	}
 
 	// Get the Figure Scale
-	float FigureScale = m_pSelectedNode->getScaleControl()->getValue();
+	float FigureScale = pNode->getScaleControl()->getValue();
 
 	// Create the Scene
 	FbxScene* Scene = FbxScene::Create(SdkManager, "");
@@ -230,7 +230,7 @@ void FACSexportAnimation(DzNode* m_pSelectedNode)
 
 	// Add the skeleton to the scene
 	QMap<DzNode*, FbxNode*> BoneMap;
-	FACSexportSkeleton(m_pSelectedNode, nullptr, nullptr, Scene, BoneMap);
+	FACSexportSkeleton(pNode, nullptr, nullptr, Scene, BoneMap);
 
 	// Get the play range
 	//DzTimeRange PlayRange = dzScene->getPlayRange();
@@ -498,66 +498,74 @@ bool processElementRecursively(QMap<QString,MorphInfo>* morphInfoTable, int nFra
 	return true;
 }
 
+bool DzRobloxAction::generateFacs50()
+{
+		//MvcTools::testMvc(dzScene->getPrimarySelection());
+
+		dzScene->setFrame(1);
+		//DzTimeRange range = dzScene->getPlayRange();
+		DzTimeRange range = dzScene->getAnimRange();
+		DzTime endTime = range.getEnd();
+		DzTime timeStep = dzScene->getTimeStep();
+		float frame = endTime / timeStep;
+		dzScene->setTime(endTime);
+
+		DzTime frame01_time = 1 * timeStep;
+
+		QString jsonFilename = "C:/GitHub/DazToRoblox-daz3d/PluginData/Daz_FACS_List.json";
+		QFile fileFacs(jsonFilename);
+		if (fileFacs.open(QIODevice::ReadOnly) == false)
+		{
+			return false;
+		}
+		DzJsonReader jsonReader(&fileFacs);
+		DzJsonDomParser jsonParser;
+		jsonReader.read(&jsonParser);
+		fileFacs.close();
+		DzJsonElement el = jsonParser.getRoot();
+		DzJsonObject obj;
+		DzJsonArray array;
+		if (el.isObject()) {
+			obj = el.toObject();
+			DzJsonElement el2 = obj.getMember("FACS");
+			array = el2.toArray();
+		}
+		else {
+			array = el.toArray();
+		}
+		int numMorphs = array.itemCount() + 2;
+		range.setEnd(numMorphs * timeStep);
+		dzScene->setAnimRange(range);
+		dzScene->setPlayRange(range);
+
+		int nNextFrame = 1;
+		double global_fStrength = 1.0;
+		double local_fStrength = global_fStrength;
+		QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(dzScene->getPrimarySelection());
+		foreach(DzJsonElement el, array.getItems()) {
+			processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
+			nNextFrame++;
+		}
+		MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
+
+//		m_pSelectedNode = dzScene->getPrimarySelection();
+//		readGui(this->getBridgeDialog());
+//		m_bAnimationTransferFace = true;
+		//exportAnimation();
+		QString sFacsAnimOutputFilename = m_sDestinationPath + "/facs50.fbx";
+		FACSexportAnimation(m_pSelectedNode, sFacsAnimOutputFilename);
+
+		return true;
+
+}
+
 void DzRobloxAction::executeAction()
 {
 
+//	generateFacs50();
+//	return;
+
 	if (dzScene->getPrimarySelection() == NULL) return;
-
-	//MvcTools::testMvc(dzScene->getPrimarySelection());
-
-	dzScene->setFrame(1);
-	//DzTimeRange range = dzScene->getPlayRange();
-	DzTimeRange range = dzScene->getAnimRange();
-	DzTime endTime = range.getEnd();
-	DzTime timeStep = dzScene->getTimeStep();
-	float frame = endTime / timeStep;
-	dzScene->setTime(endTime);
-
-	DzTime frame01_time = 1 * timeStep;
-
-	QString jsonFilename = "C:/GitHub/DazToRoblox-daz3d/PluginData/Daz_FACS_List.json";
-	QFile fileFacs(jsonFilename);
-	if (fileFacs.open(QIODevice::ReadOnly) == false)
-	{
-		return;
-	}
-	DzJsonReader jsonReader(&fileFacs);
-	DzJsonDomParser jsonParser;
-	jsonReader.read(&jsonParser);
-	fileFacs.close();
-	DzJsonElement el = jsonParser.getRoot();
-	DzJsonObject obj;
-	DzJsonArray array;
-	if (el.isObject()) {
-		obj = el.toObject();
-		DzJsonElement el2 = obj.getMember("FACS");
-		array = el2.toArray();
-	}
-	else {
-		array = el.toArray();
-	}
-	int numMorphs = array.itemCount() + 2;
-	range.setEnd(numMorphs * timeStep);
-	dzScene->setAnimRange(range);
-	dzScene->setPlayRange(range);
-
-	int nNextFrame = 1;
-	double global_fStrength = 1.0;
-	double local_fStrength = global_fStrength;
-	QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(dzScene->getPrimarySelection());
-	foreach(DzJsonElement el, array.getItems()) {
-		processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
-		nNextFrame++;
-	}
-	MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
-
-	m_pSelectedNode = dzScene->getPrimarySelection();
-	readGui(this->getBridgeDialog());
-	m_bAnimationTransferFace = true;
-	//exportAnimation();
-	FACSexportAnimation(m_pSelectedNode);
-
-	return;
 
 	// CreateUI() disabled for debugging -- 2022-Feb-25
 	/*
@@ -1081,6 +1089,8 @@ void DzRobloxAction::executeAction()
 		}
 
 		/*****************************************************************************************************/
+
+		generateFacs50();
 
 		QString sScriptPath;
 

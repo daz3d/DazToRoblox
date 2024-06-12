@@ -72,6 +72,7 @@ protected:
 
 	Q_INVOKABLE virtual bool applyGeograft(DzNode* pBaseNode, QString geograftFilename, QString geograftNodeName = "");
 	Q_INVOKABLE virtual bool copyMaterialsToGeograft(DzNode* pGeograftNode, DzNode* pBaseNode = NULL);
+	Q_INVOKABLE virtual bool generateFacs50();
 
 	bool m_bEnableBreastsGone = false;
 
