@@ -466,18 +466,12 @@ bool setMorphKeyFrame(DzProperty* prop, double fStrength, int nFrame) {
 	DzTime tmCurrentFrameTime = nFrame * timeStep;
 	DzTime tmNextFrameTime = (nFrame + 1) * timeStep;
 	DzFloatProperty* floatProp = qobject_cast<DzFloatProperty*>(prop);
-	DzNumericProperty* numProp = qobject_cast<DzNumericProperty*>(prop);
 	if (floatProp)
 	{
-		floatProp->setValue(tmPrevFrameTime, 0.0);
+		int key;
+		if (floatProp->isKey(tmPrevFrameTime, key) == false) floatProp->setValue(tmPrevFrameTime, 0.0);
 		floatProp->setValue(tmCurrentFrameTime, fStrength);
 		floatProp->setValue(tmNextFrameTime, 0.0);
-	}
-	else if (numProp)
-	{
-		numProp->setDoubleValue(tmPrevFrameTime, 0.0);
-		numProp->setDoubleValue(tmCurrentFrameTime, fStrength);
-		numProp->setDoubleValue(tmNextFrameTime, 0.0);
 	}
 
 	return true;
