@@ -134,9 +134,9 @@ void setKey(int& KeyIndex, FbxTime Time, FbxAnimLayer* AnimLayer, FbxPropertyT<F
 	animCurve->KeyModifyEnd();
 }
 
-bool hasAncestorName(DzNode* pNode, QString sAncestorName, bool bCaseInsensitive = false) {
+bool hasAncestorName(DzNode* pNode, QString sAncestorName, bool bCaseSensitive = true) {
 	if (DzNode* pParentNode = pNode->getNodeParent()) {
-		if (!bCaseInsensitive) {
+		if (bCaseSensitive) {
 			if (pParentNode->getName() == sAncestorName)
 				return true;
 		}
@@ -145,7 +145,7 @@ bool hasAncestorName(DzNode* pNode, QString sAncestorName, bool bCaseInsensitive
 				return true;
 		}
 		if (pParentNode->getNodeParent())
-			return hasAncestorName(pParentNode, sAncestorName, bCaseInsensitive);
+			return hasAncestorName(pParentNode, sAncestorName, bCaseSensitive);
 	}
 	return false;
 }
@@ -156,7 +156,7 @@ void FACSexportNodeAnimation(DzNode* Bone, QMap<DzNode*, FbxNode*>& BoneMap, Fbx
 
 	QString Name = Bone->getName();
 
-	if (hasAncestorName(Bone, "head", true) == false) {
+	if (hasAncestorName(Bone, "head", false) == false) {
 		return;
 	}
 
