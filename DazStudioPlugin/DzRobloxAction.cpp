@@ -213,7 +213,7 @@ void FACSexportNodeAnimation(DzNode* Bone, QMap<DzNode*, FbxNode*>& BoneMap, Fbx
 	}
 }
 
-void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename)
+void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename, bool bAsciiMode = false)
 {
 	if (!pNode) return;
 
@@ -230,6 +230,9 @@ void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename)
 
 	int FileFormat = -1;
 	FileFormat = SdkManager->GetIOPluginRegistry()->GetNativeWriterFormat();
+	if (bAsciiMode) {
+		FileFormat = SdkManager->GetIOPluginRegistry()->FindWriterIDByDescription("FBX ascii (*.fbx)");
+	}
 
 	FbxExporter* Exporter = FbxExporter::Create(SdkManager, "");
 	if (sFacsAnimOutputFilename == "") sFacsAnimOutputFilename = "C:/github/FACSanimtest.fbx";
@@ -583,7 +586,8 @@ bool DzRobloxAction::generateFacs50()
 
 		//exportAnimation();
 		QString sFacsAnimOutputFilename = m_sDestinationPath + "/facs50.fbx";
-		FACSexportAnimation(m_pSelectedNode, sFacsAnimOutputFilename);
+		FACSexportAnimation(m_pSelectedNode, QString(sFacsAnimOutputFilename).replace(".fbx", "-ascii.fbx"), true);
+		FACSexportAnimation(m_pSelectedNode, sFacsAnimOutputFilename, false);
 
 		return true;
 
