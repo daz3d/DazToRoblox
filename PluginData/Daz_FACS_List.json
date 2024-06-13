@@ -1,9 +1,9 @@
 {
     "FACS": [
-        ["facs_bs_EyeLookDownLeft", "facs_bs_EyeLookDownRight"],
-        ["facs_bs_EyeLookInRight", "facs_bs_EyeLookOutLeft"],
-        ["facs_bs_EyeLookInLeft", "facs_bs_EyeLookOutRight"],
-        ["facs_bs_EyeLookUpLeft", "facs_bs_EyeLookUpRight"],
+        [-1.0, "facs_ctrl_EyeLookUp-Down", "facs_bs_EyeLookDownLeft", "facs_bs_EyeLookDownRight"],
+        [-1.0, "facs_ctrl_EyeLookSide-Side", "facs_bs_EyeLookInRight", "facs_bs_EyeLookOutLeft"],
+        [1.0, "facs_ctrl_EyeLookSide-Side", "facs_bs_EyeLookInLeft", "facs_bs_EyeLookOutRight"],
+        [1.0, "facs_ctrl_EyeLookUp-Down", "facs_bs_EyeLookUpLeft", "facs_bs_EyeLookUpRight"],
         "facs_bs_EyeBlinkLeft",
         "facs_bs_EyeBlinkRight",
         "facs_bs_JawOpen",
@@ -15,8 +15,8 @@
         ["facs_bs_MouthShrugUpperRight", "facs_bs_MouthUpperUpRight"],
         ["facs_bs_MouthCloseLowerLeft", "facs_bs_MouthCloseLowerRight", "facs_bs_MouthCloseUpperLeft", "facs_bs_MouthCloseUpperRight"],
         "facs_ctrl_MouthPucker",
-        ["facs_ctrl_MouthPressLeft", "0.5", "facs_bs_MouthStretchLeft"],
-        ["facs_ctrl_MouthPressRight", "0.5", "facs_bs_MouthStretchRight"],
+        ["facs_ctrl_MouthPressLeft", 0.5, "facs_bs_MouthStretchLeft"],
+        ["facs_ctrl_MouthPressRight", 0.5, "facs_bs_MouthStretchRight"],
         "facs_ctrl_MouthShrugLower",
         "facs_ctrl_MouthShrugUpper",
         "facs_ctrl_MouthPurse",
@@ -47,8 +47,8 @@
         "facs_bs_EyelidOpenUpperLeft",
         "facs_bs_CheekSquintRight",
         "facs_bs_EyelidOpenUpperRight",
-        ["-1.0", "facs_ctrl_TongueTipBend"],
+        [-1.0, "facs_ctrl_TongueTipBend"],
         "facs_bs_TongueOut",
-        ["1.0", "facs_ctrl_TongueTipBend"]
+        [1.0, "facs_ctrl_TongueTipBend"]
     ]
 }
