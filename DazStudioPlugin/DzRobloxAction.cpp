@@ -555,16 +555,32 @@ bool DzRobloxAction::generateFacs50()
 		int nNextFrame = 1;
 		double global_fStrength = 1.0;
 		double local_fStrength = global_fStrength;
-		QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(dzScene->getPrimarySelection());
+		DzNode* pMainNode = dzScene->getPrimarySelection();
+		QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(pMainNode);
 		foreach(DzJsonElement el, array.getItems()) {
 			processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
 			nNextFrame++;
 		}
 		MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
+#ifdef FACS50_EXPORT_TONGUE
+		// DB 2024-06-13: configure morph in children (for tongue? but no bones? depending on tongue bone solution, may not want to keep)
+		for (int i = 0; i < pMainNode->getNumNodeChildren(); i++) {
+			DzNode* pChildNode = pMainNode->getNodeChild(i);
+			DzFigure* pChildFig = qobject_cast<DzFigure*>(pChildNode);
+			if (pChildFig) {
+				int nNextFrame = 1;
+				double global_fStrength = 1.0;
+				double local_fStrength = global_fStrength;
+				QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(pChildFig);
+				foreach(DzJsonElement el, array.getItems()) {
+					processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
+					nNextFrame++;
+				}
+				MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
+			}
+		}
+#endif
 
-//		m_pSelectedNode = dzScene->getPrimarySelection();
-//		readGui(this->getBridgeDialog());
-//		m_bAnimationTransferFace = true;
 		//exportAnimation();
 		QString sFacsAnimOutputFilename = m_sDestinationPath + "/facs50.fbx";
 		FACSexportAnimation(m_pSelectedNode, sFacsAnimOutputFilename);
