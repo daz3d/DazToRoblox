@@ -1,3 +1,5 @@
+#define WS_SCALE_FACTOR 0.01f
+
 #define COMBINED_UVSET_STRING "Combined Head And Body"
 #define R15_POSTFIX_STRING "_R15_reminder_adjust_cage_and_attachments"
 #define S1_POSTFIX_STRING "_S1_ready_for_avatar_autosetup"
@@ -64,14 +66,22 @@ void FACSexportSkeleton(DzNode* Node, DzNode* Parent, FbxNode* FbxParent, FbxSce
 	// null parent is the root bone
 	if (FbxParent == nullptr)
 	{
-		// Create a root bone.  Always named root so we don't have to fix it in Unreal
-		FbxSkeleton* SkeletonAttribute = FbxSkeleton::Create(Scene, "root");
-		SkeletonAttribute->SetSkeletonType(FbxSkeleton::eRoot);
-		BoneNode = FbxNode::Create(Scene, "root");
-		BoneNode->SetNodeAttribute(SkeletonAttribute);
+		if ( (BoneNode = Scene->FindNodeByName("root")) == NULL) {
+			// Create a root bone.  Always named root so we don't have to fix it in Unreal
+			FbxSkeleton* SkeletonAttribute = FbxSkeleton::Create(Scene, "root");
+			SkeletonAttribute->SetSkeletonType(FbxSkeleton::eRoot);
+			BoneNode = FbxNode::Create(Scene, "root");
+			BoneNode->SetNodeAttribute(SkeletonAttribute);
 
-		FbxNode* RootNode = Scene->GetRootNode();
-		RootNode->AddChild(BoneNode);
+			//BoneNode->PreRotation.Set(-90, 0, 0);
+
+			FbxNode* RootNode = Scene->GetRootNode();
+			RootNode->AddChild(BoneNode);
+		}
+		else
+		{
+			int nop = 0;
+		}
 
 		// Looks through the child nodes for more bones
 		for (int ChildIndex = 0; ChildIndex < Node->getNumNodeChildren(); ChildIndex++)
@@ -85,33 +95,38 @@ void FACSexportSkeleton(DzNode* Node, DzNode* Parent, FbxNode* FbxParent, FbxSce
 		// Child nodes need to be bones
 		if (DzBone* Bone = qobject_cast<DzBone*>(Node))
 		{
-			// create the bone
-			FbxSkeleton* SkeletonAttribute = FbxSkeleton::Create(Scene, Node->getName().toLocal8Bit().data());
-			SkeletonAttribute->SetSkeletonType(FbxSkeleton::eLimbNode);
-			BoneNode = FbxNode::Create(Scene, Node->getName().toLocal8Bit().data());
-			BoneNode->SetNodeAttribute(SkeletonAttribute);
+			FbxString fbxName(Node->getName().toLocal8Bit().data());
+			if ( (BoneNode = Scene->FindNodeByName(fbxName)) == NULL) {
+				// create the bone
+				FbxSkeleton* SkeletonAttribute = FbxSkeleton::Create(Scene, Node->getName().toLocal8Bit().data());
+				SkeletonAttribute->SetSkeletonType(FbxSkeleton::eLimbNode);
+				BoneNode = FbxNode::Create(Scene, Node->getName().toLocal8Bit().data());
+				BoneNode->SetNodeAttribute(SkeletonAttribute);
 
-			// find the bones position
-			DzVec3 Position = Node->getWSPos(DzTime(0), true);
-			DzVec3 ParentPosition = Parent->getWSPos(DzTime(0), true);
-			DzVec3 LocalPosition = Position - ParentPosition;
+				// find the bones position
+				DzVec3 Position = Node->getWSPos(DzTime(0), true) * WS_SCALE_FACTOR;
+				DzVec3 ParentPosition = Parent->getWSPos(DzTime(0), true) * WS_SCALE_FACTOR;
+				DzVec3 LocalPosition = Position - ParentPosition;
 
-			// find the bone's rotation
-			DzQuat Rotation = Node->getWSRot(DzTime(0), true);
-			DzQuat ParentRotation = Parent->getWSRot(DzTime(0), true);
-			DzQuat LocalRotation = Node->getOrientation(true);//Rotation * ParentRotation.inverse();
-			DzVec3 VectorRotation;
-			LocalRotation.getValue(VectorRotation);
+				// find the bone's rotation
+				DzQuat Rotation = Node->getWSRot(DzTime(0), true);
+				DzQuat ParentRotation = Parent->getWSRot(DzTime(0), true);
+				DzQuat LocalRotation = Node->getOrientation(true);//Rotation * ParentRotation.inverse();
+				DzVec3 VectorRotation;
+				LocalRotation.getValue(VectorRotation);
 
-			// set the position and rotation properties
-			BoneNode->LclTranslation.Set(FbxVector4(LocalPosition.m_x, LocalPosition.m_y, LocalPosition.m_z));
-			//BoneNode->LclRotation.Set(FbxVector4(VectorRotation.m_x, VectorRotation.m_y, VectorRotation.m_z));
-			VectorRotation = Node->getOrientation(true).inverse().multVec(VectorRotation);
-			BoneNode->PreRotation.Set(FbxVector4(VectorRotation.m_x, VectorRotation.m_y, VectorRotation.m_z));
-			VectorRotation = DzVec3(0, 0, 0);
-			BoneNode->LclRotation.Set(FbxVector4(VectorRotation.m_x, VectorRotation.m_y, VectorRotation.m_z));
+				// set the position and rotation properties
+				BoneNode->LclTranslation.Set(FbxVector4(LocalPosition.m_x, LocalPosition.m_y, LocalPosition.m_z));
+				//			BoneNode->PreRotation.Set(FbxVector4(VectorRotation.m_x, VectorRotation.m_y, VectorRotation.m_z));
+				VectorRotation = DzVec3(0, 0, 0);
+				//			BoneNode->LclRotation.Set(FbxVector4(VectorRotation.m_x, VectorRotation.m_y, VectorRotation.m_z));
 
-			FbxParent->AddChild(BoneNode);
+				FbxParent->AddChild(BoneNode);
+			}
+			else
+			{
+				int nop = 0;
+			}
 
 			// Looks through the child nodes for more bones
 			for (int ChildIndex = 0; ChildIndex < Node->getNumNodeChildren(); ChildIndex++)
@@ -122,8 +137,11 @@ void FACSexportSkeleton(DzNode* Node, DzNode* Parent, FbxNode* FbxParent, FbxSce
 		}
 	}
 
-	// Add the bone to the map
-	BoneMap.insert(Node, BoneNode);
+	if (BoneMap.contains(Node) == false) {
+		// Add the bone to the map
+		BoneMap.insert(Node, BoneNode);
+	}
+
 }
 
 void setKey(int& KeyIndex, FbxTime Time, FbxAnimLayer* AnimLayer, FbxPropertyT<FbxDouble3>& Property, const char* pChannel, float Value) {
@@ -254,6 +272,14 @@ void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename, bool bA
 	// Add the skeleton to the scene
 	QMap<DzNode*, FbxNode*> BoneMap;
 	FACSexportSkeleton(pNode, nullptr, nullptr, Scene, BoneMap);
+	// add additional bones from followers
+	for (int i = 0; i < pNode->getNumNodeChildren(); i++) {
+		DzNode* pChild = pNode->getNodeChild(i);
+		DzFigure* pFigChild = qobject_cast<DzFigure*>(pChild);
+		if (pFigChild && pFigChild->getFollowTarget() == Skeleton) {
+			FACSexportSkeleton(pChild, nullptr, nullptr, Scene, BoneMap);
+		}
+	}
 
 	// Get the play range
 	//DzTimeRange PlayRange = dzScene->getPlayRange();
@@ -268,6 +294,21 @@ void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename, bool bA
 	{
 		FACSexportNodeAnimation(Bone, BoneMap, AnimBaseLayer, FigureScale);
 	}
+	for (int i = 0; i < pNode->getNumNodeChildren(); i++) {
+		DzNode* pChild = pNode->getNodeChild(i);
+		DzFigure* pFigChild = qobject_cast<DzFigure*>(pChild);
+		if (pFigChild && pFigChild->getFollowTarget() == Skeleton) {
+			DzSkeleton* pSkeletonChild = pFigChild->getSkeleton();
+			DzBoneList ChildBones;
+			pSkeletonChild->getAllBones(ChildBones);
+			for (auto ChildBone : ChildBones)
+			{
+				if (Bones.contains(ChildBone) == false)
+					FACSexportNodeAnimation(ChildBone, BoneMap, AnimBaseLayer, FigureScale);
+			}
+		}
+	}
+
 
 	//// Get a list of animated properties
 	//if (m_bAnimationExportActiveCurves)
@@ -565,6 +606,7 @@ bool DzRobloxAction::generateFacs50()
 			nNextFrame++;
 		}
 		MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
+#define FACS50_EXPORT_TONGUE
 #ifdef FACS50_EXPORT_TONGUE
 		// DB 2024-06-13: configure morph in children (for tongue? but no bones? depending on tongue bone solution, may not want to keep)
 		for (int i = 0; i < pMainNode->getNumNodeChildren(); i++) {
@@ -862,7 +904,7 @@ void DzRobloxAction::executeAction()
 			"blender_dtu_to_roblox_blend.py" << "blender_dtu_to_avatar_autosetup.py" <<
 			"roblox_tools.py" << "Daz_Cage_Att_Template.blend" <<
 			"game_readiness_tools.py" << "game_readiness_roblox_data.py" <<
-			"Genesis9Action.blend");
+			"Genesis9Action.blend" << "Genesis9facs50.blend");
 		if (bUseFallbackScriptFolder)
 		{
 			foreach(QString filename, aOverrideFilenameList)

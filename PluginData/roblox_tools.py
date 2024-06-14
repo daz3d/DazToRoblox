@@ -412,15 +412,29 @@ def clone_head_to_dynamichead(armature_object):
     bpy.ops.object.mode_set(mode='OBJECT')
 
 # DB 2024-06-12: Copy generated FACS50 animations
-def copy_facs50_animations():
+def copy_facs50_animations(animation_template_filename):
     armature_name = "Genesis9"
-    action_name = "root|AnimStack|Layer0"
+    action_name = "facs50"
+
+    if animation_template_filename == "":
+        animation_template_filename = _animation_template_filename
+
+    # Load action from template file
+    with bpy.data.libraries.load(animation_template_filename, link=False) as (data_from, data_to):
+        data_to.actions = [name for name in data_from.actions if name == action_name]
+
     # Asign loaded action to existing armature
     armature_object = bpy.data.objects[armature_name]
     action = bpy.data.actions[action_name]
     armature_object.animation_data_create()  # Create animation data if not already present
     armature_object.animation_data.action = action
+
+    # # Create a temporary NLA track to ensure the action is exported
+    # nla_track = armature_object.animation_data.nla_tracks.new()
+    # nla_strip = nla_track.strips.new(name=action_name, start=0, action=action)
+
     clone_head_to_dynamichead(armature_object)
+
     # set up custom properties for Head_Geo
     head_geo_obj = bpy.data.objects['Head_Geo']
     head_geo_obj["RootFaceJoint"] = "DynamicHead"
@@ -447,7 +461,7 @@ def copy_facs50_animations():
     _add_to_log("FACS-50 animations copied successfully.")
 
 # DB-2024-05-30: Copy facial animations from template file
-def copy_facial_animations(animation_template_filename=""):
+def copy_facial_animations(animation_template_filename):
     armature_name = "Genesis9"
     action_name = "Genesis9Action"
 
