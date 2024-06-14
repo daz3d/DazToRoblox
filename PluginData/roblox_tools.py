@@ -443,19 +443,64 @@ def copy_facs50_animations(animation_template_filename):
     head_geo_obj["Frame2"] = "EyesLookLeft"
     head_geo_obj["Frame3"] = "EyesLookRight"
     head_geo_obj["Frame4"] = "EyesLookUp"
-    head_geo_obj["Frame5"] = "JawDrop"
-    head_geo_obj["Frame6"] = "LeftEyeClosed"
-    head_geo_obj["Frame7"] = "LeftLipCornerPuller"
-    head_geo_obj["Frame8"] = "LeftLipStretcher"
-    head_geo_obj["Frame9"] = "LeftLowerLipDepressor"
-    head_geo_obj["Frame10"] = "LeftUpperLipRaiser"
-    head_geo_obj["Frame11"] = "LipsTogether"
-    head_geo_obj["Frame12"] = "Pucker"
-    head_geo_obj["Frame14"] = "RightEyeClosed"
-    head_geo_obj["Frame15"] = "RightLipCornerPuller"
-    head_geo_obj["Frame16"] = "RightLipStretcher"
-    head_geo_obj["Frame17"] = "RightLowerLipDepressor"
-    head_geo_obj["Frame18"] = "RightUpperLipRaiser"
+    head_geo_obj["Frame5"] = "LeftEyeClosed"
+    head_geo_obj["Frame6"] = "RightEyeClosed"
+    head_geo_obj["Frame7"] = "JawDrop"
+
+    head_geo_obj["Frame8"] = "LeftLipCornerPuller"
+    head_geo_obj["Frame9"] = "RightLipCornerPuller"
+
+    head_geo_obj["Frame10"] = "LeftLowerLipDepressor"
+    head_geo_obj["Frame11"] = "LeftUpperLipRaiser"
+    head_geo_obj["Frame12"] = "RightLowerLipDepressor"
+    head_geo_obj["Frame13"] = "RightUpperLipRaiser"
+
+    head_geo_obj["Frame14"] = "LipsTogether"
+    head_geo_obj["Frame15"] = "Pucker"
+
+    head_geo_obj["Frame16"] = "LeftLipStretcher"
+    head_geo_obj["Frame17"] = "RightLipStretcher"
+
+    head_geo_obj["Frame18"] = "ChinRaiser"
+    head_geo_obj["Frame19"] = "ChinRaiserUpperLip"
+    head_geo_obj["Frame20"] = "FlatPucker"
+    head_geo_obj["Frame21"] = "Funneler"
+    head_geo_obj["Frame22"] = "LowerLipSuck"
+    head_geo_obj["Frame23"] = "LipPresser"
+    head_geo_obj["Frame24"] = "MouthLeft"
+    head_geo_obj["Frame25"] = "MouthRight"
+    head_geo_obj["Frame26"] = "UpperLipSuck"
+
+    head_geo_obj["Frame27"] = "LeftCheekPuff"
+    head_geo_obj["Frame28"] = "LeftDimpler"
+    head_geo_obj["Frame29"] = "LeftLipCornerDown"
+    head_geo_obj["Frame30"] = "RightCheekPuff"
+    head_geo_obj["Frame31"] = "RightDimpler"
+    head_geo_obj["Frame32"] = "RightLipCornerDown"
+
+    head_geo_obj["Frame33"] = "JawLeft"
+    head_geo_obj["Frame34"] = "JawRight"
+    head_geo_obj["Frame35"] = "Corrugator"
+
+    head_geo_obj["Frame36"] = "LeftBrowLowerer"
+    head_geo_obj["Frame37"] = "LeftOuterBrowRaiser"
+    head_geo_obj["Frame38"] = "LeftNoseWrinkler"
+    head_geo_obj["Frame39"] = "LeftInnerBrowRaiser"
+
+    head_geo_obj["Frame40"] = "RightBrowLowerer"
+    head_geo_obj["Frame41"] = "RightOuterBrowRaiser"
+    head_geo_obj["Frame42"] = "RightInnerBrowRaiser"
+    head_geo_obj["Frame43"] = "RightNoseWrinkler"
+
+    head_geo_obj["Frame44"] = "LeftCheekRaiser"
+    head_geo_obj["Frame45"] = "LeftEyeUpperLidRaiser"
+    head_geo_obj["Frame46"] = "RightCheekRaiser"
+    head_geo_obj["Frame47"] = "RightEyeUpperLidRaiser"
+
+    head_geo_obj["Frame48"] = "TongueDown"
+    head_geo_obj["Frame49"] = "TongueOut"
+    head_geo_obj["Frame50"] = "TongueUp"
+
     bpy.context.scene.frame_start = 0
     bpy.context.scene.frame_end = 52
     _add_to_log("FACS-50 animations copied successfully.")
