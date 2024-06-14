@@ -182,7 +182,9 @@ void FACSexportNodeAnimation(DzNode* Bone, QMap<DzNode*, FbxNode*>& BoneMap, Fbx
 	if (Node == nullptr) return;
 
 	// Create a curve node for this bone
-	FbxAnimCurveNode* AnimCurveNode = Node->LclRotation.GetCurveNode(AnimBaseLayer, true);
+	FbxAnimCurveNode* AnimCurveNodeR = Node->LclRotation.GetCurveNode(AnimBaseLayer, true);
+	FbxAnimCurveNode* AnimCurveNodeT = Node->LclTranslation.GetCurveNode(AnimBaseLayer, true);
+	FbxAnimCurveNode* AnimCurveNodeS = Node->LclScaling.GetCurveNode(AnimBaseLayer, true);
 
 	// For each frame, write a key (equivalent of bake)
 	for (DzTime CurrentTime = PlayRange.getStart(); CurrentTime <= PlayRange.getEnd(); CurrentTime += dzScene->getTimeStep())
@@ -191,43 +193,46 @@ void FACSexportNodeAnimation(DzNode* Bone, QMap<DzNode*, FbxNode*>& BoneMap, Fbx
 
 		dzScene->setTime(CurrentTime);
 		Bone->finalize();
-		DzVec3 VectorRotation = DzVec3(0, 0, 0);
 		DzVec3 Position = DzVec3(0, 0, 0);
-		DzVec3 ControlScale = DzVec3(1, 1, 1);
+		DzVec3 VectorRotation = DzVec3(0, 0, 0);
+		DzVec3 VectorScale = DzVec3(1, 1, 1);
+
+		Position = Bone->getWSPos(CurrentTime, false) * WS_SCALE_FACTOR;
+		DzQuat Orientation = Bone->getWSRot(CurrentTime, false);
+		DzMatrix3 ScaleMatrix = Bone->getWSScale(CurrentTime, false);
 		if (DzNode* ParentBone = Bone->getNodeParent()) {
 			ParentBone->finalize();
-			Position = Bone->getWSPos(CurrentTime, false) - ParentBone->getWSPos(CurrentTime, false);
-			DzMatrix3 ScaleMatrix = Bone->getWSScale(CurrentTime, false) * ParentBone->getWSScale(CurrentTime, false).inverse();
-			ControlScale.m_x = ScaleMatrix.row(0)[0];
-			ControlScale.m_y = ScaleMatrix.row(1)[1];
-			ControlScale.m_z = ScaleMatrix.row(2)[2];
-
-			DzQuat Orientation = Bone->getWSRot(CurrentTime, false) * ParentBone->getWSRot(CurrentTime, false).inverse();
-			Orientation.getValue(Bone->getRotationOrder(), VectorRotation);
-			VectorRotation.m_x = VectorRotation.m_x * FBXSDK_180_DIV_PI;
-			VectorRotation.m_y = VectorRotation.m_y * FBXSDK_180_DIV_PI;
-			VectorRotation.m_z = VectorRotation.m_z * FBXSDK_180_DIV_PI;
+			Position = (Bone->getWSPos(CurrentTime, false) * WS_SCALE_FACTOR) - (ParentBone->getWSPos(CurrentTime, false) * WS_SCALE_FACTOR);
+			Orientation = Bone->getWSRot(CurrentTime, false) * ParentBone->getWSRot(CurrentTime, false).inverse();
+			ScaleMatrix = Bone->getWSScale(CurrentTime, false) * ParentBone->getWSScale(CurrentTime, false).inverse();
 		}
+		Orientation.getValue(Bone->getRotationOrder(), VectorRotation);
+		VectorRotation.m_x = VectorRotation.m_x * FBXSDK_180_DIV_PI;
+		VectorRotation.m_y = VectorRotation.m_y * FBXSDK_180_DIV_PI;
+		VectorRotation.m_z = VectorRotation.m_z * FBXSDK_180_DIV_PI;
+		VectorScale.m_x = ScaleMatrix.row(0)[0];
+		VectorScale.m_y = ScaleMatrix.row(1)[1];
+		VectorScale.m_z = ScaleMatrix.row(2)[2];
 
 		// Set the frame
 		FbxTime Time;
 		Time.SetFrame(Frame);
 		int KeyIndex = 0;
 
-		// Rotation
-		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclRotation, "X", VectorRotation.m_x);
-		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclRotation, "Y", VectorRotation.m_y);
-		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclRotation, "Z", VectorRotation.m_z);
-
 		// Position
 		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclTranslation, "X", Position.m_x);
 		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclTranslation, "Y", Position.m_y);
 		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclTranslation, "Z", Position.m_z);
 
+		// Rotation
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclRotation, "X", VectorRotation.m_x);
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclRotation, "Y", VectorRotation.m_y);
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclRotation, "Z", VectorRotation.m_z);
+
 		// Scale
-		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclScaling, "X", ControlScale.m_x);
-		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclScaling, "Y", ControlScale.m_y);
-		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclScaling, "Z", ControlScale.m_z);
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclScaling, "X", VectorScale.m_x);
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclScaling, "Y", VectorScale.m_y);
+		setKey(KeyIndex, Time, AnimBaseLayer, Node->LclScaling, "Z", VectorScale.m_z);
 	}
 }
 
@@ -246,6 +251,8 @@ void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename, bool bA
 	FbxIOSettings* ios = FbxIOSettings::Create(SdkManager, IOSROOT);
 	SdkManager->SetIOSettings(ios);
 
+
+
 	int FileFormat = -1;
 	FileFormat = SdkManager->GetIOPluginRegistry()->GetNativeWriterFormat();
 	if (bAsciiMode) {
@@ -253,7 +260,6 @@ void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename, bool bA
 	}
 
 	FbxExporter* Exporter = FbxExporter::Create(SdkManager, "");
-	if (sFacsAnimOutputFilename == "") sFacsAnimOutputFilename = "C:/github/FACSanimtest.fbx";
 	if (!Exporter->Initialize(sFacsAnimOutputFilename.toLocal8Bit().data(), FileFormat, SdkManager->GetIOSettings()))
 	{
 		return;
@@ -264,6 +270,10 @@ void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename, bool bA
 
 	// Create the Scene
 	FbxScene* Scene = FbxScene::Create(SdkManager, "");
+
+	FbxGlobalSettings* pGlobalSettings = &Scene->GetGlobalSettings();
+	pGlobalSettings->SetOriginalUpAxis(FbxAxisSystem::DirectX);
+	pGlobalSettings->SetSystemUnit(FbxSystemUnit::cm);
 
 	FbxAnimStack* AnimStack = FbxAnimStack::Create(Scene, "AnimStack");
 	FbxAnimLayer* AnimBaseLayer = FbxAnimLayer::Create(Scene, "Layer0");
@@ -281,10 +291,18 @@ void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename, bool bA
 		}
 	}
 
-	// Get the play range
-	//DzTimeRange PlayRange = dzScene->getPlayRange();
+	FbxTime oFbxStartTime;
+	FbxTime oFbxEndTime;
+	FbxTimeSpan oFbxTimeSpan;
+	DzTimeRange oAnimRange = dzScene->getAnimRange();
+	DzTime tTimeStep = dzScene->getTimeStep();
+	oFbxStartTime.SetFrame(oAnimRange.getStart() / tTimeStep);
+	oFbxEndTime.SetFrame(oAnimRange.getEnd() / tTimeStep);
+	oFbxTimeSpan.Set(oFbxStartTime, oFbxEndTime);
+	
+	AnimStack->SetLocalTimeSpan(oFbxTimeSpan);
+	AnimStack->SetReferenceTimeSpan(oFbxTimeSpan);
 
-	//
 	FACSexportNodeAnimation(Figure, BoneMap, AnimBaseLayer, FigureScale);
 
 	// Iterate the bones
@@ -467,7 +485,7 @@ bool DzRobloxAction::deepCopyNode(FbxNode* pDestinationRoot, FbxNode* pSourceNod
 //		for (int c = 0; c < lChildren.size(); c++)
 //			pDestinationRoot->AddChild(lChildren[c]);
 	}
-	int debug_lchildren_size = lChildren.size();
+	int debug_lchildren_size = (int) lChildren.size();
 	for (int c = 0; c < lChildren.size(); c++)
 		pDestinationRoot->AddChild(lChildren[c]);
 
