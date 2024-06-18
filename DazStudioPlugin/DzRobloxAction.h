@@ -52,6 +52,8 @@ public:
 
 	QList<DzNode*> m_aGeograftConversionHelpers;
 
+	Q_INVOKABLE bool showDisclaimer();
+
 protected:
 	unsigned char m_nPythonExceptionExitCode = 11; // arbitrary exit code to check for blener python exceptions
 
