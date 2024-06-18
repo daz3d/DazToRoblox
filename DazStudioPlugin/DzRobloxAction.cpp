@@ -576,90 +576,92 @@ bool processElementRecursively(QMap<QString,MorphInfo>* morphInfoTable, int nFra
 
 bool DzRobloxAction::generateFacs50()
 {
-		//MvcTools::testMvc(dzScene->getPrimarySelection());
+	if (dzScene->getPrimarySelection() == false) return false;
 
-		dzScene->setFrame(1);
-		//DzTimeRange range = dzScene->getPlayRange();
-		DzTimeRange range = dzScene->getAnimRange();
-		DzTime endTime = range.getEnd();
-		DzTime timeStep = dzScene->getTimeStep();
-		float frame = endTime / timeStep;
-		dzScene->setTime(endTime);
+	//MvcTools::testMvc(dzScene->getPrimarySelection());
 
-		DzTime frame01_time = 1 * timeStep;
+	dzScene->setFrame(1);
+	DzTimeRange range = dzScene->getAnimRange();
+	DzTime endTime = range.getEnd();
+	DzTime timeStep = dzScene->getTimeStep();
+	float frame = endTime / timeStep;
+	dzScene->setTime(endTime);
 
-		QString jsonFilename = "C:/GitHub/DazToRoblox-daz3d/PluginData/Daz_FACS_List.json";
-		QFile fileFacs(jsonFilename);
-		if (fileFacs.open(QIODevice::ReadOnly) == false)
-		{
-			return false;
-		}
-		DzJsonReader jsonReader(&fileFacs);
-		DzJsonDomParser jsonParser;
-		jsonReader.read(&jsonParser);
-		fileFacs.close();
-		DzJsonElement el = jsonParser.getRoot();
-		DzJsonObject obj;
-		DzJsonArray array;
-		if (el.isObject()) {
-			obj = el.toObject();
-			DzJsonElement el2 = obj.getMember("FACS");
-			array = el2.toArray();
-		}
-		else {
-			array = el.toArray();
-		}
-		int numMorphs = array.itemCount() + 2;
-		range.setEnd(numMorphs * timeStep);
-		dzScene->setAnimRange(range);
-		dzScene->setPlayRange(range);
+	DzTime frame01_time = 1 * timeStep;
 
-		int nNextFrame = 1;
-		double global_fStrength = 1.0;
-		double local_fStrength = global_fStrength;
-		DzNode* pMainNode = dzScene->getPrimarySelection();
-		QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(pMainNode);
-		foreach(DzJsonElement el, array.getItems()) {
-			processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
-			nNextFrame++;
-		}
-		MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
+	QString jsonFilename = "C:/GitHub/DazToRoblox-daz3d/PluginData/Daz_FACS_List.json";
+	QFile fileFacs(jsonFilename);
+	if (fileFacs.open(QIODevice::ReadOnly) == false)
+	{
+		return false;
+	}
+	DzJsonReader jsonReader(&fileFacs);
+	DzJsonDomParser jsonParser;
+	jsonReader.read(&jsonParser);
+	fileFacs.close();
+	DzJsonElement el = jsonParser.getRoot();
+	DzJsonObject obj;
+	DzJsonArray array;
+	if (el.isObject()) {
+		obj = el.toObject();
+		DzJsonElement el2 = obj.getMember("FACS");
+		array = el2.toArray();
+	}
+	else {
+		array = el.toArray();
+	}
+	int numMorphs = array.itemCount() + 2;
+	range.setEnd(numMorphs * timeStep);
+	dzScene->setAnimRange(range);
+	dzScene->setPlayRange(range);
+
+	int nNextFrame = 1;
+	double global_fStrength = 1.0;
+	double local_fStrength = global_fStrength;
+	DzNode* pMainNode = dzScene->getPrimarySelection();
+	QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(pMainNode);
+	foreach(DzJsonElement el, array.getItems()) {
+		processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
+		nNextFrame++;
+	}
+	MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
 #define FACS50_EXPORT_TONGUE
 #ifdef FACS50_EXPORT_TONGUE
-		// DB 2024-06-13: configure morph in children (for tongue? but no bones? depending on tongue bone solution, may not want to keep)
-		for (int i = 0; i < pMainNode->getNumNodeChildren(); i++) {
-			DzNode* pChildNode = pMainNode->getNodeChild(i);
-			DzFigure* pChildFig = qobject_cast<DzFigure*>(pChildNode);
-			if (pChildFig) {
-				int nNextFrame = 1;
-				double global_fStrength = 1.0;
-				double local_fStrength = global_fStrength;
-				QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(pChildFig);
-				foreach(DzJsonElement el, array.getItems()) {
-					processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
-					nNextFrame++;
-				}
-				MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
+	// DB 2024-06-13: configure morph in children (for tongue? but no bones? depending on tongue bone solution, may not want to keep)
+	for (int i = 0; i < pMainNode->getNumNodeChildren(); i++) {
+		DzNode* pChildNode = pMainNode->getNodeChild(i);
+		DzFigure* pChildFig = qobject_cast<DzFigure*>(pChildNode);
+		if (pChildFig) {
+			int nNextFrame = 1;
+			double global_fStrength = 1.0;
+			double local_fStrength = global_fStrength;
+			QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(pChildFig);
+			foreach(DzJsonElement el, array.getItems()) {
+				processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
+				nNextFrame++;
 			}
+			MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
 		}
+	}
 #endif
 
-		//exportAnimation();
-		QString sFacsAnimOutputFilename = m_sDestinationPath + "/facs50.fbx";
-		FACSexportAnimation(m_pSelectedNode, QString(sFacsAnimOutputFilename).replace(".fbx", "-ascii.fbx"), true);
-		FACSexportAnimation(m_pSelectedNode, sFacsAnimOutputFilename, false);
+	QString sFacsAnimOutputFilename = m_sDestinationPath + "/facs50.fbx";
+	FACSexportAnimation(m_pSelectedNode, QString(sFacsAnimOutputFilename).replace(".fbx", "-ascii.fbx"), true);
+	FACSexportAnimation(m_pSelectedNode, sFacsAnimOutputFilename, false);
 
-		return true;
+	// load facs50.fbx scene???..... won't have mesh....
+	// create new class to use with Daz... base it on MvcTest....
+
+	return true;
 
 }
 
 void DzRobloxAction::executeAction()
 {
 
-//	generateFacs50();
-//	return;
-
-	if (dzScene->getPrimarySelection() == NULL) return;
+	//generateFacs50();
+	//return;
+	 
 
 	// CreateUI() disabled for debugging -- 2022-Feb-25
 	/*
@@ -772,8 +774,6 @@ void DzRobloxAction::executeAction()
 	// Prepare member variables when not using GUI
 	if (m_nNonInteractiveMode == 1)
 	{
-//		if (m_sRootFolder != "") m_bridgeDialog->getIntermediateFolderEdit()->setText(m_sRootFolder);
-
 		if (m_aMorphListOverride.isEmpty() == false)
 		{
 			m_bEnableMorphs = true;
@@ -783,12 +783,10 @@ void DzRobloxAction::executeAction()
 			{
 				m_morphSelectionDialog = DZ_BRIDGE_NAMESPACE::DzBridgeMorphSelectionDialog::Get(m_bridgeDialog);
 			}
-//			m_mMorphNameToLabel.clear();
 			m_MorphNamesToExport.clear();
 			foreach(QString morphName, m_aMorphListOverride)
 			{
 				QString label = m_morphSelectionDialog->GetMorphLabelFromName(morphName);
-//				m_mMorphNameToLabel.insert(morphName, label);
 				m_MorphNamesToExport.append(morphName);
 			}
 		}
@@ -796,7 +794,6 @@ void DzRobloxAction::executeAction()
 		{
 			m_bEnableMorphs = false;
 			m_sMorphSelectionRule = "";
-//			m_mMorphNameToLabel.clear();
 			m_MorphNamesToExport.clear();
 		}
 
@@ -916,7 +913,6 @@ void DzRobloxAction::executeAction()
         exportProgress->setInfo("Preparing FBX PostProcessing Pipeline...");
         
 		// run blender scripts
-		//QString sBlenderPath = QString("C:/Program Files/Blender Foundation/Blender 3.6/blender.exe");
 		QString sBlenderLogPath = QString("%1/blender.log").arg(m_sDestinationPath);
 
 		// Hardcoded to use FallbackScriptFolder
@@ -972,7 +968,6 @@ void DzRobloxAction::executeAction()
 
 		if (m_sAssetType.contains("R15"))
 		{
-			dzApp->log("DzRoblox-MvcTest: Hello, World.");
 			OpenFBXInterface* openFbx = OpenFBXInterface::GetInterface();
 			bool bFailed = false;
 			bool bResult = false;
@@ -983,14 +978,14 @@ void DzRobloxAction::executeAction()
 			if (openFbx->LoadScene(pTemplateScene, tempFilePath.toLocal8Bit().data()) == false)
 			{
 				bFailed = true;
-				dzApp->log("DzRoblox-MvcTest: Load Fbx Scene failed.");
+				dzApp->log("DzRoblox Cage Retargeting: Load Fbx Scene failed.");
 			}
 			// 1b. read morphed fbx
 			FbxScene* pMorphedSourceScene = openFbx->CreateScene("My Scene");
 			if (openFbx->LoadScene(pMorphedSourceScene, m_sDestinationFBX.toLocal8Bit().data()) == false)
 			{
 				bFailed = true;
-				dzApp->log("DzRoblox-MvcTest: Load Fbx Scene failed.");
+				dzApp->log("DzRoblox Cage Retargeting: Load Fbx Scene failed.");
 			}
 			// 2a. extract template mesh
 			FbxNode* pTemplateMesh = pTemplateScene->FindNodeByName("OriginalGenesis9");
@@ -1000,7 +995,7 @@ void DzRobloxAction::executeAction()
 				if (!pTemplateMesh)
 				{
 					bFailed = true;
-					dzApp->log("DzRoblox-MvcTest: Unable to extract template mesh.");
+					dzApp->log("DzRoblox Cage Retargeting: Unable to extract template mesh.");
 				}
 			}
 			// 2b. extract morphed mesh
@@ -1008,7 +1003,7 @@ void DzRobloxAction::executeAction()
 			if (!pSourceNode)
 			{
 				bFailed = true;
-				dzApp->log("DzRoblox-MvcTest: Unable to extract source mesh.");
+				dzApp->log("DzRoblox Cage Retargeting: Unable to extract source mesh.");
 			}
 			FbxGeometry* pSourceGeo = openFbx->FindGeometry(pMorphedSourceScene, "Genesis9.Shape");
 
@@ -1030,7 +1025,7 @@ void DzRobloxAction::executeAction()
 			if (!characterRoot)
 			{
 				bFailed = true;
-				QString sCriticalException = "DzRoblox-MvcTest: Critical Exception: Unable to find Genesis9 node in: " + m_sDestinationFBX + ", aborting.";
+				QString sCriticalException = "DzRoblox Cage Retargeting: Critical Exception: Unable to find Genesis9 node in: " + m_sDestinationFBX + ", aborting.";
 				dzApp->log(sCriticalException);
 				exportProgress->setCurrentInfo(sCriticalException);
 				exportProgress->cancel();
@@ -1180,7 +1175,7 @@ void DzRobloxAction::executeAction()
 			if (openFbx->SaveScene(pMorphedSourceScene, morphedOutputPath.toLocal8Bit().data()) == false)
 			{
 				bFailed = true;
-				dzApp->log("DzRoblox-MvcTest: Load Source Fbx Scene failed.");
+				dzApp->log("DzRoblox Cage Retargeting: Load Source Fbx Scene failed.");
 			}
 
 		}
