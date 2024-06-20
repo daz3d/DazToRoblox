@@ -502,7 +502,7 @@ def copy_facs50_animations(animation_template_filename):
     head_geo_obj["Frame50"] = "TongueUp"
 
     bpy.context.scene.frame_start = 0
-    bpy.context.scene.frame_end = 52
+    bpy.context.scene.frame_end = 51
     _add_to_log("FACS-50 animations copied successfully.")
 
 # DB-2024-05-30: Copy facial animations from template file

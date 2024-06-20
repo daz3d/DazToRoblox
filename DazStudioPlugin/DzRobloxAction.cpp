@@ -610,7 +610,7 @@ bool DzRobloxAction::generateFacs50()
 	else {
 		array = el.toArray();
 	}
-	int numMorphs = array.itemCount() + 2;
+	int numMorphs = array.itemCount() + 1;
 	range.setEnd(numMorphs * timeStep);
 	dzScene->setAnimRange(range);
 	dzScene->setPlayRange(range);
