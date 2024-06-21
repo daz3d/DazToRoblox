@@ -57,8 +57,7 @@
 #include "MvcTools.h"
 
 
-
-void FACSexportSkeleton(DzNode* Node, DzNode* Parent, FbxNode* FbxParent, FbxScene* Scene, QMap<DzNode*, FbxNode*>& BoneMap)
+void DzRobloxUtils::FACSexportSkeleton(DzNode* Node, DzNode* Parent, FbxNode* FbxParent, FbxScene* Scene, QMap<DzNode*, FbxNode*>& BoneMap)
 {
 
 	FbxNode* BoneNode;
@@ -144,7 +143,7 @@ void FACSexportSkeleton(DzNode* Node, DzNode* Parent, FbxNode* FbxParent, FbxSce
 
 }
 
-void setKey(int& KeyIndex, FbxTime Time, FbxAnimLayer* AnimLayer, FbxPropertyT<FbxDouble3>& Property, const char* pChannel, float Value) {
+void DzRobloxUtils::setKey(int& KeyIndex, FbxTime Time, FbxAnimLayer* AnimLayer, FbxPropertyT<FbxDouble3>& Property, const char* pChannel, float Value) {
 	FbxAnimCurve* animCurve = Property.GetCurve(AnimLayer, pChannel, true);
 	animCurve->KeyModifyBegin();
 	KeyIndex = animCurve->KeyAdd(Time);
@@ -152,7 +151,7 @@ void setKey(int& KeyIndex, FbxTime Time, FbxAnimLayer* AnimLayer, FbxPropertyT<F
 	animCurve->KeyModifyEnd();
 }
 
-bool hasAncestorName(DzNode* pNode, QString sAncestorName, bool bCaseSensitive = true) {
+bool DzRobloxUtils::hasAncestorName(DzNode* pNode, QString sAncestorName, bool bCaseSensitive) {
 	if (DzNode* pParentNode = pNode->getNodeParent()) {
 		if (bCaseSensitive) {
 			if (pParentNode->getName() == sAncestorName)
@@ -168,7 +167,7 @@ bool hasAncestorName(DzNode* pNode, QString sAncestorName, bool bCaseSensitive =
 	return false;
 }
 
-void FACSexportNodeAnimation(DzNode* Bone, QMap<DzNode*, FbxNode*>& BoneMap, FbxAnimLayer* AnimBaseLayer, float FigureScale)
+void DzRobloxUtils::FACSexportNodeAnimation(DzNode* Bone, QMap<DzNode*, FbxNode*>& BoneMap, FbxAnimLayer* AnimBaseLayer, float FigureScale)
 {
 	DzTimeRange PlayRange = dzScene->getPlayRange();
 
@@ -236,7 +235,7 @@ void FACSexportNodeAnimation(DzNode* Bone, QMap<DzNode*, FbxNode*>& BoneMap, Fbx
 	}
 }
 
-void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename, bool bAsciiMode = false)
+void DzRobloxUtils::FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename, bool bAsciiMode )
 {
 	if (!pNode) return;
 
@@ -338,6 +337,140 @@ void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename, bool bA
 	// Write the FBX
 	Exporter->Export(Scene);
 	Exporter->Destroy();
+}
+
+bool DzRobloxUtils::setMorphKeyFrame(DzProperty* prop, double fStrength, int nFrame) {
+	DzTime timeStep = dzScene->getTimeStep();
+	DzTime tmPrevFrameTime = (nFrame - 1) * timeStep;
+	DzTime tmCurrentFrameTime = nFrame * timeStep;
+	DzTime tmNextFrameTime = (nFrame + 1) * timeStep;
+	DzFloatProperty* floatProp = qobject_cast<DzFloatProperty*>(prop);
+	if (floatProp)
+	{
+		int key;
+		if (floatProp->isKey(tmPrevFrameTime, key) == false) floatProp->setValue(tmPrevFrameTime, 0.0);
+		floatProp->setValue(tmCurrentFrameTime, fStrength);
+		floatProp->setValue(tmNextFrameTime, 0.0);
+	}
+
+	return true;
+}
+
+DzProperty* DzRobloxUtils::loadMorph(QMap<QString, MorphInfo>* morphInfoTable, QString sMorphName) {
+	DzProperty* prop = NULL;
+	auto result = morphInfoTable->find(sMorphName);
+	if (result != morphInfoTable->end())
+	{
+		MorphInfo morphInfo = result.value();
+		prop = morphInfo.Property;
+	}
+
+	return prop;
+}
+
+bool DzRobloxUtils::processElementRecursively(QMap<QString, MorphInfo>* morphInfoTable, int nFrame, DzJsonElement el, double& current_fStrength, const double default_fStrength) {
+
+	if (el.isNumberValue()) {
+		current_fStrength = el.numberValue(default_fStrength);
+	}
+	else if (el.isStringValue()) {
+		QString morphName = el.stringValue();
+		DzProperty* prop = loadMorph(morphInfoTable, morphName);
+		setMorphKeyFrame(prop, current_fStrength, nFrame);
+		// reset fStrength after use
+		current_fStrength = default_fStrength;
+	}
+	else if (el.isArray()) {
+		DzJsonArray array = el.toArray();
+		double sub_fStrength = default_fStrength;
+		foreach(DzJsonElement sub_el, array.getItems()) {
+			processElementRecursively(morphInfoTable, nFrame, sub_el, sub_fStrength, default_fStrength);
+		}
+	}
+
+	return true;
+}
+
+bool DzRobloxUtils::generateFacs50(DzRobloxAction* that)
+{
+	if (dzScene->getPrimarySelection() == false) return false;
+
+	//MvcTools::testMvc(dzScene->getPrimarySelection());
+
+	dzScene->setFrame(1);
+	DzTimeRange range = dzScene->getAnimRange();
+	DzTime endTime = range.getEnd();
+	DzTime timeStep = dzScene->getTimeStep();
+	float frame = endTime / timeStep;
+	dzScene->setTime(endTime);
+
+	DzTime frame01_time = 1 * timeStep;
+
+	QString jsonFilename = "C:/GitHub/DazToRoblox-daz3d/PluginData/Daz_FACS_List.json";
+	QFile fileFacs(jsonFilename);
+	if (fileFacs.open(QIODevice::ReadOnly) == false)
+	{
+		return false;
+	}
+	DzJsonReader jsonReader(&fileFacs);
+	DzJsonDomParser jsonParser;
+	jsonReader.read(&jsonParser);
+	fileFacs.close();
+	DzJsonElement el = jsonParser.getRoot();
+	DzJsonObject obj;
+	DzJsonArray array;
+	if (el.isObject()) {
+		obj = el.toObject();
+		DzJsonElement el2 = obj.getMember("FACS");
+		array = el2.toArray();
+	}
+	else {
+		array = el.toArray();
+	}
+	int numMorphs = array.itemCount() + 1;
+	range.setEnd(numMorphs * timeStep);
+	dzScene->setAnimRange(range);
+	dzScene->setPlayRange(range);
+
+	int nNextFrame = 1;
+	double global_fStrength = 1.0;
+	double local_fStrength = global_fStrength;
+	DzNode* pMainNode = dzScene->getPrimarySelection();
+	QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(pMainNode);
+	foreach(DzJsonElement el, array.getItems()) {
+		processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
+		nNextFrame++;
+	}
+	MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
+#define FACS50_EXPORT_TONGUE
+#ifdef FACS50_EXPORT_TONGUE
+	// DB 2024-06-13: configure morph in children (for tongue? but no bones? depending on tongue bone solution, may not want to keep)
+	for (int i = 0; i < pMainNode->getNumNodeChildren(); i++) {
+		DzNode* pChildNode = pMainNode->getNodeChild(i);
+		DzFigure* pChildFig = qobject_cast<DzFigure*>(pChildNode);
+		if (pChildFig) {
+			int nNextFrame = 1;
+			double global_fStrength = 1.0;
+			double local_fStrength = global_fStrength;
+			QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(pChildFig);
+			foreach(DzJsonElement el, array.getItems()) {
+				processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
+				nNextFrame++;
+			}
+			MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
+		}
+	}
+#endif
+
+	QString sFacsAnimOutputFilename = that->m_sDestinationPath + "/facs50.fbx";
+	FACSexportAnimation(that->m_pSelectedNode, QString(sFacsAnimOutputFilename).replace(".fbx", "-ascii.fbx"), true);
+	FACSexportAnimation(that->m_pSelectedNode, sFacsAnimOutputFilename, false);
+
+	// load facs50.fbx scene???..... won't have mesh....
+	// create new class to use with Daz... base it on MvcTest....
+
+	return true;
+
 }
 
 
@@ -520,140 +653,6 @@ bool DzRobloxAction::deepCopyNode(FbxNode* pDestinationRoot, FbxNode* pSourceNod
 	*/
 
 	return true;
-}
-
-bool setMorphKeyFrame(DzProperty* prop, double fStrength, int nFrame) {
-	DzTime timeStep = dzScene->getTimeStep();
-	DzTime tmPrevFrameTime = (nFrame - 1) * timeStep;
-	DzTime tmCurrentFrameTime = nFrame * timeStep;
-	DzTime tmNextFrameTime = (nFrame + 1) * timeStep;
-	DzFloatProperty* floatProp = qobject_cast<DzFloatProperty*>(prop);
-	if (floatProp)
-	{
-		int key;
-		if (floatProp->isKey(tmPrevFrameTime, key) == false) floatProp->setValue(tmPrevFrameTime, 0.0);
-		floatProp->setValue(tmCurrentFrameTime, fStrength);
-		floatProp->setValue(tmNextFrameTime, 0.0);
-	}
-
-	return true;
-}
-
-DzProperty* loadMorph(QMap<QString, MorphInfo>* morphInfoTable, QString sMorphName) {
-	DzProperty* prop = NULL;
-	auto result = morphInfoTable->find(sMorphName);
-	if (result != morphInfoTable->end())
-	{
-		MorphInfo morphInfo = result.value();
-		prop = morphInfo.Property;
-	}
-
-	return prop;
-}
-
-bool processElementRecursively(QMap<QString,MorphInfo>* morphInfoTable, int nFrame, DzJsonElement el, double &current_fStrength, const double default_fStrength ) {
-
-	if (el.isNumberValue()) {
-		current_fStrength = el.numberValue(default_fStrength);
-	}
-	else if (el.isStringValue()) {
-		QString morphName = el.stringValue();
-		DzProperty* prop = loadMorph(morphInfoTable, morphName);
-		setMorphKeyFrame(prop, current_fStrength, nFrame);
-		// reset fStrength after use
-		current_fStrength = default_fStrength;
-	}
-	else if (el.isArray()) {
-		DzJsonArray array = el.toArray();
-		double sub_fStrength = default_fStrength;
-		foreach(DzJsonElement sub_el, array.getItems()) {
-			processElementRecursively(morphInfoTable, nFrame, sub_el, sub_fStrength, default_fStrength);
-		}
-	}
-
-	return true;
-}
-
-bool DzRobloxAction::generateFacs50()
-{
-	if (dzScene->getPrimarySelection() == false) return false;
-
-	//MvcTools::testMvc(dzScene->getPrimarySelection());
-
-	dzScene->setFrame(1);
-	DzTimeRange range = dzScene->getAnimRange();
-	DzTime endTime = range.getEnd();
-	DzTime timeStep = dzScene->getTimeStep();
-	float frame = endTime / timeStep;
-	dzScene->setTime(endTime);
-
-	DzTime frame01_time = 1 * timeStep;
-
-	QString jsonFilename = "C:/GitHub/DazToRoblox-daz3d/PluginData/Daz_FACS_List.json";
-	QFile fileFacs(jsonFilename);
-	if (fileFacs.open(QIODevice::ReadOnly) == false)
-	{
-		return false;
-	}
-	DzJsonReader jsonReader(&fileFacs);
-	DzJsonDomParser jsonParser;
-	jsonReader.read(&jsonParser);
-	fileFacs.close();
-	DzJsonElement el = jsonParser.getRoot();
-	DzJsonObject obj;
-	DzJsonArray array;
-	if (el.isObject()) {
-		obj = el.toObject();
-		DzJsonElement el2 = obj.getMember("FACS");
-		array = el2.toArray();
-	}
-	else {
-		array = el.toArray();
-	}
-	int numMorphs = array.itemCount() + 1;
-	range.setEnd(numMorphs * timeStep);
-	dzScene->setAnimRange(range);
-	dzScene->setPlayRange(range);
-
-	int nNextFrame = 1;
-	double global_fStrength = 1.0;
-	double local_fStrength = global_fStrength;
-	DzNode* pMainNode = dzScene->getPrimarySelection();
-	QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(pMainNode);
-	foreach(DzJsonElement el, array.getItems()) {
-		processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
-		nNextFrame++;
-	}
-	MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
-#define FACS50_EXPORT_TONGUE
-#ifdef FACS50_EXPORT_TONGUE
-	// DB 2024-06-13: configure morph in children (for tongue? but no bones? depending on tongue bone solution, may not want to keep)
-	for (int i = 0; i < pMainNode->getNumNodeChildren(); i++) {
-		DzNode* pChildNode = pMainNode->getNodeChild(i);
-		DzFigure* pChildFig = qobject_cast<DzFigure*>(pChildNode);
-		if (pChildFig) {
-			int nNextFrame = 1;
-			double global_fStrength = 1.0;
-			double local_fStrength = global_fStrength;
-			QMap<QString, MorphInfo>* morphInfoTable = MorphTools::getAvailableMorphs(pChildFig);
-			foreach(DzJsonElement el, array.getItems()) {
-				processElementRecursively(morphInfoTable, nNextFrame, el, local_fStrength, global_fStrength);
-				nNextFrame++;
-			}
-			MorphTools::safeDeleteMorphInfoTable(morphInfoTable);
-		}
-	}
-#endif
-
-	QString sFacsAnimOutputFilename = m_sDestinationPath + "/facs50.fbx";
-	FACSexportAnimation(m_pSelectedNode, QString(sFacsAnimOutputFilename).replace(".fbx", "-ascii.fbx"), true);
-	FACSexportAnimation(m_pSelectedNode, sFacsAnimOutputFilename, false);
-
-	// load facs50.fbx scene???..... won't have mesh....
-	// create new class to use with Daz... base it on MvcTest....
-
-	return true;
-
 }
 
 void DzRobloxAction::executeAction()
@@ -1182,7 +1181,7 @@ void DzRobloxAction::executeAction()
 
 		/*****************************************************************************************************/
 
-		generateFacs50();
+//		DzRobloxUtils::generateFacs50(this);
 
 		QString sScriptPath;
 

@@ -27,6 +27,22 @@ public:
 	virtual bool deformCage(const FbxMesh* pMorphedMesh, const FbxMesh* pCage, FbxVector4* pVertexBuffer, bool bUseHardCodeWorkaround );
 };
 
+class DzJsonElement;
+class DzRobloxUtils
+{
+public:
+	static void FACSexportAnimation(DzNode* pNode, QString sFacsAnimOutputFilename, bool bAsciiMode = false);
+	static void FACSexportNodeAnimation(DzNode* Bone, QMap<DzNode*, FbxNode*>& BoneMap, FbxAnimLayer* AnimBaseLayer, float FigureScale);
+	static void FACSexportSkeleton(DzNode* Node, DzNode* Parent, FbxNode* FbxParent, FbxScene* Scene, QMap<DzNode*, FbxNode*>& BoneMap);
+	static bool hasAncestorName(DzNode* pNode, QString sAncestorName, bool bCaseSensitive = true);
+	static void setKey(int& KeyIndex, FbxTime Time, FbxAnimLayer* AnimLayer, FbxPropertyT<FbxDouble3>& Property, const char* pChannel, float Value);
+	static DzProperty* loadMorph(QMap<QString, MorphInfo>* morphInfoTable, QString sMorphName);
+	static bool processElementRecursively(QMap<QString, MorphInfo>* morphInfoTable, int nFrame, DzJsonElement el, double& current_fStrength, const double default_fStrength);
+	static bool setMorphKeyFrame(DzProperty* prop, double fStrength, int nFrame);
+	static bool generateFacs50(DzRobloxAction* that);
+
+};
+
 
 class DzRobloxAction : public DZ_BRIDGE_NAMESPACE::DzBridgeAction {
 	Q_OBJECT
@@ -74,9 +90,10 @@ protected:
 
 	Q_INVOKABLE virtual bool applyGeograft(DzNode* pBaseNode, QString geograftFilename, QString geograftNodeName = "");
 	Q_INVOKABLE virtual bool copyMaterialsToGeograft(DzNode* pGeograftNode, DzNode* pBaseNode = NULL);
-	Q_INVOKABLE virtual bool generateFacs50();
 
 	bool m_bEnableBreastsGone = false;
+
+	friend class DzRobloxUtils;
 
 #ifdef UNITTEST_DZBRIDGE
 	friend class UnitTest_DzRobloxAction;
