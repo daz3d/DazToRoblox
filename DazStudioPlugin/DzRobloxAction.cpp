@@ -1895,22 +1895,30 @@ bool DzRobloxAction::copyMaterialsToGeograft(DzNode* pGeograftNode, DzNode* pBas
 bool DzRobloxAction::showDisclaimer()
 {
 	QString content = "\
-<div><h3><p>By using Daz to Roblox Studio, the user agrees to the following:</p>\
+<div><font size=\"4\"><p>By using Daz to Roblox Studio, the user agrees to the following:</p>\
 <p><b>Interactive License Requirement:</b></p>\
-<p>Importing Daz Characters into Roblox Studio requires an Interactive License because the assets are uploaded to the \
-Roblox servers. The user must have an Interactive License for all Daz Studio assets including characters, textures and \
-morphs which are used in the process of exporting and uploading characters to the Roblox servers.</p>\
+<p>Importing Daz Characters into Roblox Studio requires an \
+<a href=\"https://www.daz3d.com/interactive-license-info\">Interactive License</a> \
+because the assets are uploaded to the Roblox servers. The user must have an Interactive License for all \
+Daz Studio assets including characters, textures and morphs which are used in the process of exporting and \
+uploading characters to the Roblox servers.</p>\
 <p><b>Disclaimer:</b></p>\
-<p>Roblox uses both automated and human moderation to review assets uploaded to its servers. Uploaded assets which are \
-rejected by Roblox moderation may result actions by the Roblox moderation team including removal of assets from the \
-Roblox servers and/or banning of the user's Roblox account. It is the user's responsibility to ensure assets uploaded \
-to the Roblox servers comply with Roblox Community Standards, especially regarding Sexual Content. Daz 3D will not be \
-liable for any damages arising from the use of this software.</p></h3></div>";
+<p>Roblox uses both automated and human moderation to review assets uploaded to its servers. \
+Uploaded assets which are rejected by Roblox moderation may result actions by the Roblox moderation team including removal \
+of assets from the Roblox servers and/or banning of the user's Roblox account. It is the user's responsibility to ensure \
+assets uploaded to the Roblox servers comply with \
+<a href=\"https://en.help.roblox.com/hc/en-us/articles/203313410-Roblox-Community-Standards\">Roblox Community Standards</a>, \
+especially regarding Sexual Content and \
+<a href=\"https://create.roblox.com/docs/art/marketplace/marketplace-policy#age-appropriate\">Age Appropriate Avatar bodies</a>. \
+Daz 3D will not be liable for any damages arising from the use of this software.</p></div>";
 
 	QTextBrowser* wContent = new QTextBrowser();
 	wContent->setText(content);
+	wContent->setOpenExternalLinks(true);
 
-	DzBasicDialog* wDialog = new DzBasicDialog(NULL, "Daz To Roblox Studio Disclaimer");
+	QString sWindowTitle = "Daz To Roblox Studio Disclaimer";
+	DzBasicDialog* wDialog = new DzBasicDialog(NULL, sWindowTitle);
+	wDialog->setWindowTitle(sWindowTitle);
 	wDialog->setMinimumWidth(500);
 	wDialog->setMinimumHeight(450);
 	QGridLayout* layout = new QGridLayout(wDialog);
