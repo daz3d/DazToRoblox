@@ -7,7 +7,7 @@
 
 #include "dzbridge.h"
 
-CPP_PLUGIN_DEFINITION("Roblox Avatar Exporter");
+CPP_PLUGIN_DEFINITION("Daz To Roblox Studio: Avatar Exporter");
 
 DZ_PLUGIN_AUTHOR("Daz 3D, Inc");
 

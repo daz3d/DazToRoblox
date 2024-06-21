@@ -35,7 +35,7 @@
 /*****************************
 Local definitions
 *****************************/
-#define DAZ_BRIDGE_PLUGIN_NAME "Roblox Avatar Exporter"
+#define DAZ_BRIDGE_PLUGIN_NAME "Daz To Roblox Studio: Avatar Exporter"
 
 #include "dzbridge.h"
 
@@ -63,7 +63,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 int btnMinWidth = style()->pixelMetric(DZ_PM_ButtonMinWidth);
 
 	 // Set the dialog title
-	 setWindowTitle(tr("Roblox Avatar Exporter %1 v%2.%3").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV));
+	 setWindowTitle(tr("Daz To Roblox Studio: Avatar Exporter %1 v%2.%3").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV));
 	 QString sDazAppDir = dzApp->getHomePath().replace("\\", "/");
 	 QString sPdfPath = sDazAppDir + "/docs/Plugins" + "/Daz to Roblox/Daz to Roblox.pdf";
 	 QString sSetupModeString = tr("\
@@ -123,6 +123,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 // Add No Breast Option
 	 m_wBreastsGoneCheckbox = new QCheckBox("Breasts Gone Morph");
 	 m_wBreastsGoneCheckbox->setToolTip("Optional Remove Breasts. REQUIRES Genesis 9 Body Shapes Add-On");
+	 m_wBreastsGoneCheckbox->setChecked(true);
 
 	 // Add GUI to layout
 	 mainLayout->insertRow(1, "Roblox Output Folder", robloxOutputFolderLayout);
