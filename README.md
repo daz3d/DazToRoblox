@@ -119,11 +119,11 @@ The directory structure is as follows:
 
 - `DazLibraryFiles`:          Asset files to be installed into the user's Daz Studio Content Library.
 - `DazStudioPlugin`:          Files that pertain to the Daz Studio plugin.
+- `DevKit`:                   Supplemental asset files to assist with creating a Roblox avatar.
 - `dzbridge-common`:          Files from the Daz Bridge Library used by Daz Studio plugin.
 - `InternalAssets`:           Internal development and production files.
 - `PluginData`:               Scripts, assets and other data files which are used by the Daz Studio plugin.
 - `Test`:                     Scripts and generated output (reports) used for Quality Assurance Testing.
-- `DevKit`:                Supplemental asset files to assist with creating a Roblox avatar.
 
 [OwnerURL]: https://www.daz3d.com
 [TwitterURL]: https://twitter.com/Daz3d
