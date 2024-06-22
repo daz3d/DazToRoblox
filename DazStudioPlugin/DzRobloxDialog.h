@@ -40,9 +40,11 @@ public:
 	Q_INVOKABLE void saveSettings() override;
 
 	DzFileValidator m_dzValidatorFileExists;
-	Q_INVOKABLE bool disableAcceptUntilBlenderValid(const QString& text="");
-	Q_INVOKABLE bool disableAcceptUntilAssetTypeValid();
+	Q_INVOKABLE bool isBlenderTextBoxValid(const QString& text="");
+	Q_INVOKABLE bool isAssetTypeComboBoxValid();
 	Q_INVOKABLE bool disableAcceptUntilAllRequirementsValid();
+
+	Q_INVOKABLE bool showDisclaimer();
 
 public slots:
 	void HandleTextChanged( const QString &text);
@@ -58,6 +60,10 @@ protected slots:
 	void showRobloxOptions(bool bVisible);
 
 	void HandleSelectBlenderExecutablePathButton();
+
+	bool HandleAcceptButtonValidationFeedback();
+
+	void accept() override;
 
 protected:
 	QLineEdit* intermediateFolderEdit;

@@ -478,7 +478,7 @@ DzRobloxAction::DzRobloxAction() :
 	DzBridgeAction(tr("&Roblox Avatar Exporter"), tr("Export the selected character for Roblox Studio."))
 {
 	m_nNonInteractiveMode = 0;
-//	m_sAssetType = QString("__");
+	m_sAssetType = QString("__");
 
 	//Setup Icon
 	QString iconName = "Daz to Roblox";
@@ -869,10 +869,6 @@ void DzRobloxAction::executeAction()
 			}
 
 		} while (bSettingsValid == false);
-
-		if (showDisclaimer() == false) {
-			return;
-		}
 
 		// Extract PluginData
 		// 1. extract to temp folder
@@ -1892,6 +1888,7 @@ bool DzRobloxAction::copyMaterialsToGeograft(DzNode* pGeograftNode, DzNode* pBas
 	return true;
 }
 
+// DO NOT USE UNLESS DzRobloxDialog is not part of pipeline.  Otherwise, use the prefered DzRobloxDialog::showDisclaimer() instead.
 bool DzRobloxAction::showDisclaimer()
 {
 	QString content = "\
@@ -1916,7 +1913,7 @@ Daz 3D will not be liable for any damages arising from the use of this software.
 	wContent->setText(content);
 	wContent->setOpenExternalLinks(true);
 
-	QString sWindowTitle = "Daz To Roblox Studio Disclaimer";
+	QString sWindowTitle = "Daz To Roblox Studio EULA";
 	DzBasicDialog* wDialog = new DzBasicDialog(NULL, sWindowTitle);
 	wDialog->setWindowTitle(sWindowTitle);
 	wDialog->setMinimumWidth(500);

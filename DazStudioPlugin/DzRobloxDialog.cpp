@@ -16,6 +16,7 @@
 #include <QtGui/qlistwidget.h>
 #include <QtGui/qgroupbox.h>
 #include <QtGui/qvalidator.h>
+#include <qtextbrowser.h>
 
 #include "dzapp.h"
 #include "dzscene.h"
@@ -407,7 +408,7 @@ void DzRobloxDialog::HandleAssetTypeComboChange(int state)
 	disableAcceptUntilAllRequirementsValid();
 }
 
-bool DzRobloxDialog::disableAcceptUntilBlenderValid(const QString& arg_text)
+bool DzRobloxDialog::isBlenderTextBoxValid(const QString& arg_text)
 {
 	QString temp_text(arg_text);
 
@@ -426,7 +427,7 @@ bool DzRobloxDialog::disableAcceptUntilBlenderValid(const QString& arg_text)
 	return true;
 }
 
-bool DzRobloxDialog::disableAcceptUntilAssetTypeValid()
+bool DzRobloxDialog::isAssetTypeComboBoxValid()
 {
 	if (assetTypeCombo->currentIndex() == 0)
 	{
@@ -446,7 +447,7 @@ bool DzRobloxDialog::disableAcceptUntilAllRequirementsValid()
 	// otherwise, enable accept button so we can show feedback dialog to help user
 	this->setAcceptButtonEnabled(true);
 
-	if (!disableAcceptUntilBlenderValid() || !disableAcceptUntilAssetTypeValid())
+	if (!isBlenderTextBoxValid() || !isAssetTypeComboBoxValid())
 	{
 //		this->setAcceptButtonEnabled(false);
 		this->setAcceptButtonText("Unable to Proceed");
@@ -456,6 +457,114 @@ bool DzRobloxDialog::disableAcceptUntilAllRequirementsValid()
 //	this->setAcceptButtonEnabled(true);
 	return true;
 
+}
+
+
+bool DzRobloxDialog::HandleAcceptButtonValidationFeedback() {
+
+	// Check if Roblox Output Folder and Blender Executable are valid, if not issue Error and fail gracefully
+	bool bSettingsValid = false;
+
+	if (m_wRobloxOutputFolderEdit->text() != "" && QDir(m_wRobloxOutputFolderEdit->text()).exists() &&
+		m_wBlenderExecutablePathEdit->text() != "" && QFileInfo(m_wBlenderExecutablePathEdit->text()).exists() &&
+		assetTypeCombo->itemData(assetTypeCombo->currentIndex()).toString() != "__")
+	{
+		bSettingsValid = true;
+
+		return bSettingsValid;
+
+	}
+
+	if (m_wRobloxOutputFolderEdit->text() == "" || QDir(m_wRobloxOutputFolderEdit->text()).exists() == false)
+	{
+		QMessageBox::warning(0, tr("Roblox Output Folder"), tr("Roblox Output Folder must be set."), QMessageBox::Ok);
+	}
+	else if (m_wBlenderExecutablePathEdit->text() == "" || QFileInfo(m_wBlenderExecutablePathEdit->text()).exists() == false)
+	{
+		QMessageBox::warning(0, tr("Blender Executable Path"), tr("Blender Executable Path must be set."), QMessageBox::Ok);
+		// Enable Advanced Settings
+		if (advancedSettingsGroupBox->isChecked() == false)
+		{
+			advancedSettingsGroupBox->setChecked(true);
+
+			foreach(QObject * child, advancedSettingsGroupBox->children())
+			{
+				QWidget* widget = qobject_cast<QWidget*>(child);
+				if (widget)
+				{
+					widget->setHidden(false);
+					QString name = widget->objectName();
+					dzApp->log("DEBUG: widget name = " + name);
+				}
+			}
+		}
+	}
+	else if (assetTypeCombo->itemData(assetTypeCombo->currentIndex()).toString() == "__")
+	{
+		QMessageBox::warning(0, tr("Select Asset Type"), tr("Please select an asset type from the dropdown menu."), QMessageBox::Ok);
+	}
+
+	return bSettingsValid;
+
+}
+
+void DzRobloxDialog::accept()
+{
+	bool bResult = HandleAcceptButtonValidationFeedback();
+
+	if (bResult == true)
+	{
+		bResult = showDisclaimer();
+	}
+
+	if (bResult == true) 
+	{
+		DzBridgeDialog::accept();
+	}
+
+}
+
+bool DzRobloxDialog::showDisclaimer()
+{
+	QString content = tr("\
+<div><font size=\"4\"><p>By using Daz to Roblox Studio, the user agrees to the following:</p>\
+<p><b>Interactive License Requirement:</b></p>\
+<p>Importing Daz Characters into Roblox Studio requires an \
+<a href=\"https://www.daz3d.com/interactive-license-info\">Interactive License</a> \
+because the assets are uploaded to the Roblox servers. The user must have an Interactive License for all \
+Daz Studio assets including characters, textures and morphs which are used in the process of exporting and \
+uploading characters to the Roblox servers.</p>\
+<p><b>Disclaimer:</b></p>\
+<p>Roblox uses both automated and human moderation to review assets uploaded to its servers. \
+Uploaded assets which are rejected by Roblox moderation may result actions by the Roblox moderation team including removal \
+of assets from the Roblox servers and/or banning of the user's Roblox account. It is the user's responsibility to ensure \
+assets uploaded to the Roblox servers comply with \
+<a href=\"https://en.help.roblox.com/hc/en-us/articles/203313410-Roblox-Community-Standards\">Roblox Community Standards</a>, \
+especially regarding Sexual Content and \
+<a href=\"https://create.roblox.com/docs/art/marketplace/marketplace-policy#age-appropriate\">Age Appropriate Avatar bodies</a>. \
+Daz 3D will not be liable for any damages arising from the use of this software.</p></div>");
+
+	QTextBrowser* wContent = new QTextBrowser();
+	wContent->setText(content);
+	wContent->setOpenExternalLinks(true);
+
+	QString sWindowTitle = tr("Daz To Roblox Studio EULA");
+	DzBasicDialog* wDialog = new DzBasicDialog(NULL, sWindowTitle);
+	wDialog->setAcceptButtonText(tr("Accept EULA"));
+	wDialog->setCancelButtonText(tr("Decline"));
+	wDialog->setWindowTitle(sWindowTitle);
+	wDialog->setMinimumWidth(500);
+	wDialog->setMinimumHeight(450);
+	QGridLayout* layout = new QGridLayout(wDialog);
+	layout->addWidget(wContent);
+	wDialog->addLayout(layout);
+	int result = wDialog->exec();
+
+	if (result == QDialog::DialogCode::Rejected || result != QDialog::DialogCode::Accepted) {
+		return false;
+	}
+
+	return true;
 }
 
 #include "moc_DzRobloxDialog.cpp"
