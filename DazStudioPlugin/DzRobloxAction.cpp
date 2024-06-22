@@ -393,7 +393,7 @@ bool DzRobloxUtils::processElementRecursively(QMap<QString, MorphInfo>* morphInf
 
 bool DzRobloxUtils::generateFacs50(DzRobloxAction* that)
 {
-	if (dzScene->getPrimarySelection() == false) return false;
+	if (dzScene->getPrimarySelection() == NULL) return false;
 
 	//MvcTools::testMvc(dzScene->getPrimarySelection());
 
