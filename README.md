@@ -1,9 +1,9 @@
-# Daz To Roblox UGC Developer Kit
+# Daz To Roblox Studio Developer Kit
 A set of tools including a Daz Studio Plugin, Daz Scripts, Blender Scripts and asset files to aid in the conversion of Daz Studio Genesis characters to Roblox Avatars.
 
 * Owner: [Daz 3D][OwnerURL] – [@Daz3d][TwitterURL]
 * License: [Apache License, Version 2.0][LicenseURL] - see ``LICENSE`` and ``NOTICE`` for more information.
-* Offical Release: [Daz to Roblox][ProductURL]
+* Offical Release: [Daz to Roblox Studio][ProductURL]
 * Official Project: [github.com/daz3d/DazToRoblox][RepositoryURL]
 
 
@@ -19,12 +19,12 @@ A set of tools including a Daz Studio Plugin, Daz Scripts, Blender Scripts and a
 
 
 ## 1. About the Developer Kit
-The Daz To Roblox UGC Developer Kit can assist Roblox UGC developers to convert Genesis 9 characters into a format compatible with Roblox Studio for use as playable avatars.  This developer kit consists of a Daz Studio plugin, Daz Scripts, Blender Scripts and asset files which perform several operations including conversion to R15 rig, baking modesty coverings onto nude skin textures, baking separate images into a texture atlas, segmenting into separate mesh body parts and decimation of high resolution mesh data.
+The Daz To Roblox Studio Developer Kit can assist Roblox game developers to convert Genesis 9 characters into a format compatible with Roblox Studio for use as playable avatars.  This developer kit consists of a Daz Studio plugin, Daz Scripts, Blender Scripts and asset files which perform several operations including conversion to R15 rig, baking modesty coverings onto nude skin textures, baking separate images into a texture atlas, segmenting into separate mesh body parts and decimation of high resolution mesh data.  There is also support for generating S1 meshes compatible with Roblox Avatar Auto Setup.
 
 
 ## 2. Prerequisites
 - A compatible version of the [Daz Studio][DazStudioURL] application
-  - Minimum: 4.20
+  - Minimum: 4.22
 - A compatible version of the [Roblox Studio][CreateRobloxURL] application
 - A compatible version of the [Blender][BlenderURL] application
   - Minimum: 3.6
@@ -34,41 +34,63 @@ The Daz To Roblox UGC Developer Kit can assist Roblox UGC developers to convert 
 
 
 ## 3. How to Download and Manually Install
-1. Download the developer kit zip file from the [Release Page][ReleasesURL].
-2. Move the `DazToRobloxUGCDevKitWin64.zip` file to your `DAZ 3D\InstallManager\Downloads\` folder.  This is commonly located in `C:\Users\Public\Documents\DAZ 3D\InstallManager\Downloads`.  Mac users should use `DazToRobloxUGCDevKitMac64.zip`.
-3. Run the Daz Install Manager, go to the Ready to Install tab.
-4. Find `DazToRoblox UGC Dev Kit` and click `Install`.
-5. The product entry for `DazToRoblox UGC Dev Kit` should move from the Ready to Intall tab to the Installed tab.
-6. You may click the 3 dots next to `DazToRoblox UGC Dev Kit` to open additional menu options, then click `Show Installed Files` to find where your installed files are located.
-7. To uninstall, click the `Uninstall` button from the Daz Install Manager.  You can delete the `DazToRobloxUGCDevKit.zip` by clicking the 3 dots and selecting `Delete the "DazToRoblox UGC Dev Kit" package`.
+1. If you have a previous version of this plugin installed, please run Daz Install Manager and uninstall then delete the previous package before continuing.
+2. To uninstall a previous version, open the Daz Install Manager.  Then find the `DazToRobloxStudio Dev Kit` package in the `Installed` tab and click the corresponding `Uninstall` button .  You can delete the `DazToRobloxStudioDevKit.zip` by clicking the 3 dots and selecting `Delete the "DazToRobloxStudio Dev Kit" package`.
+3. Download the appropriate `.package` file for your system (Win64 or Mac64) and the `.dsa` install script from the [Release Page][ReleasesURL].  Make sure that both files are in the same folder.
+4. Double-click the `.dsa` install script file, named `DOUBLE_CLICK_ME_IM00098159-01_DazToRobloxStudioDevKit.dsa`.
+5. Daz Studio launch and run the dsa install script.  The install script will automatically locate your Daz Install Manager archive folder and copy your package file into that folder.  If you are asked to overwrite an existing package file, click `Yes`.  Once the package file is copied to the correct folder, Daz Studio will automatically quit and Daz Install Manager will automatically start.
+6. When Daz Install Manager starts, click the `Ready to Install` tab and look for `DazToRobloxStudio Dev Kit`.  If you have a previous version installed, `DazToRobloxStudio Dev Kit` may appear in the `Installed` tab.  Uninstall any previously installed `DazToRobloxStudio Dev Kit` package before continuing.
+7. Select `DazToRobloxStudio Dev Kit` in the `Ready to Install` tab and click `Install`.
+8. The product entry for `DazToRobloxStudio Dev Kit` should move from the `Ready to Intall` tab to the `Installed` tab.
+9. You may click the 3 dots next to `DazToRobloxStudio Dev Kit` to open additional menu options, then click `Show Installed Files` to find where your installed files are located.
+10. To uninstall the `DazToRobloxStudio Dev Kit`, follow the instructions in Step 2.
 
 
 ## 4. How to Use
-1. Open your character in Daz Studio.
-2. Make sure top node of the character is selected in the Scene pane.
-3. From the main menu, select File -> Send To -> Daz To Roblox.
-4. A dialog will pop up: set the `Roblox Output Folder` line to wherever you want the final output file to be saved.
+1. Start Daz Studio with an empty scene, then add the desired character to the scene.
+2. Your character should be nude, without clothing or any accessories and in the default pose.
+3. Make sure top node of the character is selected in the Scene pane.
+4. From the main menu, select File -> Send To -> Roblox Avatar Exporter.
+4. A dialog will pop up: set the `Roblox Output Folder` line to wherever you want the final output files (FBX and Blender formats) to be saved.
 5. Enable the Advanced Settings section if it is disabled, then make sure the `Blender Executable` line is set to the location of your blender executable. Example: `C:\Program Files\Blender Foundation\Blender 3.6\blender.exe`.
-6. Set the desired asset name for the output.
-7. Click the Asset Type dropdown and select the desired modesty coverings for your avatar.  WARNING: Please make sure you adhere to Roblox Community Standards, especially prohibited Sexual Content.
-8. Click Accept, then wait for a dialog popup to notify the conversion is complete.
-9. A window to the Roblox Output Folder should automatically open.
-10. You may now open the final FBX output file in your preferred editor, such as Blender or Maya.  Adjust cages and attachments and make any desired modifications.  This FBX file is in the correct scale and orientation for import into Roblox Studio.
-11. Alternatively, open the .blend file in the output folder to adjust cages and attachments and make desired modifications.
-12. If using the .blend file from the final output folder, use the following settings when exporting to FBX:
+6. Set the desired asset name for the output.  This will be the filename of the final output files.
+7. Click the Asset Type dropdown and select the desired setting: `Roblox R15 Avatar` will produce an FBX file that is ready for import using the existing Avatar Import method of Roblox Studio.  `Roblox S1 for Avatar Auto Setup` will produce an FBX file for use with the Roblox Avatar Auto Setup feature (currently available as a Beta Feature in Roblox Studio).  There are also tanktop variants of each setting, which will use a tanktop style modesty overlay instead of the default sportsbra modesty overlay.
+8. If you exporting a feminine Daz character, it is highly recommended to enable the `Breasts Gone` morph to reduce or remove the breast shape to help comply with Roblox Community Standards.  The `Breasts Gone` morph is part of the Genesis 9 Body Shapes add-on, which is a paid product available on the Daz Store.  If you do not have the Genesis 9 Body Shapes add-on, then you can try manually editing the mesh using Blender or Maya prior to importing into Roblox Studio.  Otherwise, it is recommended that you export only masculine Daz characters in order to comply with Roblox Community Standards.
+9. Click the `Accept` button to proceed.  If you see an `Unable to Proceed` button, then may click it for detailed instructions on the missing steps needed to proceed.
+10. After clicking the `Accept` button, you will be presented with the DazToRobloxStudio End User License Agreement (EULA).
+11. After reading through the EULA, you may click `Accept EULA` to proceed with the conversio process.  Then wait for a dialog popup to notify you when the conversion is complete.
+12. If the conversion completed successfully, click `OK` and a window to the Roblox Output Folder should automatically open.
+13. If any errors occured during conversion, you may be able to complete the conversion or find detailed error messages by running a script from the command-line.  Depending on your system setup, an explorer window or filesystem window should popup, showing the DazToRoblox Intermediate Folder.  Open a command-prompt or Terminal window and then run the `manual_blender_script.bat` on Windows or `sh manual_blender_script.sh` on Mac.  This script should start a command-line Blender process and give detailed feedback on any errors that are encountered.
+14. If the conversion copmleted successfully, then an FBX and a Blender file should appear in the Roblox Output Folder.  The filenames should begin with the Asset Name from the Roblox Avatar Exporter window.  The FBX file is ready for import into Roblox Studio.  The Blender file can be opened in Blender to view and edit your character.
+15. If you exported your character from Daz Studio using the `Roblox R15 Avatar` setting, then open Roblox Studio, click the Avatar tab, then click `Import 3D File`.  Select the final FBX output file to import, then click `Open`.  The filename should end with `_R15_ready_to_import.fbx`.
+16. In the Import Preview window, click the `Rig General` section.  The Rig Type should be automatically set to `R15` and does not need to be changed.  Click the Rig Scale dropdown and select `Rthro Narrow`.  This will scale legacy Roblox accessories to be more compatible with realistic human body types like Daz characters.  You may try `Rthro` for masculine characters.
+17. If you exported your character from Daz Studio using the `Roblox S1 for Avatar Auto Setup` setting, then Open Roblox Studio.  If you have not enabled the Beta Feature for `Avatar Auto Setup` yet, then you can click File -> Beta Features, then scroll down to find `Avatar Auto-Setup Beta` and make sure it is enabled then click Save.  You may need to restart Roblox Studio.  Then click the Avatar tab and click `Import 3D File`.  Select the final FBX output file, then click `Open`.  The filename should end with `_S1_for_avatar_autosetup.fbx`.
+18. In the Import Preview window, just click `Import`.  The character should appear in the scene and be automatically selected.  If the `Avatar Setup` pane is not open, click the `Avatar Setup` button in the Avatar tab.  In the `Avatar Setup` pane, you should see a `Set Up Avatar` button in the lower right corner.  Click the button and wait for Auto Setup to complete.
+19.  When Auto Setup is complete, it should add a second copy of your character into the scene.  However, this new copy should be fully configured and functioning as a Roblox Avatar.
+20. Alternatively, open the `.blend` file in the output folder to adjust cages and attachments and make desired modifications to the mesh or materials.  In addition to body segments, cages and attachments, this `.blend` file also contains a high resolution version of the character that can be used to bake normal maps and other operations.  This HD mesh will be set to invisible by default.
+21. If using the `.blend` file from the final output folder, use the following settings when exporting to FBX:
 - Path Mode: `Copy`, click icon to enable `Embed Textures`.
+- Limit to: enable `Visible Objects`.
 - Below the Object Types section, enable `Custom Properties`.
 - In the Armature section, disable `Add Leaf Bones`.
-- Enable Bake Animation.
-13. If you want to work with intermediate files, click the `Open Intermediate Folder` in the Advanced Settings of the Send To -> Daz To Roblox dialog popup.
+- Enable Bake Animation, then open the section and disable `NLA Strips` and disable `All Actions`.
+22. After exporting to an FBX, you can then import the FBX into Roblox Studio.
 
 
 ## 5. How to Build
-Requirements: Daz Studio 4.5+ SDK, Autodesk Fbx SDK 2020.1 on Windows or 2015 on Mac, Pixar OpenSubdiv Library, CMake, C++ development environment
+Requirements:
+- Daz Studio 4.5+ SDK, 
+- Autodesk FBX SDK 2020.1 on Windows or FBX SDK 2015.1 on Mac, 
+- Pixar OpenSubdiv 3.4.4 Library, 
+- CMake, 
+- C++ development environment
 
-Download or clone the DazToRoblox github repository to your local machine. The Daz Bridge Library is linked as a git submodule to the DazBridge repository. Depending on your git client, you may have to use `git submodule init` and `git submodule update` to properly clone the Daz Bridge Library.
+Download or clone the DazToRoblox github repository to your local machine. The Daz Bridge Library is linked as a git submodule to the DazBridge repository. Depending on your git client, you may have to use `git submodule init` and `git submodule update` to properly clone the Daz Bridge Library.  FBX SDK is available as an installer file downloadable from the Autodesk website.  Be sure to only use the correct version for your system mentioned in the Requirements above.  OpenSubdiv should be configured and built as a static CPU only library.  For convenience, pre-built libraries for OpenSubdiv 3.4.4 for both Win64 and Mac64 are available here: https://github.com/danielbui78/OpenSubdiv/releases/tag/v3.4.4
 
-Use CMake to configure the project files. Daz Bridge Library will be automatically configured to static-link with DazToBlender. If using the CMake gui, you will be prompted for folder paths to dependencies: Daz SDK, Fbx SDK and OpenSubdiv during the Configure process.  NOTE: Use only the version of Qt 4.8 included with the Daz SDK.  Any external Qt 4.8 installations will most likely be incompatible with Daz Studio development.
+Use CMake to configure the project files. Daz Bridge Library will be automatically configured to static-link. If using the CMake gui, you will be prompted for folder paths to dependencies: Daz SDK (DAZ_SDK_DIR), FBX SDK (FBX_SDK_DIR) and OpenSubdiv (OPENSUBDIV_DIR) during the Configure process.  NOTE: Use only the version of Qt 4.8 included with the Daz SDK.  Any external Qt 4.8 installations will most likely be incompatible with Daz Studio development.
+- For the DAZ_SDK_DIR, then default Windows path should be similar to `C:/Users/Public/Documents/My DAZ 3D Library/DAZStudio4.5+ SDK`.  On Mac, this should be similar to `/Users/Shared/My DAZ 3D Library/DAZStudio4.5+ SDK`.
+- For the FBX_SDK_DIR, the default Windows path should be similar to `C:/Program Files/Autodesk/FBX/FBX SDK/2020.0.1`.  On Mac, this should be similar to `/Applications/Autodesk/FBX SDK/2015.1`.
+- For OPENSUBDIV_DIR, if you are using the prebuilt libraries from the link above, you will only need to specify the root folder, example: `C:/Users/<username>/OpenSubdiv-3.4.4` or `/Users/<username>/OpenSubdiv-3.4.4`.  Otherwise, if you built from source, you will need to manually specify the OPENSUBDIV_INCLUDE folder path, ex: `C:/Users/<username>/OpenSubdiv-3.4.4`, and the OPENSUBDIV_LIB file path, ex: `C:/Users/<username>/OpenSubdiv-3.4.4/build/lib/Release/osdCPU.lib`.
 
 
 ## 6. How to QA Test
@@ -101,7 +123,7 @@ The directory structure is as follows:
 - `InternalAssets`:           Internal development and production files.
 - `PluginData`:               Scripts, assets and other data files which are used by the Daz Studio plugin.
 - `Test`:                     Scripts and generated output (reports) used for Quality Assurance Testing.
-- `UgcDevKit`:                Supplemental asset files to assist with creating a Roblox avatar.
+- `DevKit`:                Supplemental asset files to assist with creating a Roblox avatar.
 
 [OwnerURL]: https://www.daz3d.com
 [TwitterURL]: https://twitter.com/Daz3d
