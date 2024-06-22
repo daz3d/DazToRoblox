@@ -658,10 +658,6 @@ bool DzRobloxAction::deepCopyNode(FbxNode* pDestinationRoot, FbxNode* pSourceNod
 void DzRobloxAction::executeAction()
 {
 
-	//generateFacs50();
-	//return;
-	 
-
 	// CreateUI() disabled for debugging -- 2022-Feb-25
 	/*
 		 // Create and show the dialog. If the user cancels, exit early,
@@ -885,13 +881,15 @@ void DzRobloxAction::executeAction()
 
 
 		// DB 2021-10-11: Progress Bar
-		DzProgress* exportProgress = new DzProgress("Sending to Roblox...", 10);
+		DzProgress* exportProgress = new DzProgress("Sending to Roblox Studio...", 50, false, true);
         exportProgress->setCloseOnFinish(false);
         exportProgress->enable(true);
-        
+		DzProgress::setCurrentInfo("Sending to DazToRobloxStudio...");
+
 		//Create Daz3D folder if it doesn't exist
 		QDir dir;
 		dir.mkpath(m_sRootFolder);
+		exportProgress->setCurrentInfo("Starting up conversion pipeline...");
 		exportProgress->step();
 
 		// export FBX
@@ -905,7 +903,8 @@ void DzRobloxAction::executeAction()
 			return;
 		}
 
-        exportProgress->setInfo("Preparing FBX PostProcessing Pipeline...");
+        exportProgress->setCurrentInfo("Preparing FBX PostProcessing Pipeline...");
+		exportProgress->step();
         
 		// run blender scripts
 		QString sBlenderLogPath = QString("%1/blender.log").arg(m_sDestinationPath);
@@ -916,7 +915,7 @@ void DzRobloxAction::executeAction()
 			"blender_dtu_to_roblox_blend.py" << "blender_dtu_to_avatar_autosetup.py" <<
 			"roblox_tools.py" << "Daz_Cage_Att_Template.blend" <<
 			"game_readiness_tools.py" << "game_readiness_roblox_data.py" <<
-			"Genesis9Action.blend" << "Genesis9facs50.blend");
+			"Genesis9facs50.blend");
 		if (bUseFallbackScriptFolder)
 		{
 			foreach(QString filename, aOverrideFilenameList)
@@ -959,7 +958,9 @@ void DzRobloxAction::executeAction()
 		}
 
 		/*****************************************************************************************************/
-		exportProgress->setInfo("Automatic Cage and Attachment Retargeting...");
+		DzProgress::setCurrentInfo("Automatic Cage and Attachment Retargeting...");
+		exportProgress->setCurrentInfo("Automatic Cage and Attachment Retargeting...");
+		exportProgress->step();
 
 		if (m_sAssetType.contains("R15"))
 		{
@@ -1215,10 +1216,11 @@ void DzRobloxAction::executeAction()
 		batchFileOut.write(sBatchString.toAscii().constData());
 		batchFileOut.close();
 
-		exportProgress->setInfo("Starting Blender Processing...");
+		DzProgress::setCurrentInfo("Starting Blender Processing...");
+		exportProgress->setCurrentInfo("Starting Blender Processing...");
 		bool retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs);
 
-        exportProgress->setInfo("Roblox Avatar Exporter: Export Phase Completed.");
+        exportProgress->setCurrentInfo("Roblox Avatar Exporter: Export Phase Completed.");
 		// DB 2021-10-11: Progress Bar
 		exportProgress->finish();
 
@@ -1267,7 +1269,7 @@ void DzRobloxAction::executeAction()
 					QString sErrorString;
 					sErrorString += QString("An error occured while running the Blender Python script (ExitCode=%1).\n").arg(m_nBlenderExitCode);
 					sErrorString += QString("\nPlease check log files at : %1\n").arg(m_sDestinationPath);
-					sErrorString += QString("\nYou can rerun the Blender Python script manually using: %1").arg(batchFilePath);
+					sErrorString += QString("\nYou can rerun the Blender command-line script manually using: %1").arg(batchFilePath);
 					QMessageBox::critical(0, "Roblox Avatar Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Ok);
 				}
 				else {
@@ -1458,7 +1460,7 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 			break;
 		}
 	}
-    progress->setInfo("Blender Scripts Completed.");
+    progress->setCurrentInfo("Blender Scripts Completed.");
 	progress->finish();
 	delete progress;
 	m_nBlenderExitCode = pToolProcess->exitCode();
@@ -1518,6 +1520,9 @@ DZ_BRIDGE_NAMESPACE::DzBridgeDialog* DzRobloxAction::getBridgeDialog()
 // It also assumes that only one G9 character is in the scene.
 bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 {
+	DzProgress::setCurrentInfo("DazToRobloxStudio Preprocessing...");
+	DzProgress robloxPreProcessProgress = DzProgress("DazToRobloxStudio Preprocessing...", 50, false, true);
+
 	DzBridgeAction::preProcessScene(parentNode);
 
 	// Sanity Check
@@ -1540,10 +1545,15 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	}
 	QString sParentNodeName = parentNode->getName();
 	dzApp->debug("DzRobloxAction::preProcessScene() processing node: " + sParentNodeName);
+	robloxPreProcessProgress.setCurrentInfo("Processing node: " + sParentNodeName);
+	robloxPreProcessProgress.step();
 
 	// apply optional morphs
 	if (m_bEnableBreastsGone)
 	{
+		robloxPreProcessProgress.setCurrentInfo("Applying conversion morphs...");
+		robloxPreProcessProgress.step();
+
 		// obtain selection
 		DzFigure* pFigureNode = qobject_cast<DzFigure*>( dzScene->getPrimarySelection() );
 		if (pFigureNode && pFigureNode->getName() == "Genesis9")
@@ -1575,6 +1585,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	QString tempPath = dzApp->getTempPath();
 
 	// check if geograft present
+	robloxPreProcessProgress.setCurrentInfo("Applying conversion geografts...");
+	robloxPreProcessProgress.step();
 	if (dzScene->findNodeByLabel("game_engine_mouth_geograft") == NULL &&
 		dzScene->findNode("game_engine_mouth_geograft_0") == NULL) {
 		DzNode* mouthNode = dzScene->findNode("Genesis9Mouth");
@@ -1618,6 +1630,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	//}
 
 	/// BONE CONVERSION OPERATION
+	robloxPreProcessProgress.setCurrentInfo("Converting to roblox compatible skeleton...");
+	robloxPreProcessProgress.step();
 	sScriptFilename = sPluginFolder + "/" + sRobloxBoneConverter;
 	if (QFileInfo(sScriptFilename).exists() == false) {
 		sScriptFilename = dzApp->getTempPath() + "/" + sRobloxBoneConverter;
@@ -1677,6 +1691,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	/// TEXTURE OPERATIONS (MODESTY OVERLAY, UV CONVERSION, ETC)
 	if (!sApplyModestyOverlay.isEmpty())
 	{
+		robloxPreProcessProgress.setCurrentInfo("Applying modesty layer...");
+		robloxPreProcessProgress.step();
 		sScriptFilename = sPluginFolder + "/" + sApplyModestyOverlay;
 		if (QFileInfo(sScriptFilename).exists() == false) {
 			sScriptFilename = dzApp->getTempPath() + "/" + sApplyModestyOverlay;
@@ -1693,6 +1709,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
 
+	robloxPreProcessProgress.setCurrentInfo("Generating combined texture parts...");
+	robloxPreProcessProgress.step();
 	sScriptFilename = sPluginFolder + "/" + sGenerateCombinedTextures;
 	if (QFileInfo(sScriptFilename).exists() == false) {
 		sScriptFilename = dzApp->getTempPath() + "/" + sGenerateCombinedTextures;
@@ -1704,6 +1722,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
 
+	robloxPreProcessProgress.setCurrentInfo("Merging combined texture parts...");
+	robloxPreProcessProgress.step();
 	sScriptFilename = sPluginFolder + "/" + sCombineTextureMaps;
 	if (QFileInfo(sScriptFilename).exists() == false) {
 		sScriptFilename = dzApp->getTempPath() + "/" + sCombineTextureMaps;
@@ -1715,6 +1735,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
 
+	robloxPreProcessProgress.setCurrentInfo("Applying combined texture...");
+	robloxPreProcessProgress.step();
 	sScriptFilename = sPluginFolder + "/" + sAssignCombinedTextures;
 	if (QFileInfo(sScriptFilename).exists() == false) {
 		sScriptFilename = dzApp->getTempPath() + "/" + sAssignCombinedTextures;
@@ -1725,6 +1747,9 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
+
+	robloxPreProcessProgress.setCurrentInfo("DazToRobloxStudio Preprocessing complete.");
+	robloxPreProcessProgress.finish();
 
 	return true;
 }
