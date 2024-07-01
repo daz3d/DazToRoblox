@@ -39,6 +39,8 @@
 #include "dzbone.h"
 #include "dzjsonreader.h"
 #include "dzjsondom.h"
+#include "dzviewportmgr.h"
+#include "dzviewtool.h"
 
 #include "DzRobloxAction.h"
 #include "DzRobloxDialog.h"
@@ -680,6 +682,47 @@ void DzRobloxAction::executeAction()
 		return;
 	}
 
+	// Make sure geometry edit tool is not active
+	DzViewportMgr* pViewportMgr = mw->getViewportMgr();
+	DzViewTool* pNodeTool = pViewportMgr->findTool("Node Selection");
+	if (!pNodeTool) {
+		pNodeTool = pViewportMgr->getTool(0);
+	}
+
+	DzViewTool* pCurrentViewTool = pViewportMgr->getActiveTool();
+	QString sToolName = pCurrentViewTool->getName();
+	if ( m_nNonInteractiveMode == 0 &&
+			(sToolName != "Node Selection" && 
+			sToolName != "Scene Navigator" &&
+			sToolName != "Universal" &&
+			sToolName != "Rotate" && 
+			sToolName != "Translate" &&
+			sToolName != "Scale"  &&
+			sToolName != "ActivePose" &&
+			sToolName != "aniMate2" &&
+			sToolName != "Region Navigator" &&
+			sToolName != "Surface Selection" &&
+			sToolName != "Spot Render")
+		)
+	{
+		// issue error message
+		int nResult = QMessageBox::warning(0, tr("WARNING"),
+			tr("DazToRoblox may not function correctly in the current Tool mode. \n\
+Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
+		if (nResult == QMessageBox::Cancel)
+		{
+			return;
+		}
+		if (nResult == QMessageBox::Yes)
+		{
+			// select node tool
+			pViewportMgr->setActiveTool(pNodeTool);
+			DzViewTool* pNewTool = pViewportMgr->getActiveTool();
+			QString sNewToolName = pNewTool->getName();
+		}
+	}
+
+
 	// Create and show the dialog. If the user cancels, exit early,
 	// otherwise continue on and do the thing that required modal
 	// input from the user.
@@ -731,8 +774,11 @@ void DzRobloxAction::executeAction()
 						int combinedUvVal = uvset->findItemString(COMBINED_UVSET_STRING);
 						int currentVal = uvset->getValue();
 						if (currentVal == combinedUvVal) {
-							QMessageBox::warning(0, tr("Warning"),
-								tr("A non-standard UV Set was detected, overlay will NOT be applied."), QMessageBox::Ok);
+							if (m_nNonInteractiveMode == 0)
+							{
+								QMessageBox::warning(0, tr("Warning"),
+									tr("A non-standard UV Set was detected, overlay will NOT be applied."), QMessageBox::Ok);
+							}
 							break;
 						}
 					}
@@ -897,8 +943,11 @@ void DzRobloxAction::executeAction()
 
 		if (!bExportResult)
 		{
-			QMessageBox::information(0, "Roblox Avatar Exporter",
-				tr("Export cancelled."), QMessageBox::Ok);
+			if (m_nNonInteractiveMode == 0)
+			{
+				QMessageBox::information(0, "Roblox Avatar Exporter",
+					tr("Export cancelled."), QMessageBox::Ok);
+			}
 			exportProgress->finish();
 			return;
 		}
@@ -1077,7 +1126,19 @@ void DzRobloxAction::executeAction()
 					if (sNodeName == "Head_OuterCage") {
 //						bUseHardCodeWorkaround = true;
 					}
-					pCageRetargeter->deformCage(pSourceNode->GetMesh(), pCageMesh, pWorkInProgressCageBuffer, bUseHardCodeWorkaround);
+					bool bResult = pCageRetargeter->deformCage(pSourceNode->GetMesh(), pCageMesh, pWorkInProgressCageBuffer, bUseHardCodeWorkaround);
+					if (!bResult) {
+						delete[] pWorkInProgressCageBuffer;
+						if (m_nNonInteractiveMode == 0) 
+						{
+							QMessageBox::critical(0, "Roblox Avatar Exporter",
+								tr("Critical Error occured during Cage Retargeting.  Unable to continue export operation.  Aborting."), QMessageBox::Ok);
+						}
+						exportProgress->cancel();
+						exportProgress->setCloseOnFinish(false);
+						exportProgress->finish();
+						return;
+					}
 					// update cage with verts from new cage
 					memcpy(pFinalCageBuffer, pWorkInProgressCageBuffer, sizeof(FbxVector4) * numCageVerts);
 					delete[] pWorkInProgressCageBuffer;
@@ -1852,6 +1913,14 @@ bool MvcCustomCageRetargeter::deformCage(const FbxMesh* pMorphedMesh, const FbxM
 		}
 		QVector<double>* pMvcWeights = results.value();
 		FbxVector4* pMorphedVertexBuffer = pMorphedMesh->GetControlPoints();
+
+		// Sanity Checks
+		int numVerts = pMorphedMesh->GetControlPointsCount();
+		int numWeights = pMvcWeights->count();
+		if (numVerts != numWeights) {
+			dzApp->log(QString("CRITICAL ERROR: DzRobloxAction.cpp, MvcCustomCageRetarger::deformCage(): (line1860): numVerts [%1] != numWeights [%2], aborting...").arg(numVerts).arg(numWeights));
+			return false;
+		}
 
 		//QString name = QString(pCage->GetName());
 		//if (i == 11 && name == "Head_OuterCage") {
