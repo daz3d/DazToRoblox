@@ -65,7 +65,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 int btnMinWidth = style()->pixelMetric(DZ_PM_ButtonMinWidth);
 
 	 // Set the dialog title
-	 setWindowTitle(tr("Daz To Roblox Studio Exporter %1 v%2.%3").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV));
+	 setWindowTitle(tr("Roblox Export Options"));
 	 QString sDazAppDir = dzApp->getHomePath().replace("\\", "/");
 	 QString sPdfPath = sDazAppDir + "/docs/Plugins" + "/Daz to Roblox/Daz to Roblox.pdf";
 	 QString sSetupModeString = tr("\
@@ -125,9 +125,11 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 
 	 // Add Project Folder
 	 QHBoxLayout* robloxOutputFolderLayout = new QHBoxLayout();
+	 robloxOutputFolderLayout->setSpacing(0);
 	 m_wRobloxOutputFolderEdit = new QLineEdit(this);
 	 m_wRobloxOutputFolderEdit->setValidator(&m_dzValidatorFileExists);
-	 m_wRobloxOutputFolderButton = new QPushButton("...", this);
+	 //m_wRobloxOutputFolderButton = new QPushButton("...", this);
+	 m_wRobloxOutputFolderButton = new DzBridgeBrowseButton(this);
 	 robloxOutputFolderLayout->addWidget(m_wRobloxOutputFolderEdit);
 	 robloxOutputFolderLayout->addWidget(m_wRobloxOutputFolderButton);
 	 connect(m_wRobloxOutputFolderButton, SIGNAL(released()), this, SLOT(HandleSelectRobloxOutputFolderButton()));
@@ -182,20 +184,22 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 QLabel* wLayeredClothingRowLabel = new QLabel(tr("Accessories"));
 
 	 // Add GUI to layout
-	 mainLayout->insertRow(1, "Roblox Output Folder", robloxOutputFolderLayout);
-	 m_wGodotProjectFolderRowLabelWidget = mainLayout->itemAt(1, QFormLayout::LabelRole)->widget();
+	 m_wRobloxOutputFolderRowLabel = new QLabel(tr("Roblox Output Folder"));
+	 mainLayout->insertRow(1, m_wRobloxOutputFolderRowLabel, robloxOutputFolderLayout);
 	 showRobloxOptions(true);
 	 this->showLodRow(false);
-	 QLabel* wContentModerationRowLabel = new QLabel(tr("Content Moderation"));
-	 mainLayout->addRow(wContentModerationRowLabel, m_wBreastsGoneCheckbox);
+	 m_wContentModerationRowLabel = new QLabel(tr("Content Moderation"));
+	 mainLayout->addRow(m_wContentModerationRowLabel, m_wBreastsGoneCheckbox);
 	 mainLayout->addRow(wReplacementPartsRowLabel, wReplacementPartsLayout);
 	 mainLayout->addRow(wLayeredClothingRowLabel, wClothingOptionsLayout);
 
 	 // Select Blender Executable Path GUI
 	 QHBoxLayout* blenderExecutablePathLayout = new QHBoxLayout();
+	 blenderExecutablePathLayout->setSpacing(0);
 	 m_wBlenderExecutablePathEdit = new QLineEdit(this);
 	 m_wBlenderExecutablePathEdit->setValidator(&m_dzValidatorFileExists);
-	 m_wBlenderExecutablePathButton = new QPushButton("...", this);
+	 //m_wBlenderExecutablePathButton = new QPushButton("...", this);
+	 m_wBlenderExecutablePathButton = new DzBridgeBrowseButton(this);
 	 blenderExecutablePathLayout->addWidget(m_wBlenderExecutablePathEdit);
 	 blenderExecutablePathLayout->addWidget(m_wBlenderExecutablePathButton);
 	 connect(m_wBlenderExecutablePathButton, SIGNAL(released()), this, SLOT(HandleSelectBlenderExecutablePathButton()));
@@ -204,24 +208,30 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 
 	 // Intermediate Folder
 	 QHBoxLayout* intermediateFolderLayout = new QHBoxLayout();
+	 intermediateFolderLayout->setSpacing(0);
 	 intermediateFolderEdit = new QLineEdit(this);
 	 intermediateFolderEdit->setValidator(&m_dzValidatorFileExists);
-	 intermediateFolderButton = new QPushButton("...", this);
+	 //intermediateFolderButton = new QPushButton("...", this);
+	 intermediateFolderButton = new DzBridgeBrowseButton(this);
 	 intermediateFolderLayout->addWidget(intermediateFolderEdit);
 	 intermediateFolderLayout->addWidget(intermediateFolderButton);
 	 connect(intermediateFolderButton, SIGNAL(released()), this, SLOT(HandleSelectIntermediateFolderButton()));
 	 connect(intermediateFolderEdit, SIGNAL(textChanged(const QString&)), this, SLOT(HandleTextChanged(const QString&)));
 
 	 //  Add Intermediate Folder to Advanced Settings container as a new row with specific headers
-	 QFormLayout* advancedLayout = qobject_cast<QFormLayout*>(advancedWidget->layout());
 	 if (advancedLayout)
 	 {
-		 advancedLayout->insertRow(1, "Blender Executable", blenderExecutablePathLayout);
+		 m_wBlenderExecutablePathRowLabel = new QLabel("Blender Executable");
+		 advancedLayout->insertRow(1, m_wBlenderExecutablePathRowLabel, blenderExecutablePathLayout);
 
-		 advancedLayout->addRow("Intermediate Folder", intermediateFolderLayout);
+		 m_wIntermediateFolderRowLabel = new QLabel("Intermediate Folder");
+		 advancedLayout->addRow(m_wIntermediateFolderRowLabel, intermediateFolderLayout);
+
 		 // reposition the Open Intermediate Folder button so it aligns with the center section
 		 advancedLayout->removeWidget(m_OpenIntermediateFolderButton);
-		 advancedLayout->addRow("", m_OpenIntermediateFolderButton);
+		 m_wOpenIntermediateFolderButtonRowLabel = new QLabel("");
+		 advancedLayout->addRow(m_wOpenIntermediateFolderButtonRowLabel, m_OpenIntermediateFolderButton);
+
 	 }
 
 	 // Disable Experimental Options Checkbox
@@ -233,8 +243,6 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 setBridgeVersionStringAndLabel(sVersionString);
 
 	 //// Configure Target Plugin Installer
-	 //renameTargetPluginInstaller("Godot Plugin Installer");
-	 //m_TargetSoftwareVersionCombo->clear();
 	 showTargetPluginInstaller(false);
 
 	 // Make the dialog fit its contents, with a minimum width, and lock it down
@@ -262,6 +270,11 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 loadSavedSettings();
 
 	 disableAcceptUntilAllRequirementsValid();
+
+	 // GUI Refresh
+	 m_WelcomeLabel->hide();
+	 setWindowTitle(tr("Roblox Export Options"));
+	 wHelpMenuButton->show();
 
 }
 
@@ -410,7 +423,7 @@ void DzRobloxDialog::showRobloxOptions(bool bVisible)
 {
 	m_wRobloxOutputFolderEdit->setVisible(bVisible);
 	m_wRobloxOutputFolderButton->setVisible(bVisible);
-	m_wGodotProjectFolderRowLabelWidget->setVisible(bVisible);
+	m_wRobloxOutputFolderRowLabel->setVisible(bVisible);
 }
 
 void DzRobloxDialog::HandleSelectBlenderExecutablePathButton()
@@ -715,6 +728,27 @@ void DzRobloxDialog::enableModestyOptions(bool bEnable)
 	}
 
 	return;
+}
+
+void DzRobloxDialog::HandlePdfButton()
+{
+//	QString sDazAppDir = dzApp->getHomePath().replace("\\", "/");
+//	QString sPdfPath = sDazAppDir + "/docs/Plugins" + "/Daz to Blender/Daz to Blender.pdf";
+	QString sPdfPath = "https://github.com/daz3d/DazToRoblox?tab=readme-ov-file#readme";
+	QDesktopServices::openUrl(QUrl(sPdfPath));
+}
+
+void DzRobloxDialog::HandleYoutubeButton()
+{
+	// Roblox Avatar Help
+	QString url = "https://create.roblox.com/docs/art/characters/specifications";
+	QDesktopServices::openUrl(QUrl(url));
+}
+
+void DzRobloxDialog::HandleSupportButton()
+{
+	QString url = "https://bugs.daz3d.com/hc/en-us/requests/new";
+	QDesktopServices::openUrl(QUrl(url));
 }
 
 #include "moc_DzRobloxDialog.cpp"

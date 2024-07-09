@@ -560,7 +560,7 @@ bool DzRobloxUtils::generateBlenderBatchFile(QString batchFilePath, QString sBle
 }
 
 DzRobloxAction::DzRobloxAction() :
-	DzBridgeAction(tr("&Roblox Studio Exporter"), tr("Export the selected character for Roblox Studio."))
+	DzBridgeAction(tr("Send to &Roblox..."), tr("Export the selected character for Roblox Studio."))
 {
 	m_nNonInteractiveMode = 0;
 	m_sAssetType = QString("__");
@@ -799,7 +799,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 	// If selection has hair or clothing asset, pre-configure Asset Type
 	if (dzScene->getNumSelectedNodes() != 1)
 	{
-		DzNodeList rootNodes = buildRootNodeList();
+		DzNodeList rootNodes = DzBridgeAction::BuildRootNodeList();
 		if (rootNodes.length() == 1)
 		{
 			dzScene->selectAllNodes(false);

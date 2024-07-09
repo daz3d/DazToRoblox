@@ -92,20 +92,20 @@ public slots:
 protected slots:
 	void HandleSelectIntermediateFolderButton();
 	void HandleAssetTypeComboChange(int state);
-
 	virtual void HandleDisabledChooseSubdivisionsButton();
 	virtual void HandleOpenIntermediateFolderButton(QString sFolderPath="");
+	void HandlePdfButton() override;
+	void HandleYoutubeButton() override;
+	void HandleSupportButton() override;
+	void accept() override;
 
 	void HandleSelectRobloxOutputFolderButton();
 	void showRobloxOptions(bool bVisible);
-
 	void HandleSelectBlenderExecutablePathButton();
 	bool HandleAcceptButtonValidationFeedback();
 	void HandleCustomModestyOverlayActivated(int index);
 
 	void HandleAgreeEulaCheckbox(bool checked);
-
-	void accept() override;
 
 protected:
 	QLineEdit* intermediateFolderEdit;
@@ -115,11 +115,14 @@ protected:
 
 	QLineEdit* m_wRobloxOutputFolderEdit;
 	QPushButton* m_wRobloxOutputFolderButton;
-	QWidget* m_wGodotProjectFolderRowLabelWidget;
+	QLabel* m_wRobloxOutputFolderRowLabel;
+	QLabel* m_wContentModerationRowLabel;
+	QLabel* m_wIntermediateFolderRowLabel;
+	QLabel* m_wOpenIntermediateFolderButtonRowLabel;
 
 	QLineEdit* m_wBlenderExecutablePathEdit;
 	QPushButton* m_wBlenderExecutablePathButton;
-	QWidget* m_wBlenderExecutablePathRowLabelWdiget;
+	QLabel* m_wBlenderExecutablePathRowLabel;
 
 	QCheckBox* m_wBreastsGoneCheckbox;
 	QCheckBox* m_wBakeSingleOutfitCheckbox;
