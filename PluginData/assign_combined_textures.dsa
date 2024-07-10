@@ -27,32 +27,44 @@ function assignCombinedTextures(oNode) {
                     if (oMaterial) {
                         print("DEBUG: material=" + oMaterial.name);
                         var oDiffuseColorProperty = oMaterial.findProperty("Diffuse Color");
-                        if (oDiffuseColorProperty) {
+                        if (oDiffuseColorProperty && DzFileInfo(sCombinedDiffuseColorImage).exists()) {
                             oDiffuseColorProperty.setMap(sCombinedDiffuseColorImage);
                         }
                         var oNormalMapProperty = oMaterial.findProperty("Normal Map");
-                        if (oNormalMapProperty) {
+                        if (oNormalMapProperty && DzFileInfo(sCombinedNormalMapImage).exists()) {
                             oNormalMapProperty.setMap(sCombinedNormalMapImage);
                         }
                         var oSpecularMapProperty = oMaterial.findProperty("Specular Lobe 1 Roughness");
-                        if (oSpecularMapProperty && oSpecularMapProperty.getMapValue() && oSpecularMapProperty.getMapValue().getFilename().length > 0) {
-							 print("DEBUG: setting specular lobe 1 roughness for " + oMaterial.name);
+                        if (oSpecularMapProperty && 
+                            oSpecularMapProperty.getMapValue() && 
+                            oSpecularMapProperty.getMapValue().getFilename().length > 0 &&
+                            DzFileInfo(sCombinedSpecularMapImage).exists()
+                            ) {
+							print("DEBUG: setting specular lobe 1 roughness for " + oMaterial.name);
                             oSpecularMapProperty.setMap(sCombinedSpecularMapImage);
                         } else {
 	                        oSpecularMapProperty = oMaterial.findProperty("Dual Lobe Specular Weight");
-	                        if (oSpecularMapProperty && oSpecularMapProperty.getMapValue() && oSpecularMapProperty.getMapValue().getFilename().length > 0) {
+	                        if (oSpecularMapProperty && 
+                                oSpecularMapProperty.getMapValue() && 
+                                oSpecularMapProperty.getMapValue().getFilename().length > 0 &&
+                                DzFileInfo(sCombinedSpecularMapImage).exists()
+                                ) {
 								 print("DEBUG: dual lobe specular weight for " + oMaterial.name);
 	                            oSpecularMapProperty.setMap(sCombinedSpecularMapImage);
 	                        } else {
                                 oSpecularMapProperty = oMaterial.findProperty("Dual Lobe Specular Reflectivity");
-                                if (oSpecularMapProperty && oSpecularMapProperty.getMapValue() && oSpecularMapProperty.getMapValue().getFilename().length > 0) {
+                                if (oSpecularMapProperty && 
+                                    oSpecularMapProperty.getMapValue() && 
+                                    oSpecularMapProperty.getMapValue().getFilename().length > 0 &&
+                                    DzFileInfo(sCombinedSpecularMapImage).exists()
+                                    ) {
                                      print("DEBUG: dual lobe specular weight for " + oMaterial.name);
                                     oSpecularMapProperty.setMap(sCombinedSpecularMapImage);
                                 }    
                             }
                         }
                         var oMetallicMapProperty = oMaterial.findProperty("Metallic Weight");
-                        if (oMetallicMapProperty) {
+                        if (oMetallicMapProperty && DzFileInfo(sCombinedMetallicMapImage).exists()) {
                             oMetallicMapProperty.setMap(sCombinedMetallicMapImage);
                         }
 

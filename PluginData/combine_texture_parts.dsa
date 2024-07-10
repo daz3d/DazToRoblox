@@ -68,32 +68,40 @@ function main() {
     }
     
     // diffuse color
-    var sOutputFilename = sMapTransferOutputFolder + "/combined diffuse test.png";
-	print("DEBUG: output = " + sOutputFilename);
-    var oCombinedImage = combineImages(aDiffuseColorImages);
-    oCombinedImage.save(sOutputFilename);
-    oCombinedImage.deleteLater();
+    if (aDiffuseColorImages.length > 0) {
+        var sOutputFilename = sMapTransferOutputFolder + "/combined diffuse test.png";
+        print("DEBUG: output = " + sOutputFilename);
+        var oCombinedImage = combineImages(aDiffuseColorImages);
+        oCombinedImage.save(sOutputFilename);
+        oCombinedImage.deleteLater();    
+    }
 
     // normal
-    var sOutputFilename = sMapTransferOutputFolder + "/combined normal test.png";
-	print("DEBUG: output = " + sOutputFilename);
-    var oCombinedImage = combineImages(aNormalMapImages);
-    oCombinedImage.save(sOutputFilename);
-    oCombinedImage.deleteLater();
+    if (aNormalMapImages.length > 0) {
+        var sOutputFilename = sMapTransferOutputFolder + "/combined normal test.png";
+        print("DEBUG: output = " + sOutputFilename);
+        var oCombinedImage = combineImages(aNormalMapImages);
+        oCombinedImage.save(sOutputFilename);
+        oCombinedImage.deleteLater();
+    }
     
     // specular
-    var sOutputFilename = sMapTransferOutputFolder + "/combined specular test.png";
-	print("DEBUG: output = " + sOutputFilename);
-    var oCombinedImage = combineImages(aSpecularMapImages);
-    oCombinedImage.save(sOutputFilename);
-    oCombinedImage.deleteLater();
+    if (aSpecularMapImages.length > 0) {
+        var sOutputFilename = sMapTransferOutputFolder + "/combined specular test.png";
+        print("DEBUG: output = " + sOutputFilename);
+        var oCombinedImage = combineImages(aSpecularMapImages);
+        oCombinedImage.save(sOutputFilename);
+        oCombinedImage.deleteLater();
+    }
 
-    // specular
-    var sOutputFilename = sMapTransferOutputFolder + "/combined metallic test.png";
-	print("DEBUG: output = " + sOutputFilename);
-    var oCombinedImage = combineImages(aMetallicMapImages);
-    oCombinedImage.save(sOutputFilename);
-    oCombinedImage.deleteLater();
+    // metallic
+    if (aMetallicMapImages.length > 0) {
+        var sOutputFilename = sMapTransferOutputFolder + "/combined metallic test.png";
+        print("DEBUG: output = " + sOutputFilename);
+        var oCombinedImage = combineImages(aMetallicMapImages);
+        oCombinedImage.save(sOutputFilename);
+        oCombinedImage.deleteLater();
+    }
 
 	print("done");
 }
