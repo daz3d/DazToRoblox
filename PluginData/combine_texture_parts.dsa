@@ -40,6 +40,7 @@ function main() {
 	var aDiffuseColorImages = [];
 	var aNormalMapImages = [];
 	var aSpecularMapImages = [];
+    var aMetallicMapImages = [];
 
     // get list of files in the folder
     oDir = new DzDir(sMapTransferInputFolder);
@@ -60,7 +61,10 @@ function main() {
         	aNormalMapImages.push(aFiles[i]);
         } else if (aFiles[i].search("Specular") > 0) {
         	aSpecularMapImages.push(aFiles[i]);
+        } else if (aFiles[i].search("Metallic") > 0) {
+        	aMetallicMapImages.push(aFiles[i]);
         }
+
     }
     
     // diffuse color
@@ -81,6 +85,13 @@ function main() {
     var sOutputFilename = sMapTransferOutputFolder + "/combined specular test.png";
 	print("DEBUG: output = " + sOutputFilename);
     var oCombinedImage = combineImages(aSpecularMapImages);
+    oCombinedImage.save(sOutputFilename);
+    oCombinedImage.deleteLater();
+
+    // specular
+    var sOutputFilename = sMapTransferOutputFolder + "/combined metallic test.png";
+	print("DEBUG: output = " + sOutputFilename);
+    var oCombinedImage = combineImages(aMetallicMapImages);
     oCombinedImage.save(sOutputFilename);
     oCombinedImage.deleteLater();
 

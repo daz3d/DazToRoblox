@@ -484,7 +484,7 @@ def process_material(mat, lowres_mode=None):
             # node_tex.image.colorspace_settings.name = "Non-Color"
             # links = data.node_tree.links
             # link = links.new(node_tex.outputs["Color"], bsdf_inputs["Specular"])
-            load_cached_image_to_material(matName, "Specular", "Color", reflectivity_map, reflectivity_value, "Non-Color")
+            load_cached_image_to_material(matName, "Roughness", "Color", reflectivity_map, reflectivity_value, "Non-Color")
     elif (specular_weight_map != ""):
         if (not os.path.exists(specular_weight_map)):
             _add_to_log("ERROR: process_dtu(): specular weight map file does not exist, skipping...")
@@ -496,7 +496,7 @@ def process_material(mat, lowres_mode=None):
             # node_tex.image.colorspace_settings.name = "Non-Color"
             # links = data.node_tree.links
             # link = links.new(node_tex.outputs["Color"], bsdf_inputs["Specular"])
-            load_cached_image_to_material(matName, "Specular", "Color", specular_weight_map, dual_lobe_specular_weight, "Non-Color")
+            load_cached_image_to_material(matName, "Roughness", "Color", specular_weight_map, dual_lobe_specular_weight, "Non-Color")
     elif (glossy_weight_map != ""):
         if (not os.path.exists(glossy_weight_map)):
             _add_to_log("ERROR: process_dtu(): glossy weight map file does not exist, skipping...")
@@ -508,7 +508,7 @@ def process_material(mat, lowres_mode=None):
             # node_tex.image.colorspace_settings.name = "Non-Color"
             # links = data.node_tree.links
             # link = links.new(node_tex.outputs["Color"], bsdf_inputs["Specular"])
-            load_cached_image_to_material(matName, "Specular", "Color", glossy_weight_map, glossy_weight, "Non-Color")
+            load_cached_image_to_material(matName, "Roughness", "Color", glossy_weight_map, glossy_weight, "Non-Color")
     elif (reflectivity_value != 0.0):
         # if blender version 4, use roughness instead of specular
         if bpy.app.version[0] >= 4:

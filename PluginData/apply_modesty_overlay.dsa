@@ -17,7 +17,12 @@ var normalOverlayImagePath = [
 var roughnessOverlayImagePath = [
     sIncludePath + "/genesis9_torso_modesty_overlay_r.png",
     sIncludePath + "/genesis9_legs_modesty_overlay_r.png",
-    ];
+];
+var metallicOverlayImagePath = [
+    sIncludePath + "/genesis9_torso_modesty_overlay_m.png",
+    sIncludePath + "/genesis9_legs_modesty_overlay_m.png",
+];
+
 // // TODO: make specular overlay if needed
 // var specularOverlayImagePath = sIncludePath + "/genesis9_torso_modesty_overlay_r.png"
 
@@ -77,6 +82,13 @@ function replaceMaterialWithLayeredTextures(material, overlay_index) {
         replaceColorPropertyWithLayeredTexture(material, diffuseColor, diffuseOverlayImagePath[overlay_index]);
     }
 
+    var diffuseColor = material.findProperty("Diffuse Overlay Color");
+    if (!diffuseColor) {
+        print("Material does not have a 'Diffuse Overlay Color' property.");
+    } else {
+        replaceColorPropertyWithLayeredTexture(material, diffuseColor, diffuseOverlayImagePath[overlay_index]);
+    }
+
     var diffuseColor = material.findProperty("Translucency Color");
     if (!diffuseColor) {
         print("Material does not have a 'Diffuse Color' property.");
@@ -93,7 +105,7 @@ function replaceMaterialWithLayeredTextures(material, overlay_index) {
 
     var normalMap = material.findProperty("Detail Normal Map");
     if (!normalMap) {
-        print("Material does not have a 'Normal Map' property.");
+        print("Material does not have a 'Detail Normal Map' property.");
     } else {
         replaceColorPropertyWithLayeredTexture(material, normalMap, normalOverlayImagePath[overlay_index]);
     }
@@ -103,20 +115,28 @@ function replaceMaterialWithLayeredTextures(material, overlay_index) {
         roughnessMap = material.findProperty("Glossy Roughness");
     }
     if (roughnessMap) {
+        print("DEBUG: applying roughness overlay...");
         replaceColorPropertyWithLayeredTexture(material, roughnessMap, roughnessOverlayImagePath[overlay_index]);
     }
 
-    // var specularMap = material.findProperty("Dual Lobe Specular Weight");
-    // if (!specularMap) {
-    //     specularMap = material.findProperty("Dual Lobe Specular Reflectivity");
-    //     if (!specularMap) {
-    //         specularMap = material.findProperty("Glossy Reflectivity");
-    //     }
-    // }
-    // if (specularMap) {
-    //     replaceColorPropertyWithLayeredTexture(material, specularMap, specularOverlayImagePath);
-    // }
+    var specularMap = material.findProperty("Dual Lobe Specular Weight");
+    if (!specularMap || !specularMap.getMapValue()) {
+        specularMap = material.findProperty("Dual Lobe Specular Reflectivity");
+        if (!specularMap || !specularMap.getMapValue()) {
+            specularMap = material.findProperty("Glossy Reflectivity");
+        }
+    }
+    if (specularMap && specularMap.getMapValue()) {
+        print("DEBUG: applying specular overlay...");
+        replaceColorPropertyWithLayeredTexture(material, specularMap, roughnessOverlayImagePath[overlay_index]);
+    }
 
+    var metallicMap = material.findProperty("Metallic Weight");
+    if (metallicMap && metallicMap.getMapValue()) {
+        print("DEBUG: applying metallic overlay...");
+        replaceColorPropertyWithLayeredTexture(material, metallicMap, metallicOverlayImagePath[overlay_index]);
+    }
+    
     print("Replaced texture map with layered texture for material: " + material.name);
 }
 

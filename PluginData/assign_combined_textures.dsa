@@ -10,6 +10,7 @@ var sMapTransferOutputFolder = sDazTempFolder + "/MapTransfer";
 var sCombinedDiffuseColorImage = sMapTransferOutputFolder + "/combined diffuse test.png";
 var sCombinedNormalMapImage = sMapTransferOutputFolder + "/combined normal test.png";
 var sCombinedSpecularMapImage = sMapTransferOutputFolder + "/combined specular test.png";
+var sCombinedMetallicMapImage = sMapTransferOutputFolder + "/combined metallic test.png";
 
 function assignCombinedTextures(oNode) {
     if (oNode) {
@@ -38,11 +39,21 @@ function assignCombinedTextures(oNode) {
 							 print("DEBUG: setting specular lobe 1 roughness for " + oMaterial.name);
                             oSpecularMapProperty.setMap(sCombinedSpecularMapImage);
                         } else {
-	                        var oSpecularMapProperty = oMaterial.findProperty("Dual Lobe Specular Weight");
+	                        oSpecularMapProperty = oMaterial.findProperty("Dual Lobe Specular Weight");
 	                        if (oSpecularMapProperty && oSpecularMapProperty.getMapValue() && oSpecularMapProperty.getMapValue().getFilename().length > 0) {
 								 print("DEBUG: dual lobe specular weight for " + oMaterial.name);
 	                            oSpecularMapProperty.setMap(sCombinedSpecularMapImage);
-	                        }
+	                        } else {
+                                oSpecularMapProperty = oMaterial.findProperty("Dual Lobe Specular Reflectivity");
+                                if (oSpecularMapProperty && oSpecularMapProperty.getMapValue() && oSpecularMapProperty.getMapValue().getFilename().length > 0) {
+                                     print("DEBUG: dual lobe specular weight for " + oMaterial.name);
+                                    oSpecularMapProperty.setMap(sCombinedSpecularMapImage);
+                                }    
+                            }
+                        }
+                        var oMetallicMapProperty = oMaterial.findProperty("Metallic Weight");
+                        if (oMetallicMapProperty) {
+                            oMetallicMapProperty.setMap(sCombinedMetallicMapImage);
                         }
 
                         // switch UV set to the combined texture
