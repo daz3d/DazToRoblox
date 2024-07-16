@@ -1466,6 +1466,9 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 		if (m_sRobloxOutputFolderPath == "" || m_nNonInteractiveMode == 0) m_sRobloxOutputFolderPath = pRobloxDialog->m_wRobloxOutputFolderEdit->text().replace("\\", "/");
 		if (m_sBlenderExecutablePath == "" || m_nNonInteractiveMode == 0) m_sBlenderExecutablePath = pRobloxDialog->m_wBlenderExecutablePathEdit->text().replace("\\", "/");
 		m_bEnableBreastsGone = pRobloxDialog->m_wBreastsGoneCheckbox->isChecked();
+
+		// modesty overlay
+		m_nModestyOverlay = pRobloxDialog->m_wModestyOverlayCombo->itemData(pRobloxDialog->m_wModestyOverlayCombo->currentIndex()).toInt();
 	}
 	else
 	{
@@ -1681,17 +1684,18 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	QString sScriptFilename = "";
 	QScopedPointer<DzScript> Script(new DzScript());
 
-	//if (m_sAssetType.contains("_M"))
-	//{
-	//	sApplyModestyOverlay = "apply_modesty_overlay_M.dsa";
-	//}
-	//else if (m_sAssetType == "R15Z")
-	//{
-	//	sApplyModestyOverlay = "";
-	//}
+//	if (m_sAssetType.contains("_M"))
+	if (m_nModestyOverlay == eModestyOverlay::TankTop_Shorts)
+	{
+		sApplyModestyOverlay = "apply_modesty_overlay_M.dsa";
+	}
+//	else if (m_sAssetType == "R15Z")
+	else if (m_nModestyOverlay == eModestyOverlay::CustomModestyOverlay)
+	{
+		sApplyModestyOverlay = "";
+	}
 
 	sApplyModestyOverlay = "apply_modesty_overlay_aArgs.dsa";
-
 
 	/// BONE CONVERSION OPERATION
 	robloxPreProcessProgress.setCurrentInfo("Converting to roblox compatible skeleton...");
@@ -1766,14 +1770,51 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		QVariantList aArgs;
 		QStringList slDiffuseOverlays, slNormalOverlays, slRoughnessOverlays, slMetallicOverlays;
 
-		// if sportsbra, use default
-		// if tanktop, use embedded files
-		// if custom, generate template string from selected file, then generate all variants from template string 
+		QString sDiffuseOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_d.png";
+		QString sDiffuseOverlayLegs = sPluginFolder + "/genesis9_legs_modesty_overlay_d.png";
+		QString sDiffuseOverlayHead = "";
+		QString sNormalOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_nm.png";
+		QString sNormalOverlayLegs = sPluginFolder + "/genesis9_head_modesty_overlay_nm.png";
+		QString sNormalOverlayHead = "";
+		QString sRoughnessOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_r.png";
+		QString sRoughnessOverlayLegs = sPluginFolder + "/genesis9_legs_modesty_overlay_r.png";
+		QString sRoughnessOverlayHead = "";
+		QString sMetallicOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_m.png";
+		QString sMetallicOverlayLegs = sPluginFolder + "/genesis9_legs_modesty_overlay_m.png";
+		QString sMetallicOverlayHead = "";
 
-		slDiffuseOverlays.append(sPluginFolder + "/genesis9_torso_modesty_overlay_d.png"); slDiffuseOverlays.append(sPluginFolder + "/genesis9_legs_modesty_overlay_dXXX.png"); slDiffuseOverlays.append("");
-		slNormalOverlays.append(sPluginFolder + "/genesis9_torso_modesty_overlay_nm.png"); slNormalOverlays.append(""); slNormalOverlays.append("");
-		slRoughnessOverlays.append(sPluginFolder + "/genesis9_torso_modesty_overlay_r.png"); slRoughnessOverlays.append(""); slRoughnessOverlays.append("");
-		slMetallicOverlays.append(sPluginFolder + "/genesis9_torso_modesty_overlay_m.png"); slMetallicOverlays.append(""); slMetallicOverlays.append("");
+		// if sportsbra, use default ==> do nothing
+		if (m_nModestyOverlay == eModestyOverlay::SportsBra_Shorts)
+		{
+		}
+
+		// if tanktop, use embedded files
+		if (m_nModestyOverlay == eModestyOverlay::TankTop_Shorts)
+		{
+			sDiffuseOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_d_M.png";
+//			sDiffuseOverlayLegs = sPluginFolder + "/genesis9_legs_modesty_overlay_d.png";
+			sDiffuseOverlayHead = sPluginFolder + "/genesis9_head_modesty_overlay_d_M.png";
+			sNormalOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_nm_M.png";
+//			sNormalOverlayLegs = sPluginFolder + "/genesis9_head_modesty_overlay_nm_M.png";
+			sNormalOverlayHead = sPluginFolder + "/genesis9_legs_modesty_overlay_nm.png";
+			sRoughnessOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_r_M.png";
+//			sRoughnessOverlayLegs = sPluginFolder + "/genesis9_legs_modesty_overlay_r.png";
+			sRoughnessOverlayHead = sPluginFolder + "/genesis9_head_modesty_overlay_r_M.png";
+			sMetallicOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_m_M.png";
+//			sMetallicOverlayLegs = sPluginFolder + "/genesis9_legs_modesty_overlay_m.png";
+			sMetallicOverlayHead = sPluginFolder + "/genesis9_head_modesty_overlay_m_M.png";
+		}
+
+		// if custom, generate template string from selected file, then generate all variants from template string 
+		if (m_nModestyOverlay == eModestyOverlay::CustomModestyOverlay)
+		{
+		}
+
+		slDiffuseOverlays.append(sDiffuseOverlayTorso); slDiffuseOverlays.append(sDiffuseOverlayLegs); slDiffuseOverlays.append(sDiffuseOverlayHead);
+		slNormalOverlays.append(sNormalOverlayTorso); slNormalOverlays.append(sNormalOverlayLegs); slNormalOverlays.append(sNormalOverlayHead);
+		slRoughnessOverlays.append(sRoughnessOverlayTorso); slRoughnessOverlays.append(sRoughnessOverlayLegs); slRoughnessOverlays.append(sRoughnessOverlayHead);
+		slMetallicOverlays.append(sMetallicOverlayTorso); slMetallicOverlays.append(sMetallicOverlayLegs); slMetallicOverlays.append(sMetallicOverlayHead);
+
 		aArgs.append(QVariant(slDiffuseOverlays));
 		aArgs.append(QVariant(slNormalOverlays));
 		aArgs.append(QVariant(slRoughnessOverlays));

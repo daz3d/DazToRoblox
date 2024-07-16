@@ -86,9 +86,9 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 assetTypeCombo->clear();
 	 assetTypeCombo->addItem("Please select an asset type...", "__");
 	 assetTypeCombo->addItem("Roblox R15 Avatar", "R15");
-	 assetTypeCombo->addItem("Roblox R15 Avatar (tanktop)", "R15_M");
+//	 assetTypeCombo->addItem("Roblox R15 Avatar (tanktop)", "R15_M");
 	 assetTypeCombo->addItem("Roblox S1 for Avatar Auto Setup", "S1");
-	 assetTypeCombo->addItem("Roblox S1 for Avatar Auto Setup (tanktop)", "S1_M");
+//	 assetTypeCombo->addItem("Roblox S1 for Avatar Auto Setup (tanktop)", "S1_M");
 	 //	 assetTypeCombo->addItem("Roblox R15 Avatar (No modesty covers)", "R15Z");
 	 assetTypeCombo->setCurrentIndex(0);
 
@@ -110,6 +110,14 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wExportCsvRowLabelWidget->hide();
 	 m_enableExperimentalOptionsCheckBox->hide();
 	 m_wEnableExperimentalRowLabelWidget->hide();
+
+	 m_wModestyOverlayCombo = new QComboBox();
+	 m_wModestyOverlayCombo->addItem("Sports bra and shorts", eModestyOverlay::SportsBra_Shorts);
+	 m_wModestyOverlayCombo->addItem("Tank top and shorts", eModestyOverlay::TankTop_Shorts);
+	 m_wModestyOverlayCombo->addItem("Custom modesty overlay", eModestyOverlay::CustomModestyOverlay);
+	 m_wModestyOverlayCombo->setCurrentIndex(0);
+	 m_wModestyOverlayRowLabel = new QLabel(tr("Modesty Overlay"));
+	 mainLayout->addRow(m_wModestyOverlayRowLabel, m_wModestyOverlayCombo);
 
 	 // Add Project Folder
 	 QHBoxLayout* robloxOutputFolderLayout = new QHBoxLayout();

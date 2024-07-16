@@ -92,6 +92,7 @@ protected:
 	Q_INVOKABLE virtual bool copyMaterialsToGeograft(DzNode* pGeograftNode, DzNode* pBaseNode = NULL);
 
 	bool m_bEnableBreastsGone = false;
+	int m_nModestyOverlay = 0;
 
 	friend class DzRobloxUtils;
 

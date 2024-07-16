@@ -17,6 +17,12 @@ class UnitTest_DzRobloxDialog;
 
 #include "dzbridge.h"
 
+enum eModestyOverlay {
+	SportsBra_Shorts = 1,
+	TankTop_Shorts = 2,
+	CustomModestyOverlay = -1
+};
+
 class DzFileValidator : public QValidator {
 public:
 	State validate(QString& input, int& pos) const;
@@ -68,6 +74,8 @@ protected slots:
 protected:
 	QLineEdit* intermediateFolderEdit;
 	QPushButton* intermediateFolderButton;
+	QComboBox* m_wModestyOverlayCombo;
+	QLabel* m_wModestyOverlayRowLabel;
 
 	QLineEdit* m_wRobloxOutputFolderEdit;
 	QPushButton* m_wRobloxOutputFolderButton;
