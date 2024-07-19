@@ -1,0 +1,198 @@
+(function(){
+
+// Script Configuration
+var bInvertOverlayMask = false; // change to true to support FPE HD Fantasy Skins Aquatic for Genesis 9
+var bForceFullOverlayOpacity = false; // change to true to support FPE HD Fantasy Skins Aquatic for Genesis 9
+
+// Do Not Edit Below This Line
+function bakeIrayUberToDiffuse(material) {
+    if (!material) {
+        print("Material is not valid.");
+        return;
+    }
+   
+    // process diffuse related color maps, use diffuse color as base, then combine with related color maps
+    var baseColorLayer = material.findProperty("Diffuse Color");
+    var materialName = material.name;
+    var layeredTextureName = "Layered " + baseColorLayer.name + " for " + materialName;
+
+    // Get the current texture map
+    var baseTextureMap = baseColorLayer.getMapValue();
+    if (!baseTextureMap) {
+        print("No current texture map found.");
+        return;
+    }
+    // force baseTextureMap to bake to file
+    baseTextureMap.getPreviewPixmap(1,1);
+
+    // create layered texture
+    var oImageMgr = App.getImageMgr();
+    var layeredTexture = oImageMgr.createLayeredTexture(layeredTextureName);
+    layeredTexture.size = new Size( 4096, 4096 );
+
+    var baseLayer = null;
+    if (baseTextureMap.inherits("DzLayeredTexture")) {
+    	// Deep copy existing Layered Texture to new Layered Texture
+	    layeredTexture.copyFrom(baseTextureMap);
+        baseLayer = layeredTexture.getLayer(0);
+	}
+	else
+	{
+	    // Add the original texture map as the base layer
+	    baseLayer = layeredTexture.createLayer("Base Layer");
+	    baseLayer.imageFile = baseTextureMap.getFilename();			
+	}
+
+    // create background layer
+    var backgroundLayer = layeredTexture.createLayer("Background Layer");
+    backgroundLayer.color = new Color(0, 0, 0);
+    var backgroundIndex = layeredTexture.findLayer(backgroundLayer);
+    layeredTexture.moveLayer(backgroundIndex, 0);
+
+    // combine translucency color with diffuse color
+    var translucencyLayer = material.findProperty("Translucency Color");
+    var transmittedColor = material.findProperty("Transmitted Color");
+    var sssColor = material.findProperty("SSS Color");
+    var translucencyWeight = material.findProperty("Translucency Weight");
+    if (translucencyLayer) {
+        var translucencyTextureMap = translucencyLayer.getMapValue();
+        if (translucencyTextureMap) {
+            // Add the overlay image as a new layer
+            var overlayLayer = layeredTexture.createLayer("Overlayed " + translucencyLayer.name);
+            overlayLayer.imageFile = translucencyTextureMap.getFilename();
+            if (transmittedColor) {
+                overlayLayer.color = transmittedColor.getColorValue();
+                var backgroundColor = transmittedColor.getColorValue();
+                backgroundColor.value = backgroundColor.value * 0.5;
+                backgroundLayer.color = backgroundColor;
+            } else {
+                overlayLayer.color = translucencyLayer.getColorValue();
+                var backgroundColor = translucencyLayer.getColorValue();
+                backgroundColor.value = backgroundColor.value * 0.5;
+                backgroundLayer.color = backgroundColor;
+            }
+            if (sssColor) {
+                baseLayer.color = sssColor.getColorValue();
+            }
+            var baseWeight = 0.5;
+            var layerWieght = translucencyWeight.getDoubleValue();
+            layerWieght = layerWieght * 0.5;
+            baseWeight = baseWeight - layerWieght;
+            overlayLayer.opacity = layerWieght;
+            baseLayer.opacity = baseWeight;
+            translucencyLayer.setMap(null);
+            translucencyWeight.setDoubleValue(0);
+        }
+    }
+
+    // combine diffuse overlay layer with base diffuse layer
+    var diffuseOverlayLayer = material.findProperty("Diffuse Overlay Color");
+    var diffuseOverlayWeight = material.findProperty("Diffuse Overlay Weight");
+    if (diffuseOverlayLayer) {
+        var diffuseOverlayTextureMap = diffuseOverlayLayer.getMapValue();
+        var diffuseOverlayMask = diffuseOverlayWeight.getMapValue();
+        if (diffuseOverlayTextureMap) {
+            // force makeupLayer to bake to file
+            diffuseOverlayTextureMap.getPreviewPixmap(1,1);  
+            // Add the overlay image as a new layer
+            var overlayLayer = layeredTexture.createLayer("Overlayed " + diffuseOverlayLayer.name);
+            overlayLayer.imageFile = diffuseOverlayTextureMap.getFilename();
+            overlayLayer.color = diffuseOverlayLayer.getColorValue();
+            if (bForceFullOverlayOpacity) {
+                overlayLayer.opacity = 1;
+            } else {
+                overlayLayer.opacity = diffuseOverlayWeight.getDoubleValue();
+            }
+            if (diffuseOverlayMask) {
+                var maskLayer = overlayLayer.createMask("Mask for " + diffuseOverlayLayer.name);
+                maskLayer.imageFile = diffuseOverlayMask.getFilename();
+                // invert for Reptile Skin add-on
+                maskLayer.invert = bInvertOverlayMask;
+            }
+            diffuseOverlayLayer.setMap(null);
+            diffuseOverlayWeight.setDoubleValue(0);
+            diffuseOverlayWeight.setMap(null);
+        }
+    }
+
+    // combine Makeup layer
+    var makeupLayer = material.findProperty("Makeup Base Color");
+    var makeupWeight = material.findProperty("Makeup Weight");
+    if (makeupLayer) {
+        var makeupTextureMap = makeupLayer.getMapValue();
+        var makeupMask = makeupWeight.getMapValue();
+        if (makeupTextureMap) {
+            // force makeupLayer to bake to file
+            makeupTextureMap.getPreviewPixmap(1,1);  
+            // Add the overlay image as a new layer
+            var overlayLayer = layeredTexture.createLayer("Overlayed " + makeupLayer.name);
+            overlayLayer.imageFile = makeupTextureMap.getFilename();
+            overlayLayer.color = makeupLayer.getColorValue();
+            overlayLayer.opacity = makeupWeight.getDoubleValue();
+            if (makeupMask) {
+                var maskLayer = overlayLayer.createMask("Mask for " + makeupLayer.name);
+                maskLayer.imageFile = makeupMask.getFilename();
+            }
+        }
+    }
+
+    // Assign the new layered texture to the material's diffuse color property
+    baseColorLayer.setMap(layeredTexture);
+
+    // NECESSARY FOR SCRIPT TO WORK ATOMICLY
+    // getPreviewPixmap is called to force Texture Baking to file
+	layeredTexture.getPreviewPixmap(1,1);
+
+}
+
+
+// Function to flatten (aka bake) IrayUber material to a standard PBR material
+function bakeIrayUberToPBR(material) {
+    if (!material) {
+        print("Material is not valid.");
+        return;
+    }
+
+    // obtain shared resources that exist across all PBR bases (diffuse, normal, roughness, metallic)
+    var makeupLayer = material.findProperty("Makeup Base Color");
+    var makeupWeight = material.findProperty("Makeup Weight");
+
+    // bake PBR bases
+    bakeIrayUberToDiffuse(material);
+
+    // reset shared resources
+    if (makeupLayer) {
+        makeupLayer.setMap(null);
+    }
+    if (makeupWeight) {
+        makeupWeight.setDoubleValue(0);
+    }
+
+    print("Replaced texture map with layered texture for material: " + material.name);
+}
+
+function main() {
+    var selectedNode = Scene.getPrimarySelection();
+    
+    if (selectedNode) {
+        print("Selected Node: " + selectedNode.name);
+        var object = selectedNode.getObject();
+        
+        if (object) {
+            var shape = object.getCurrentShape();
+            var materialCount = shape.getNumMaterials();
+            print("Number of Materials: " + materialCount);
+            
+            for (var i = 0; i < materialCount; i++) {
+                var material = shape.getMaterial(i);
+                print("Material " + (i + 1) + ": " + material.name);
+                bakeIrayUberToPBR(material);
+            }
+        }
+    }
+
+    MessageBox.information("Bake IrayUber to PBR completed.", "Bake IrayUber to PBR", "OK");
+};
+
+main();
+})();

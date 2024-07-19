@@ -1,0 +1,82 @@
+// DAZ Studio version 4.22.0.16 filetype DAZ Script
+
+// Function to reset pose except for hands
+function resetPoseExceptHandsAndFeet(node, skip) {
+    var children = node.getNodeChildren(false);
+    for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        if (skip && 
+            (child.name.indexOf("l_hand") != -1 || 
+            child.name.indexOf("r_hand") != -1 ||
+            child.name.indexOf("l_foot") != -1 ||
+            child.name.indexOf("r_foot") != -1
+            )) {
+        	print("DEBUG: skipping: " + child.name);
+            continue;
+        }
+        if (child.inherits("DzBone")) {
+            if ((child.name.indexOf("l_hand") != -1 || child.name.indexOf("r_hand") != -1)) {
+                print("DEBUG: resetting: " + child.name);
+            }    
+            var defaultPose = new DzQuat(0,0,0,1);
+	        child.setWSRot(defaultPose);
+	    }
+        resetPoseExceptHandsAndFeet(child, skip);
+    }
+}
+
+// Main script
+function main() {
+    // 1. Get selected figure (assuming Genesis 9)
+    var figure = Scene.getPrimarySelection();
+    if (!figure || !figure.inherits("DzFigure")) {
+        if (figure) print("DEBUG: figure is class: " + figure.className() );
+        MessageBox.information("Please select a Genesis 9 figure.", "Error", "OK");
+        return;
+    }
+
+    // 2. Reset all pose except for hands
+    resetPoseExceptHandsAndFeet(figure, true);
+
+    // 3. Set mesh resolution to base
+    var obj = figure.getObject();
+
+    var shape = obj.getCurrentShape();
+    if (shape) {
+        var lodLevel = shape.findProperty("lodlevel");
+        if (lodLevel) {
+            lodLevel.setValue(0);  // 0 is typically the base resolution
+        }
+    }
+
+    obj.forceCacheUpdate(figure);
+    var cachedGeo = obj.getCachedGeom();
+    var geo = new DzFacetMesh();
+    geo.copyFrom(cachedGeo);
+
+    // 6. Reset hand pose
+    resetPoseExceptHandsAndFeet(figure, false);
+
+
+    // 5. Reimport OBJ as morph
+    var morphName = "HandsAndFeetPoseMorph";
+    var morphLoader = new DzMorphLoader();
+    morphLoader.setMorphName(morphName);
+    morphLoader.setPropertyGroupPath("Morphs/Morph Loader");
+    morphLoader.setReverseDeformations(true);
+    morphLoader.setPreserveExistingDeltas(true);
+    var result = morphLoader.createMorphFromMesh(geo, figure);
+    print("DEBUG: createMorphFromMesh result: " + typeof(result) + " " + result);
+
+    // 7. Apply morph
+    var morphProperty = figure.findProperty(morphName);
+    if (morphProperty) {
+        morphProperty.setValue(1.0);
+    } else {
+        print("Morph property not found: " + morphName);
+    }
+
+    MessageBox.information("Hand pose morph created and applied successfully.", "Success", "OK");
+}
+
+main();
