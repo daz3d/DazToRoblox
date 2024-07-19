@@ -43,8 +43,8 @@ function main() {
     var aMetallicMapImages = [];
 
     // get list of files in the folder
-    oDir = new DzDir(sMapTransferInputFolder);
-    aFiles = oDir.getFilesFromDir(["*.png"], true);
+    var oDir = new DzDir(sMapTransferInputFolder);
+    var aFiles = oDir.getFilesFromDir(["*.png"], true);
     // add detail normals first so that it is overwritten by the main normal map
     for (var i = 0; i < aFiles.length; i++) {
         if (aFiles[i].search("Normal Map") > 0 && aFiles[i].search("Detail") > 0) {
