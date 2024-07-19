@@ -1681,14 +1681,17 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	QString sScriptFilename = "";
 	QScopedPointer<DzScript> Script(new DzScript());
 
-	if (m_sAssetType.contains("_M"))
-	{
-		sApplyModestyOverlay = "apply_modesty_overlay_M.dsa";
-	}
+	//if (m_sAssetType.contains("_M"))
+	//{
+	//	sApplyModestyOverlay = "apply_modesty_overlay_M.dsa";
+	//}
 	//else if (m_sAssetType == "R15Z")
 	//{
 	//	sApplyModestyOverlay = "";
 	//}
+
+	sApplyModestyOverlay = "apply_modesty_overlay_aArgs.dsa";
+
 
 	/// BONE CONVERSION OPERATION
 	robloxPreProcessProgress.setCurrentInfo("Converting to roblox compatible skeleton...");
@@ -1758,9 +1761,24 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		if (QFileInfo(sScriptFilename).exists() == false) {
 			sScriptFilename = dzApp->getTempPath() + "/" + sApplyModestyOverlay;
 		}
-		Script.reset(new DzScript());
-		Script->loadFromFile(sScriptFilename);
-		Script->execute();
+		DzScript* ScriptWithArgs = new DzScript();
+		ScriptWithArgs->loadFromFile(sScriptFilename);
+		QVariantList aArgs;
+		QStringList slDiffuseOverlays, slNormalOverlays, slRoughnessOverlays, slMetallicOverlays;
+
+		// if sportsbra, use default
+		// if tanktop, use embedded files
+		// if custom, generate template string from selected file, then generate all variants from template string 
+
+		slDiffuseOverlays.append(sPluginFolder + "/genesis9_torso_modesty_overlay_d.png"); slDiffuseOverlays.append(sPluginFolder + "/genesis9_legs_modesty_overlay_dXXX.png"); slDiffuseOverlays.append("");
+		slNormalOverlays.append(sPluginFolder + "/genesis9_torso_modesty_overlay_nm.png"); slNormalOverlays.append(""); slNormalOverlays.append("");
+		slRoughnessOverlays.append(sPluginFolder + "/genesis9_torso_modesty_overlay_r.png"); slRoughnessOverlays.append(""); slRoughnessOverlays.append("");
+		slMetallicOverlays.append(sPluginFolder + "/genesis9_torso_modesty_overlay_m.png"); slMetallicOverlays.append(""); slMetallicOverlays.append("");
+		aArgs.append(QVariant(slDiffuseOverlays));
+		aArgs.append(QVariant(slNormalOverlays));
+		aArgs.append(QVariant(slRoughnessOverlays));
+		aArgs.append(QVariant(slMetallicOverlays));
+		ScriptWithArgs->execute(aArgs);
 	}
 	// copy modesty overlaid materials to geografts
 	foreach(auto geograft_helper, m_aGeograftConversionHelpers)
