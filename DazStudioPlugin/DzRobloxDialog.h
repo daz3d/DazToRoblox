@@ -66,8 +66,8 @@ protected slots:
 	void showRobloxOptions(bool bVisible);
 
 	void HandleSelectBlenderExecutablePathButton();
-
 	bool HandleAcceptButtonValidationFeedback();
+	void HandleCustomModestyOverlayActivated(int index);
 
 	void accept() override;
 

@@ -114,8 +114,9 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wModestyOverlayCombo = new QComboBox();
 	 m_wModestyOverlayCombo->addItem("Sports bra and shorts", eModestyOverlay::SportsBra_Shorts);
 	 m_wModestyOverlayCombo->addItem("Tank top and shorts", eModestyOverlay::TankTop_Shorts);
-	 m_wModestyOverlayCombo->addItem("Custom modesty overlay", eModestyOverlay::CustomModestyOverlay);
+	 m_wModestyOverlayCombo->addItem("Custom modesty overlay...", eModestyOverlay::CustomModestyOverlay);
 	 m_wModestyOverlayCombo->setCurrentIndex(0);
+	 connect(m_wModestyOverlayCombo, SIGNAL(activated(int)), this, SLOT(HandleCustomModestyOverlayActivated(int)));
 	 m_wModestyOverlayRowLabel = new QLabel(tr("Modesty Overlay"));
 	 mainLayout->addRow(m_wModestyOverlayRowLabel, m_wModestyOverlayCombo);
 
@@ -573,6 +574,34 @@ Daz 3D will not be liable for any damages arising from the use of this software.
 	}
 
 	return true;
+}
+
+void DzRobloxDialog::HandleCustomModestyOverlayActivated(int index)
+{
+	// get itemData
+	QVariant vItemData = m_wModestyOverlayCombo->itemData(index);
+
+	if (vItemData.type() != QVariant::String && vItemData.toInt() == eModestyOverlay::CustomModestyOverlay) {
+		// roblox dev kit folder
+		QString sStartingFolder = "";
+		QString sFileFilter = tr("Images (*.png)");
+		// pop file selection window
+		QString sFilePath = QFileDialog::getOpenFileName(this,
+			tr("Select Custom Modesty Overlay Image"),
+			sStartingFolder, sFileFilter);
+
+		if (QFileInfo(sFilePath).exists()) {
+			// check if filepath itemData is already in dropdown
+			if (int nMatchingIndex=m_wModestyOverlayCombo->findData(sFilePath) != -1) {
+				m_wModestyOverlayCombo->setCurrentIndex(nMatchingIndex);
+			}
+			else {
+				QString sShortFilename = ".../" + QFileInfo(sFilePath).fileName();
+				m_wModestyOverlayCombo->addItem(sShortFilename, QVariant(sFilePath));
+				m_wModestyOverlayCombo->setCurrentIndex(m_wModestyOverlayCombo->count()-1);
+			}
+		}
+	}
 }
 
 #include "moc_DzRobloxDialog.cpp"

@@ -93,6 +93,7 @@ protected:
 
 	bool m_bEnableBreastsGone = false;
 	int m_nModestyOverlay = 0;
+	QString m_sModestyOverlayCustomFilePath = "";
 
 	friend class DzRobloxUtils;
 
