@@ -215,6 +215,7 @@ def _main(argv):
                     else:
                         print(f"DEBUG: HD eyes duplication failed, bpy.context.object.name={bpy.context.object.name}")
                         exit(-1)
+                    break
         else:
             print(f"DEBUG: HD duplication failed, bpy.context.object.name={bpy.context.object.name}")
             exit(-1)
@@ -252,6 +253,14 @@ def _main(argv):
             break
 
     figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape", "hd_genesis9.shape"]
+    # add any custom eyes or eyelashes to safe list
+    eyebrows_lashes_list = []
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and (
+            "eyebrow" in obj.name.lower() or
+            "eyelash" in obj.name.lower()
+        ) :
+            eyebrows_lashes_list.append(obj.name.lower())
     cage_list = []
     att_list = []
     for obj in bpy.data.objects:
@@ -263,8 +272,48 @@ def _main(argv):
             elif "_Att" in obj.name:
                 print("DEBUG: attachment obj.name=" + obj.name)
                 att_list.append(obj.name.lower())
-    game_readiness_tools.remove_extra_meshes(figure_list + cage_list + att_list)
-    game_readiness_tools.remove_extra_materials(["body", "cage_material", "attachment_material"])
+    game_readiness_tools.remove_extra_meshes(figure_list + cage_list + att_list + eyebrows_lashes_list)
+    game_readiness_tools.remove_extra_materials(["body", "cage_material", "attachment_material"], eyebrows_lashes_list)
+
+    # set up game_engine eyelashes and eyebrows if present
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and (
+            "eyebrow" in obj.name.lower() or
+            "eyelash" in obj.name.lower()
+        ) :
+            if "_innercage" in obj.name.lower() or "_outercage" in obj.name.lower():
+                continue
+            # unparent and keep transforms
+            bpy.context.view_layer.objects.active = obj
+            bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+            # apply all transforms
+            bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+            # rename object
+            obj.name = obj.name.replace("game_engine_", "Genesis9_").replace("_0", "").replace(".Shape", "")
+            # add custom properties
+            roblox_tools.add_custom_dynamichead_properties(obj)
+            # create inner/outer cages
+            cagename_template = obj.name
+            # get source cage ("Head_OuterCage")
+            source_cage = bpy.data.objects.get("Head_OuterCage")
+            if source_cage is not None:
+                cage_name = cagename_template + "_OuterCage"
+                if bpy.data.objects.get(cage_name) is None:
+                    bpy.ops.object.select_all(action='DESELECT')
+                    source_cage.select_set(True)
+                    bpy.context.view_layer.objects.active = source_cage
+                    bpy.ops.object.duplicate()
+                    if source_cage != bpy.context.object and source_cage.name in bpy.context.object.name:
+                        bpy.context.object.name = cage_name
+
+                cage_name = cagename_template + "_InnerCage"
+                if bpy.data.objects.get(cage_name) is None:
+                    bpy.ops.object.select_all(action='DESELECT')
+                    source_cage.select_set(True)
+                    bpy.context.view_layer.objects.active = source_cage
+                    bpy.ops.object.duplicate()
+                    if source_cage != bpy.context.object and source_cage.name in bpy.context.object.name:
+                        bpy.context.object.name = cage_name
 
     # read from python data file (import vertex_indices_for_daztoroblox.py)
     for group_name in geo_group_names + decimation_group_names:

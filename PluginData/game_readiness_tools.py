@@ -263,7 +263,7 @@ def remove_moisture_materials(obj):
         bpy.ops.object.mode_set(mode="OBJECT")
 
 # remove all materials other than the safe_material_names_list
-def remove_extra_materials(safe_material_names_list):
+def remove_extra_materials(safe_material_names_list, safe_mesh_names_list=[]):
     if bpy.context.view_layer.objects.active is None:
         bpy.context.view_layer.objects.active = bpy.data.objects[0]
     # object mode
@@ -272,6 +272,8 @@ def remove_extra_materials(safe_material_names_list):
     for obj in bpy.data.objects:
         # query for material names of each obj
         if obj.type == 'MESH':
+            if obj.name.lower() in safe_mesh_names_list:
+                continue
             obj_materials = obj.data.materials
             for mat in obj_materials:
                 mat_name = mat.name

@@ -85,7 +85,10 @@ function assignCombinedTextures(oNode) {
         }
         var aChildren = oNode.getNodeChildren();
         for (var i = 0; i < aChildren.length; i++) {
-            assignCombinedTextures(aChildren[i]);
+            var oChild = aChildren[i];
+            if (oChild.name == "Genesis9Eyes" || oChild.name == "Genesis9Mouth") {
+                assignCombinedTextures(aChildren[i]);
+            }
         }
     }
 }

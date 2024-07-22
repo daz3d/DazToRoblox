@@ -435,8 +435,16 @@ def copy_facs50_animations(animation_template_filename):
 
     clone_head_to_dynamichead(armature_object)
 
+
     # set up custom properties for Head_Geo
     head_geo_obj = bpy.data.objects['Head_Geo']
+    add_custom_dynamichead_properties(head_geo_obj)
+
+    bpy.context.scene.frame_start = 0
+    bpy.context.scene.frame_end = 51
+    _add_to_log("FACS-50 animations copied successfully.")
+
+def add_custom_dynamichead_properties(head_geo_obj):
     head_geo_obj["RootFaceJoint"] = "DynamicHead"
     head_geo_obj["Frame0"] = "Neutral"
     head_geo_obj["Frame1"] = "EyesLookDown"
@@ -500,10 +508,7 @@ def copy_facs50_animations(animation_template_filename):
     head_geo_obj["Frame48"] = "TongueDown"
     head_geo_obj["Frame49"] = "TongueOut"
     head_geo_obj["Frame50"] = "TongueUp"
-
-    bpy.context.scene.frame_start = 0
-    bpy.context.scene.frame_end = 51
-    _add_to_log("FACS-50 animations copied successfully.")
+    
 
 # DB-2024-05-30: Copy facial animations from template file
 def copy_facial_animations(animation_template_filename):
