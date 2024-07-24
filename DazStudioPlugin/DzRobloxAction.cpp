@@ -1662,23 +1662,24 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	if (dzScene->findNodeByLabel("game_engine_mouth_geograft") == NULL &&
 		dzScene->findNode("game_engine_mouth_geograft_0") == NULL) {
 		DzNode* mouthNode = dzScene->findNode("Genesis9Mouth");
-		//DzNode* mouthNode = dzScene->findNodeByLabel("Genesis 9 Mouth");
-		QString mouthNodeName = mouthNode->getName();
-		applyGeograft(mouthNode, tempPath + "/game_engine_mouth_geograft.duf", "game_engine_mouth_geograft_0");
+		if (mouthNode) {
+			applyGeograft(mouthNode, tempPath + "/game_engine_mouth_geograft.duf", "game_engine_mouth_geograft_0");
+		}
 	}
 	if (dzScene->findNodeByLabel("game_engine_eye_geograft") == NULL &&
 		dzScene->findNode("game_engine_eye_geograft_0") == NULL) {
 		DzNode* eyesNode = dzScene->findNode("Genesis9Eyes");
-		//DzNode* eyesNode = dzScene->findNodeByLabel("Genesis 9 Eyes");
-		QString eyesNodeName = eyesNode->getName();
-		applyGeograft(eyesNode, tempPath + "/game_engine_eye_geograft.duf", "game_engine_eye_geograft_0");
+		if (eyesNode) {
+			applyGeograft(eyesNode, tempPath + "/game_engine_eye_geograft.duf", "game_engine_eye_geograft_0");
+		}
 	}
 	// groin geograft (no butt cleavage mod)
 	if (dzScene->findNodeByLabel("game_engine_groin_geograft") == NULL &&
 		dzScene->findNode("game_engine_groin_geograft_0") == NULL) {
 		DzNode* baseFigureNode = dzScene->findNode("Genesis9");
-		QString baseFigureNodeName = baseFigureNode->getName();
-		applyGeograft(baseFigureNode, tempPath + "/game_engine_groin_geograft.duf", "game_engine_groin_geograft_0");
+		if (baseFigureNode) {
+			applyGeograft(baseFigureNode, tempPath + "/game_engine_groin_geograft.duf", "game_engine_groin_geograft_0");
+		}
 	}
 
 	//QString sPluginFolder = dzApp->getPluginsPath() + "/DazToRoblox";
