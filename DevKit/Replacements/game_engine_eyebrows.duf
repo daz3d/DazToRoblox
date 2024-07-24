@@ -9,7 +9,7 @@
 			"website" : ""
 		},
 		"revision" : "1.0",
-		"modified" : "2024-07-22T15:51:44Z"
+		"modified" : "2024-07-24T08:32:19Z"
 	},
 	"geometry_library" : [
 		{
@@ -18540,6 +18540,19 @@
 			]
 		}
 	],
+	"image_library" : [
+		{
+			"id" : "black_tex.png",
+			"name" : "black_tex.png",
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "./black_tex.png",
+					"label" : "black_tex.png"
+				}
+			]
+		}
+	],
 	"material_library" : [
 		{
 			"id" : "Eyebrows",
@@ -18550,7 +18563,7 @@
 					"name" : "Diffuse Color",
 					"label" : "Base Color",
 					"value" : [ 0.7529412, 0.7529412, 0.7529412 ],
-					"current_value" : [ 0, 0, 0 ],
+					"current_value" : [ 1, 1, 1 ],
 					"min" : 0,
 					"max" : 1,
 					"clamped" : true,
@@ -21928,8 +21941,8 @@
 						"type" : "float_color",
 						"name" : "Diffuse Color",
 						"value" : [ 0.7529412, 0.7529412, 0.7529412 ],
-						"current_value" : [ 0, 0, 0 ],
-						"image" : null
+						"current_value" : [ 1, 1, 1 ],
+						"image_file" : "./black_tex.png"
 					}
 				},
 				"uv_set" : "#default",
