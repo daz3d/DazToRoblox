@@ -254,13 +254,14 @@ def _main(argv):
 
     figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape", "hd_genesis9.shape"]
     # add any custom eyes or eyelashes to safe list
-    eyebrows_lashes_list = []
+    head_accessories_list = []
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and (
             "eyebrow" in obj.name.lower() or
-            "eyelash" in obj.name.lower()
+            "eyelash" in obj.name.lower() or
+            "hair" in obj.name.lower()
         ) :
-            eyebrows_lashes_list.append(obj.name.lower())
+            head_accessories_list.append(obj.name.lower())
     cage_list = []
     att_list = []
     for obj in bpy.data.objects:
@@ -272,8 +273,8 @@ def _main(argv):
             elif "_Att" in obj.name:
                 print("DEBUG: attachment obj.name=" + obj.name)
                 att_list.append(obj.name.lower())
-    game_readiness_tools.remove_extra_meshes(figure_list + cage_list + att_list + eyebrows_lashes_list)
-    game_readiness_tools.remove_extra_materials(["body", "cage_material", "attachment_material"], eyebrows_lashes_list)
+    game_readiness_tools.remove_extra_meshes(figure_list + cage_list + att_list + head_accessories_list)
+    game_readiness_tools.remove_extra_materials(["body", "cage_material", "attachment_material"], head_accessories_list)
 
     # set up game_engine eyelashes and eyebrows if present
     for obj in bpy.data.objects:
