@@ -962,9 +962,11 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		bool bUseFallbackScriptFolder = true;
 		QStringList aOverrideFilenameList = (QStringList() << "blender_tools.py" << "NodeArrange.py" << 
 			"blender_dtu_to_roblox_blend.py" << "blender_dtu_to_avatar_autosetup.py" <<
+			"blender_dtu_to_r15_clothing.py" <<
 			"roblox_tools.py" << "Daz_Cage_Att_Template.blend" <<
 			"game_readiness_tools.py" << "game_readiness_roblox_data.py" <<
-			"Genesis9facs50.blend");
+			"Genesis9facs50.blend"
+			);
 		if (bUseFallbackScriptFolder)
 		{
 			foreach(QString filename, aOverrideFilenameList)
@@ -1011,7 +1013,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		exportProgress->setCurrentInfo("Automatic Cage and Attachment Retargeting...");
 		exportProgress->step();
 
-		if (m_sAssetType.contains("R15"))
+		if (m_sAssetType.contains("R15") || m_sAssetType.contains("clothing"))
 		{
 			OpenFBXInterface* openFbx = OpenFBXInterface::GetInterface();
 			bool bFailed = false;
@@ -1250,6 +1252,10 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		else if (m_sAssetType.contains("S1"))
 		{
 			sScriptPath = sScriptFolderPath + "/blender_dtu_to_avatar_autosetup.py";
+		}
+		else if (m_sAssetType.contains("clothing"))
+		{
+			sScriptPath = sScriptFolderPath + "/blender_dtu_to_r15_clothing.py";
 		}
 		QString sCommandArgs = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath).arg(m_sDestinationFBX);
 
