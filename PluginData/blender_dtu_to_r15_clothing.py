@@ -224,13 +224,29 @@ def _main(argv):
             main_item.name = roblox_asset_name
             obj_materials = main_item.data.materials
             main_mat = None
+            main_match_strength = 0
             for mat in obj_materials:
+                mat_match_strength = 0
                 nodes = mat.node_tree.nodes
+                # find and interpret BSDF node data
                 for node in nodes:
                     if node.type == 'BSDF_PRINCIPLED':
-                        if node.inputs['Base Color'].is_linked:
-                            main_mat = mat
-                            break
+                        if "Normal" in node.inputs and node.inputs["Normal"].is_linked:
+                            mat_match_strength += 1
+                        if "Metallic" in node.inputs and node.inputs["Metallic"].is_linked:
+                            mat_match_strength += 1
+                        if "Roughness" in node.inputs and node.inputs["Roughness"].is_linked:
+                            mat_match_strength += 1
+                        if "Base Color" in node.inputs and node.inputs["Base Color"].is_linked:
+                            mat_match_strength += 1
+                        break
+                # find the best match
+                if main_mat is None or mat_match_strength > main_match_strength:
+                    main_mat = mat
+                    main_match_strength = mat_match_strength
+                # keep going until done or perfect match found
+                if main_match_strength == 4:
+                    break
             if main_mat is not None:
                 mat_name = roblox_asset_name + "_material"
                 main_mat.name = mat_name

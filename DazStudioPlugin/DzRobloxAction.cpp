@@ -493,6 +493,7 @@ DzRobloxAction::DzRobloxAction() :
 	m_bConvertToJpg = false;
 	m_bExportAllTextures = true;
 	m_bCombineDiffuseAndAlphaMaps = true;
+	m_bGenerateNormalMaps = true;
 	m_bResizeTextures = true;
 	m_qTargetTextureSize = QSize(1024, 1024);
 	m_bMultiplyTextureValues = true;
