@@ -166,8 +166,7 @@ def _main(argv):
         if obj.type == 'MESH' and (
             "eyebrow" in obj.name.lower() or
             "eyelash" in obj.name.lower() or
-            "tear" in obj.name.lower() or
-            "hair" in obj.name.lower()
+            "tear" in obj.name.lower()
         ) :
             figure_list.append(obj.name.lower())
     cage_list = []
@@ -215,25 +214,27 @@ def _main(argv):
                 if obj.vertex_groups:
                     main_item = obj
                     join_list.append(obj)
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in join_list:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = main_item
-        bpy.ops.object.join()
-        main_item.name = roblox_asset_name
-        obj_materials = main_item.data.materials
-        main_mat = None
-        for mat in obj_materials:
-            nodes = mat.node_tree.nodes
-            for node in nodes:
-                if node.type == 'BSDF_PRINCIPLED':
-                    if node.inputs['Base Color'].is_linked:
-                        main_mat = mat
-                        break
-        if main_mat is not None:
-            mat_name = roblox_asset_name + "_material"
-            main_mat.name = mat_name
-            game_readiness_tools.remove_extra_materials([mat_name.lower(), "cage_material", "attachment_material"])
+        if main_item is not None:
+            bpy.ops.object.select_all(action='DESELECT')
+            bpy.context.view_layer.objects.active = main_item
+            for obj in join_list:
+                obj.select_set(True)
+            if len(join_list) > 1:
+                bpy.ops.object.join()
+            main_item.name = roblox_asset_name
+            obj_materials = main_item.data.materials
+            main_mat = None
+            for mat in obj_materials:
+                nodes = mat.node_tree.nodes
+                for node in nodes:
+                    if node.type == 'BSDF_PRINCIPLED':
+                        if node.inputs['Base Color'].is_linked:
+                            main_mat = mat
+                            break
+            if main_mat is not None:
+                mat_name = roblox_asset_name + "_material"
+                main_mat.name = mat_name
+                game_readiness_tools.remove_extra_materials([mat_name.lower(), "cage_material", "attachment_material"])
 
     # for each obj, make list of vertex group names
     for obj in bpy.data.objects:

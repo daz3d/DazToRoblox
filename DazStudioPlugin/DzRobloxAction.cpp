@@ -492,10 +492,10 @@ DzRobloxAction::DzRobloxAction() :
 	m_bConvertToPng = true;
 	m_bConvertToJpg = false;
 	m_bExportAllTextures = true;
-	m_bCombineDiffuseAndAlphaMaps = false;
+	m_bCombineDiffuseAndAlphaMaps = true;
 	m_bResizeTextures = true;
 	m_qTargetTextureSize = QSize(1024, 1024);
-	m_bMultiplyTextureValues = false;
+	m_bMultiplyTextureValues = true;
 	m_bRecompressIfFileSizeTooBig = false;
 	m_nFileSizeThresholdToInitiateRecompression = 1024 * 1024 * 1;
 
@@ -1426,15 +1426,19 @@ void DzRobloxAction::writeConfiguration()
 // Setup custom FBX export options
 void DzRobloxAction::setExportOptions(DzFileIOSettings& ExportOptions)
 {
-	//ExportOptions.setBoolValue("doEmbed", false);
-	//ExportOptions.setBoolValue("doDiffuseOpacity", false);
-	//ExportOptions.setBoolValue("doCopyTextures", false);
 	ExportOptions.setBoolValue("doFps", true);
 	ExportOptions.setBoolValue("doLocks", false);
 	ExportOptions.setBoolValue("doLimits", false);
 	ExportOptions.setBoolValue("doBaseFigurePoseOnly", false);
 	ExportOptions.setBoolValue("doHelperScriptScripts", false);
 	ExportOptions.setBoolValue("doMentalRayMaterials", false);
+
+	// Unable to use this option, since generated files are referenced only in FBX and unknown to DTU
+	ExportOptions.setBoolValue("doDiffuseOpacity", false);
+	// disable these options since we use Blender to generate a new FBX with embedded files
+	ExportOptions.setBoolValue("doEmbed", false);
+	ExportOptions.setBoolValue("doCopyTextures", false);
+
 }
 
 QString DzRobloxAction::readGuiRootFolder()

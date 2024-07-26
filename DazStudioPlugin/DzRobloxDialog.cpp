@@ -87,7 +87,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 assetTypeCombo->addItem("Please select an asset type...", "__");
 	 assetTypeCombo->addItem("Roblox R15 Avatar", "R15");
 	 assetTypeCombo->addItem("Roblox S1 for Avatar Auto Setup", "S1");
-	 assetTypeCombo->addItem("Clothing for R15 Avatar", "clothing");
+	 assetTypeCombo->addItem("Clothing and Hair for R15 Avatar", "clothing");
 	 assetTypeCombo->setCurrentIndex(0);
 
 	 // Remove options
