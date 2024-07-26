@@ -1753,9 +1753,15 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 			int currentVal = uvset->getValue();
 			if (currentVal == combinedUvVal) {
 				dzApp->debug("WARNING: DzRobloxAction: preProcessScene(): Combined UV already set, skipping texture operations. Returning false.");
+				robloxPreProcessProgress.finish();
 				return false;
 			}
 		}
+	}
+
+	if (m_sAssetType.contains("clothing")) {
+		robloxPreProcessProgress.finish();
+		return false;
 	}
 
 	/// TEXTURE OPERATIONS (MODESTY OVERLAY, UV CONVERSION, ETC)

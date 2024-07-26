@@ -263,6 +263,7 @@ def _main(argv):
         ) :
             head_accessories_list.append(obj.name.lower())
     cage_list = []
+    cage_obj_list = []
     att_list = []
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
@@ -270,11 +271,24 @@ def _main(argv):
             if "_OuterCage" in obj.name:
                 print("DEBUG: cage obj.name=" + obj.name)
                 cage_list.append(obj.name.lower())
+                cage_obj_list.append(obj)
             elif "_Att" in obj.name:
                 print("DEBUG: attachment obj.name=" + obj.name)
                 att_list.append(obj.name.lower())
     game_readiness_tools.remove_extra_meshes(figure_list + cage_list + att_list + head_accessories_list)
     game_readiness_tools.remove_extra_materials(["body", "cage_material", "attachment_material"], head_accessories_list)
+
+    # create new collection for cages
+    cage_collection = bpy.data.collections.new(name="Cages")
+    # Link the new collection to the scene
+    bpy.context.scene.collection.children.link(cage_collection)
+    # move cages to new collection
+    for obj in cage_obj_list:
+        # Unlink the object from its current collection(s)
+        for col in obj.users_collection:
+            col.objects.unlink(obj)
+        # Link the object to the new collection
+        cage_collection.objects.link(obj)
 
     # set up game_engine eyelashes and eyebrows if present
     for obj in bpy.data.objects:
