@@ -36,7 +36,7 @@
 /*****************************
 Local definitions
 *****************************/
-#define DAZ_BRIDGE_PLUGIN_NAME "Daz To Roblox Studio: Avatar Exporter"
+#define DAZ_BRIDGE_PLUGIN_NAME "Daz To Roblox Studio Exporter"
 
 #include "dzbridge.h"
 
@@ -64,7 +64,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 int btnMinWidth = style()->pixelMetric(DZ_PM_ButtonMinWidth);
 
 	 // Set the dialog title
-	 setWindowTitle(tr("Daz To Roblox Studio: Avatar Exporter %1 v%2.%3").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV));
+	 setWindowTitle(tr("Daz To Roblox Studio Exporter %1 v%2.%3").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV));
 	 QString sDazAppDir = dzApp->getHomePath().replace("\\", "/");
 	 QString sPdfPath = sDazAppDir + "/docs/Plugins" + "/Daz to Roblox/Daz to Roblox.pdf";
 	 QString sSetupModeString = tr("\
@@ -187,7 +187,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_enableExperimentalOptionsCheckBox->setToolTip(tr("No experimental options in this version."));
 	 m_enableExperimentalOptionsCheckBox->setWhatsThis(tr("No experimental options in this version."));
 
-	 QString sVersionString = tr("Roblox Avatar Exporter %1 v%2.%3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD);
+	 QString sVersionString = tr("Roblox Studio Exporter %1 v%2.%3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD);
 	 setBridgeVersionStringAndLabel(sVersionString);
 
 	 //// Configure Target Plugin Installer
@@ -203,10 +203,10 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 update();
 
 	 // Help
-	 assetNameEdit->setWhatsThis("This is the name the asset will use in Godot.");
+	 assetNameEdit->setWhatsThis("This is the name the asset will use in Roblox Studio.");
 	 assetTypeCombo->setWhatsThis("Skeletal Mesh for something with moving parts, like a character\nStatic Mesh for things like props\nAnimation for a character animation.");
-	 intermediateFolderEdit->setWhatsThis("Roblox Avatar Exporter will collect the assets in a subfolder under this folder.");
-	 intermediateFolderButton->setWhatsThis("Roblox Avatar Exporter will collect the assets in a subfolder under this folder.");
+	 intermediateFolderEdit->setWhatsThis("Roblox Studio Exporter will collect the assets in a subfolder under this folder.");
+	 intermediateFolderButton->setWhatsThis("Roblox Studio Exporter will collect the assets in a subfolder under this folder.");
 	 //m_wTargetPluginInstaller->setWhatsThis("You can install the Godot Plugin by selecting the desired Godot version and then clicking Install.");
 
 	 // Set Defaults

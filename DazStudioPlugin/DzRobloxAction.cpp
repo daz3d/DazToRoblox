@@ -477,7 +477,7 @@ bool DzRobloxUtils::generateFacs50(DzRobloxAction* that)
 
 
 DzRobloxAction::DzRobloxAction() :
-	DzBridgeAction(tr("&Roblox Avatar Exporter"), tr("Export the selected character for Roblox Studio."))
+	DzBridgeAction(tr("&Roblox Studio Exporter"), tr("Export the selected character for Roblox Studio."))
 {
 	m_nNonInteractiveMode = 0;
 	m_sAssetType = QString("__");
@@ -946,7 +946,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		{
 			if (m_nNonInteractiveMode == 0)
 			{
-				QMessageBox::information(0, "Roblox Avatar Exporter",
+				QMessageBox::information(0, "Roblox Studio Exporter",
 					tr("Export cancelled."), QMessageBox::Ok);
 			}
 			exportProgress->finish();
@@ -963,7 +963,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		bool bUseFallbackScriptFolder = true;
 		QStringList aOverrideFilenameList = (QStringList() << "blender_tools.py" << "NodeArrange.py" << 
 			"blender_dtu_to_roblox_blend.py" << "blender_dtu_to_avatar_autosetup.py" <<
-			"blender_dtu_to_r15_clothing.py" <<
+			"blender_dtu_to_r15_accessories.py" <<
 			"roblox_tools.py" << "Daz_Cage_Att_Template.blend" <<
 			"game_readiness_tools.py" << "game_readiness_roblox_data.py" <<
 			"Genesis9facs50.blend"
@@ -979,7 +979,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 					bool result = dir.mkpath(sFallbackFolder);
 					if (!result)
 					{
-						dzApp->log("Roblox Avatar Exporter: ERROR: Unable to create fallback folder: " + sFallbackFolder + ", will fallback to using temp folder to store script files...");
+						dzApp->log("Roblox Studio Exporter: ERROR: Unable to create fallback folder: " + sFallbackFolder + ", will fallback to using temp folder to store script files...");
 						sScriptFolderPath = dzApp->getTempPath();
 						break;
 					}
@@ -989,13 +989,13 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 				// delete file if it already exists
 				if (QFileInfo(sOverrideFilePath).exists() == true)
 				{
-					dzApp->log(QString("Roblox Avatar Exporter: Removing existing override file (%1)...").arg(sOverrideFilePath));
+					dzApp->log(QString("Roblox Studio Exporter: Removing existing override file (%1)...").arg(sOverrideFilePath));
 					bool result = QFile(sOverrideFilePath).remove();
 					if (!result) {
-						dzApp->debug("Roblox Avatar Exporter: ERROR: unable to remove existing script from intermediate folder: " + sOverrideFilePath);
+						dzApp->debug("Roblox Studio Exporter: ERROR: unable to remove existing script from intermediate folder: " + sOverrideFilePath);
 					}
 				}
-				dzApp->log(QString("Roblox Avatar Exporter: Found override file (%1), copying from temp folder.").arg(sOverrideFilePath));
+				dzApp->log(QString("Roblox Studio Exporter: Found override file (%1), copying from temp folder.").arg(sOverrideFilePath));
 				bool result = QFile(sTempFilePath).copy(sOverrideFilePath);
 				if (result)
 				{
@@ -1004,7 +1004,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 				}
 				else
 				{
-					dzApp->log("Roblox Avatar Exporter: ERROR: Unable to copy script files to scriptfolder: " + sOverrideFilePath);
+					dzApp->log("Roblox Studio Exporter: ERROR: Unable to copy script files to scriptfolder: " + sOverrideFilePath);
 				}
 			}
 		}
@@ -1134,7 +1134,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 						delete[] pWorkInProgressCageBuffer;
 						if (m_nNonInteractiveMode == 0) 
 						{
-							QMessageBox::critical(0, "Roblox Avatar Exporter",
+							QMessageBox::critical(0, "Roblox Studio Exporter",
 								tr("Critical Error occured during Cage Retargeting.  Unable to continue export operation.  Aborting."), QMessageBox::Ok);
 						}
 						exportProgress->cancel();
@@ -1256,7 +1256,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		}
 		else if (m_sAssetType.contains("layered") || m_sAssetType.contains("rigid"))
 		{
-			sScriptPath = sScriptFolderPath + "/blender_dtu_to_r15_clothing.py";
+			sScriptPath = sScriptFolderPath + "/blender_dtu_to_r15_accessories.py";
 		}
 		QString sCommandArgs = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath).arg(m_sDestinationFBX);
 
@@ -1288,7 +1288,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		exportProgress->setCurrentInfo("Starting Blender Processing...");
 		bool retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs);
 
-        exportProgress->setCurrentInfo("Roblox Avatar Exporter: Export Phase Completed.");
+        exportProgress->setCurrentInfo("Roblox Studio Exporter: Export Phase Completed.");
 		// DB 2021-10-11: Progress Bar
 		exportProgress->finish();
 
@@ -1297,7 +1297,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		{
 			if (retCode)
 			{
-				QMessageBox::information(0, "Roblox Avatar Exporter",
+				QMessageBox::information(0, "Roblox Studio Exporter",
 					tr("Export from Daz Studio complete. Ready to import into Roblox Studio."), QMessageBox::Ok);
 
 #ifdef WIN32
@@ -1338,13 +1338,13 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 					sErrorString += QString("An error occured while running the Blender Python script (ExitCode=%1).\n").arg(m_nBlenderExitCode);
 					sErrorString += QString("\nPlease check log files at : %1\n").arg(m_sDestinationPath);
 					sErrorString += QString("\nYou can rerun the Blender command-line script manually using: %1").arg(batchFilePath);
-					QMessageBox::critical(0, "Roblox Avatar Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Ok);
+					QMessageBox::critical(0, "Roblox Studio Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Ok);
 				}
 				else {
 					QString sErrorString;
 					sErrorString += QString("An error occured during the export process (ExitCode=%1).\n").arg(m_nBlenderExitCode);
 					sErrorString += QString("Please check log files at : %1\n").arg(m_sDestinationPath);
-					QMessageBox::critical(0, "Roblox Avatar Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Ok);
+					QMessageBox::critical(0, "Roblox Studio Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Ok);
 				}
 #ifdef WIN32
 				ShellExecuteA(NULL, "open", m_sDestinationPath.toLocal8Bit().data(), NULL, NULL, SW_SHOWDEFAULT);
@@ -1494,7 +1494,7 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 	else
 	{
 		// TODO: issue error and fail gracefully
-		dzApp->log("Roblox Avatar Exporter: ERROR: Roblox Dialog was not initialized.  Cancelling operation...");
+		dzApp->log("Roblox Studio Exporter: ERROR: Roblox Dialog was not initialized.  Cancelling operation...");
 
 		return false;
 	}
@@ -1511,7 +1511,7 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 			sErrorString += QString("Make sure you have Genesis 9 Body Shapes Add-On installed to use the Breasts Gone option.");
 			sErrorString += QString("\n\nDo you want to continue without the Breasts Gone option?  Please make sure that your character will pass Roblox Moderation before attempting to upload.");
 			sErrorString += QString("\n\nPress Cancel to cancel the export now.");
-			auto result = QMessageBox::warning(0, "Roblox Avatar Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Yes | QMessageBox::Cancel);
+			auto result = QMessageBox::warning(0, "Roblox Studio Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Yes | QMessageBox::Cancel);
 			if (result == QMessageBox::Cancel) {
 				return false;
 			}
@@ -1557,11 +1557,11 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
     {
 		if (m_nBlenderExitCode == m_nPythonExceptionExitCode)
 		{
-			dzApp->log(QString("Roblox Avatar Exporter: ERROR: Python error:.... %1").arg(m_nBlenderExitCode));
+			dzApp->log(QString("Roblox Studio Exporter: ERROR: Python error:.... %1").arg(m_nBlenderExitCode));
 		}
 		else
 		{
-            dzApp->log(QString("Roblox Avatar Exporter: ERROR: exit code = %1").arg(m_nBlenderExitCode));
+            dzApp->log(QString("Roblox Studio Exporter: ERROR: exit code = %1").arg(m_nBlenderExitCode));
 		}
 		return false;
 	}
