@@ -87,7 +87,8 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 assetTypeCombo->addItem("Please select an asset type...", "__");
 	 assetTypeCombo->addItem("Roblox R15 Avatar", "R15");
 	 assetTypeCombo->addItem("Roblox S1 for Avatar Auto Setup", "S1");
-	 assetTypeCombo->addItem("Clothing or Hair for R15 Avatar", "clothing");
+	 assetTypeCombo->addItem("Layered Clothing or Hair", "layered");
+	 assetTypeCombo->addItem("Rigid Accessories", "rigid");
 	 assetTypeCombo->setCurrentIndex(0);
 
 	 // Remove options
@@ -109,6 +110,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_enableExperimentalOptionsCheckBox->hide();
 	 m_wEnableExperimentalRowLabelWidget->hide();
 
+	 // Figure Export Options
 	 m_wModestyOverlayCombo = new QComboBox();
 	 m_wModestyOverlayCombo->addItem("Sports bra and shorts", eModestyOverlay::SportsBra_Shorts);
 	 m_wModestyOverlayCombo->addItem("Tank top and shorts", eModestyOverlay::TankTop_Shorts);
@@ -133,12 +135,19 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wBreastsGoneCheckbox->setToolTip("Optional Remove Breasts. REQUIRES Genesis 9 Body Shapes Add-On");
 	 m_wBreastsGoneCheckbox->setChecked(true);
 
+	 // Accessory Export Options
+	 m_wBakeSingleOutfitCheckbox = new QCheckBox(tr("Bake Single Outfit"));
+	 m_wBakeSingleOutfitCheckbox->setToolTip(tr("Bake all items into a single layered clothing outfit"));
+	 QLabel* wLayeredClothingRowLabel = new QLabel(tr("Layered Clothing"));
+
 	 // Add GUI to layout
 	 mainLayout->insertRow(1, "Roblox Output Folder", robloxOutputFolderLayout);
 	 m_wGodotProjectFolderRowLabelWidget = mainLayout->itemAt(1, QFormLayout::LabelRole)->widget();
 	 showRobloxOptions(true);
 	 this->showLodRow(false);
-	 mainLayout->addRow("Content Moderation Tools", m_wBreastsGoneCheckbox);
+	 QLabel* wContentModerationRowLabel = new QLabel(tr("Content Moderation"));
+	 mainLayout->addRow(wContentModerationRowLabel, m_wBreastsGoneCheckbox);
+	 mainLayout->addRow(wLayeredClothingRowLabel, m_wBakeSingleOutfitCheckbox);
 
 	 // Select Blender Executable Path GUI
 	 QHBoxLayout* blenderExecutablePathLayout = new QHBoxLayout();

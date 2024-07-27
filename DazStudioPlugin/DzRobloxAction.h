@@ -95,6 +95,8 @@ protected:
 	int m_nModestyOverlay = 0;
 	QString m_sModestyOverlayCustomFilePath = "";
 
+	bool m_bBakeSingleOutfit = false;
+
 	friend class DzRobloxUtils;
 
 #ifdef UNITTEST_DZBRIDGE

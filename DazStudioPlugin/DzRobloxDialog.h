@@ -86,6 +86,11 @@ protected:
 	QWidget* m_wBlenderExecutablePathRowLabelWdiget;
 
 	QCheckBox* m_wBreastsGoneCheckbox;
+	QCheckBox* m_wBakeSingleOutfitCheckbox;
+	QCheckBox* m_wRunTextureAtlas;
+
+	QComboBox* m_wEyebrowReplacement;
+	QComboBox* m_wEyelashReplacement;
 
 	virtual void refreshAsset() override;
 

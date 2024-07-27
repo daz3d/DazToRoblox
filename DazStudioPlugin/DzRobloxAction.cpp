@@ -1014,7 +1014,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		exportProgress->setCurrentInfo("Automatic Cage and Attachment Retargeting...");
 		exportProgress->step();
 
-		if (m_sAssetType.contains("R15") || m_sAssetType.contains("clothing"))
+		if (m_sAssetType.contains("R15") || m_sAssetType.contains("layered"))
 		{
 			OpenFBXInterface* openFbx = OpenFBXInterface::GetInterface();
 			bool bFailed = false;
@@ -1254,7 +1254,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		{
 			sScriptPath = sScriptFolderPath + "/blender_dtu_to_avatar_autosetup.py";
 		}
-		else if (m_sAssetType.contains("clothing"))
+		else if (m_sAssetType.contains("layered") || m_sAssetType.contains("rigid"))
 		{
 			sScriptPath = sScriptFolderPath + "/blender_dtu_to_r15_clothing.py";
 		}
@@ -1377,8 +1377,9 @@ void DzRobloxAction::writeConfiguration()
 
 	writeDTUHeader(writer);
 
-	// Godot-specific items
+	// Plugin-specific items
 	writer.addMember("Output Folder", m_sRobloxOutputFolderPath);
+	writer.addMember("Bake Single Outfit", m_bBakeSingleOutfit);
 
 	if (true)
 	{
@@ -1477,6 +1478,7 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 		if (m_sRobloxOutputFolderPath == "" || m_nNonInteractiveMode == 0) m_sRobloxOutputFolderPath = pRobloxDialog->m_wRobloxOutputFolderEdit->text().replace("\\", "/");
 		if (m_sBlenderExecutablePath == "" || m_nNonInteractiveMode == 0) m_sBlenderExecutablePath = pRobloxDialog->m_wBlenderExecutablePathEdit->text().replace("\\", "/");
 		m_bEnableBreastsGone = pRobloxDialog->m_wBreastsGoneCheckbox->isChecked();
+		m_bBakeSingleOutfit = pRobloxDialog->m_wBakeSingleOutfitCheckbox->isChecked();
 
 		// modesty overlay
 		QVariant vItemData = pRobloxDialog->m_wModestyOverlayCombo->itemData(pRobloxDialog->m_wModestyOverlayCombo->currentIndex());
@@ -1764,7 +1766,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		}
 	}
 
-	if (m_sAssetType.contains("clothing")) {
+	if (m_sAssetType.contains("layered") || m_sAssetType.contains("rigid")) {
 		robloxPreProcessProgress.finish();
 		return false;
 	}

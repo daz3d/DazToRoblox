@@ -113,6 +113,11 @@ def _main(argv):
     # global variables and settings from DTU
     roblox_asset_name = dtu_dict["Asset Name"]
     roblox_output_path = dtu_dict["Output Folder"]
+    roblox_asset_type = dtu_dict["Asset Type"]
+    if "Bake Single Outfit" in dtu_dict:
+        bake_single_outfit = dtu_dict["Bake Single Outfit"]
+    else:
+        bake_single_outfit = False
 
     if "Has Animation" in dtu_dict:
         bHasAnimation = dtu_dict["Has Animation"]
@@ -134,8 +139,8 @@ def _main(argv):
     move_root_node_to_origin()
 
     daz_generation = dtu_dict["Asset Id"]
-    if (bHasAnimation == False):
-        apply_i_pose()
+    # if (bHasAnimation == False):
+    #     apply_i_pose()
 
     # # add decimate modifier
     # add_decimate_modifier()
@@ -187,20 +192,22 @@ def _main(argv):
                 att_list.append(obj.name.lower())
 
     top_collection = bpy.context.scene.collection
-    # create new collection for cages
-    cage_collection = bpy.data.collections.new(name="Unused Cages")
-    # Link the new collection to the scene
-    bpy.context.scene.collection.children.link(cage_collection)
-    # move cages to new collection
-    for obj in cage_obj_list:
-        # Unlink the object from its current collection(s)
-        for col in obj.users_collection:
-            col.objects.unlink(obj)
-        # Link the object to the new collection
-        cage_collection.objects.link(obj)
+    cage_collection = None
 
-    bBakeSingleOutfit = True
-    if bBakeSingleOutfit:
+    if "layered" in roblox_asset_type:
+        # create new collection for cages
+        cage_collection = bpy.data.collections.new(name="Unused Cages")
+        # Link the new collection to the scene
+        bpy.context.scene.collection.children.link(cage_collection)
+        # move cages to new collection
+        for obj in cage_obj_list:
+            # Unlink the object from its current collection(s)
+            for col in obj.users_collection:
+                col.objects.unlink(obj)
+            # Link the object to the new collection
+            cage_collection.objects.link(obj)
+
+    if bake_single_outfit:
         # join all mesh objects together
         main_item = None
         join_list = []
@@ -222,134 +229,147 @@ def _main(argv):
             if len(join_list) > 1:
                 bpy.ops.object.join()
             main_item.name = roblox_asset_name
-            obj_materials = main_item.data.materials
-            main_mat = None
-            main_match_strength = 0
-            for mat in obj_materials:
-                mat_match_strength = 0
-                nodes = mat.node_tree.nodes
-                # find and interpret BSDF node data
-                for node in nodes:
-                    if node.type == 'BSDF_PRINCIPLED':
-                        if "Normal" in node.inputs and node.inputs["Normal"].is_linked:
-                            mat_match_strength += 1
-                        if "Metallic" in node.inputs and node.inputs["Metallic"].is_linked:
-                            mat_match_strength += 1
-                        if "Roughness" in node.inputs and node.inputs["Roughness"].is_linked:
-                            mat_match_strength += 1
-                        if "Base Color" in node.inputs and node.inputs["Base Color"].is_linked:
-                            mat_match_strength += 1
-                        break
-                # find the best match
-                if main_mat is None or mat_match_strength > main_match_strength:
-                    main_mat = mat
-                    main_match_strength = mat_match_strength
-                # keep going until done or perfect match found
-                if main_match_strength == 4:
-                    break
-            if main_mat is not None:
-                mat_name = roblox_asset_name + "_material"
-                main_mat.name = mat_name
-                game_readiness_tools.remove_extra_materials([mat_name.lower(), "cage_material", "attachment_material"])
 
-    # for each obj, make list of vertex group names
+    # Remove multilpe materials
+    safe_material_names_list = []
     for obj in bpy.data.objects:
-        if obj.type == 'MESH'and (
-            "_outercage" not in obj.name.lower() and
-            "_innercage" not in obj.name.lower() and
-            "_att" not in obj.name.lower()
+        if obj.type != 'MESH'or (
+            "_outercage" in obj.name.lower() or
+            "_innercage" in obj.name.lower() or
+            "_att" in obj.name.lower()
             ):
-            vertex_group_names = []
-            vertex_group_vertices = {}
-            inner_cage_obj_list = []
-            outer_cage_obj_list = []
-            # num_vert_threshold = len(obj.data.vertices) * 0.05
-            num_vert_threshold = 4
-            weight_threshold = 0.75
-            # get list of names of all vertex groups that are not empty
-            for vertex in obj.data.vertices:
-                for group in vertex.groups:
-                    if group.weight > weight_threshold:
-                        vg_name = obj.vertex_groups[group.group].name
-                        if vg_name not in vertex_group_vertices.keys():
-                            vertex_group_vertices[vg_name] = 1
-                        else:
-                            vertex_group_vertices[vg_name] += 1
-                        if (vertex_group_vertices[vg_name] > num_vert_threshold):
-                            if vg_name not in vertex_group_names:
-                                vertex_group_names.append(vg_name)
-                if len(vertex_group_names) == len(obj.vertex_groups):
+            continue
+        obj_materials = obj.data.materials
+        best_mat = None
+        best_match_strength = 0
+        for mat in obj_materials:
+            mat_match_strength = 0
+            nodes = mat.node_tree.nodes
+            # find and interpret BSDF node data
+            for node in nodes:
+                if node.type == 'BSDF_PRINCIPLED':
+                    if "Normal" in node.inputs and node.inputs["Normal"].is_linked:
+                        mat_match_strength += 1
+                    if "Metallic" in node.inputs and node.inputs["Metallic"].is_linked:
+                        mat_match_strength += 1
+                    if "Roughness" in node.inputs and node.inputs["Roughness"].is_linked:
+                        mat_match_strength += 1
+                    if "Base Color" in node.inputs and node.inputs["Base Color"].is_linked:
+                        mat_match_strength += 1
                     break
+            # find the best match
+            if best_mat is None or mat_match_strength > best_match_strength:
+                best_mat = mat
+                best_match_strength = mat_match_strength
+            # keep going until done or perfect match found
+            if best_match_strength == 4:
+                break
+        if best_mat is not None:
+            mat_name = obj.name + "_material"
+            best_mat.name = mat_name
+            safe_material_names_list.append(mat_name.lower())
+    if len(safe_material_names_list) > 0:
+        game_readiness_tools.remove_extra_materials(safe_material_names_list + ["cage_material", "attachment_material"])
 
-            for name in vertex_group_names:
-                # get cage name
-                cage_name = name + "_OuterCage"
-                # get obj by name (cage_name)
-                cage_obj = bpy.data.objects.get(cage_name)
-                if cage_obj is not None:
-                    # make 2 duplicates of cage_obj
-                    bpy.ops.object.select_all(action='DESELECT')
-                    cage_obj.select_set(True)
-                    bpy.context.view_layer.objects.active = cage_obj
-                    bpy.ops.object.duplicate()
-                    if cage_obj != bpy.context.object and cage_obj.name in bpy.context.object.name:
-                        cage_obj_copy1 = bpy.context.object
-                        top_collection.objects.link(cage_obj_copy1)
-                        cage_collection.objects.unlink(cage_obj_copy1)
-                        inner_cage_obj_list.append(cage_obj_copy1)
-                    else:
-                        # throw exception
-                        raise Exception("ERROR: main(): object duplication failed, obj name=" + cage_obj.name)
-                    bpy.ops.object.select_all(action='DESELECT')
-                    cage_obj.select_set(True)
-                    bpy.context.view_layer.objects.active = cage_obj
-                    bpy.ops.object.duplicate()
-                    if cage_obj != bpy.context.object and cage_obj.name in bpy.context.object.name:
-                        cage_obj_copy2 = bpy.context.object
-                        top_collection.objects.link(cage_obj_copy2)
-                        cage_collection.objects.unlink(cage_obj_copy2)
-                        outer_cage_obj_list.append(cage_obj_copy2)
-                    else:
-                        # throw exception
-                        raise Exception("ERROR: main(): object duplication failed, obj name=" + cage_obj.name)
+    if "layered" in roblox_asset_type:
+        # for each obj, make list of vertex group names
+        for obj in bpy.data.objects:
+            if obj.type == 'MESH'and (
+                "_outercage" not in obj.name.lower() and
+                "_innercage" not in obj.name.lower() and
+                "_att" not in obj.name.lower()
+                ):
+                vertex_group_names = []
+                vertex_group_vertices = {}
+                inner_cage_obj_list = []
+                outer_cage_obj_list = []
+                # num_vert_threshold = len(obj.data.vertices) * 0.05
+                num_vert_threshold = 4
+                weight_threshold = 0.75
+                # get list of names of all vertex groups that are not empty
+                for vertex in obj.data.vertices:
+                    for group in vertex.groups:
+                        if group.weight > weight_threshold:
+                            vg_name = obj.vertex_groups[group.group].name
+                            if vg_name not in vertex_group_vertices.keys():
+                                vertex_group_vertices[vg_name] = 1
+                            else:
+                                vertex_group_vertices[vg_name] += 1
+                            if (vertex_group_vertices[vg_name] > num_vert_threshold):
+                                if vg_name not in vertex_group_names:
+                                    vertex_group_names.append(vg_name)
+                    if len(vertex_group_names) == len(obj.vertex_groups):
+                        break
 
-            # join all cages in inner_cage_obj_list
-            if len(inner_cage_obj_list) > 1:
-                bpy.ops.object.select_all(action='DESELECT')
-                for cage_obj in inner_cage_obj_list:
-                    cage_obj.select_set(True)
-                bpy.context.view_layer.objects.active = inner_cage_obj_list[0]
-                bpy.ops.object.join()
-            if len(inner_cage_obj_list) > 0:
-                inner_cage_obj = inner_cage_obj_list[0]
-                inner_cage_obj.name = obj.name + "_InnerCage"
-                # # add shrinkwrap modifier to inner_cage_obj
-                # bpy.context.view_layer.objects.active = inner_cage_obj
-                # bpy.ops.object.modifier_add(type='SHRINKWRAP')
-                # bpy.context.object.modifiers["Shrinkwrap"].target = obj
-                # bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
-                # bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'INSIDE'
-            # join all cages in outer_cage_obj_list
-            if len(outer_cage_obj_list) > 1:
-                bpy.ops.object.select_all(action='DESELECT')
-                for cage_obj in outer_cage_obj_list:
-                    cage_obj.select_set(True)
-                bpy.context.view_layer.objects.active = outer_cage_obj_list[0]
-                bpy.ops.object.join()
-            if len(outer_cage_obj_list) > 0:
-                outer_cage_obj = outer_cage_obj_list[0]
-                outer_cage_obj.name = obj.name + "_OuterCage"
-                # add shrinkwrap modifier to outer_cage_obj
-                bpy.ops.object.select_all(action='DESELECT')
-                outer_cage_obj.select_set(True)
-                bpy.context.view_layer.objects.active = outer_cage_obj
-                bpy.ops.object.modifier_add(type='SHRINKWRAP')
-                bpy.context.object.modifiers["Shrinkwrap"].target = obj
-                bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
-                bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'OUTSIDE'
-                #bpy.context.object.modifiers["Shrinkwrap"].offset = 0.0005
-                ## Blender Bug workaround: 0.0005 is actually 0.014 before changing scene scale to 1/28
-                bpy.context.object.modifiers["Shrinkwrap"].offset = 0.014
+                for name in vertex_group_names:
+                    # get cage name
+                    cage_name = name + "_OuterCage"
+                    # get obj by name (cage_name)
+                    cage_obj = bpy.data.objects.get(cage_name)
+                    if cage_obj is not None:
+                        # make 2 duplicates of cage_obj
+                        bpy.ops.object.select_all(action='DESELECT')
+                        cage_obj.select_set(True)
+                        bpy.context.view_layer.objects.active = cage_obj
+                        bpy.ops.object.duplicate()
+                        if cage_obj != bpy.context.object and cage_obj.name in bpy.context.object.name:
+                            cage_obj_copy1 = bpy.context.object
+                            top_collection.objects.link(cage_obj_copy1)
+                            cage_collection.objects.unlink(cage_obj_copy1)
+                            inner_cage_obj_list.append(cage_obj_copy1)
+                        else:
+                            # throw exception
+                            raise Exception("ERROR: main(): object duplication failed, obj name=" + cage_obj.name)
+                        bpy.ops.object.select_all(action='DESELECT')
+                        cage_obj.select_set(True)
+                        bpy.context.view_layer.objects.active = cage_obj
+                        bpy.ops.object.duplicate()
+                        if cage_obj != bpy.context.object and cage_obj.name in bpy.context.object.name:
+                            cage_obj_copy2 = bpy.context.object
+                            top_collection.objects.link(cage_obj_copy2)
+                            cage_collection.objects.unlink(cage_obj_copy2)
+                            outer_cage_obj_list.append(cage_obj_copy2)
+                        else:
+                            # throw exception
+                            raise Exception("ERROR: main(): object duplication failed, obj name=" + cage_obj.name)
+
+                # join all cages in inner_cage_obj_list
+                if len(inner_cage_obj_list) > 1:
+                    bpy.ops.object.select_all(action='DESELECT')
+                    for cage_obj in inner_cage_obj_list:
+                        cage_obj.select_set(True)
+                    bpy.context.view_layer.objects.active = inner_cage_obj_list[0]
+                    bpy.ops.object.join()
+                if len(inner_cage_obj_list) > 0:
+                    inner_cage_obj = inner_cage_obj_list[0]
+                    inner_cage_obj.name = obj.name + "_InnerCage"
+                    # # add shrinkwrap modifier to inner_cage_obj
+                    # bpy.context.view_layer.objects.active = inner_cage_obj
+                    # bpy.ops.object.modifier_add(type='SHRINKWRAP')
+                    # bpy.context.object.modifiers["Shrinkwrap"].target = obj
+                    # bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
+                    # bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'INSIDE'
+                # join all cages in outer_cage_obj_list
+                if len(outer_cage_obj_list) > 1:
+                    bpy.ops.object.select_all(action='DESELECT')
+                    for cage_obj in outer_cage_obj_list:
+                        cage_obj.select_set(True)
+                    bpy.context.view_layer.objects.active = outer_cage_obj_list[0]
+                    bpy.ops.object.join()
+                if len(outer_cage_obj_list) > 0:
+                    outer_cage_obj = outer_cage_obj_list[0]
+                    outer_cage_obj.name = obj.name + "_OuterCage"
+                    # add shrinkwrap modifier to outer_cage_obj
+                    bpy.ops.object.select_all(action='DESELECT')
+                    outer_cage_obj.select_set(True)
+                    bpy.context.view_layer.objects.active = outer_cage_obj
+                    bpy.ops.object.modifier_add(type='SHRINKWRAP')
+                    bpy.context.object.modifiers["Shrinkwrap"].target = obj
+                    bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
+                    bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'OUTSIDE'
+                    #bpy.context.object.modifiers["Shrinkwrap"].offset = 0.0005
+                    ## Blender Bug workaround: 0.0005 is actually 0.014 before changing scene scale to 1/28
+                    bpy.context.object.modifiers["Shrinkwrap"].offset = 0.014
 
     # # delete genesis9.shape
     # bpy.ops.object.select_all(action='DESELECT')
@@ -437,14 +457,18 @@ def _main(argv):
     # roblox UGC Validation Fixes
     roblox_tools.ugc_validation_fixes()
 
-    cage_collection.hide_viewport = True
+    if cage_collection is not None:
+        cage_collection.hide_viewport = True
 
     # prepare destination folder paths
     destinationPath = roblox_output_path.replace("\\","/")
     if (not os.path.exists(destinationPath)):
         os.makedirs(destinationPath)
     fbx_base_name = os.path.basename(fbxPath)
-    fbx_output_name = fbx_base_name.replace(".fbx", "_R15_clothing.fbx")
+    if "layered" in roblox_asset_type:
+        fbx_output_name = fbx_base_name.replace(".fbx", "_R15_layered.fbx")
+    else:
+        fbx_output_name = fbx_base_name.replace(".fbx", "_R15_attachments.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     # export to fbx
