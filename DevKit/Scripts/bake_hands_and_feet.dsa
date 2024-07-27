@@ -5,24 +5,105 @@ function resetPoseExceptHandsAndFeet(node, skip) {
     var children = node.getNodeChildren(false);
     for (var i = 0; i < children.length; i++) {
         var child = children[i];
+        var parent = child.getNodeParent();
         if (skip && 
-            (child.name.indexOf("l_hand") != -1 || 
-            child.name.indexOf("r_hand") != -1 ||
-            child.name.indexOf("l_foot") != -1 ||
-            child.name.indexOf("r_foot") != -1
-            )) {
+            (parent.name.indexOf("l_hand") != -1 || 
+            parent.name.indexOf("r_hand") != -1 ||
+            parent.name.indexOf("l_foot") != -1 ||
+            parent.name.indexOf("r_foot") != -1
+        )) {
         	print("DEBUG: skipping: " + child.name);
             continue;
         }
         if (child.inherits("DzBone")) {
-            if ((child.name.indexOf("l_hand") != -1 || child.name.indexOf("r_hand") != -1)) {
+            if (
+                parent.name.indexOf("head") != -1 ||
+                child.name.lower().indexOf("eye") != -1 || 
+                child.name.lower().indexOf("brow") != -1 ||
+                child.name.lower().indexOf("lash") != -1
+            ) {
+                print("DEBUG: skipping: " + child.name);
+                continue;
+            }
+            if ((child.name.indexOf("l_hand") == -1 || child.name.indexOf("r_hand") == -1)) {
                 print("DEBUG: resetting: " + child.name);
-            }    
+            }
             var defaultPose = new DzQuat(0,0,0,1);
 	        child.setWSRot(defaultPose);
 	    }
         resetPoseExceptHandsAndFeet(child, skip);
     }
+}
+
+function findMorphProperty(figure, morphName) {
+    print("DEBUG: findMorphProperty: " + figure.name + ", " + morphName);
+    var obj = figure.getObject();
+    if (obj) {
+        var modifier = obj.findModifier(morphName);
+        if (modifier) {
+            var property = modifier.findProperty("Value");
+            if (property) {
+                return property;
+            }
+        }
+        print("DEBUG: Using fallback code to find morph property");
+        // get modifiers
+        for (var i = 0; i < obj.getNumModifiers(); i++) {
+            var modifier = obj.getModifier(i);
+            if (modifier && modifier.inherits("DzMorph")) {
+                print("DEBUG: modifier.name: " + modifier.name);
+                if (modifier.name == morphName) {
+                    // get properties
+                    for (var j = 0; j < modifier.getNumProperties(); j++) {
+                        var property = modifier.getProperty(j);
+                        print("DEBUG: property.name: " + property.name);
+                        if (property) {
+                            // get presentation
+                            var presentation = property.getPresentation();
+                            if (presentation) {
+                                print("DEBUG: presentation.name: " + presentation.name);
+                                return property;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    var morphProperty = figure.findProperty(morphName);
+    if (morphProperty) {
+        return morphProperty;
+    }
+    return null;
+}
+
+function getCachedGeom(figure) {
+    var obj = figure.getObject();
+    var shape = obj.getCurrentShape();
+    if (shape) {
+        var lodLevel = shape.findProperty("lodlevel");
+        if (lodLevel) {
+            lodLevel.setValue(0);  // 0 is typically the base resolution
+        }
+    }
+    obj.forceCacheUpdate(figure);
+    var cachedGeo = obj.getCachedGeom();
+    var geo = new DzFacetMesh();
+    geo.copyFrom(cachedGeo);
+    return geo;
+}
+
+function generateMorph(figure, geo, morphName) {
+    print("DEBUG: generateMorph: " + figure.name + ", " + morphName);
+    var morphLoader = new DzMorphLoader();
+    var realMorphName = figure.name + "_" + morphName;
+    morphLoader.setMorphName(morphName);
+    morphLoader.setPropertyGroupPath("Morphs/Morph Loader");
+    morphLoader.setReverseDeformations(true);
+    morphLoader.setPreserveExistingDeltas(true);
+//    morphLoader.setOverwriteExisting(true);
+    var logText = morphLoader.createMorphFromMesh(geo, figure, false, true);
+    print("DEBUG: morphLoader: " + logText);
 }
 
 // Main script
@@ -35,41 +116,48 @@ function main() {
         return;
     }
 
-    // 2. Reset all pose except for hands
-    resetPoseExceptHandsAndFeet(figure, true);
+    // 2. Reset all pose except for hands and feet
+    var skeleton = figure.getFollowTarget();
+    if (!skeleton) skeleton = figure;
+    resetPoseExceptHandsAndFeet(skeleton, true);
 
-    // 3. Set mesh resolution to base
-    var obj = figure.getObject();
-
-    var shape = obj.getCurrentShape();
-    if (shape) {
-        var lodLevel = shape.findProperty("lodlevel");
-        if (lodLevel) {
-            lodLevel.setValue(0);  // 0 is typically the base resolution
+    var cachedGeoLookup = {};
+    var nodeChildren = figure.getNodeChildren(false);
+    for (var i = 0; i < nodeChildren.length; i++) {
+        var child = nodeChildren[i];
+        if (child.inherits("DzFigure")) {
+            var geo = getCachedGeom(child);
+            cachedGeoLookup[child.name] = geo;
         }
     }
-
-    obj.forceCacheUpdate(figure);
-    var cachedGeo = obj.getCachedGeom();
-    var geo = new DzFacetMesh();
-    geo.copyFrom(cachedGeo);
+    var geo = getCachedGeom(figure);
+    cachedGeoLookup[figure.name] = geo;
 
     // 6. Reset hand pose
-    resetPoseExceptHandsAndFeet(figure, false);
+    resetPoseExceptHandsAndFeet(skeleton, false);
 
-
-    // 5. Reimport OBJ as morph
     var morphName = "HandsAndFeetPoseMorph";
     var morphLoader = new DzMorphLoader();
     morphLoader.setMorphName(morphName);
     morphLoader.setPropertyGroupPath("Morphs/Morph Loader");
-    morphLoader.setReverseDeformations(true);
-    morphLoader.setPreserveExistingDeltas(true);
-    var result = morphLoader.createMorphFromMesh(geo, figure);
-    print("DEBUG: createMorphFromMesh result: " + typeof(result) + " " + result);
+    morphLoader.setReverseDeformations(false);
+    morphLoader.setPreserveExistingDeltas(false);
+//    morphLoader.setOverwriteExisting(true);
+//    morphLoader.setCleanUpOrphans(true);
+
+
+    for (var i = 0; i < nodeChildren.length; i++) {
+        var child = nodeChildren[i];
+        if (child.inherits("DzFigure")) {
+            var geo = cachedGeoLookup[child.name];
+		    morphLoader.createMorphFromMesh(geo, child, false, true);
+        }
+    }
+    var geo = cachedGeoLookup[figure.name];
+    morphLoader.createMorphFromMesh(geo, figure, false, true);
 
     // 7. Apply morph
-    var morphProperty = figure.findProperty(morphName);
+    var morphProperty = findMorphProperty(figure, morphName);
     if (morphProperty) {
         morphProperty.setValue(1.0);
     } else {
