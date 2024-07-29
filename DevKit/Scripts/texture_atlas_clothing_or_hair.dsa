@@ -1,0 +1,48 @@
+// DAZ Studio version 4.22.0.16 filetype DAZ Script
+
+var nodeList = new Array();
+var primSel = Scene.getPrimarySelection();
+var children = primSel.getNodeChildren();
+for (i = 0; i < children.length; i++)
+{
+	child = children[i];
+	if (child.name.toLowerCase().indexOf("eyelash") > -1) {
+		continue;
+	}
+	if (child.name.toLowerCase().indexOf("eyes") > -1) {
+		continue;
+	}
+	if (child.name.toLowerCase().indexOf("tear") > -1) {
+		continue;
+	}
+	if (child.name.toLowerCase().indexOf("eyebrow") > -1) {
+		continue;
+	}
+	if (child.name.toLowerCase().indexOf("mouth") > -1) {
+		continue;
+	}
+	nodeList.push(child);
+}
+
+var group = new DzNode();
+group.setName("NewClothingOrHairSet");    
+Scene.addNode(group);
+
+for (i=0; i < nodeList.length; i++) {
+	var node = nodeList[i];
+	primSel.removeNodeChild(node, true);
+	group.addNodeChild(node, true);
+}
+
+Scene.setPrimarySelection(group);
+var oT = new DzTextureAtlas()
+oT.executeAction()
+
+for (i=0; i < nodeList.length; i++) {
+	var node = nodeList[i];
+	group.removeNodeChild(node, true);
+	primSel.addNodeChild(node, true);
+}
+
+Scene.setPrimarySelection(primSel);
+Scene.removeNode(group);

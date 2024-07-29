@@ -46,33 +46,6 @@ function findMorphProperty(figure, morphName) {
                 return property;
             }
         }
-        print("DEBUG: Using fallback code to find morph property");
-        // get modifiers
-        for (var i = 0; i < obj.getNumModifiers(); i++) {
-            var modifier = obj.getModifier(i);
-            if (modifier && modifier.inherits("DzMorph")) {
-                print("DEBUG: modifier.name: " + modifier.name);
-                if (modifier.name == morphName) {
-                    // get properties
-                    for (var j = 0; j < modifier.getNumProperties(); j++) {
-                        var property = modifier.getProperty(j);
-                        print("DEBUG: property.name: " + property.name);
-                        if (property) {
-                            // get presentation
-                            var presentation = property.getPresentation();
-                            if (presentation) {
-                                print("DEBUG: presentation.name: " + presentation.name);
-                                return property;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    var morphProperty = figure.findProperty(morphName);
-    if (morphProperty) {
-        return morphProperty;
     }
     return null;
 }
@@ -140,19 +113,19 @@ function main() {
     var morphLoader = new DzMorphLoader();
     morphLoader.setMorphName(morphName);
     morphLoader.setPropertyGroupPath("Morphs/Morph Loader");
-    morphLoader.setReverseDeformations(false);
+    morphLoader.setReverseDeformations(true);
     morphLoader.setPreserveExistingDeltas(false);
 //    morphLoader.setOverwriteExisting(true);
 //    morphLoader.setCleanUpOrphans(true);
 
 
-    for (var i = 0; i < nodeChildren.length; i++) {
-        var child = nodeChildren[i];
-        if (child.inherits("DzFigure")) {
-            var geo = cachedGeoLookup[child.name];
-		    morphLoader.createMorphFromMesh(geo, child, false, true);
-        }
-    }
+    // for (var i = 0; i < nodeChildren.length; i++) {
+    //     var child = nodeChildren[i];
+    //     if (child.inherits("DzFigure")) {
+    //         var geo = cachedGeoLookup[child.name];
+	// 	    morphLoader.createMorphFromMesh(geo, child, false, true);
+    //     }
+    // }
     var geo = cachedGeoLookup[figure.name];
     morphLoader.createMorphFromMesh(geo, figure, false, true);
 
