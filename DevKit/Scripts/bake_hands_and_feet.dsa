@@ -1,5 +1,24 @@
 // DAZ Studio version 4.22.0.16 filetype DAZ Script
 
+function setVisibleAllFigures(bVisible) {
+    var nodes = Scene.getNodeList();
+    for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].inherits("DzFigure")) {
+            nodes[i].setVisible(bVisible);
+        }
+    }
+}
+
+function resetPoseProperties(node) {
+    var properties = node.getPropertyList();
+    for (var i = 0; i < properties.length; i++) {
+        var property = properties[i];
+        if (property.inherits("DzFloatProperty")) {
+            property.setValue(property.getDefaultValue());
+        }
+    }
+}
+
 // Function to reset pose except for hands
 function resetPoseExceptHandsAndFeet(node, skip) {
     var children = node.getNodeChildren(false);
@@ -7,29 +26,30 @@ function resetPoseExceptHandsAndFeet(node, skip) {
         var child = children[i];
         var parent = child.getNodeParent();
         if (skip && 
-            (parent.name.indexOf("l_hand") != -1 || 
-            parent.name.indexOf("r_hand") != -1 ||
-            parent.name.indexOf("l_foot") != -1 ||
-            parent.name.indexOf("r_foot") != -1
+            (child.name.indexOf("l_hand") != -1 || 
+            child.name.indexOf("r_hand") != -1 ||
+            child.name.indexOf("l_foot") != -1 ||
+            child.name.indexOf("r_foot") != -1
         )) {
         	print("DEBUG: skipping: " + child.name);
             continue;
         }
         if (child.inherits("DzBone")) {
-            if (
-                parent.name.indexOf("head") != -1 ||
-                child.name.lower().indexOf("eye") != -1 || 
-                child.name.lower().indexOf("brow") != -1 ||
-                child.name.lower().indexOf("lash") != -1
-            ) {
-                print("DEBUG: skipping: " + child.name);
-                continue;
-            }
-            if ((child.name.indexOf("l_hand") == -1 || child.name.indexOf("r_hand") == -1)) {
-                print("DEBUG: resetting: " + child.name);
-            }
-            var defaultPose = new DzQuat(0,0,0,1);
-	        child.setWSRot(defaultPose);
+            resetPoseProperties(child);
+            // if (
+            //     parent.name.indexOf("head") != -1 ||
+            //     child.name.lower().indexOf("eye") != -1 || 
+            //     child.name.lower().indexOf("brow") != -1 ||
+            //     child.name.lower().indexOf("lash") != -1
+            // ) {
+            //     print("DEBUG: skipping: " + child.name);
+            //     continue;
+            // }
+            // if ((child.name.indexOf("l_hand") == -1 || child.name.indexOf("r_hand") == -1)) {
+            //     print("DEBUG: resetting: " + child.name);
+            // }
+            // var defaultPose = new DzQuat(0,0,0,1);
+	        // child.setWSRot(defaultPose);
 	    }
         resetPoseExceptHandsAndFeet(child, skip);
     }
@@ -51,6 +71,7 @@ function findMorphProperty(figure, morphName) {
 }
 
 function getCachedGeom(figure) {
+    // MUST HIDE EVERYTHING TO ISOLATE FIGURE
     var obj = figure.getObject();
     var shape = obj.getCurrentShape();
     if (shape) {
@@ -59,7 +80,8 @@ function getCachedGeom(figure) {
             lodLevel.setValue(0);  // 0 is typically the base resolution
         }
     }
-    obj.forceCacheUpdate(figure);
+//    obj.forceCacheUpdate(figure);
+    forceUpdateAll(figure);
     var cachedGeo = obj.getCachedGeom();
     var geo = new DzFacetMesh();
     geo.copyFrom(cachedGeo);
@@ -74,9 +96,28 @@ function generateMorph(figure, geo, morphName) {
     morphLoader.setPropertyGroupPath("Morphs/Morph Loader");
     morphLoader.setReverseDeformations(true);
     morphLoader.setPreserveExistingDeltas(true);
-//    morphLoader.setOverwriteExisting(true);
+    morphLoader.setOverwriteExisting(true);
     var logText = morphLoader.createMorphFromMesh(geo, figure, false, true);
     print("DEBUG: morphLoader: " + logText);
+}
+
+function forceUpdateAll(node) {
+    if (node.inherits("DzFigure") == false) {
+        return;
+    }
+    var children = node.getNodeChildren(false);
+    for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        if (child.inherits("DzFigure")) {
+            forceUpdateAll(child);
+        }
+    }
+    var obj = node.getObject();
+    if (obj) {
+        setVisibleAllFigures(false);
+        node.setVisible(true);
+        obj.forceCacheUpdate(node);
+    }
 }
 
 // Main script
@@ -99,10 +140,14 @@ function main() {
     for (var i = 0; i < nodeChildren.length; i++) {
         var child = nodeChildren[i];
         if (child.inherits("DzFigure")) {
+//            setVisibleAllFigures(false);
+//            child.setVisible(true);
             var geo = getCachedGeom(child);
             cachedGeoLookup[child.name] = geo;
         }
     }
+//    setVisibleAllFigures(false);
+//    figure.setVisible(true);
     var geo = getCachedGeom(figure);
     cachedGeoLookup[figure.name] = geo;
 
@@ -115,9 +160,8 @@ function main() {
     morphLoader.setPropertyGroupPath("Morphs/Morph Loader");
     morphLoader.setReverseDeformations(true);
     morphLoader.setPreserveExistingDeltas(false);
-//    morphLoader.setOverwriteExisting(true);
-//    morphLoader.setCleanUpOrphans(true);
-
+    morphLoader.setOverwriteExisting(true);
+    morphLoader.setCleanUpOrphans(true);
 
     // for (var i = 0; i < nodeChildren.length; i++) {
     //     var child = nodeChildren[i];
@@ -126,18 +170,23 @@ function main() {
 	// 	    morphLoader.createMorphFromMesh(geo, child, false, true);
     //     }
     // }
+//    setVisibleAllFigures(false);
+//    figure.setVisible(true);
+    forceUpdateAll(figure);
     var geo = cachedGeoLookup[figure.name];
     morphLoader.createMorphFromMesh(geo, figure, false, true);
+    setVisibleAllFigures(true);
 
     // 7. Apply morph
     var morphProperty = findMorphProperty(figure, morphName);
     if (morphProperty) {
         morphProperty.setValue(1.0);
+        MessageBox.information("Hand pose morph created and applied successfully.", "Success", "OK");
     } else {
         print("Morph property not found: " + morphName);
+        MessageBox.critical("Hand pose morph creation failed.", "FAIL", "SORRY");
     }
 
-    MessageBox.information("Hand pose morph created and applied successfully.", "Success", "OK");
 }
 
 main();
