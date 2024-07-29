@@ -156,12 +156,12 @@ def _main(argv):
     move_root_node_to_origin()
 
     daz_generation = dtu_dict["Asset Id"]
-    # if (bHasAnimation == False):
-    #     # if ("Genesis8" in daz_generation):
-    #     #     blender_tools.apply_tpose_for_g8_g9()
-    #     # elif ("Genesis9" in daz_generation):
-    #     #     blender_tools.apply_tpose_for_g8_g9()
-    #     apply_i_pose()
+    if (bHasAnimation == False):
+        # if ("Genesis8" in daz_generation):
+        #     blender_tools.apply_tpose_for_g8_g9()
+        # elif ("Genesis9" in daz_generation):
+        #     blender_tools.apply_tpose_for_g8_g9()
+        apply_i_pose()
 
     # # add decimate modifier
     # add_decimate_modifier()
@@ -448,9 +448,10 @@ def _main(argv):
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and "_Att" in obj.name and "Grip" in obj.name:
             # set rotation axes separately with Quaternions to avoid gimbal lock
+            euler_x = mathutils.Euler((1.5708, 0, 0))
             euler_y = mathutils.Euler((0, -1.5708, 0))
             euler_z = mathutils.Euler((0, 0, -1.5708))
-            new_rotation = mathutils.Quaternion(euler_y) @ mathutils.Quaternion(euler_z)
+            new_rotation = mathutils.Quaternion(euler_x)
             new_matrix = obj.matrix_world @ new_rotation.to_matrix().to_4x4()
             obj.matrix_world = new_matrix
 
