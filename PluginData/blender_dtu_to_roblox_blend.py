@@ -449,9 +449,9 @@ def _main(argv):
         if obj.type == 'MESH' and "_Att" in obj.name and "Grip" in obj.name:
             # set rotation axes separately with Quaternions to avoid gimbal lock
             euler_x = mathutils.Euler((1.5708, 0, 0))
-            euler_y = mathutils.Euler((0, -1.5708, 0))
+            euler_y = mathutils.Euler((0, -0.17453292, 0))
             euler_z = mathutils.Euler((0, 0, -1.5708))
-            new_rotation = mathutils.Quaternion(euler_x)
+            new_rotation = mathutils.Quaternion(euler_x) @ mathutils.Quaternion(euler_y)
             new_matrix = obj.matrix_world @ new_rotation.to_matrix().to_4x4()
             obj.matrix_world = new_matrix
 
@@ -553,32 +553,34 @@ def apply_i_pose():
         # bpy.context.object.pose.bones["UpperTorso"].rotation_euler[0] = -0.17
         # rotate left shoulder 50 degrees along global y
         bpy.context.object.pose.bones["LeftUpperArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["LeftUpperArm"].rotation_euler[2] = -0.6
+        bpy.context.object.pose.bones["LeftUpperArm"].rotation_euler[0] = 0.02731336
+        bpy.context.object.pose.bones["LeftUpperArm"].rotation_euler[2] = -0.5127
         bpy.context.object.pose.bones["RightUpperArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["RightUpperArm"].rotation_euler[2] = 0.6
+        bpy.context.object.pose.bones["RightUpperArm"].rotation_euler[0] = 0.02731336
+        bpy.context.object.pose.bones["RightUpperArm"].rotation_euler[2] = 0.5127
         # elbows
         bpy.context.object.pose.bones["LeftLowerArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["LeftLowerArm"].rotation_euler[0] = 0.115
-        bpy.context.object.pose.bones["LeftLowerArm"].rotation_euler[1] = 0.079
+        # bpy.context.object.pose.bones["LeftLowerArm"].rotation_euler[0] = 0.115
+        # bpy.context.object.pose.bones["LeftLowerArm"].rotation_euler[1] = 0.079
         bpy.context.object.pose.bones["RightLowerArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["RightLowerArm"].rotation_euler[0] = 0.115
-        bpy.context.object.pose.bones["RightLowerArm"].rotation_euler[1] = -0.079
+        # bpy.context.object.pose.bones["RightLowerArm"].rotation_euler[0] = 0.115
+        # bpy.context.object.pose.bones["RightLowerArm"].rotation_euler[1] = -0.079
         # wrists
         bpy.context.object.pose.bones["LeftHand"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["LeftHand"].rotation_euler[0] = -0.122
-        bpy.context.object.pose.bones["LeftHand"].rotation_euler[1] = -0.084
+        bpy.context.object.pose.bones["LeftHand"].rotation_euler[0] = -0.204557824
+        bpy.context.object.pose.bones["LeftHand"].rotation_euler[1] = -0.113851841
         bpy.context.object.pose.bones["RightHand"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["RightHand"].rotation_euler[0] = -0.122
-        bpy.context.object.pose.bones["RightHand"].rotation_euler[1] = 0.084
+        bpy.context.object.pose.bones["RightHand"].rotation_euler[0] = -0.204557824
+        bpy.context.object.pose.bones["RightHand"].rotation_euler[1] = 0.113851841
         # L and R hips to 5 degrees
         bpy.context.object.pose.bones["LeftUpperLeg"].rotation_mode= "XYZ"
         bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[0] = -0.00296797
         bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[1] = -0.09181723
-        bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[2] = 0.0
+        bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[2] = -0.0448015547
         bpy.context.object.pose.bones["RightUpperLeg"].rotation_mode= "XYZ"
         bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[0] = -0.00296797
         bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[1] = 0.09181723
-        bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[2] = 0.0
+        bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[2] = 0.0448015547
 
     # if shapes are present in mesh, then return without baking t-pose since blender can not apply armature modifier
     for obj, mod in armature_modifier_list:
