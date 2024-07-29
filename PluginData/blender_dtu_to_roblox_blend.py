@@ -572,12 +572,13 @@ def apply_i_pose():
         bpy.context.object.pose.bones["RightHand"].rotation_euler[1] = 0.084
         # L and R hips to 5 degrees
         bpy.context.object.pose.bones["LeftUpperLeg"].rotation_mode= "XYZ"
-        # bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[0] = -0.17
-        bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[2] = -0.026
+        bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[0] = -0.00296797
+        bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[1] = -0.09181723
+        bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[2] = 0.0
         bpy.context.object.pose.bones["RightUpperLeg"].rotation_mode= "XYZ"
-        # bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[0] = -0.17
-        bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[2] = 0.026
-
+        bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[0] = -0.00296797
+        bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[1] = 0.09181723
+        bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[2] = 0.0
 
     # if shapes are present in mesh, then return without baking t-pose since blender can not apply armature modifier
     for obj, mod in armature_modifier_list:
