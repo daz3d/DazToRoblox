@@ -353,10 +353,13 @@ def _main(argv):
     # select all
     bpy.ops.object.select_all(action="SELECT")
     # scale to 0.0333
-    bpy.ops.transform.resize(value=(0.0333, 0.0333, 0.0333))
+    # bpy.ops.transform.resize(value=(0.0333, 0.0333, 0.0333))
+    # bpy.ops.transform.resize(value=(1/28, 1/28, 1/28))
     # apply using "All Transforms to Deltas"
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
+    # NEW SCALING CODE
+    bpy.context.scene.unit_settings.scale_length = 1/28
 
     # export to fbx
     roblox_asset_name = dtu_dict["Asset Name"]

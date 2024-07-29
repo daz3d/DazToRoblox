@@ -156,12 +156,12 @@ def _main(argv):
     move_root_node_to_origin()
 
     daz_generation = dtu_dict["Asset Id"]
-    if (bHasAnimation == False):
-        # if ("Genesis8" in daz_generation):
-        #     blender_tools.apply_tpose_for_g8_g9()
-        # elif ("Genesis9" in daz_generation):
-        #     blender_tools.apply_tpose_for_g8_g9()
-        apply_i_pose()
+    # if (bHasAnimation == False):
+    #     # if ("Genesis8" in daz_generation):
+    #     #     blender_tools.apply_tpose_for_g8_g9()
+    #     # elif ("Genesis9" in daz_generation):
+    #     #     blender_tools.apply_tpose_for_g8_g9()
+    #     apply_i_pose()
 
     # # add decimate modifier
     # add_decimate_modifier()
@@ -432,7 +432,7 @@ def _main(argv):
     # bpy.ops.transform.resize(value=(0.0333, 0.0333, 0.0333))
     #
     # NEW SCALING CODE
-    bpy.context.scene.unit_settings.scale_length = 1/30
+    bpy.context.scene.unit_settings.scale_length = 1/28
 
     # apply using "All Transforms to Deltas"
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
