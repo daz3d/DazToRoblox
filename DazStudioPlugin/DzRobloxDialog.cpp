@@ -84,7 +84,8 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 
 	 // populate Roblox Asset Types
 	 assetTypeCombo->clear();
-	 assetTypeCombo->addItem("Please select an asset type...", "__");
+//	 assetTypeCombo->addItem("Please select an asset type...", "__");
+	 assetTypeCombo->addItem("Complete Character and Outfit", "ALL");
 	 assetTypeCombo->addItem("Roblox R15 Avatar", "R15");
 	 assetTypeCombo->addItem("Roblox S1 for Avatar Auto Setup", "S1");
 	 assetTypeCombo->addItem("Layered Clothing or Hair", "layered");
@@ -445,7 +446,7 @@ bool DzRobloxDialog::isBlenderTextBoxValid(const QString& arg_text)
 
 bool DzRobloxDialog::isAssetTypeComboBoxValid()
 {
-	if (assetTypeCombo->currentIndex() == 0)
+	if (assetTypeCombo->itemData(assetTypeCombo->currentIndex()).toString() == "__")
 	{
 		return false;
 	}

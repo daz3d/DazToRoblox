@@ -475,6 +475,34 @@ bool DzRobloxUtils::generateFacs50(DzRobloxAction* that)
 
 }
 
+bool DzRobloxUtils::generateBlenderBatchFile(QString batchFilePath, QString sBlenderExecutablePath, QString sCommandArgs)
+{
+	// 4. Generate manual batch file to launch blender scripts
+	QString sBatchString = QString("\"%1\"").arg(sBlenderExecutablePath);
+	foreach(QString arg, sCommandArgs.split(";"))
+	{
+		if (arg.contains(" "))
+		{
+			sBatchString += QString(" \"%1\"").arg(arg);
+		}
+		else
+		{
+			sBatchString += " " + arg;
+		}
+	}
+	// write batch
+	QFile batchFileOut(batchFilePath);
+	bool bResult = batchFileOut.open(QIODevice::WriteOnly | QIODevice::OpenModeFlag::Truncate);
+	if (bResult) {
+		batchFileOut.write(sBatchString.toAscii().constData());
+		batchFileOut.close();
+	}
+	else {
+		dzApp->log("ERROR: DazToRoblox: generateBlenderBatchFile(): Unable to open batch filr for writing: " + batchFilePath);
+	}
+
+	return true;
+}
 
 DzRobloxAction::DzRobloxAction() :
 	DzBridgeAction(tr("&Roblox Studio Exporter"), tr("Export the selected character for Roblox Studio."))
@@ -1014,7 +1042,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		exportProgress->setCurrentInfo("Automatic Cage and Attachment Retargeting...");
 		exportProgress->step();
 
-		if (m_sAssetType.contains("R15") || m_sAssetType.contains("layered"))
+		if (m_sAssetType.contains("R15") || m_sAssetType.contains("layered") || m_sAssetType.contains("ALL") )
 		{
 			OpenFBXInterface* openFbx = OpenFBXInterface::GetInterface();
 			bool bFailed = false;
@@ -1245,6 +1273,9 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 //		DzRobloxUtils::generateFacs50(this);
 
 		QString sScriptPath;
+		QString sScriptPath_R15 = sScriptFolderPath + "/blender_dtu_to_roblox_blend.py";
+		QString sScriptPath_S1 = sScriptFolderPath + "/blender_dtu_to_avatar_autosetup.py";
+		QString sScriptPath_Accessories = sScriptFolderPath + "/blender_dtu_to_r15_accessories.py";
 
 		if (m_sAssetType.contains("R15"))
 		{
@@ -1259,34 +1290,47 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 			sScriptPath = sScriptFolderPath + "/blender_dtu_to_r15_accessories.py";
 		}
 		QString sCommandArgs = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath).arg(m_sDestinationFBX);
-
-		// 4. Generate manual batch file to launch blender scripts
-		QString sBatchString = QString("\"%1\"").arg(m_sBlenderExecutablePath);
-		foreach(QString arg, sCommandArgs.split(";"))
-		{
-			if (arg.contains(" "))
-			{
-				sBatchString += QString(" \"%1\"").arg(arg);
-			}
-			else
-			{
-				sBatchString += " " + arg;
-			}
-		}
-		// write batch
 #ifdef WIN32
 		QString batchFilePath = m_sDestinationPath + "/manual_blender_script.bat";
 #elif defined(__APPLE__)
 		QString batchFilePath = m_sDestinationPath + "/manual_blender_script.sh";
 #endif
-		QFile batchFileOut(batchFilePath);
-		batchFileOut.open(QIODevice::WriteOnly | QIODevice::OpenModeFlag::Truncate);
-		batchFileOut.write(sBatchString.toAscii().constData());
-		batchFileOut.close();
 
-		DzProgress::setCurrentInfo("Starting Blender Processing...");
-		exportProgress->setCurrentInfo("Starting Blender Processing...");
-		bool retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs);
+		QString sCommandArgs_R15 = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_R15).arg(m_sDestinationFBX);
+		QString batchFilePath_R15 = QString(batchFilePath).replace("_script.", "_script_R15_Avatar.");
+		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_R15, m_sBlenderExecutablePath, sCommandArgs_R15);
+
+		QString sCommandArgs_S1 = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_S1).arg(m_sDestinationFBX);
+		QString batchFilePath_S1 = QString(batchFilePath).replace("_script.", "_script_S1_Avatar.");
+		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_S1, m_sBlenderExecutablePath, sCommandArgs_S1);
+
+		QString sCommandArgs_Accessories = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_Accessories).arg(m_sDestinationFBX);
+		QString batchFilePath_Accessories = QString(batchFilePath).replace("_script.", "_script_Accessories.");
+		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_Accessories, m_sBlenderExecutablePath, sCommandArgs_Accessories);
+
+		bool retCode = false;
+		if (m_sAssetType == "ALL") {
+			// R15
+//			DzProgress::setCurrentInfo("Starting Blender Processing... R15 Avatar");
+			exportProgress->setCurrentInfo("Starting Blender Processing... R15 Avatar");
+			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_R15);
+
+			// S1
+//			DzProgress::setCurrentInfo("... S1 Avatar");
+			exportProgress->setCurrentInfo("... S1 Avatar");
+			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_S1);
+
+			// Accessories
+//			DzProgress::setCurrentInfo("... Accessories");
+			exportProgress->setCurrentInfo("... Accessories");
+			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_Accessories);
+		}
+		else
+		{
+			DzProgress::setCurrentInfo("Starting Blender Processing...");
+			exportProgress->setCurrentInfo("Starting Blender Processing...");
+			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs);
+		}
 
         exportProgress->setCurrentInfo("Roblox Studio Exporter: Export Phase Completed.");
 		// DB 2021-10-11: Progress Bar

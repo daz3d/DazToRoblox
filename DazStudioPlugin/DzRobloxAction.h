@@ -40,6 +40,7 @@ public:
 	static bool processElementRecursively(QMap<QString, MorphInfo>* morphInfoTable, int nFrame, DzJsonElement el, double& current_fStrength, const double default_fStrength);
 	static bool setMorphKeyFrame(DzProperty* prop, double fStrength, int nFrame);
 	static bool generateFacs50(DzRobloxAction* that);
+	static bool generateBlenderBatchFile(QString batchFilePath, QString sBlenderExecutablePath, QString sCommandArgs);
 
 };
 

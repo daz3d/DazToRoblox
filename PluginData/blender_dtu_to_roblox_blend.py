@@ -58,7 +58,7 @@ decimation_lookup = {
                     "NonFace_DecimationGroup": 0.5,
                     "Face_DecimationGroup": 0.6,
                     "UpperTorso_DecimationGroup": 0.15,
-                    "LowerTorso_DecimationGroup": 0.22,
+                    "LowerTorso_DecimationGroup": 0.223,
                     "RightUpperArm_DecimationGroup": 0.15,
                     "LeftUpperArm_DecimationGroup": 0.15,
                     "RightLowerArm_DecimationGroup": 0.15,
@@ -259,7 +259,6 @@ def _main(argv):
         if obj.type == 'MESH' and (
             "eyebrow" in obj.name.lower() or
             "eyelash" in obj.name.lower() or
-            "hair" in obj.name.lower()
         ) :
             head_accessories_list.append(obj.name.lower())
     cage_list = []
@@ -477,7 +476,7 @@ def _main(argv):
     if (not os.path.exists(destinationPath)):
         os.makedirs(destinationPath)
     fbx_base_name = os.path.basename(fbxPath)
-    fbx_output_name = fbx_base_name.replace(".fbx", "_R15_ready_to_import.fbx")
+    fbx_output_name = fbx_base_name.replace(".fbx", "_R15_avatar.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     # export to fbx

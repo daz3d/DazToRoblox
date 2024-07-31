@@ -192,20 +192,18 @@ def _main(argv):
                 att_list.append(obj.name.lower())
 
     top_collection = bpy.context.scene.collection
-    cage_collection = None
 
-    if "layered" in roblox_asset_type:
-        # create new collection for cages
-        cage_collection = bpy.data.collections.new(name="Unused Cages")
-        # Link the new collection to the scene
-        bpy.context.scene.collection.children.link(cage_collection)
-        # move cages to new collection
-        for obj in cage_obj_list:
-            # Unlink the object from its current collection(s)
-            for col in obj.users_collection:
-                col.objects.unlink(obj)
-            # Link the object to the new collection
-            cage_collection.objects.link(obj)
+    # create new collection for cages
+    cage_collection = bpy.data.collections.new(name="Unused Cages")
+    # Link the new collection to the scene
+    bpy.context.scene.collection.children.link(cage_collection)
+    # move cages to new collection
+    for obj in cage_obj_list:
+        # Unlink the object from its current collection(s)
+        for col in obj.users_collection:
+            col.objects.unlink(obj)
+        # Link the object to the new collection
+        cage_collection.objects.link(obj)
 
     if bake_single_outfit:
         # join all mesh objects together
@@ -228,7 +226,10 @@ def _main(argv):
                 obj.select_set(True)
             if len(join_list) > 1:
                 bpy.ops.object.join()
-            main_item.name = roblox_asset_name
+            if "ALL" in roblox_asset_type:
+                main_item.name = roblox_asset_name + "_Outfit"
+            else:
+                main_item.name = roblox_asset_name
 
     # Remove multilpe materials
     safe_material_names_list = []
@@ -271,7 +272,7 @@ def _main(argv):
     if len(safe_material_names_list) > 0:
         game_readiness_tools.remove_extra_materials(safe_material_names_list + ["cage_material", "attachment_material"])
 
-    if "layered" in roblox_asset_type:
+    if "layered" in roblox_asset_type or "ALL" in roblox_asset_type:
         # for each obj, make list of vertex group names
         for obj in bpy.data.objects:
             if obj.type == 'MESH'and (
@@ -458,17 +459,21 @@ def _main(argv):
     roblox_tools.ugc_validation_fixes()
 
     if cage_collection is not None:
-        cage_collection.hide_viewport = True
+        layer_collection = find_layer_collection(cage_collection)
+        if layer_collection is not None:
+            layer_collection.exclude = True
+        else:
+            cage_collection.hide_viewport = True
 
     # prepare destination folder paths
     destinationPath = roblox_output_path.replace("\\","/")
     if (not os.path.exists(destinationPath)):
         os.makedirs(destinationPath)
     fbx_base_name = os.path.basename(fbxPath)
-    if "layered" in roblox_asset_type:
-        fbx_output_name = fbx_base_name.replace(".fbx", "_R15_layered.fbx")
+    if "layered" in roblox_asset_type or "ALL" in roblox_asset_type:
+        fbx_output_name = fbx_base_name.replace(".fbx", "_layered_accessories.fbx")
     else:
-        fbx_output_name = fbx_base_name.replace(".fbx", "_R15_attachments.fbx")
+        fbx_output_name = fbx_base_name.replace(".fbx", "_rigid_accessories.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     # export to fbx
@@ -1161,10 +1166,20 @@ def transfer_weights(source_mesh_name, target_mesh_name):
         for mod in target_obj.modifiers:
             if mod.type == "ARMATURE":
                 mod.name = armature_name
-        
 
     print(f"Weights transferred successfully from {source_mesh_name} to {target_mesh_name}!")
 
+def find_layer_collection(collection, layer_collection = None):
+    """Recursively search for the layer collection that corresponds to the given collection."""
+    if layer_collection is None:
+        layer_collection = bpy.context.view_layer.layer_collection
+    if layer_collection.collection == collection:
+        return layer_collection
+    for child in layer_collection.children:
+        result = find_layer_collection(collection, child)
+        if result:
+            return result
+    return None
 
 # Execute main()
 if __name__=='__main__':
