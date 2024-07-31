@@ -20,6 +20,7 @@ class UnitTest_DzRobloxDialog;
 enum eModestyOverlay {
 	SportsBra_Shorts = 1,
 	TankTop_Shorts = 2,
+	StraplessBra_Bikini =3,
 	CustomModestyOverlay = -1
 };
 

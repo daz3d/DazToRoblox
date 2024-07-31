@@ -1677,6 +1677,62 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	robloxPreProcessProgress.setCurrentInfo("Processing node: " + sParentNodeName);
 	robloxPreProcessProgress.step();
 
+	QString tempPath = dzApp->getTempPath();
+
+	//////////////// Remove incompatible nodes, replace with game-ready equivalents
+	// Remove eyebrows
+	bool bReplaceEyebrows = true;
+	if (bReplaceEyebrows) {
+		DzFigure* pFigureNode = qobject_cast<DzFigure*>(dzScene->getPrimarySelection());
+		if (pFigureNode && pFigureNode->getName() == "Genesis9")
+		{
+			for (int i = 0; i < pFigureNode->getNumNodeChildren(); i++) {
+				DzNode* pNode = pFigureNode->getNodeChild(i);
+				DzFigure* pChild = qobject_cast<DzFigure*>(pNode);
+				if (pChild) {
+					if (pChild->getName().contains("eyebrow", Qt::CaseInsensitive) ||
+						pChild->getLabel().contains("eyebrow", Qt::CaseInsensitive)) 
+					{
+						robloxPreProcessProgress.setCurrentInfo("Replacing eyebrows...");
+						robloxPreProcessProgress.step();
+						dzScene->removeNode(pChild);
+						// add replacement eyebrows
+						if (dzScene->findNodeByLabel("game_engine_eyebrows") == NULL &&
+							dzScene->findNode("game_engine_eyebrows_0") == NULL) {
+							addAccessory(pFigureNode, tempPath + "/game_engine_eyebrows.duf", "game_engine_eyebrows_0");
+						}
+					}
+				}
+			}
+		}
+	}
+	// Remove eyelashes
+	bool bReplaceEyelashes = true;
+	if (bReplaceEyelashes) {
+		robloxPreProcessProgress.setCurrentInfo("Replacing eyebrows...");
+		robloxPreProcessProgress.step();
+		DzFigure* pFigureNode = qobject_cast<DzFigure*>(dzScene->getPrimarySelection());
+		if (pFigureNode && pFigureNode->getName() == "Genesis9")
+		{
+			for (int i = 0; i < pFigureNode->getNumNodeChildren(); i++) {
+				DzNode* pNode = pFigureNode->getNodeChild(i);
+				DzFigure* pChild = qobject_cast<DzFigure*>(pNode);
+				if (pChild) {
+					if (pChild->getName().contains("eyelash", Qt::CaseInsensitive) ||
+						pChild->getLabel().contains("eyelash", Qt::CaseInsensitive))
+					{
+						dzScene->removeNode(pChild);
+						// add replacement eyelashes
+						if (dzScene->findNodeByLabel("game_engine_eyelashes") == NULL &&
+							dzScene->findNode("game_engine_eyelashes_0") == NULL) {
+							addAccessory(pFigureNode, tempPath + "/game_engine_eyelashes.duf", "game_engine_eyelashes_0");
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// apply optional morphs
 	if (m_bEnableBreastsGone)
 	{
@@ -1710,9 +1766,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		}
 	}
 
-	// apply geografts
-	QString tempPath = dzApp->getTempPath();
-
+	////// apply geografts
 	// check if geograft present
 	robloxPreProcessProgress.setCurrentInfo("Applying conversion geografts...");
 	robloxPreProcessProgress.step();
@@ -1846,6 +1900,10 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		if (m_nModestyOverlay == eModestyOverlay::SportsBra_Shorts)
 		{
 		}
+		
+		if (m_nModestyOverlay == eModestyOverlay::StraplessBra_Bikini)
+		{
+		}
 
 		// if tanktop, use embedded files
 		if (m_nModestyOverlay == eModestyOverlay::TankTop_Shorts)
@@ -1951,6 +2009,42 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	robloxPreProcessProgress.setCurrentInfo("DazToRobloxStudio Preprocessing complete.");
 	robloxPreProcessProgress.finish();
 
+	return true;
+}
+
+bool DzRobloxAction::addAccessory(DzNode* pBaseNode, QString accessoryFilename, QString accessoryNodeName)
+{
+	DzContentMgr* contentMgr = dzApp->getContentMgr();
+	//	QString tempPath = dzApp->getTempPath() + "/" + geograftFilename;
+	QFile srcFile(accessoryFilename);
+	if (accessoryNodeName == "")
+	{
+		accessoryNodeName = QFileInfo(accessoryFilename).baseName();
+	}
+	QString node_name;
+	// copy to temp folder and merge tpose into scene
+	if (srcFile.exists())
+	{
+		//		DzBridgeAction::copyFile(&srcFile, &tempPath, true);
+			//	if (contentMgr->openFile(tempPath, true))
+
+				// deselect all ndoes
+		dzScene->setPrimarySelection(NULL);
+		if (contentMgr->openFile(accessoryFilename, true))
+		{
+			// parent geograft
+			DzNode* generic_node = dzScene->findNode(accessoryNodeName);
+			if (!generic_node)
+				generic_node = dzScene->findNodeByLabel(QString(accessoryNodeName).replace("_0", ""));
+			//QString debug_geograftNodeName = generic_geograft_node->getName();
+			DzFigure* accessory_node = qobject_cast<DzFigure*>(generic_node);
+			if (accessory_node && pBaseNode)
+			{
+				pBaseNode->addNodeChild(accessory_node, false);
+				accessory_node->setFollowTarget(pBaseNode->getSkeleton());
+			}
+		}
+	}
 	return true;
 }
 

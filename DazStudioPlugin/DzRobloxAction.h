@@ -92,6 +92,8 @@ protected:
 	Q_INVOKABLE virtual bool applyGeograft(DzNode* pBaseNode, QString geograftFilename, QString geograftNodeName = "");
 	Q_INVOKABLE virtual bool copyMaterialsToGeograft(DzNode* pGeograftNode, DzNode* pBaseNode = NULL);
 
+	Q_INVOKABLE virtual bool addAccessory(DzNode* pBaseNode, QString accessoryFilename, QString accessoryNodeName = "");
+
 	bool m_bEnableBreastsGone = false;
 	int m_nModestyOverlay = 0;
 	QString m_sModestyOverlayCustomFilePath = "";
