@@ -163,13 +163,14 @@ function main() {
     morphLoader.setOverwriteExisting(true);
     morphLoader.setCleanUpOrphans(true);
 
-    // for (var i = 0; i < nodeChildren.length; i++) {
-    //     var child = nodeChildren[i];
-    //     if (child.inherits("DzFigure")) {
-    //         var geo = cachedGeoLookup[child.name];
-	// 	    morphLoader.createMorphFromMesh(geo, child, false, true);
-    //     }
-    // }
+    for (var i = 0; i < nodeChildren.length; i++) {
+        var child = nodeChildren[i];
+        if (child.inherits("DzFigure")) {
+            forceUpdateAll(child);
+            var geo = cachedGeoLookup[child.name];
+		    morphLoader.createMorphFromMesh(geo, child, false, true);
+        }
+    }
 //    setVisibleAllFigures(false);
 //    figure.setVisible(true);
     forceUpdateAll(figure);
@@ -180,6 +181,8 @@ function main() {
     // 7. Apply morph
     var morphProperty = findMorphProperty(figure, morphName);
     if (morphProperty) {
+        morphProperty.setMin(0.0);
+        morphProperty.setMax(1.0);
         morphProperty.setValue(1.0);
         MessageBox.information("Hand pose morph created and applied successfully.", "Success", "OK");
     } else {
