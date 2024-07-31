@@ -523,7 +523,7 @@ DzRobloxAction::DzRobloxAction() :
 	m_bCombineDiffuseAndAlphaMaps = true;
 	m_bGenerateNormalMaps = true;
 	m_bResizeTextures = true;
-	m_qTargetTextureSize = QSize(1024, 1024);
+	m_qTargetTextureSize = QSize(4096, 4096);
 	m_bMultiplyTextureValues = true;
 	m_bRecompressIfFileSizeTooBig = false;
 	m_nFileSizeThresholdToInitiateRecompression = 1024 * 1024 * 1;

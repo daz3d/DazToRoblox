@@ -6,7 +6,7 @@
    <PresetID>0</PresetID>
    <RenderViewport>1</RenderViewport>
    <AspectConstrain>1</AspectConstrain>
-   <ImageSize SizeX="1024" SizeY="1024"/>
+   <ImageSize SizeX="4096" SizeY="4096"/>
    <AspectRatio HeightRatio="1" WidthRatio="1"/>
    <HardwareCutOffSize>32768</HardwareCutOffSize>
    <BleedFactor>0.01</BleedFactor>

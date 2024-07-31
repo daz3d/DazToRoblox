@@ -5,6 +5,8 @@
 var sDazTempFolder = App.getTempPath();
 var sMapTransferOutputFolder = sDazTempFolder + "/MapTransfer";
 var sMapTransferInputFolder = sDazTempFolder + "/textureConvert";
+var nTextureWidth = 4096;
+var nTextureHeight = 4096;
 
 // Template Names: "Diffuse Color.png", "Normal Map.png", "Specular Lob 1 Roughness.png", "Dual Lobe Specular Weight.png"
 
@@ -14,7 +16,7 @@ function alphaCombine(oImageA, oImageB) {
 }
 
 function combineImages(aImageList) {
-    var width=1024, height=1024;
+    var width=nTextureWidth, height=nTextureHeight;
     var format = 5;
     var oImageA = new Image(width, height, format);
     //print("DEBUG: creating empty image: width = " + oImageA.width + ", height = " + oImageA.height + ", format=" + oImageA.format);
