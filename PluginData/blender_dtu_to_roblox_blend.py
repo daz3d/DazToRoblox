@@ -258,8 +258,8 @@ def _main(argv):
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and (
             "eyebrow" in obj.name.lower() or
-            "eyelash" in obj.name.lower() or
-        ) :
+            "eyelash" in obj.name.lower()
+            ):
             head_accessories_list.append(obj.name.lower())
     cage_list = []
     cage_obj_list = []
@@ -294,7 +294,7 @@ def _main(argv):
         if obj.type == 'MESH' and (
             "eyebrow" in obj.name.lower() or
             "eyelash" in obj.name.lower()
-        ) :
+            ):
             if "_innercage" in obj.name.lower() or "_outercage" in obj.name.lower():
                 continue
             # unparent and keep transforms
