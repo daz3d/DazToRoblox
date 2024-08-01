@@ -525,8 +525,8 @@ DzRobloxAction::DzRobloxAction() :
 	m_bResizeTextures = true;
 	m_qTargetTextureSize = QSize(4096, 4096);
 	m_bMultiplyTextureValues = true;
-	m_bRecompressIfFileSizeTooBig = false;
-	m_nFileSizeThresholdToInitiateRecompression = 1024 * 1024 * 1;
+	m_bRecompressIfFileSizeTooBig = true;
+	m_nFileSizeThresholdToInitiateRecompression = 1024 * 1024 * 19; // 2024-08-01, DB: current roblox image size upload limit of < 20MB
 
 }
 
