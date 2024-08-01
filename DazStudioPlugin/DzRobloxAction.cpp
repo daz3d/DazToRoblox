@@ -1801,8 +1801,31 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	QString sGenerateCombinedTextures = "generate_texture_parts.dsa";
 	QString sCombineTextureMaps = "combine_texture_parts.dsa";
 	QString sAssignCombinedTextures = "assign_combined_textures.dsa";
+	QString sBakeHandsAndFeetPose = "bake_hands_and_feet_nogui.dsa";
 	QString sScriptFilename = "";
 	QScopedPointer<DzScript> Script(new DzScript());
+
+	// APPLY HAND POSE
+	bool bApplyHandPose = true;
+	if (bApplyHandPose) {
+		robloxPreProcessProgress.setCurrentInfo("Applying Roblox hand grip pose...");
+		robloxPreProcessProgress.step();
+		dzApp->getContentMgr()->openFile(tempPath + "/roblox_hand_grip.duf", true);
+	}
+
+	// BAKE HANDS AND FEET
+	bool bBakeHandsAndFeet = true;
+	if (bBakeHandsAndFeet) {
+		robloxPreProcessProgress.setCurrentInfo("Baking hands and feet pose...");
+		robloxPreProcessProgress.step();
+		sScriptFilename = dzApp->getTempPath() + "/" + sBakeHandsAndFeetPose;
+		// run bone conversion on main figure
+		dzScene->selectAllNodes(false);
+		dzScene->setPrimarySelection(parentNode);
+		Script.reset(new DzScript());
+		Script->loadFromFile(sScriptFilename);
+		Script->execute();
+	}
 
 	/// BONE CONVERSION OPERATION
 	robloxPreProcessProgress.setCurrentInfo("Converting to roblox compatible skeleton...");
