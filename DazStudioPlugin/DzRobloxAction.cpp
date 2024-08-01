@@ -1883,39 +1883,58 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		QVariantList aArgs;
 		QStringList slDiffuseOverlays, slNormalOverlays, slRoughnessOverlays, slMetallicOverlays;
 
-		QString sDiffuseOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_d.png";
-		QString sDiffuseOverlayLegs = sPluginFolder + "/genesis9_legs_modesty_overlay_d.png";
+		QString sDiffuseOverlayTorso = "";
+		QString sNormalOverlayTorso = "";
+		QString sRoughnessOverlayTorso = "";
+		QString sMetallicOverlayTorso = "";
+
 		QString sDiffuseOverlayHead = "";
-		QString sNormalOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_nm.png";
-		QString sNormalOverlayLegs = sPluginFolder + "/genesis9_head_modesty_overlay_nm.png";
 		QString sNormalOverlayHead = "";
-		QString sRoughnessOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_r.png";
-		QString sRoughnessOverlayLegs = sPluginFolder + "/genesis9_legs_modesty_overlay_r.png";
 		QString sRoughnessOverlayHead = "";
-		QString sMetallicOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_m.png";
-		QString sMetallicOverlayLegs = sPluginFolder + "/genesis9_legs_modesty_overlay_m.png";
 		QString sMetallicOverlayHead = "";
 
-		// if sportsbra, use default ==> do nothing
-		if (m_nModestyOverlay == eModestyOverlay::SportsBra_Shorts)
-		{
-		}
-		
+		QString sDiffuseOverlayLegs = "";
+		QString sNormalOverlayLegs = "";
+		QString sRoughnessOverlayLegs = "";
+		QString sMetallicOverlayLegs = "";
+
 		if (m_nModestyOverlay == eModestyOverlay::StraplessBra_Bikini)
 		{
+			sDiffuseOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_d.png";
+			sNormalOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_nm.png";
+			sRoughnessOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_r.png";
+			sMetallicOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_m.png";
 		}
 
-		// if tanktop, use embedded files
+		if (m_nModestyOverlay == eModestyOverlay::SportsBra_Shorts)
+		{
+			sDiffuseOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_d.png";
+			sNormalOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_n.png";
+			sRoughnessOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_r.png";
+			sMetallicOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_m.png";
+
+			sDiffuseOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_d.png";
+			sNormalOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_n.png";
+			sRoughnessOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_r.png";
+			sMetallicOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_m.png";
+		}
+		
 		if (m_nModestyOverlay == eModestyOverlay::TankTop_Shorts)
 		{
-			sDiffuseOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_d_M.png";
-			sDiffuseOverlayHead = sPluginFolder + "/genesis9_head_modesty_overlay_d_M.png";
-			sNormalOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_nm_M.png";
-			sNormalOverlayHead = sPluginFolder + "/genesis9_legs_modesty_overlay_nm.png";
-			sRoughnessOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_r_M.png";
-			sRoughnessOverlayHead = sPluginFolder + "/genesis9_head_modesty_overlay_r_M.png";
-			sMetallicOverlayTorso = sPluginFolder + "/genesis9_torso_modesty_overlay_m_M.png";
-			sMetallicOverlayHead = sPluginFolder + "/genesis9_head_modesty_overlay_m_M.png";
+			sDiffuseOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_d.png";
+			sNormalOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_n.png";
+			sRoughnessOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_r.png";
+			sMetallicOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_m.png";
+
+			sDiffuseOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_d.png";
+			sNormalOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_n.png";
+			sRoughnessOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_r.png";
+			sMetallicOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_m.png";
+
+			sDiffuseOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_d.png";
+			sNormalOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_n.png";
+			sRoughnessOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_r.png";
+			sMetallicOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_m.png";
 		}
 
 		// if custom, generate template string from selected file, then generate all variants from template string 

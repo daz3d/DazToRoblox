@@ -113,8 +113,8 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 
 	 // Figure Export Options
 	 m_wModestyOverlayCombo = new QComboBox();
-	 //m_wModestyOverlayCombo->addItem("Sports bra and shorts", eModestyOverlay::SportsBra_Shorts);
 	 m_wModestyOverlayCombo->addItem("Strapless bra and bikini", eModestyOverlay::StraplessBra_Bikini);
+	 m_wModestyOverlayCombo->addItem("Sports bra and shorts", eModestyOverlay::SportsBra_Shorts);
 	 m_wModestyOverlayCombo->addItem("Tank top and shorts", eModestyOverlay::TankTop_Shorts);
 	 m_wModestyOverlayCombo->addItem("Custom modesty overlay...", eModestyOverlay::CustomModestyOverlay);
 	 m_wModestyOverlayCombo->setCurrentIndex(0);
