@@ -884,63 +884,6 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 			return;
 		}
 
-		// Check if Roblox Output Folder and Blender Executable are valid, if not issue Error and fail gracefully
-		bool bSettingsValid = false;
-		do 
-		{
-			if (m_sRobloxOutputFolderPath != "" && QDir(m_sRobloxOutputFolderPath).exists() &&
-				m_sBlenderExecutablePath != "" && QFileInfo(m_sBlenderExecutablePath).exists() &&
-				m_sAssetType != "__")
-			{
-				bSettingsValid = true;
-				break;
-			}
-			if (bSettingsValid == false && m_nNonInteractiveMode == 1)
-			{
-				return;
-			}
-			if (m_sRobloxOutputFolderPath == "" || QDir(m_sRobloxOutputFolderPath).exists() == false)
-			{
-				QMessageBox::warning(0, tr("Roblox Output Folder"), tr("Roblox Output Folder must be set."), QMessageBox::Ok);
-			}
-			else if (m_sBlenderExecutablePath == "" || QFileInfo(m_sBlenderExecutablePath).exists() == false)
-			{
-				QMessageBox::warning(0, tr("Blender Executable Path"), tr("Blender Executable Path must be set."), QMessageBox::Ok);
-				// Enable Advanced Settings
-				QGroupBox* advancedBox = m_bridgeDialog->getAdvancedSettingsGroupBox();
-				if (advancedBox->isChecked() == false)
-				{
-					advancedBox->setChecked(true);
-					foreach(QObject* child, advancedBox->children())
-					{
-						QWidget* widget = qobject_cast<QWidget*>(child);
-						if (widget)
-						{
-							widget->setHidden(false);
-							QString name = widget->objectName();
-							dzApp->log("DEBUG: widget name = " + name);
-						}
-					}
-				}
-			}
-			else if (m_sAssetType == "__")
-			{
-				QMessageBox::warning(0, tr("Select Asset Type"), tr("Please select an asset type from the dropdown menu."), QMessageBox::Ok);
-			}
-
-			qobject_cast<DzRobloxDialog*>(m_bridgeDialog)->disableAcceptUntilAllRequirementsValid();
-			dlgResult = m_bridgeDialog->exec();
-			if (dlgResult == QDialog::Rejected)
-			{
-				return;
-			}
-			if (readGui(m_bridgeDialog) == false)
-			{
-				return;
-			}
-
-		} while (bSettingsValid == false);
-
 		// Extract PluginData
 		// 1. extract to temp folder
 		// 2. attempt copy to plugindata folder
