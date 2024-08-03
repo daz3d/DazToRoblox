@@ -377,6 +377,12 @@ def convert_to_atlas(obj):
         except:
             print("ERROR: Unable to set active_render for uv layer: " + new_uv.name)
     
+    # remove other UVs
+    for uv in obj.data.uv_layers:
+        if uv.name != new_uv.name:
+            print("DEBUG: removing old uv layer: " + uv.name)
+            obj.data.uv_layers.remove(uv)
+
     # # remove world lighting
     # if background:
     #     background.inputs['Strength'].default_value = 0.0
@@ -560,6 +566,23 @@ def _main(argv):
             "_innercage" not in obj.name.lower() and
             "_att" not in obj.name.lower()
             ):
+            # check if obj has multiple images in multiple materials and different UVs, if so, then convert to atlas
+            # 1. check for multiple materials
+            num_materials = len(obj.material_slots)
+            if num_materials <= 1:
+                continue
+            num_images = 0
+            for mat_slot in obj.material_slots:
+                if mat_slot.material and mat_slot.material.use_nodes:
+                    for node in mat_slot.material.node_tree.nodes:
+                        if node.type == 'TEX_IMAGE':
+                            num_images += 1
+                            break
+            if num_images <= 1:
+                continue
+            num_uvs = len(obj.data.uv_layers)
+            if num_uvs <= 1:
+                continue
             atlas, atlas_material, _ = convert_to_atlas(obj)
             safe_material_names_list.append(atlas_material.name.lower())
 
@@ -598,8 +621,8 @@ def _main(argv):
                 break
         if best_mat is not None:
             mat_name = obj.name + "_material"
-            # best_mat.name = mat_name
-            safe_material_names_list.append(mat_name.lower())
+            best_mat.name = mat_name
+            safe_material_names_list.append(best_mat.name.lower())
     if len(safe_material_names_list) > 0:
         print("DEBUG: safe_material_names_list=" + str(safe_material_names_list))
         game_readiness_tools.remove_extra_materials(safe_material_names_list + ["cage_material", "attachment_material"])
