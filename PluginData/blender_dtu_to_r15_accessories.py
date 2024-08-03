@@ -792,7 +792,9 @@ def _main(argv):
     if (not os.path.exists(destinationPath)):
         os.makedirs(destinationPath)
     fbx_base_name = os.path.basename(fbxPath)
-    if "layered" in roblox_asset_type or "ALL" in roblox_asset_type:
+    if bake_single_outfit and "ALL" in roblox_asset_type:
+        fbx_output_name = fbx_base_name.replace(".fbx", "_outfit.fbx")
+    elif "layered" in roblox_asset_type or "ALL" in roblox_asset_type:
         fbx_output_name = fbx_base_name.replace(".fbx", "_layered_accessories.fbx")
     else:
         fbx_output_name = fbx_base_name.replace(".fbx", "_rigid_accessories.fbx")
