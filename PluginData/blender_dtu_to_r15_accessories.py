@@ -84,20 +84,44 @@ def add_basic_lighting(strength=5.0):
 
 def setup_bake_nodes(material, atlas):
     nodes = material.node_tree.nodes
-
     for node in nodes:
         node.select = False
-
     # Create Image Texture node for baking target
     bake_node = nodes.new(type='ShaderNodeTexImage')
     bake_node.image = atlas
     bake_node.select = True
-    nodes.active = bake_node
-    
-    # Position the bake node
-    bake_node.location = (0, 300)  # Adjust as needed
-    
+    nodes.active = bake_node   
     return bake_node
+
+def cleanup_bake_nodes(obj, bake_nodes, unlink_emission=False):
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            material = mat_slot.material
+            for bake_node in bake_nodes:
+                if bake_node in material.node_tree.nodes.values():
+                    material.node_tree.nodes.remove(bake_node)
+            if unlink_emission:
+                nodes = material.node_tree.nodes
+                if bpy.app.version >= (4, 0, 0):
+                    material.node_tree.links.remove(nodes['Principled BSDF'].inputs['Emission Color'].links[0])
+                else:
+                    material.node_tree.links.remove(nodes['Principled BSDF'].inputs['Emission'].links[0])
+    return
+
+def find_roughness_node(material):
+    nodes = material.node_tree.nodes
+    for node in nodes:
+        if node.type == 'BSDF_PRINCIPLED':
+            if "Roughness" in node.inputs and node.inputs["Roughness"].is_linked:
+                return node.inputs["Roughness"].links[0].from_node
+    # create placeholder roughness node
+    nodes = material.node_tree.nodes
+    roughness_node = nodes.new(type='ShaderNodeRGB')
+    if nodes.get('Principled BSDF') is not None:
+        roughness_node.outputs['Color'].default_value = nodes['Principled BSDF'].inputs['Roughness'].default_value
+    else:
+        roughness_node.outputs['Color'].default_value = (0.5, 0.5, 0.5, 1.0)
+    return roughness_node
 
 def find_metallic_node(material):
     nodes = material.node_tree.nodes
@@ -108,7 +132,10 @@ def find_metallic_node(material):
     # create placeholder metallic node
     nodes = material.node_tree.nodes
     metallic_node = nodes.new(type='ShaderNodeRGB')
-    metallic_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
+    if nodes.get('Principled BSDF') is not None:
+        metallic_node.outputs['Color'].default_value = nodes['Principled BSDF'].inputs['Metallic'].default_value
+    else:
+        metallic_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
     return metallic_node
 
 def find_diffuse_node(material):
@@ -120,8 +147,46 @@ def find_diffuse_node(material):
     # create placeholder diffuse node
     nodes = material.node_tree.nodes
     diffuse_node = nodes.new(type='ShaderNodeRGB')
-    diffuse_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
+    if nodes.get('Principled BSDF') is not None:
+        diffuse_node.outputs['Color'].default_value = nodes['Principled BSDF'].inputs['Base Color'].default_value
+    else:
+        diffuse_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
     return diffuse_node
+
+def bake_roughness_to_atlas(obj, atlas):
+    bpy.ops.object.select_all(action='DESELECT')
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+
+    bpy.context.scene.render.engine = 'CYCLES'
+    bpy.context.scene.cycles.samples = 4
+    bpy.context.scene.cycles.time_limit = 2
+    bpy.context.scene.cycles.bake_type = 'ROUGHNESS'
+    bpy.context.scene.render.bake.margin = 16
+
+    # Setup bake nodes for each material
+    bake_nodes = []
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            print(f"Setting up bake node for material: {mat_slot.material.name}")
+            bake_node = setup_bake_nodes(mat_slot.material, atlas)
+            bake_nodes.append(bake_node)
+        else:
+            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
+    if not bake_nodes:
+        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
+        return
+
+    # Bake
+    print("Starting bake operation...")
+    bpy.ops.object.bake(type='ROUGHNESS')
+    print("Bake operation completed.")
+
+    # Clean up bake nodes
+    cleanup_bake_nodes(obj, bake_nodes)
+
+    return
+
 
 def bake_normal_to_atlas(obj, atlas):
     bpy.ops.object.select_all(action='DESELECT')
@@ -153,9 +218,7 @@ def bake_normal_to_atlas(obj, atlas):
     print("Bake operation completed.")
 
     # Clean up bake nodes
-    for mat_slot, bake_node in zip(obj.material_slots, bake_nodes):
-        if mat_slot.material and mat_slot.material.use_nodes:
-            mat_slot.material.node_tree.nodes.remove(bake_node)
+    cleanup_bake_nodes(obj, bake_nodes)
 
     return
 
@@ -217,9 +280,7 @@ def bake_metallic_to_atlas(obj, atlas):
     print("Bake operation completed.")
 
     # Clean up bake nodes
-    for mat_slot, bake_node in zip(obj.material_slots, bake_nodes):
-        if mat_slot.material and mat_slot.material.use_nodes:
-            mat_slot.material.node_tree.nodes.remove(bake_node)
+    cleanup_bake_nodes(obj, bake_nodes, True)
 
     return
 
@@ -268,9 +329,7 @@ def bake_diffuse_to_atlas(obj, atlas):
     print("Bake operation completed.")
     
     # Clean up bake nodes
-    for mat_slot, bake_node in zip(obj.material_slots, bake_nodes):
-        if mat_slot.material and mat_slot.material.use_nodes:
-            mat_slot.material.node_tree.nodes.remove(bake_node)
+    cleanup_bake_nodes(obj, bake_nodes, True)
 
     return
 
@@ -349,16 +408,27 @@ def convert_to_atlas(obj):
     metallic_atlas.file_format = 'JPEG'
     metallic_atlas.save()
 
-    # link normal atlas to atlas material
+    roughness_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_R", width=4096, height=4096)
+    bake_roughness_to_atlas(obj, roughness_atlas)
+
+    roughness_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_R.jpg"
+    print("DEBUG: saving: " + roughness_atlas_path)
+    roughness_atlas.filepath_raw = roughness_atlas_path
+    roughness_atlas.file_format = 'JPEG'
+    roughness_atlas.save()
+
     nodes = atlas_material.node_tree.nodes
+    # link normal atlas to atlas material
     normal_tex_node = nodes.new(type='ShaderNodeTexImage')
     normal_tex_node.image = normal_atlas
     normal_node = nodes.new(type='ShaderNodeNormalMap')
     atlas_material.node_tree.links.new(normal_tex_node.outputs['Color'], normal_node.inputs['Color'])
     atlas_material.node_tree.links.new(normal_node.outputs['Normal'], nodes["Principled BSDF"].inputs['Normal'])
-
+    # link roughness atlas to atlas material
+    roughness_node = nodes.new(type='ShaderNodeTexImage')
+    roughness_node.image = roughness_atlas
+    atlas_material.node_tree.links.new(roughness_node.outputs['Color'], nodes["Principled BSDF"].inputs['Roughness'])
     # link metallic atlas to atlas material
-    nodes = atlas_material.node_tree.nodes
     metallic_node = nodes.new(type='ShaderNodeTexImage')
     metallic_node.image = metallic_atlas
     atlas_material.node_tree.links.new(metallic_node.outputs['Color'], nodes["Principled BSDF"].inputs['Metallic'])
