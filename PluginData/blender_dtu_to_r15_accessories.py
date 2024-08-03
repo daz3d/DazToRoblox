@@ -129,7 +129,7 @@ def bake_normal_to_atlas(obj, atlas):
     bpy.context.view_layer.objects.active = obj
 
     bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 16
+    bpy.context.scene.cycles.samples = 4
     bpy.context.scene.cycles.time_limit = 2
     bpy.context.scene.cycles.bake_type = 'NORMAL'
     bpy.context.scene.render.bake.margin = 16
@@ -179,7 +179,7 @@ def bake_metallic_to_atlas(obj, atlas):
     bpy.context.view_layer.objects.active = obj
 
     bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 16
+    bpy.context.scene.cycles.samples = 4
     bpy.context.scene.cycles.time_limit = 2
     bpy.context.scene.cycles.bake_type = 'EMIT'
     bpy.context.scene.render.bake.use_pass_direct = False
@@ -230,7 +230,7 @@ def bake_diffuse_to_atlas(obj, atlas):
     bpy.context.view_layer.objects.active = obj
     
     bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 16
+    bpy.context.scene.cycles.samples = 4
     bpy.context.scene.cycles.time_limit = 2
     bpy.context.scene.cycles.bake_type = 'COMBINED'
     bpy.context.scene.render.bake.use_pass_direct = False
@@ -334,19 +334,19 @@ def convert_to_atlas(obj):
     normal_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_N", width=4096, height=4096)
     bake_normal_to_atlas(obj, normal_atlas)
 
-    normal_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_N.png"
+    normal_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_N.jpg"
     print("DEBUG: saving: " + normal_atlas_path)
     normal_atlas.filepath_raw = normal_atlas_path
-    normal_atlas.file_format = 'PNG'
+    normal_atlas.file_format = 'JPEG'
     normal_atlas.save()
 
     metallic_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_M", width=4096, height=4096)
     bake_metallic_to_atlas(obj, metallic_atlas)
 
-    metallic_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_M.png"
+    metallic_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_M.jpg"
     print("DEBUG: saving: " + metallic_atlas_path)
     metallic_atlas.filepath_raw = metallic_atlas_path
-    metallic_atlas.file_format = 'PNG'
+    metallic_atlas.file_format = 'JPEG'
     metallic_atlas.save()
 
     # link normal atlas to atlas material
@@ -367,11 +367,12 @@ def convert_to_atlas(obj):
 
     # print("DEBUG: new_uv.name=" + str(new_uv.name))
     try:
-        if new_uv.name != "":
-            obj.data.uv_layers[new_uv.name].active_render = True
+        if str(new_uv.name) != "":
+            obj.data.uv_layers[str(new_uv.name)].active_render = True
         else:
             obj.data.uv_layers[new_uv_name].active_render = True
     except:
+        print("ERROR: retrying to set uv layer: " + new_uv_name)
         try:
             obj.data.uv_layers[new_uv_name].active_render = True
         except:
@@ -379,8 +380,11 @@ def convert_to_atlas(obj):
     
     # remove other UVs
     for uv in obj.data.uv_layers:
-        if uv.name != new_uv.name:
-            print("DEBUG: removing old uv layer: " + uv.name)
+        if uv != new_uv and str(uv.name) != str(new_uv_name):
+            try:
+                print("DEBUG: removing old uv layer: " + str(uv.name))
+            except:
+                pass                
             obj.data.uv_layers.remove(uv)
 
     # # remove world lighting
@@ -566,23 +570,30 @@ def _main(argv):
             "_innercage" not in obj.name.lower() and
             "_att" not in obj.name.lower()
             ):
-            # check if obj has multiple images in multiple materials and different UVs, if so, then convert to atlas
+            # check if obj has multiple images in multiple materials, if so, then convert to atlas
             # 1. check for multiple materials
             num_materials = len(obj.material_slots)
             if num_materials <= 1:
                 continue
-            num_images = 0
+            image_list = []
             for mat_slot in obj.material_slots:
                 if mat_slot.material and mat_slot.material.use_nodes:
                     for node in mat_slot.material.node_tree.nodes:
-                        if node.type == 'TEX_IMAGE':
-                            num_images += 1
-                            break
-            if num_images <= 1:
+                        if node.type == 'TEX_IMAGE' and node.image is not None:
+                            # if node's 'Color' output is linked to 'Base Color' input of Principled BSDF node
+                            if node.outputs["Color"].is_linked:
+                                linked_node = node.outputs["Color"].links[0].to_node
+                                if linked_node.type == 'BSDF_PRINCIPLED':
+                                    bsdf_node = linked_node
+                                    if bsdf_node.inputs["Base Color"].is_linked:
+                                        base_color_node = bsdf_node.inputs["Base Color"].links[0].from_node
+                                        if node == base_color_node:
+                                            if node.image not in image_list:
+                                                image_list.append(node.image)
+                                                continue
+            if len(image_list) <= 1:
                 continue
-            num_uvs = len(obj.data.uv_layers)
-            if num_uvs <= 1:
-                continue
+            print("DEBUG: running texture atlas for obj: " + obj.name + ", num materials: " + str(num_materials) + ", images: " + str(image_list))
             atlas, atlas_material, _ = convert_to_atlas(obj)
             safe_material_names_list.append(atlas_material.name.lower())
 
