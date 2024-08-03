@@ -53,12 +53,342 @@ except:
     import game_readiness_tools
     from game_readiness_roblox_data import *
 
+g_intermediate_folder_path = ""
+
 def _add_to_log(sMessage):
     print(str(sMessage))
     with open(logFilename, "a") as file:
         file.write(sMessage + "\n")
 
+def setup_world_lighting(color, strength=5.0):
+    world = bpy.context.scene.world
+    world.use_nodes = True
+    nodes = world.node_tree.nodes
+    nodes.clear()
+    background = nodes.new(type='ShaderNodeBackground')
+    background.inputs['Color'].default_value = color
+    background.inputs['Strength'].default_value = strength
+    world_output = nodes.new(type='ShaderNodeOutputWorld')
+    links = world.node_tree.links
+    links.new(background.outputs['Background'], world_output.inputs['Surface'])
+    bpy.context.scene.world = world   
+    return background
+
+def add_basic_lighting(strength=5.0):
+    bpy.ops.object.light_add(type='SUN', location=(0, 0, 10))
+    sun = bpy.context.active_object
+    sun.data.energy = strength  # Adjust as needed
+    sun.data.use_shadow = False
+    # sun.data.angle = 0.523599
+    return sun
+
+def setup_bake_nodes(material, atlas):
+    nodes = material.node_tree.nodes
+
+    for node in nodes:
+        node.select = False
+
+    # Create Image Texture node for baking target
+    bake_node = nodes.new(type='ShaderNodeTexImage')
+    bake_node.image = atlas
+    bake_node.select = True
+    nodes.active = bake_node
+    
+    # Position the bake node
+    bake_node.location = (0, 300)  # Adjust as needed
+    
+    return bake_node
+
+def find_metallic_node(material):
+    nodes = material.node_tree.nodes
+    for node in nodes:
+        if node.type == 'BSDF_PRINCIPLED':
+            if "Metallic" in node.inputs and node.inputs["Metallic"].is_linked:
+                return node.inputs["Metallic"].links[0].from_node
+    # create placeholder metallic node
+    nodes = material.node_tree.nodes
+    metallic_node = nodes.new(type='ShaderNodeRGB')
+    metallic_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
+    return metallic_node
+
+def find_diffuse_node(material):
+    nodes = material.node_tree.nodes
+    for node in nodes:
+        if node.type == 'BSDF_PRINCIPLED':
+            if "Base Color" in node.inputs and node.inputs["Base Color"].is_linked:
+                return node.inputs["Base Color"].links[0].from_node
+    # create placeholder diffuse node
+    nodes = material.node_tree.nodes
+    diffuse_node = nodes.new(type='ShaderNodeRGB')
+    diffuse_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
+    return diffuse_node
+
+def bake_normal_to_atlas(obj, atlas):
+    bpy.ops.object.select_all(action='DESELECT')
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+
+    bpy.context.scene.render.engine = 'CYCLES'
+    bpy.context.scene.cycles.samples = 16
+    bpy.context.scene.cycles.time_limit = 2
+    bpy.context.scene.cycles.bake_type = 'NORMAL'
+    bpy.context.scene.render.bake.margin = 16
+
+    # Setup bake nodes for each material
+    bake_nodes = []
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            print(f"Setting up bake node for material: {mat_slot.material.name}")
+            bake_node = setup_bake_nodes(mat_slot.material, atlas)
+            bake_nodes.append(bake_node)
+        else:
+            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
+    if not bake_nodes:
+        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
+        return
+
+    # Bake
+    print("Starting bake operation...")
+    bpy.ops.object.bake(type='NORMAL')
+    print("Bake operation completed.")
+
+    # Clean up bake nodes
+    for mat_slot, bake_node in zip(obj.material_slots, bake_nodes):
+        if mat_slot.material and mat_slot.material.use_nodes:
+            mat_slot.material.node_tree.nodes.remove(bake_node)
+
+    return
+
+def bake_metallic_to_atlas(obj, atlas):
+    # check metallic is linked to principled bsdf
+    metallic_found = False
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            for node in mat_slot.material.node_tree.nodes:
+                if node.type == 'BSDF_PRINCIPLED':
+                    if "Metallic" in node.inputs and node.inputs["Metallic"].is_linked:
+                        metallic_found = True
+                        break
+            break    
+    if not metallic_found:
+        print("Warning: No metallic map found. Skipping metallic bake.")
+        return
+    
+    bpy.ops.object.select_all(action='DESELECT')
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+
+    bpy.context.scene.render.engine = 'CYCLES'
+    bpy.context.scene.cycles.samples = 16
+    bpy.context.scene.cycles.time_limit = 2
+    bpy.context.scene.cycles.bake_type = 'EMIT'
+    bpy.context.scene.render.bake.use_pass_direct = False
+    bpy.context.scene.render.bake.use_pass_indirect = False
+    bpy.context.scene.render.bake.use_pass_color = False
+    bpy.context.scene.render.bake.use_pass_glossy = False
+    bpy.context.scene.render.bake.use_pass_diffuse = False
+    bpy.context.scene.render.bake.use_pass_emit = True
+    bpy.context.scene.render.bake.margin = 16
+
+    # Setup bake nodes for each material
+    bake_nodes = []
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            print(f"Setting up bake node for material: {mat_slot.material.name}")
+            bake_node = setup_bake_nodes(mat_slot.material, atlas)
+            bake_nodes.append(bake_node)
+            material = mat_slot.material
+            nodes = material.node_tree.nodes
+            metallic_node = find_metallic_node(material)
+            # link image texture color to emission color of Principled BSDF node    
+            if bpy.app.version >= (4, 0, 0):
+                material.node_tree.links.new(metallic_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission Color'])
+            else:
+                material.node_tree.links.new(metallic_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission'])   
+        else:
+            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
+    if not bake_nodes:
+        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
+        return
+
+    # Bake
+    print("Starting bake operation...")
+    bpy.ops.object.bake(type='EMIT')
+    print("Bake operation completed.")
+
+    # Clean up bake nodes
+    for mat_slot, bake_node in zip(obj.material_slots, bake_nodes):
+        if mat_slot.material and mat_slot.material.use_nodes:
+            mat_slot.material.node_tree.nodes.remove(bake_node)
+
+    return
+
+def bake_diffuse_to_atlas(obj, atlas):
+    print(f"Starting bake process for object: {obj.name}")
+    bpy.ops.object.select_all(action='DESELECT')
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+    
+    bpy.context.scene.render.engine = 'CYCLES'
+    bpy.context.scene.cycles.samples = 16
+    bpy.context.scene.cycles.time_limit = 2
+    bpy.context.scene.cycles.bake_type = 'COMBINED'
+    bpy.context.scene.render.bake.use_pass_direct = False
+    bpy.context.scene.render.bake.use_pass_indirect = False
+    bpy.context.scene.render.bake.use_pass_color = True
+    bpy.context.scene.render.bake.use_pass_glossy = False
+    bpy.context.scene.render.bake.use_pass_diffuse = True
+    bpy.context.scene.render.bake.use_pass_emit = True
+    bpy.context.scene.render.bake.margin = 16
+
+    # Setup bake nodes for each material
+    bake_nodes = []
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            print(f"Setting up bake node for material: {mat_slot.material.name}")
+            bake_node = setup_bake_nodes(mat_slot.material, atlas)
+            bake_nodes.append(bake_node)
+            material = mat_slot.material
+            nodes = material.node_tree.nodes
+            diffuse_node = find_diffuse_node(material)
+            # link image texture color to emission color of Principled BSDF node    
+            if bpy.app.version >= (4, 0, 0):
+                material.node_tree.links.new(diffuse_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission Color'])
+            else:
+                material.node_tree.links.new(diffuse_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission'])   
+        else:
+            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
+    if not bake_nodes:
+        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
+        return
+
+    # Bake
+    print("Starting bake operation...")
+    bpy.ops.object.bake(type='COMBINED')
+    print("Bake operation completed.")
+    
+    # Clean up bake nodes
+    for mat_slot, bake_node in zip(obj.material_slots, bake_nodes):
+        if mat_slot.material and mat_slot.material.use_nodes:
+            mat_slot.material.node_tree.nodes.remove(bake_node)
+
+    return
+
+
+def create_texture_atlas(obj, atlas_size=4096):
+    atlas = bpy.data.images.new(name=f"{obj.name}_Atlas", width=atlas_size, height=atlas_size, alpha=True)
+    atlas_material = bpy.data.materials.new(name=f"{obj.name}_Atlas_Material")
+    atlas_material.use_nodes = True
+    nodes = atlas_material.node_tree.nodes
+    tex_node = nodes.new(type='ShaderNodeTexImage')
+    tex_node.image = atlas
+    atlas_material.node_tree.links.new(tex_node.outputs['Color'], nodes["Principled BSDF"].inputs['Base Color'])
+    # connect alpha channel to alpha output
+    atlas_material.node_tree.links.new(tex_node.outputs['Alpha'], nodes["Principled BSDF"].inputs['Alpha'])
+    return atlas, atlas_material
+
+def create_new_uv_layer(obj, name="AtlasUV"):
+    mesh = obj.data
+    new_uv = mesh.uv_layers.new(name=name)
+    mesh.uv_layers.active = new_uv
+    return new_uv
+
+def unwrap_object(obj):
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.uv.unwrap(method='ANGLE_BASED', margin=0.001)
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+def assign_atlas_to_object(obj, atlas_material):
+    original_materials = [slot.material for slot in obj.material_slots]
+    obj.data.materials.clear()
+    obj.data.materials.append(atlas_material)
+    return original_materials
+
+def convert_to_atlas(obj):
+    global g_intermediate_folder_path
+
+    print(f"Starting atlas conversion for object: {obj.name}")
+    
+    # Add basic lighting if the scene has none
+    background = None
+    # if not any(obj.type == 'LIGHT' for obj in bpy.context.scene.objects):
+    #     print("No lights found in the scene. Adding a basic sun light and hdri.")
+    #     background = setup_world_lighting((1.0, 1.0, 1.0, 1.0), 1.0)
+    
+    diffuse_atlas, atlas_material = create_texture_atlas(obj)
+    new_uv_name = "AtlasUV"
+    new_uv = create_new_uv_layer(obj, new_uv_name)
+    unwrap_object(obj)
+
+    bake_diffuse_to_atlas(obj, diffuse_atlas)
+
+    diffuse_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_D.png"
+    print("DEBUG: saving: " + diffuse_atlas_path)
+    # save atlas image to disk
+    diffuse_atlas.filepath_raw = diffuse_atlas_path
+    diffuse_atlas.file_format = 'PNG'
+    diffuse_atlas.save()
+
+    normal_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_N", width=4096, height=4096)
+    bake_normal_to_atlas(obj, normal_atlas)
+
+    normal_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_N.png"
+    print("DEBUG: saving: " + normal_atlas_path)
+    normal_atlas.filepath_raw = normal_atlas_path
+    normal_atlas.file_format = 'PNG'
+    normal_atlas.save()
+
+    metallic_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_M", width=4096, height=4096)
+    bake_metallic_to_atlas(obj, metallic_atlas)
+
+    metallic_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_M.png"
+    print("DEBUG: saving: " + metallic_atlas_path)
+    metallic_atlas.filepath_raw = metallic_atlas_path
+    metallic_atlas.file_format = 'PNG'
+    metallic_atlas.save()
+
+    # link normal atlas to atlas material
+    nodes = atlas_material.node_tree.nodes
+    normal_tex_node = nodes.new(type='ShaderNodeTexImage')
+    normal_tex_node.image = normal_atlas
+    normal_node = nodes.new(type='ShaderNodeNormalMap')
+    atlas_material.node_tree.links.new(normal_tex_node.outputs['Color'], normal_node.inputs['Color'])
+    atlas_material.node_tree.links.new(normal_node.outputs['Normal'], nodes["Principled BSDF"].inputs['Normal'])
+
+    # link metallic atlas to atlas material
+    nodes = atlas_material.node_tree.nodes
+    metallic_node = nodes.new(type='ShaderNodeTexImage')
+    metallic_node.image = metallic_atlas
+    atlas_material.node_tree.links.new(metallic_node.outputs['Color'], nodes["Principled BSDF"].inputs['Metallic'])
+
+    original_materials = assign_atlas_to_object(obj, atlas_material)
+
+    # print("DEBUG: new_uv.name=" + str(new_uv.name))
+    try:
+        if new_uv.name != "":
+            obj.data.uv_layers[new_uv.name].active_render = True
+        else:
+            obj.data.uv_layers[new_uv_name].active_render = True
+    except:
+        try:
+            obj.data.uv_layers[new_uv_name].active_render = True
+        except:
+            print("ERROR: Unable to set active_render for uv layer: " + new_uv.name)
+    
+    # # remove world lighting
+    # if background:
+    #     background.inputs['Strength'].default_value = 0.0
+    # # bpy.context.scene.world.use_nodes = False
+
+    print("Atlas conversion completed.")
+
+    return diffuse_atlas, atlas_material, original_materials
+
+
 def _main(argv):
+    global g_intermediate_folder_path
     try:
         line = str(argv[-1])
     except:
@@ -85,6 +415,7 @@ def _main(argv):
     # prepare intermediate folder paths
     blenderFilePath = fbxPath.replace(".fbx", ".blend")
     intermediate_folder_path = os.path.dirname(fbxPath)
+    g_intermediate_folder_path = intermediate_folder_path
 
     # load FBX
     _add_to_log("DEBUG: main(): loading fbx file: " + str(fbxPath))
@@ -101,9 +432,11 @@ def _main(argv):
         if obj.type == 'MESH' and "_OuterCage" in obj.name:
             cage_obj_list.append(obj)
             transfer_weights("Genesis9.Shape", obj.name)
-        # if attachment, parent to bone
+        # if attachment, delete
         if obj.type == 'MESH' and "_Att" in obj.name:
-            roblox_tools.bind_attachment_to_bone_inplace(obj)
+            bpy.ops.object.select_all(action='DESELECT')
+            obj.select_set(True)
+            bpy.ops.object.delete()
 
     blender_tools.center_all_viewports()
     jsonPath = fbxPath.replace(".fbx", ".dtu")
@@ -139,20 +472,7 @@ def _main(argv):
     move_root_node_to_origin()
 
     daz_generation = dtu_dict["Asset Id"]
-    # if (bHasAnimation == False):
-    #     apply_i_pose()
 
-    # # add decimate modifier
-    # add_decimate_modifier()
-
-    # # separate by materials (and delete unwanted meshes)
-    # separate_by_materials()
-
-    # # separate by loose parts
-    # separate_by_loose_parts()
-
-    # # separate by bone influence
-    # separate_by_bone_influence()
 
     main_obj = None
     for obj in bpy.data.objects:
@@ -187,9 +507,11 @@ def _main(argv):
                 print("DEBUG: cage obj.name=" + obj.name)
                 cage_list.append(obj.name.lower())
                 cage_obj_list.append(obj)
+                obj.hide_render = True
             elif "_Att" in obj.name:
                 print("DEBUG: attachment obj.name=" + obj.name)
                 att_list.append(obj.name.lower())
+                obj.hide_render = True
 
     top_collection = bpy.context.scene.collection
 
@@ -231,8 +553,17 @@ def _main(argv):
             else:
                 main_item.name = roblox_asset_name
 
-    # Remove multilpe materials
     safe_material_names_list = []
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH'and (
+            "_outercage" not in obj.name.lower() and
+            "_innercage" not in obj.name.lower() and
+            "_att" not in obj.name.lower()
+            ):
+            atlas, atlas_material, _ = convert_to_atlas(obj)
+            safe_material_names_list.append(atlas_material.name.lower())
+
+    # Remove multilpe materials
     for obj in bpy.data.objects:
         if obj.type != 'MESH'or (
             "_outercage" in obj.name.lower() or
@@ -267,9 +598,10 @@ def _main(argv):
                 break
         if best_mat is not None:
             mat_name = obj.name + "_material"
-            best_mat.name = mat_name
+            # best_mat.name = mat_name
             safe_material_names_list.append(mat_name.lower())
     if len(safe_material_names_list) > 0:
+        print("DEBUG: safe_material_names_list=" + str(safe_material_names_list))
         game_readiness_tools.remove_extra_materials(safe_material_names_list + ["cage_material", "attachment_material"])
 
     if "layered" in roblox_asset_type or "ALL" in roblox_asset_type:
@@ -372,13 +704,6 @@ def _main(argv):
                     ## Blender Bug workaround: 0.0005 is actually 0.014 before changing scene scale to 1/28
                     bpy.context.object.modifiers["Shrinkwrap"].offset = 0.014
 
-    # # delete genesis9.shape
-    # bpy.ops.object.select_all(action='DESELECT')
-    # obj = bpy.data.objects.get("Genesis9.Shape")
-    # if obj is not None:
-    #     obj.select_set(True)
-    #     bpy.ops.object.delete()
-
     # remove missing or unused images
     print("DEBUG: deleting missing or unused images...")
     for image in bpy.data.images:
@@ -423,37 +748,11 @@ def _main(argv):
     bpy.context.scene.cursor.location = (0.0, 0.0, 0.0)
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
 
-    # # scale to 0.0333 ==> for future, use 1/30 for exact conversion
-    # bpy.ops.transform.resize(value=(0.0333, 0.0333, 0.0333))
-    #
     # NEW SCALING CODE
     bpy.context.scene.unit_settings.scale_length = 1/28
 
     # apply using "All Transforms to Deltas"
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-
-    # re-bind attachments to bones
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH' and "_Att" in obj.name:
-            roblox_tools.bind_attachment_to_bone_inplace(obj)
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH' and "_Att" in obj.name:
-            roblox_tools.relocalize_attachment(obj)
-    # Fix orientation of Grip attachments
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH' and "_Att" in obj.name and "Grip" in obj.name:
-            # set rotation axes separately with Quaternions to avoid gimbal lock
-            euler_y = mathutils.Euler((0, -1.5708, 0))
-            euler_z = mathutils.Euler((0, 0, -1.5708))
-            new_rotation = mathutils.Quaternion(euler_y) @ mathutils.Quaternion(euler_z)
-            new_matrix = obj.matrix_world @ new_rotation.to_matrix().to_4x4()
-            obj.matrix_world = new_matrix
-
-    # add cage and attachments
-    #roblox_tools.add_cage_and_attachments()
-
-    # copy facial animations
-    # roblox_tools.copy_facs50_animations(script_dir + "/Genesis9facs50.blend")
 
     # roblox UGC Validation Fixes
     roblox_tools.ugc_validation_fixes()
@@ -666,442 +965,6 @@ def add_decimate_modifier_old():
             bpy.ops.object.modifier_add(type='DECIMATE')
             bpy.context.object.modifiers["Decimate"].ratio = 0.2
 
-# separate by materials, but also delete unwanted meshes and unwanted materials, and remerging some meshes back together
-def separate_by_materials():
-    # separate by materials
-    bpy.ops.object.mode_set(mode="OBJECT")
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            bpy.context.view_layer.objects.active = obj
-            bpy.ops.object.mode_set(mode="EDIT")
-            bpy.ops.mesh.separate(type='MATERIAL')
-            bpy.ops.object.mode_set(mode="OBJECT")
-
-    # clean up unwanted materials
-    bpy.ops.object.mode_set(mode="OBJECT")
-    fingernail_obj = None
-    arms_obj = None
-    toenails_obj = None
-    legs_obj = None
-    eyes_list = []
-    head_obj = None
-    mouth_list = []
-    for obj in bpy.data.objects:
-        # query for material names of each obj
-        if obj.type == 'MESH':
-            obj_materials = obj.data.materials
-            # if only one material, then rename object to material.name + "_Geo"
-            if len(obj_materials) == 1:
-                obj.name = obj_materials[0].name.replace(" ","") + "_Geo"
-            for mat in obj_materials:
-                # if "Tear" in mat.name or "moisture" in mat.name.lower() or "eyebrows" in mat.name.lower() or "eyelashes" in mat.name.lower() or "teeth" in mat.name.lower() or "mouth" in mat.name.lower():
-                if "Tear" in mat.name or "moisture" in mat.name.lower() or "eyebrows" in mat.name.lower() or "eyelashes" in mat.name.lower():
-                    # remove obj
-                    print("DEBUG: Removing object " + obj.name + " with material: " + mat.name)
-                    # delete heirarchy of object
-                    descendents = obj.children
-                    bpy.ops.object.select_all(action='DESELECT')
-                    for ob in descendents:
-                        ob.select_set(True)
-                    bpy.ops.object.delete()
-                    obj.select_set(True)
-                    bpy.ops.object.delete()
-                    break
-                if "head" in mat.name.lower():
-                    head_obj = obj
-                    # get decimation modifier
-                    decimate_modifier = None
-                    for mod in obj.modifiers:
-                        if mod.type == "DECIMATE":
-                            decimate_modifier = mod
-                            break
-                    if decimate_modifier is not None:
-                        # change decimate ratio to 0.36
-                        decimate_modifier.ratio = 0.36
-                        # apply decimate modifier
-                        bpy.ops.object.select_all(action='DESELECT')
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-                        bpy.ops.object.modifier_apply(modifier=decimate_modifier.name)
-
-                if "eye" in mat.name.lower():
-                    eyes_list.append(obj)
-                    # get decimation modifier
-                    decimate_modifier = None
-                    for mod in obj.modifiers:
-                        if mod.type == "DECIMATE":
-                            decimate_modifier = mod
-                            break
-                    if decimate_modifier is not None:
-                        # change decimate ratio to 0.09
-                        decimate_modifier.ratio = 0.09
-                        # apply decimate modifier
-                        bpy.ops.object.select_all(action='DESELECT')
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-                        bpy.ops.object.modifier_apply(modifier=decimate_modifier.name)
-                if "teeth" in mat.name.lower():
-                    mouth_list.append(obj)
-                    # get decimation modifier
-                    decimate_modifier = None
-                    for mod in obj.modifiers:
-                        if mod.type == "DECIMATE":
-                            decimate_modifier = mod
-                            break
-                    if decimate_modifier is not None:
-                        # change decimate ratio to 0.09
-                        decimate_modifier.ratio = 0.09
-                        # apply decimate modifier
-                        bpy.ops.object.select_all(action='DESELECT')
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-                        bpy.ops.object.modifier_apply(modifier=decimate_modifier.name)
-                if "mouth cavity" in mat.name.lower():
-                    mouth_list.append(obj)
-                    # get decimation modifier
-                    decimate_modifier = None
-                    for mod in obj.modifiers:
-                        if mod.type == "DECIMATE":
-                            decimate_modifier = mod
-                            break
-                    if decimate_modifier is not None:
-                        # change decimate ratio to 0.068
-                        decimate_modifier.ratio = 0.068
-                        # apply decimate modifier
-                        bpy.ops.object.select_all(action='DESELECT')
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-                        bpy.ops.object.modifier_apply(modifier=decimate_modifier.name)
-                elif "mouth" in mat.name.lower():
-                    mouth_list.append(obj)
-                    # get decimation modifier
-                    decimate_modifier = None
-                    for mod in obj.modifiers:
-                        if mod.type == "DECIMATE":
-                            decimate_modifier = mod
-                            break
-                    if decimate_modifier is not None:
-                        # change decimate ratio to 0.036
-                        decimate_modifier.ratio = 0.036
-                        # apply decimate modifier
-                        bpy.ops.object.select_all(action='DESELECT')
-                        obj.select_set(True)
-                        bpy.context.view_layer.objects.active = obj
-                        bpy.ops.object.modifier_apply(modifier=decimate_modifier.name)
-                
-                if "fingernails" in mat.name.lower():
-                    fingernail_obj = obj
-                if "arms" in mat.name.lower():
-                    arms_obj = obj
-                if "toenails" in mat.name.lower():
-                    toenails_obj = obj
-                if "legs" in mat.name.lower():
-                    legs_obj = obj
-    
-    # merge objects
-    print("DEBUG: merging objects...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if fingernail_obj is not None and arms_obj is not None:
-        # deselect all objects
-        bpy.ops.object.select_all(action='DESELECT')
-        arms_obj.select_set(True)
-        fingernail_obj.select_set(True)
-        bpy.context.view_layer.objects.active = arms_obj
-        bpy.ops.object.join()
-        if do_experimental_remove_materials:
-            bpy.context.view_layer.objects.active = arms_obj
-            # remove material named "Fingernails"
-            material_name = "Fingernails"
-            material_slot = next((slot for slot in arms_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = arms_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-
-    if toenails_obj is not None and legs_obj is not None:
-        # deselect all objects
-        bpy.ops.object.select_all(action='DESELECT')
-        legs_obj.select_set(True)
-        toenails_obj.select_set(True)
-        bpy.context.view_layer.objects.active = legs_obj
-        bpy.ops.object.join()
-        if do_experimental_remove_materials:
-            bpy.context.view_layer.objects.active = legs_obj
-            # remove material named "Toenails"
-            material_name = "Toenails"
-            material_slot = next((slot for slot in legs_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = legs_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-
-    if len(eyes_list) > 0 and head_obj is not None:
-        # merge eyes
-        print("DEBUG: merging eyes...")
-        bpy.ops.object.select_all(action='DESELECT')
-        head_obj.select_set(True)
-        for obj in eyes_list:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = head_obj
-        bpy.ops.object.mode_set(mode="OBJECT")
-        bpy.ops.object.join()
-        if do_experimental_remove_materials:
-            bpy.context.view_layer.objects.active = head_obj
-            # remove material named "Eye Left" and "Eye Right"
-            material_name = "Eye Left"
-            material_slot = next((slot for slot in head_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = head_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-            material_name = "Eye Right"
-            material_slot = next((slot for slot in head_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = head_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-
-    if len(mouth_list) > 0 and head_obj is not None:
-        # merge mouth, mouth cavity, and teeth
-        print("DEBUG: merging mouth, mouth cavity, and teeth...")
-        bpy.ops.object.select_all(action='DESELECT')
-        head_obj.select_set(True)
-        for obj in mouth_list:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = head_obj
-        bpy.ops.object.mode_set(mode="OBJECT")
-        bpy.ops.object.join()
-        if do_experimental_remove_materials:
-            bpy.context.view_layer.objects.active = head_obj
-            # remove material named "Mouth Cavity" and "Teeth"
-            material_name = "Mouth Cavity"
-            material_slot = next((slot for slot in head_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = head_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-            material_name = "Teeth"
-            material_slot = next((slot for slot in head_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = head_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-            # remove material named "Mouth"
-            material_name = "Mouth"
-            material_slot = next((slot for slot in head_obj.material_slots if slot.name == material_name), None)
-            # If the material slot exists, remove it
-            if material_slot:
-                bpy.context.object.active_material_index = head_obj.material_slots.find(material_name)
-                bpy.ops.object.material_slot_remove()
-
-    print("DEBUG: done separating by materials")
-
-def separate_by_loose_parts():
-    print("DEBUG: separate_by_loose_parts()")
-    # separate by loose parts
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            bpy.context.view_layer.objects.active = obj
-            bpy.ops.object.mode_set(mode="EDIT")
-            bpy.ops.mesh.separate(type='LOOSE')
-            bpy.ops.object.mode_set(mode="OBJECT")
-
-    # clean up loose parts
-    right_arm = []
-    left_arm = []
-    right_leg = []
-    left_leg = []
-    head_list = []
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            obj_materials = obj.data.materials
-            for mat in obj_materials:
-                if "Head" in mat.name:
-                    head_list.append(obj)
-                    # break to next obj
-                    break
-                if "Arms" in mat.name:
-                    # check vertices of obj, if x position is less than 0 then collect into right_arm array to merge together
-                    for v in obj.data.vertices:
-                        if v.co.x > 0:
-                            left_arm.append(obj)
-                            break
-                        else:
-                            right_arm.append(obj)
-                            break
-                    # break to next obj
-                    break
-                if "Legs" in mat.name:
-                    # check vertices of obj, if x position is less than 0 then collect into right_leg array to merge together
-                    for v in obj.data.vertices:
-                        if v.co.x > 0:
-                            left_leg.append(obj)
-                            break
-                        else:
-                            right_leg.append(obj)
-                            break
-                    # break to next obj
-                    break
-
-    # merge right_arm
-    print("DEBUG: merging right_arm...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if len(right_arm) > 0:
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in right_arm:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = right_arm[0]
-        bpy.ops.object.join()
-        right_arm[0].name = "RightArm_Geo"
-    # merge left_arm
-    print("DEBUG: merging left_arm...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if len(left_arm) > 0:
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in left_arm:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = left_arm[0]
-        bpy.ops.object.join()
-        left_arm[0].name = "LeftArm_Geo"
-    # merge right_leg
-    print("DEBUG: merging right_leg...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if len(right_leg) > 0:
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in right_leg:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = right_leg[0]
-        bpy.ops.object.join()
-        right_leg[0].name = "RightLeg_Geo"
-    # merge left_leg
-    print("DEBUG: merging left_leg...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if len(left_leg) > 0:
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in left_leg:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = left_leg[0]
-        bpy.ops.object.join()
-        left_leg[0].name = "LeftLeg_Geo"
-
-    # merge head
-    print("DEBUG: merging head...")
-    bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.mode_set(mode="OBJECT")
-    if len(head_list) > 0:
-        bpy.ops.object.select_all(action='DESELECT')
-        for obj in head_list:
-            obj.select_set(True)
-        bpy.context.view_layer.objects.active = head_list[0]
-        bpy.ops.object.join()
-        head_list[0].name = "Head_Geo"
-
-    print("DEBUG: done separating by loose parts")
-
-
-def separate_by_bone_influence():
-    print("DEBUG: separate_by_bone_influence()")
-    # separate by bone influence
-    bpy.ops.object.mode_set(mode="OBJECT")
-    bone_table = {
-        "RightArm_Geo": ["RightHand", "RightLowerArm", "RightUpperArm"],
-        "LeftArm_Geo": ["LeftHand", "LeftLowerArm", "LeftUpperArm"],
-        "RightLeg_Geo": ["RightFoot", "RightLowerLeg", "RightUpperLeg"],
-        "LeftLeg_Geo": ["LeftFoot", "LeftLowerLeg", "LeftUpperLeg"],
-        "Body_Geo": ["UpperTorso", "LowerTorso"]
-    }
-    # deselect all
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH' and obj.name in bone_table:
-            bone_list = bone_table[obj.name]
-            bpy.context.view_layer.objects.active = obj
-            for bone_name in bone_list:
-                print("DEBUG: beginning vertex separation for bone_name=" + bone_name)
-                bpy.ops.object.mode_set(mode="EDIT")
-                # deselect all vertices
-                bpy.ops.mesh.select_all(action='DESELECT')
-                bpy.ops.object.mode_set(mode="OBJECT")
-                # get list of all objects before separation operation
-                before_list = set(bpy.context.scene.objects)
-                # select vertices by bone group
-                group = obj.vertex_groups.get(bone_name)
-                for v in obj.data.vertices:
-                    for g in v.groups:
-                        if g.group == group.index:
-                            v.select = True                
-                bpy.ops.object.mode_set(mode="EDIT")
-                # separate by selection
-                bpy.ops.mesh.separate(type='SELECTED')
-                # rename newly separated object
-                # find the new object
-                # get list of all objects after separation operation
-                after_list = set(bpy.context.scene.objects)
-                new_obj = None
-                for obj_temp in after_list:
-                    if obj_temp not in before_list:
-                        new_obj = obj_temp
-                        break
-                # Switch to object mode
-                bpy.ops.object.mode_set(mode='OBJECT')
-                # The newly created object is the active object
-                if new_obj == obj:
-                    print("ERROR: new_obj.name=" + new_obj.name + " is the same as " + obj.name)
-                else:
-                    # Select the new object
-                    print("DEBUG: new_obj.name=" + new_obj.name + " renaming to " + bone_name + "_Geo ...")
-                    new_obj.name = bone_name + "_Geo"
-                    # if "Hand" or "Foot" in bone_name, then set decimate modifier to 0.1
-                    if "Hand" in bone_name or "Foot" in bone_name:
-                        # get decimation modifier
-                        decimate_modifier = None
-                        for mod in new_obj.modifiers:
-                            if mod.type == "DECIMATE":
-                                print("DEBUG: setting decimate ratio to 0.1 for " + new_obj.name)
-                                # change decimate ratio to 0.1
-                                mod.ratio = 0.1
-                                break
-                    # deselect all objects
-                    bpy.ops.object.select_all(action='DESELECT')
-                    bpy.context.view_layer.objects.active = obj
-
-    # clean up empty objects without vertices
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH' and len(obj.data.vertices) == 0:
-            print("DEBUG: Removing empty object: " + obj.name)
-            bpy.ops.object.select_all(action='DESELECT')
-            obj.select_set(True)
-            bpy.ops.object.delete()
-
-
-def load_and_merge_cage_meshes_from_template_file(template_filepath_blend):
-    # load and merge cage meshes from template file
-    bpy.ops.wm.append(filename="CageMeshes", directory=template_filepath_blend + "/Object/")
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH' and "CageMesh" in obj.name:
-            obj.select_set(True)
-    bpy.ops.object.join()
-
-def load_and_merge_attachments_from_template_file(template_filepath_blend):
-    # load and merge attachments from template file
-    bpy.ops.wm.append(filename="Attachments", directory=template_filepath_blend + "/Object/")
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH' and "Attachment" in obj.name:
-            obj.select_set(True)
-    bpy.ops.object.join()
 
 def transfer_weights(source_mesh_name, target_mesh_name):
     # Ensure objects exist
