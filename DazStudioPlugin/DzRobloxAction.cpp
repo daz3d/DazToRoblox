@@ -518,7 +518,7 @@ DzRobloxAction::DzRobloxAction() :
 	QAction::setIcon(icon);
 
 	m_bConvertToPng = true;
-	m_bConvertToJpg = false;
+	m_bConvertToJpg = true;
 	m_bExportAllTextures = true;
 	m_bCombineDiffuseAndAlphaMaps = true;
 	m_bGenerateNormalMaps = true;
@@ -1757,8 +1757,16 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	}
 
 	// BAKE HANDS AND FEET
+	// DO NOT BAKE HANDS AND FEET IF BONES ARE ALREADY CONVERTED
+	// Check for existence of finger and toe bones
+	bool bFingerAndToeBonesExist = false;
+	DzSkeleton* skeleton = parentNode->getSkeleton();
+	if (skeleton->findNodeChild("l_thumb1", true) || skeleton->findNodeChild("l_bigtoe1", true))
+	{
+		bFingerAndToeBonesExist = true;
+	}
 	bool bBakeHandsAndFeet = true;
-	if (bBakeHandsAndFeet) {
+	if (bBakeHandsAndFeet && bFingerAndToeBonesExist) {
 		robloxPreProcessProgress.setCurrentInfo("Baking hands and feet pose...");
 		robloxPreProcessProgress.step();
 		sScriptFilename = dzApp->getTempPath() + "/" + sBakeHandsAndFeetPose;
