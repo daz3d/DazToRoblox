@@ -1514,7 +1514,7 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 	QString sWorkingPath = m_sDestinationPath;
 	QStringList args = sCommandlineArguments.split(";");
 
-	float fTimeoutInSeconds = 2.3 * 60;
+	float fTimeoutInSeconds = 2 * 60;
 	float fMilliSecondsPerTick = 200;
 	int numTotalTicks = fTimeoutInSeconds * 1000 / fMilliSecondsPerTick;
 	DzProgress* progress = new DzProgress("Running Blender Scripts", numTotalTicks, false, true);
@@ -1522,7 +1522,45 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 	QProcess* pToolProcess = new QProcess(this);
 	pToolProcess->setWorkingDirectory(sWorkingPath);
 	pToolProcess->start(sFilePath, args);
+	int currentTick = 0;
+	int timeoutTicks = numTotalTicks;
+	bool bUserInitiatedTermination = false;
 	while (pToolProcess->waitForFinished(fMilliSecondsPerTick) == false) {
+		// if timeout reached, then terminate process
+		if (currentTick++ > timeoutTicks) {
+			if (!bUserInitiatedTermination) 
+			{
+				QString sTimeoutText = tr("\
+The current Blender operation is taking a long time.\n\
+Do you want to Ignore this message and keep going. or\
+Do you want to Abort the operation?");
+				int result = QMessageBox::critical(0, 
+					tr("Daz To Roblox: Blender Timout Error"), 
+					sTimeoutText, 
+					QMessageBox::Ignore, 
+					QMessageBox::Abort);
+				if (result == QMessageBox::Ignore) 
+				{
+					int snoozeTime = 60 * 1000 / fMilliSecondsPerTick;
+					timeoutTicks += snoozeTime;
+				}
+				else 
+				{
+					bUserInitiatedTermination = true;
+				}
+			}
+			else 
+			{
+				if (currentTick - timeoutTicks < 5)
+				{
+					pToolProcess->terminate();
+				}
+				else
+				{
+					pToolProcess->kill();
+				}
+			}
+		}
 		if (pToolProcess->state() == QProcess::Running)
 		{
 			progress->step();
