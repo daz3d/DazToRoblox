@@ -158,6 +158,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 // Accessory Export Options
 	 m_wBakeSingleOutfitCheckbox = new QCheckBox(tr("Bake Single Outfit"));
 	 m_wBakeSingleOutfitCheckbox->setToolTip(tr("Bake all items into a single layered clothing outfit"));
+	 m_wBakeSingleOutfitCheckbox->setChecked(true);
 	 QLabel* wLayeredClothingRowLabel = new QLabel(tr("Layered Clothing"));
 
 	 // Add GUI to layout

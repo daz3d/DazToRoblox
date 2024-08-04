@@ -1255,17 +1255,17 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		if (m_sAssetType == "ALL") {
 			// R15
 //			DzProgress::setCurrentInfo("Starting Blender Processing... R15 Avatar");
-			exportProgress->setCurrentInfo("Starting Blender Processing... R15 Avatar");
+			exportProgress->setCurrentInfo("Starting Blender Processing. Generating R15 Avatar...");
 			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_R15);
 
 			// S1
 //			DzProgress::setCurrentInfo("... S1 Avatar");
-			exportProgress->setCurrentInfo("... S1 Avatar");
+			exportProgress->setCurrentInfo("Generating S1 Avatar...");
 			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_S1);
 
 			// Accessories
 //			DzProgress::setCurrentInfo("... Accessories");
-			exportProgress->setCurrentInfo("... Accessories");
+			exportProgress->setCurrentInfo("Generating Avatar Accessories...");
 			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_Accessories);
 		}
 		else
@@ -1517,7 +1517,7 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 	float fTimeoutInSeconds = 2 * 60;
 	float fMilliSecondsPerTick = 200;
 	int numTotalTicks = fTimeoutInSeconds * 1000 / fMilliSecondsPerTick;
-	DzProgress* progress = new DzProgress("Running Blender Scripts", numTotalTicks, false, true);
+	DzProgress* progress = new DzProgress("Running Blender Script", numTotalTicks, false, true);
 	progress->enable(true);
 	QProcess* pToolProcess = new QProcess(this);
 	pToolProcess->setWorkingDirectory(sWorkingPath);
@@ -1570,7 +1570,7 @@ Do you want to Abort the operation?");
 			break;
 		}
 	}
-    progress->setCurrentInfo("Blender Scripts Completed.");
+    progress->setCurrentInfo("Blender Script Completed.");
 	progress->finish();
 	delete progress;
 	m_nBlenderExitCode = pToolProcess->exitCode();
