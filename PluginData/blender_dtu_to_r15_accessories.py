@@ -118,7 +118,8 @@ def find_roughness_node(material):
     nodes = material.node_tree.nodes
     roughness_node = nodes.new(type='ShaderNodeRGB')
     if nodes.get('Principled BSDF') is not None:
-        roughness_node.outputs['Color'].default_value = nodes['Principled BSDF'].inputs['Roughness'].default_value
+        roughness_value = nodes['Principled BSDF'].inputs['Roughness'].default_value
+        roughness_node.outputs['Color'].default_value = (roughness_value, roughness_value, roughness_value, 1.0)
     else:
         roughness_node.outputs['Color'].default_value = (0.5, 0.5, 0.5, 1.0)
     return roughness_node
@@ -133,7 +134,8 @@ def find_metallic_node(material):
     nodes = material.node_tree.nodes
     metallic_node = nodes.new(type='ShaderNodeRGB')
     if nodes.get('Principled BSDF') is not None:
-        metallic_node.outputs['Color'].default_value = nodes['Principled BSDF'].inputs['Metallic'].default_value
+        metallic_value = nodes['Principled BSDF'].inputs['Metallic'].default_value
+        metallic_node.outputs['Color'].default_value = (metallic_value, metallic_value, metallic_value, 1.0)
     else:
         metallic_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
     return metallic_node
