@@ -352,11 +352,22 @@ def create_new_uv_layer(obj, name="AtlasUV"):
     mesh.uv_layers.active = new_uv
     return new_uv
 
+def repack_uv(obj):
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.uv.select_all(action='SELECT')
+    # bpy.ops.uv.pack_islands(margin=0.001)
+    bpy.ops.uv.pack_islands(udim_source='ACTIVE_UDIM', rotate=True, rotate_method='ANY', scale=True, 
+                            merge_overlap=False, margin_method='SCALED', margin=0.001,
+                            pin=False, pin_method='LOCKED', shape_method='CONCAVE')
+    bpy.ops.object.mode_set(mode='OBJECT')
+
 def unwrap_object(obj):
     bpy.context.view_layer.objects.active = obj
     bpy.ops.object.mode_set(mode='EDIT')
     bpy.ops.mesh.select_all(action='SELECT')
-    bpy.ops.uv.unwrap(method='ANGLE_BASED', margin=0.001)
+    bpy.ops.uv.unwrap(method='ANGLE_BASED', fill_holes=True, correct_aspect=True, margin=0.001),
     bpy.ops.object.mode_set(mode='OBJECT')
 
 def assign_atlas_to_object(obj, atlas_material):
@@ -379,7 +390,9 @@ def convert_to_atlas(obj):
     diffuse_atlas, atlas_material = create_texture_atlas(obj)
     new_uv_name = "AtlasUV"
     new_uv = create_new_uv_layer(obj, new_uv_name)
-    unwrap_object(obj)
+
+    # unwrap_object(obj)
+    repack_uv(obj)
 
     bake_diffuse_to_atlas(obj, diffuse_atlas)
 
@@ -421,16 +434,19 @@ def convert_to_atlas(obj):
     # link normal atlas to atlas material
     normal_tex_node = nodes.new(type='ShaderNodeTexImage')
     normal_tex_node.image = normal_atlas
+    normal_tex_node.image.colorspace_settings.name = 'Non-Color'
     normal_node = nodes.new(type='ShaderNodeNormalMap')
     atlas_material.node_tree.links.new(normal_tex_node.outputs['Color'], normal_node.inputs['Color'])
     atlas_material.node_tree.links.new(normal_node.outputs['Normal'], nodes["Principled BSDF"].inputs['Normal'])
     # link roughness atlas to atlas material
     roughness_node = nodes.new(type='ShaderNodeTexImage')
     roughness_node.image = roughness_atlas
+#    roughness_node.image.colorspace_settings.name = 'Non-Color'
     atlas_material.node_tree.links.new(roughness_node.outputs['Color'], nodes["Principled BSDF"].inputs['Roughness'])
     # link metallic atlas to atlas material
     metallic_node = nodes.new(type='ShaderNodeTexImage')
     metallic_node.image = metallic_atlas
+#    metallic_node.image.colorspace_settings.name = 'Non-Color'
     atlas_material.node_tree.links.new(metallic_node.outputs['Color'], nodes["Principled BSDF"].inputs['Metallic'])
 
     original_materials = assign_atlas_to_object(obj, atlas_material)
@@ -449,13 +465,17 @@ def convert_to_atlas(obj):
             print("ERROR: Unable to set active_render for uv layer: " + new_uv.name)
     
     # remove other UVs
-    for uv in obj.data.uv_layers:
-        if uv != new_uv and str(uv.name) != str(new_uv_name):
-            try:
-                print("DEBUG: removing old uv layer: " + str(uv.name))
-            except:
-                pass                
-            obj.data.uv_layers.remove(uv)
+    uv_layer_names_to_remove = []
+    for uv_layer in obj.data.uv_layers:
+        current_uv_name = str(uv_layer.name)
+        if current_uv_name != new_uv_name:
+            uv_layer_names_to_remove.append(current_uv_name)
+    
+    for uv_layer_name in uv_layer_names_to_remove:
+        uv_layer = obj.data.uv_layers.get(uv_layer_name)
+        if uv_layer is not None:
+            print("DEBUG: removing uv_layer: " + uv_layer_name)
+            obj.data.uv_layers.remove(uv_layer)
 
     # # remove world lighting
     # if background:
@@ -873,7 +893,7 @@ def _main(argv):
     if (not os.path.exists(destinationPath)):
         os.makedirs(destinationPath)
     fbx_base_name = os.path.basename(fbxPath)
-    if bake_single_outfit and "ALL" in roblox_asset_type:
+    if bake_single_outfit:
         fbx_output_name = fbx_base_name.replace(".fbx", "_outfit.fbx")
     elif "layered" in roblox_asset_type or "ALL" in roblox_asset_type:
         fbx_output_name = fbx_base_name.replace(".fbx", "_layered_accessories.fbx")
