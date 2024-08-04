@@ -352,9 +352,6 @@ def _main(argv):
 
     # select all
     bpy.ops.object.select_all(action="SELECT")
-    # scale to 0.0333
-    # bpy.ops.transform.resize(value=(0.0333, 0.0333, 0.0333))
-    # bpy.ops.transform.resize(value=(1/28, 1/28, 1/28))
     # apply using "All Transforms to Deltas"
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
@@ -373,7 +370,6 @@ def _main(argv):
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     try:
         bpy.ops.export_scene.fbx(filepath=fbx_output_file_path, 
-                                #  global_scale = 0.0333,
                                  add_leaf_bones = False,
                                  path_mode = "COPY",
                                  embed_textures = True,

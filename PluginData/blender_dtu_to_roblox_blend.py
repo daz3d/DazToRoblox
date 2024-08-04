@@ -111,9 +111,7 @@ def _main(argv):
     _add_to_log("DEBUG: main(): loading fbx file: " + str(fbxPath))
     blender_tools.import_fbx(fbxPath)
 
-    # fix scale, scale by 30x
     bpy.ops.object.select_all(action="SELECT")
-    bpy.ops.transform.resize(value=(30, 30, 30))
     # Loop through all objects in the scene
     cage_obj_list = []
     for obj in bpy.data.objects:
@@ -427,9 +425,6 @@ def _main(argv):
     bpy.context.scene.cursor.location = (0.0, 0.0, 0.0)
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
 
-    # # scale to 0.0333 ==> for future, use 1/30 for exact conversion
-    # bpy.ops.transform.resize(value=(0.0333, 0.0333, 0.0333))
-    #
     # NEW SCALING CODE
     bpy.context.scene.unit_settings.scale_length = 1/28
 
@@ -482,7 +477,6 @@ def _main(argv):
     # export to fbx
     try:
         bpy.ops.export_scene.fbx(filepath=fbx_output_file_path, 
-                                #  global_scale = 0.0333,
                                  add_leaf_bones = False,
                                  path_mode = "COPY",
                                  embed_textures = True,

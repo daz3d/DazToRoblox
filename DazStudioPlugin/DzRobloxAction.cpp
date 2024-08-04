@@ -1051,9 +1051,9 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 				return;
 			}
 			// local transform
-			FbxDouble3 scale = characterRoot->LclScaling.Get();
-			FbxDouble3 newScale = FbxDouble3(scale[0] / 30, scale[1] / 30, scale[2] / 30);
-			characterRoot->LclScaling.Set(newScale);
+//			FbxDouble3 scale = characterRoot->LclScaling.Get();
+//			FbxDouble3 newScale = FbxDouble3(scale[0] / 30, scale[1] / 30, scale[2] / 30);
+//			characterRoot->LclScaling.Set(newScale);
 
 			// causes original skeleton to be piled up at origin
 			mergeScenes(pMorphedSourceScene, pTemplateScene);
