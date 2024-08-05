@@ -99,6 +99,8 @@ protected:
 	QString m_sModestyOverlayCustomFilePath = "";
 
 	bool m_bBakeSingleOutfit = false;
+	int m_nRobloxTextureSize = 1024;
+	int m_nBlenderTextureBakeQuality = 1; // number of samples per texel
 
 	friend class DzRobloxUtils;
 

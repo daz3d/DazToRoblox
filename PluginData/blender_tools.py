@@ -822,14 +822,14 @@ def find_diffuse_node(material):
         diffuse_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
     return diffuse_node
 
-def bake_roughness_to_atlas(obj, atlas):
+def bake_roughness_to_atlas(obj, atlas, bake_quality=4):
     bpy.ops.object.select_all(action='DESELECT')
     obj.select_set(True)
     bpy.context.view_layer.objects.active = obj
 
     bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 4
-    bpy.context.scene.cycles.time_limit = 2
+    bpy.context.scene.cycles.samples = bake_quality
+    bpy.context.scene.cycles.time_limit = 1
     bpy.context.scene.cycles.bake_type = 'ROUGHNESS'
     bpy.context.scene.render.bake.margin = 16
 
@@ -857,14 +857,14 @@ def bake_roughness_to_atlas(obj, atlas):
     return
 
 
-def bake_normal_to_atlas(obj, atlas):
+def bake_normal_to_atlas(obj, atlas, bake_quality=4):
     bpy.ops.object.select_all(action='DESELECT')
     obj.select_set(True)
     bpy.context.view_layer.objects.active = obj
 
     bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 4
-    bpy.context.scene.cycles.time_limit = 2
+    bpy.context.scene.cycles.samples = bake_quality
+    bpy.context.scene.cycles.time_limit = 1
     bpy.context.scene.cycles.bake_type = 'NORMAL'
     bpy.context.scene.render.bake.margin = 16
 
@@ -891,7 +891,7 @@ def bake_normal_to_atlas(obj, atlas):
 
     return
 
-def bake_metallic_to_atlas(obj, atlas):
+def bake_metallic_to_atlas(obj, atlas, bake_quality=4):
     # check metallic is linked to principled bsdf
     metallic_found = False
     for mat_slot in obj.material_slots:
@@ -911,8 +911,8 @@ def bake_metallic_to_atlas(obj, atlas):
     bpy.context.view_layer.objects.active = obj
 
     bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 4
-    bpy.context.scene.cycles.time_limit = 2
+    bpy.context.scene.cycles.samples = bake_quality
+    bpy.context.scene.cycles.time_limit = 1
     bpy.context.scene.cycles.bake_type = 'EMIT'
     bpy.context.scene.render.bake.use_pass_direct = False
     bpy.context.scene.render.bake.use_pass_indirect = False
@@ -953,15 +953,15 @@ def bake_metallic_to_atlas(obj, atlas):
 
     return
 
-def bake_diffuse_to_atlas(obj, atlas):
+def bake_diffuse_to_atlas(obj, atlas, bake_quality=4):
     print(f"Starting bake process for object: {obj.name}")
     bpy.ops.object.select_all(action='DESELECT')
     obj.select_set(True)
     bpy.context.view_layer.objects.active = obj
     
     bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 4
-    bpy.context.scene.cycles.time_limit = 2
+    bpy.context.scene.cycles.samples = bake_quality
+    bpy.context.scene.cycles.time_limit = 1
     bpy.context.scene.cycles.bake_type = 'COMBINED'
     bpy.context.scene.render.bake.use_pass_direct = False
     bpy.context.scene.render.bake.use_pass_indirect = False
@@ -1045,7 +1045,7 @@ def assign_atlas_to_object(obj, atlas_material):
     obj.data.materials.append(atlas_material)
     return original_materials
 
-def convert_to_atlas(obj, image_output_path):
+def convert_to_atlas(obj, image_output_path, atlas_size=4096, bake_quality=4):
     print(f"Starting atlas conversion for object: {obj.name}")
     
     # Add basic lighting if the scene has none
@@ -1054,14 +1054,14 @@ def convert_to_atlas(obj, image_output_path):
     #     print("No lights found in the scene. Adding a basic sun light and hdri.")
     #     background = setup_world_lighting((1.0, 1.0, 1.0, 1.0), 1.0)
     
-    diffuse_atlas, atlas_material = create_texture_atlas(obj)
+    diffuse_atlas, atlas_material = create_texture_atlas(obj, atlas_size)
     new_uv_name = "AtlasUV"
     new_uv = create_new_uv_layer(obj, new_uv_name)
 
     # unwrap_object(obj)
     repack_uv(obj)
 
-    bake_diffuse_to_atlas(obj, diffuse_atlas)
+    bake_diffuse_to_atlas(obj, diffuse_atlas, bake_quality)
 
     diffuse_atlas_path = image_output_path + "/" + f"{obj.name}_Atlas_D.png"
     print("DEBUG: saving: " + diffuse_atlas_path)
@@ -1070,8 +1070,8 @@ def convert_to_atlas(obj, image_output_path):
     diffuse_atlas.file_format = 'PNG'
     diffuse_atlas.save()
 
-    normal_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_N", width=4096, height=4096)
-    bake_normal_to_atlas(obj, normal_atlas)
+    normal_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_N", width=atlas_size, height=atlas_size)
+    bake_normal_to_atlas(obj, normal_atlas, bake_quality)
 
     normal_atlas_path = image_output_path + "/" + f"{obj.name}_Atlas_N.jpg"
     print("DEBUG: saving: " + normal_atlas_path)
@@ -1079,8 +1079,8 @@ def convert_to_atlas(obj, image_output_path):
     normal_atlas.file_format = 'JPEG'
     normal_atlas.save()
 
-    metallic_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_M", width=4096, height=4096)
-    bake_metallic_to_atlas(obj, metallic_atlas)
+    metallic_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_M", width=atlas_size, height=atlas_size)
+    bake_metallic_to_atlas(obj, metallic_atlas, bake_quality)
 
     metallic_atlas_path = image_output_path + "/" + f"{obj.name}_Atlas_M.jpg"
     print("DEBUG: saving: " + metallic_atlas_path)
@@ -1088,8 +1088,8 @@ def convert_to_atlas(obj, image_output_path):
     metallic_atlas.file_format = 'JPEG'
     metallic_atlas.save()
 
-    roughness_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_R", width=4096, height=4096)
-    bake_roughness_to_atlas(obj, roughness_atlas)
+    roughness_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_R", width=atlas_size, height=atlas_size)
+    bake_roughness_to_atlas(obj, roughness_atlas, bake_quality)
 
     roughness_atlas_path = image_output_path + "/" + f"{obj.name}_Atlas_R.jpg"
     print("DEBUG: saving: " + roughness_atlas_path)

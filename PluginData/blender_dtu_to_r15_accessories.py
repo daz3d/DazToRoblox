@@ -115,6 +115,14 @@ def _main(argv):
     roblox_asset_name = dtu_dict["Asset Name"]
     roblox_output_path = dtu_dict["Output Folder"]
     roblox_asset_type = dtu_dict["Asset Type"]
+    if "Texture Bake Quality" in dtu_dict:
+        texture_bake_quality = dtu_dict["Texture Bake Quality"]
+    else:
+        texture_bake_quality = 1
+    if "Texture Size" in dtu_dict:
+        roblox_texture_size = dtu_dict["Texture Size"]
+    else:
+        roblox_texture_size = 1024
     if "Bake Single Outfit" in dtu_dict:
         bake_single_outfit = dtu_dict["Bake Single Outfit"]
     else:
@@ -262,7 +270,7 @@ def _main(argv):
             if len(image_list) <= 1:
                 continue
             print("DEBUG: running texture atlas for obj: " + obj.name + ", num materials: " + str(num_materials) + ", images: " + str(image_list))
-            atlas, atlas_material, _ = blender_tools.convert_to_atlas(obj, intermediate_folder_path)
+            atlas, atlas_material, _ = blender_tools.convert_to_atlas(obj, intermediate_folder_path, roblox_texture_size, texture_bake_quality)
             safe_material_names_list.append(atlas_material.name.lower())
 
     # Remove multilpe materials

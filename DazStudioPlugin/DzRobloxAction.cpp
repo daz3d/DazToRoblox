@@ -523,7 +523,7 @@ DzRobloxAction::DzRobloxAction() :
 	m_bCombineDiffuseAndAlphaMaps = true;
 	m_bGenerateNormalMaps = true;
 	m_bResizeTextures = true;
-	m_qTargetTextureSize = QSize(4096, 4096);
+	m_qTargetTextureSize = QSize(m_nRobloxTextureSize, m_nRobloxTextureSize);
 	m_bMultiplyTextureValues = true;
 	m_bRecompressIfFileSizeTooBig = true;
 	m_nFileSizeThresholdToInitiateRecompression = 1024 * 1024 * 19; // 2024-08-01, DB: current roblox image size upload limit of < 20MB
@@ -1367,6 +1367,8 @@ void DzRobloxAction::writeConfiguration()
 	// Plugin-specific items
 	writer.addMember("Output Folder", m_sRobloxOutputFolderPath);
 	writer.addMember("Bake Single Outfit", m_bBakeSingleOutfit);
+	writer.addMember("Texture Size", m_nRobloxTextureSize);
+	writer.addMember("Texture Bake Quality", m_nBlenderTextureBakeQuality);
 
 	if (true)
 	{
