@@ -608,3 +608,73 @@ def ugc_validation_fixes():
     bpy.data.objects["Genesis9"].data.edit_bones["Head"].head.z = new_z
 
     bpy.ops.object.mode_set(mode="OBJECT")
+
+def make_complete_cage():
+    cage_names_list = ['Head_OuterCage',
+                'LowerTorso_OuterCage',
+                'UpperTorso_OuterCage',
+                'LeftFoot_OuterCage',
+                'LeftHand_OuterCage',
+                'LeftLowerArm_OuterCage',
+                'LeftLowerLeg_OuterCage',
+                'LeftUpperArm_OuterCage',
+                'LeftUpperLeg_OuterCage',
+                'RightFoot_OuterCage',
+                'RightHand_OuterCage',
+                'RightLowerArm_OuterCage',
+                'RightLowerLeg_OuterCage',
+                'RightUpperArm_OuterCage',
+                'RightUpperLeg_OuterCage']
+    cage_obj_list = []
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and obj.name in cage_names_list:
+            cage_obj = obj
+            bpy.ops.object.select_all(action='DESELECT')
+            cage_obj.select_set(True)
+            bpy.context.view_layer.objects.active = cage_obj
+            bpy.ops.object.duplicate()
+            if cage_obj != bpy.context.object and cage_obj.name in bpy.context.object.name:
+                cage_obj_copy1 = bpy.context.object
+                cage_obj_list.append(cage_obj_copy1)
+            else:
+                # throw exception
+                raise Exception("ERROR: make_full_cage(): object duplication failed, obj name=" + cage_obj.name)
+    # join all inner cage objects
+    full_cage_obj = None
+    if len(cage_obj_list) > 1:
+        bpy.ops.object.select_all(action='DESELECT')
+        bpy.context.view_layer.objects.active = cage_obj_list[0]
+        for obj in cage_obj_list:
+            obj.select_set(True)
+        bpy.ops.object.join()
+        full_cage_obj = bpy.context.object
+    else:
+        raise Exception("ERROR: make_complete_cage(): unable to make full cage.")
+    full_cage_obj.name = "NEW_OuterCage"
+    return full_cage_obj
+
+def make_inner_cage(target_obj_name):
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and obj.name.lower() == target_obj_name.lower():
+            target_obj = obj
+            break
+    if target_obj is None:
+        print("ERROR: make_inner_cage(): target_obj not found.")
+        return None
+    inner_cage_obj = make_complete_cage()
+    if inner_cage_obj is None:
+        print("ERROR: make_inner_cage(): inner_cage not found.")
+        return None
+    # apply shrinkwrap modifier to inner_cage_obj
+    bpy.ops.object.select_all(action='DESELECT')
+    inner_cage_obj.select_set(True)
+    bpy.context.view_layer.objects.active = inner_cage_obj   
+    bpy.ops.object.modifier_add(type='SHRINKWRAP')
+    bpy.context.object.modifiers["Shrinkwrap"].target = target_obj
+    bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
+    bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'INSIDE'
+    # apply shrinkwrap modifier
+    bpy.ops.object.modifier_apply(modifier="Shrinkwrap")
+    inner_cage_obj.name = "NEW_InnerCage"
+    return inner_cage_obj
+

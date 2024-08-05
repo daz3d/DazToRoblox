@@ -53,444 +53,13 @@ except:
     import game_readiness_tools
     from game_readiness_roblox_data import *
 
-g_intermediate_folder_path = ""
-
 def _add_to_log(sMessage):
     print(str(sMessage))
     with open(logFilename, "a") as file:
         file.write(sMessage + "\n")
 
-def setup_world_lighting(color, strength=5.0):
-    world = bpy.context.scene.world
-    world.use_nodes = True
-    nodes = world.node_tree.nodes
-    nodes.clear()
-    background = nodes.new(type='ShaderNodeBackground')
-    background.inputs['Color'].default_value = color
-    background.inputs['Strength'].default_value = strength
-    world_output = nodes.new(type='ShaderNodeOutputWorld')
-    links = world.node_tree.links
-    links.new(background.outputs['Background'], world_output.inputs['Surface'])
-    bpy.context.scene.world = world   
-    return background
-
-def add_basic_lighting(strength=5.0):
-    bpy.ops.object.light_add(type='SUN', location=(0, 0, 10))
-    sun = bpy.context.active_object
-    sun.data.energy = strength  # Adjust as needed
-    sun.data.use_shadow = False
-    # sun.data.angle = 0.523599
-    return sun
-
-def setup_bake_nodes(material, atlas):
-    nodes = material.node_tree.nodes
-    for node in nodes:
-        node.select = False
-    # Create Image Texture node for baking target
-    bake_node = nodes.new(type='ShaderNodeTexImage')
-    bake_node.image = atlas
-    bake_node.select = True
-    nodes.active = bake_node   
-    return bake_node
-
-def cleanup_bake_nodes(obj, bake_nodes, unlink_emission=False):
-    for mat_slot in obj.material_slots:
-        if mat_slot.material and mat_slot.material.use_nodes:
-            material = mat_slot.material
-            for bake_node in bake_nodes:
-                if bake_node in material.node_tree.nodes.values():
-                    material.node_tree.nodes.remove(bake_node)
-            if unlink_emission:
-                nodes = material.node_tree.nodes
-                if bpy.app.version >= (4, 0, 0):
-                    material.node_tree.links.remove(nodes['Principled BSDF'].inputs['Emission Color'].links[0])
-                else:
-                    material.node_tree.links.remove(nodes['Principled BSDF'].inputs['Emission'].links[0])
-    return
-
-def find_roughness_node(material):
-    nodes = material.node_tree.nodes
-    for node in nodes:
-        if node.type == 'BSDF_PRINCIPLED':
-            if "Roughness" in node.inputs and node.inputs["Roughness"].is_linked:
-                return node.inputs["Roughness"].links[0].from_node
-    # create placeholder roughness node
-    nodes = material.node_tree.nodes
-    roughness_node = nodes.new(type='ShaderNodeRGB')
-    if nodes.get('Principled BSDF') is not None:
-        roughness_value = nodes['Principled BSDF'].inputs['Roughness'].default_value
-        roughness_node.outputs['Color'].default_value = (roughness_value, roughness_value, roughness_value, 1.0)
-    else:
-        roughness_node.outputs['Color'].default_value = (0.5, 0.5, 0.5, 1.0)
-    return roughness_node
-
-def find_metallic_node(material):
-    nodes = material.node_tree.nodes
-    for node in nodes:
-        if node.type == 'BSDF_PRINCIPLED':
-            if "Metallic" in node.inputs and node.inputs["Metallic"].is_linked:
-                return node.inputs["Metallic"].links[0].from_node
-    # create placeholder metallic node
-    nodes = material.node_tree.nodes
-    metallic_node = nodes.new(type='ShaderNodeRGB')
-    if nodes.get('Principled BSDF') is not None:
-        metallic_value = nodes['Principled BSDF'].inputs['Metallic'].default_value
-        metallic_node.outputs['Color'].default_value = (metallic_value, metallic_value, metallic_value, 1.0)
-    else:
-        metallic_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
-    return metallic_node
-
-def find_diffuse_node(material):
-    nodes = material.node_tree.nodes
-    for node in nodes:
-        if node.type == 'BSDF_PRINCIPLED':
-            if "Base Color" in node.inputs and node.inputs["Base Color"].is_linked:
-                return node.inputs["Base Color"].links[0].from_node
-    # create placeholder diffuse node
-    nodes = material.node_tree.nodes
-    diffuse_node = nodes.new(type='ShaderNodeRGB')
-    if nodes.get('Principled BSDF') is not None:
-        diffuse_node.outputs['Color'].default_value = nodes['Principled BSDF'].inputs['Base Color'].default_value
-    else:
-        diffuse_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
-    return diffuse_node
-
-def bake_roughness_to_atlas(obj, atlas):
-    bpy.ops.object.select_all(action='DESELECT')
-    obj.select_set(True)
-    bpy.context.view_layer.objects.active = obj
-
-    bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 4
-    bpy.context.scene.cycles.time_limit = 2
-    bpy.context.scene.cycles.bake_type = 'ROUGHNESS'
-    bpy.context.scene.render.bake.margin = 16
-
-    # Setup bake nodes for each material
-    bake_nodes = []
-    for mat_slot in obj.material_slots:
-        if mat_slot.material and mat_slot.material.use_nodes:
-            print(f"Setting up bake node for material: {mat_slot.material.name}")
-            bake_node = setup_bake_nodes(mat_slot.material, atlas)
-            bake_nodes.append(bake_node)
-        else:
-            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
-    if not bake_nodes:
-        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
-        return
-
-    # Bake
-    print("Starting bake operation...")
-    bpy.ops.object.bake(type='ROUGHNESS')
-    print("Bake operation completed.")
-
-    # Clean up bake nodes
-    cleanup_bake_nodes(obj, bake_nodes)
-
-    return
-
-
-def bake_normal_to_atlas(obj, atlas):
-    bpy.ops.object.select_all(action='DESELECT')
-    obj.select_set(True)
-    bpy.context.view_layer.objects.active = obj
-
-    bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 4
-    bpy.context.scene.cycles.time_limit = 2
-    bpy.context.scene.cycles.bake_type = 'NORMAL'
-    bpy.context.scene.render.bake.margin = 16
-
-    # Setup bake nodes for each material
-    bake_nodes = []
-    for mat_slot in obj.material_slots:
-        if mat_slot.material and mat_slot.material.use_nodes:
-            print(f"Setting up bake node for material: {mat_slot.material.name}")
-            bake_node = setup_bake_nodes(mat_slot.material, atlas)
-            bake_nodes.append(bake_node)
-        else:
-            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
-    if not bake_nodes:
-        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
-        return
-
-    # Bake
-    print("Starting bake operation...")
-    bpy.ops.object.bake(type='NORMAL')
-    print("Bake operation completed.")
-
-    # Clean up bake nodes
-    cleanup_bake_nodes(obj, bake_nodes)
-
-    return
-
-def bake_metallic_to_atlas(obj, atlas):
-    # check metallic is linked to principled bsdf
-    metallic_found = False
-    for mat_slot in obj.material_slots:
-        if mat_slot.material and mat_slot.material.use_nodes:
-            for node in mat_slot.material.node_tree.nodes:
-                if node.type == 'BSDF_PRINCIPLED':
-                    if "Metallic" in node.inputs and node.inputs["Metallic"].is_linked:
-                        metallic_found = True
-                        break
-            break    
-    if not metallic_found:
-        print("Warning: No metallic map found. Skipping metallic bake.")
-        return
-    
-    bpy.ops.object.select_all(action='DESELECT')
-    obj.select_set(True)
-    bpy.context.view_layer.objects.active = obj
-
-    bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 4
-    bpy.context.scene.cycles.time_limit = 2
-    bpy.context.scene.cycles.bake_type = 'EMIT'
-    bpy.context.scene.render.bake.use_pass_direct = False
-    bpy.context.scene.render.bake.use_pass_indirect = False
-    bpy.context.scene.render.bake.use_pass_color = False
-    bpy.context.scene.render.bake.use_pass_glossy = False
-    bpy.context.scene.render.bake.use_pass_diffuse = False
-    bpy.context.scene.render.bake.use_pass_emit = True
-    bpy.context.scene.render.bake.margin = 16
-
-    # Setup bake nodes for each material
-    bake_nodes = []
-    for mat_slot in obj.material_slots:
-        if mat_slot.material and mat_slot.material.use_nodes:
-            print(f"Setting up bake node for material: {mat_slot.material.name}")
-            bake_node = setup_bake_nodes(mat_slot.material, atlas)
-            bake_nodes.append(bake_node)
-            material = mat_slot.material
-            nodes = material.node_tree.nodes
-            metallic_node = find_metallic_node(material)
-            # link image texture color to emission color of Principled BSDF node    
-            if bpy.app.version >= (4, 0, 0):
-                material.node_tree.links.new(metallic_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission Color'])
-            else:
-                material.node_tree.links.new(metallic_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission'])   
-        else:
-            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
-    if not bake_nodes:
-        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
-        return
-
-    # Bake
-    print("Starting bake operation...")
-    bpy.ops.object.bake(type='EMIT')
-    print("Bake operation completed.")
-
-    # Clean up bake nodes
-    cleanup_bake_nodes(obj, bake_nodes, True)
-
-    return
-
-def bake_diffuse_to_atlas(obj, atlas):
-    print(f"Starting bake process for object: {obj.name}")
-    bpy.ops.object.select_all(action='DESELECT')
-    obj.select_set(True)
-    bpy.context.view_layer.objects.active = obj
-    
-    bpy.context.scene.render.engine = 'CYCLES'
-    bpy.context.scene.cycles.samples = 4
-    bpy.context.scene.cycles.time_limit = 2
-    bpy.context.scene.cycles.bake_type = 'COMBINED'
-    bpy.context.scene.render.bake.use_pass_direct = False
-    bpy.context.scene.render.bake.use_pass_indirect = False
-    bpy.context.scene.render.bake.use_pass_color = True
-    bpy.context.scene.render.bake.use_pass_glossy = False
-    bpy.context.scene.render.bake.use_pass_diffuse = True
-    bpy.context.scene.render.bake.use_pass_emit = True
-    bpy.context.scene.render.bake.margin = 16
-
-    # Setup bake nodes for each material
-    bake_nodes = []
-    for mat_slot in obj.material_slots:
-        if mat_slot.material and mat_slot.material.use_nodes:
-            print(f"Setting up bake node for material: {mat_slot.material.name}")
-            bake_node = setup_bake_nodes(mat_slot.material, atlas)
-            bake_nodes.append(bake_node)
-            material = mat_slot.material
-            nodes = material.node_tree.nodes
-            diffuse_node = find_diffuse_node(material)
-            # link image texture color to emission color of Principled BSDF node    
-            if bpy.app.version >= (4, 0, 0):
-                material.node_tree.links.new(diffuse_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission Color'])
-            else:
-                material.node_tree.links.new(diffuse_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission'])   
-        else:
-            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
-    if not bake_nodes:
-        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
-        return
-
-    # Bake
-    print("Starting bake operation...")
-    bpy.ops.object.bake(type='COMBINED')
-    print("Bake operation completed.")
-    
-    # Clean up bake nodes
-    cleanup_bake_nodes(obj, bake_nodes, True)
-
-    return
-
-
-def create_texture_atlas(obj, atlas_size=4096):
-    atlas = bpy.data.images.new(name=f"{obj.name}_Atlas", width=atlas_size, height=atlas_size, alpha=True)
-    atlas_material = bpy.data.materials.new(name=f"{obj.name}_Atlas_Material")
-    atlas_material.use_nodes = True
-    nodes = atlas_material.node_tree.nodes
-    tex_node = nodes.new(type='ShaderNodeTexImage')
-    tex_node.image = atlas
-    atlas_material.node_tree.links.new(tex_node.outputs['Color'], nodes["Principled BSDF"].inputs['Base Color'])
-    # connect alpha channel to alpha output
-    atlas_material.node_tree.links.new(tex_node.outputs['Alpha'], nodes["Principled BSDF"].inputs['Alpha'])
-    return atlas, atlas_material
-
-def create_new_uv_layer(obj, name="AtlasUV"):
-    mesh = obj.data
-    new_uv = mesh.uv_layers.new(name=name)
-    mesh.uv_layers.active = new_uv
-    return new_uv
-
-def repack_uv(obj):
-    bpy.context.view_layer.objects.active = obj
-    bpy.ops.object.mode_set(mode='EDIT')
-    bpy.ops.mesh.select_all(action='SELECT')
-    bpy.ops.uv.select_all(action='SELECT')
-    # bpy.ops.uv.pack_islands(margin=0.001)
-    bpy.ops.uv.pack_islands(udim_source='ACTIVE_UDIM', rotate=True, rotate_method='ANY', scale=True, 
-                            merge_overlap=False, margin_method='SCALED', margin=0.001,
-                            pin=False, pin_method='LOCKED', shape_method='CONCAVE')
-    bpy.ops.object.mode_set(mode='OBJECT')
-
-def unwrap_object(obj):
-    bpy.context.view_layer.objects.active = obj
-    bpy.ops.object.mode_set(mode='EDIT')
-    bpy.ops.mesh.select_all(action='SELECT')
-    bpy.ops.uv.unwrap(method='ANGLE_BASED', fill_holes=True, correct_aspect=True, margin=0.001),
-    bpy.ops.object.mode_set(mode='OBJECT')
-
-def assign_atlas_to_object(obj, atlas_material):
-    original_materials = [slot.material for slot in obj.material_slots]
-    obj.data.materials.clear()
-    obj.data.materials.append(atlas_material)
-    return original_materials
-
-def convert_to_atlas(obj):
-    global g_intermediate_folder_path
-
-    print(f"Starting atlas conversion for object: {obj.name}")
-    
-    # Add basic lighting if the scene has none
-    background = None
-    # if not any(obj.type == 'LIGHT' for obj in bpy.context.scene.objects):
-    #     print("No lights found in the scene. Adding a basic sun light and hdri.")
-    #     background = setup_world_lighting((1.0, 1.0, 1.0, 1.0), 1.0)
-    
-    diffuse_atlas, atlas_material = create_texture_atlas(obj)
-    new_uv_name = "AtlasUV"
-    new_uv = create_new_uv_layer(obj, new_uv_name)
-
-    # unwrap_object(obj)
-    repack_uv(obj)
-
-    bake_diffuse_to_atlas(obj, diffuse_atlas)
-
-    diffuse_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_D.png"
-    print("DEBUG: saving: " + diffuse_atlas_path)
-    # save atlas image to disk
-    diffuse_atlas.filepath_raw = diffuse_atlas_path
-    diffuse_atlas.file_format = 'PNG'
-    diffuse_atlas.save()
-
-    normal_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_N", width=4096, height=4096)
-    bake_normal_to_atlas(obj, normal_atlas)
-
-    normal_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_N.jpg"
-    print("DEBUG: saving: " + normal_atlas_path)
-    normal_atlas.filepath_raw = normal_atlas_path
-    normal_atlas.file_format = 'JPEG'
-    normal_atlas.save()
-
-    metallic_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_M", width=4096, height=4096)
-    bake_metallic_to_atlas(obj, metallic_atlas)
-
-    metallic_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_M.jpg"
-    print("DEBUG: saving: " + metallic_atlas_path)
-    metallic_atlas.filepath_raw = metallic_atlas_path
-    metallic_atlas.file_format = 'JPEG'
-    metallic_atlas.save()
-
-    roughness_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_R", width=4096, height=4096)
-    bake_roughness_to_atlas(obj, roughness_atlas)
-
-    roughness_atlas_path = g_intermediate_folder_path + "/" + f"{obj.name}_Atlas_R.jpg"
-    print("DEBUG: saving: " + roughness_atlas_path)
-    roughness_atlas.filepath_raw = roughness_atlas_path
-    roughness_atlas.file_format = 'JPEG'
-    roughness_atlas.save()
-
-    nodes = atlas_material.node_tree.nodes
-    # link normal atlas to atlas material
-    normal_tex_node = nodes.new(type='ShaderNodeTexImage')
-    normal_tex_node.image = normal_atlas
-    normal_tex_node.image.colorspace_settings.name = 'Non-Color'
-    normal_node = nodes.new(type='ShaderNodeNormalMap')
-    atlas_material.node_tree.links.new(normal_tex_node.outputs['Color'], normal_node.inputs['Color'])
-    atlas_material.node_tree.links.new(normal_node.outputs['Normal'], nodes["Principled BSDF"].inputs['Normal'])
-    # link roughness atlas to atlas material
-    roughness_node = nodes.new(type='ShaderNodeTexImage')
-    roughness_node.image = roughness_atlas
-#    roughness_node.image.colorspace_settings.name = 'Non-Color'
-    atlas_material.node_tree.links.new(roughness_node.outputs['Color'], nodes["Principled BSDF"].inputs['Roughness'])
-    # link metallic atlas to atlas material
-    metallic_node = nodes.new(type='ShaderNodeTexImage')
-    metallic_node.image = metallic_atlas
-#    metallic_node.image.colorspace_settings.name = 'Non-Color'
-    atlas_material.node_tree.links.new(metallic_node.outputs['Color'], nodes["Principled BSDF"].inputs['Metallic'])
-
-    original_materials = assign_atlas_to_object(obj, atlas_material)
-
-    # print("DEBUG: new_uv.name=" + str(new_uv.name))
-    try:
-        if str(new_uv.name) != "":
-            obj.data.uv_layers[str(new_uv.name)].active_render = True
-        else:
-            obj.data.uv_layers[new_uv_name].active_render = True
-    except:
-        print("ERROR: retrying to set uv layer: " + new_uv_name)
-        try:
-            obj.data.uv_layers[new_uv_name].active_render = True
-        except:
-            print("ERROR: Unable to set active_render for uv layer: " + new_uv.name)
-    
-    # remove other UVs
-    uv_layer_names_to_remove = []
-    for uv_layer in obj.data.uv_layers:
-        current_uv_name = str(uv_layer.name)
-        if current_uv_name != new_uv_name:
-            uv_layer_names_to_remove.append(current_uv_name)
-    
-    for uv_layer_name in uv_layer_names_to_remove:
-        uv_layer = obj.data.uv_layers.get(uv_layer_name)
-        if uv_layer is not None:
-            print("DEBUG: removing uv_layer: " + uv_layer_name)
-            obj.data.uv_layers.remove(uv_layer)
-
-    # # remove world lighting
-    # if background:
-    #     background.inputs['Strength'].default_value = 0.0
-    # # bpy.context.scene.world.use_nodes = False
-
-    print("Atlas conversion completed.")
-
-    return diffuse_atlas, atlas_material, original_materials
-
 
 def _main(argv):
-    global g_intermediate_folder_path
     try:
         line = str(argv[-1])
     except:
@@ -517,7 +86,6 @@ def _main(argv):
     # prepare intermediate folder paths
     blenderFilePath = fbxPath.replace(".fbx", ".blend")
     intermediate_folder_path = os.path.dirname(fbxPath)
-    g_intermediate_folder_path = intermediate_folder_path
 
     # load FBX
     _add_to_log("DEBUG: main(): loading fbx file: " + str(fbxPath))
@@ -586,6 +154,21 @@ def _main(argv):
         return
     bpy.context.view_layer.objects.active = main_obj
 
+    top_collection = bpy.context.scene.collection
+    # create new collection for cages
+    cage_collection = bpy.data.collections.new(name="Unused Cages")
+    # Link the new collection to the scene
+    bpy.context.scene.collection.children.link(cage_collection)
+
+    # make inner cage
+    print("DEBUG: main(): making inner cage template")
+    cage_template = roblox_tools.make_inner_cage("Genesis9.Shape")
+    if cage_template is not None:
+        cage_template.name = "Template_InnerCage"
+        for col in cage_template.users_collection:
+            col.objects.unlink(cage_template)        
+        cage_collection.objects.link(cage_template)
+
     figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"]
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and (
@@ -600,6 +183,7 @@ def _main(argv):
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
             if obj.name.lower() in figure_list:
+                print("DEBUG: deleting figure_list obj.name=" + obj.name)
                 bpy.ops.object.select_all(action='DESELECT')
                 obj.select_set(True)
                 bpy.ops.object.delete()
@@ -613,12 +197,6 @@ def _main(argv):
                 att_list.append(obj.name.lower())
                 obj.hide_render = True
 
-    top_collection = bpy.context.scene.collection
-
-    # create new collection for cages
-    cage_collection = bpy.data.collections.new(name="Unused Cages")
-    # Link the new collection to the scene
-    bpy.context.scene.collection.children.link(cage_collection)
     # move cages to new collection
     for obj in cage_obj_list:
         # Unlink the object from its current collection(s)
@@ -684,7 +262,7 @@ def _main(argv):
             if len(image_list) <= 1:
                 continue
             print("DEBUG: running texture atlas for obj: " + obj.name + ", num materials: " + str(num_materials) + ", images: " + str(image_list))
-            atlas, atlas_material, _ = convert_to_atlas(obj)
+            atlas, atlas_material, _ = blender_tools.convert_to_atlas(obj, intermediate_folder_path)
             safe_material_names_list.append(atlas_material.name.lower())
 
     # Remove multilpe materials
@@ -736,90 +314,36 @@ def _main(argv):
                 "_innercage" not in obj.name.lower() and
                 "_att" not in obj.name.lower()
                 ):
-                vertex_group_names = []
-                vertex_group_vertices = {}
-                inner_cage_obj_list = []
-                outer_cage_obj_list = []
-                # num_vert_threshold = len(obj.data.vertices) * 0.05
-                num_vert_threshold = 4
-                weight_threshold = 0.75
-                # get list of names of all vertex groups that are not empty
-                for vertex in obj.data.vertices:
-                    for group in vertex.groups:
-                        if group.weight > weight_threshold:
-                            vg_name = obj.vertex_groups[group.group].name
-                            if vg_name not in vertex_group_vertices.keys():
-                                vertex_group_vertices[vg_name] = 1
-                            else:
-                                vertex_group_vertices[vg_name] += 1
-                            if (vertex_group_vertices[vg_name] > num_vert_threshold):
-                                if vg_name not in vertex_group_names:
-                                    vertex_group_names.append(vg_name)
-                    if len(vertex_group_names) == len(obj.vertex_groups):
-                        break
 
-                for name in vertex_group_names:
-                    # get cage name
-                    cage_name = name + "_OuterCage"
-                    # get obj by name (cage_name)
-                    cage_obj = bpy.data.objects.get(cage_name)
-                    if cage_obj is not None:
-                        # make 2 duplicates of cage_obj
-                        bpy.ops.object.select_all(action='DESELECT')
-                        cage_obj.select_set(True)
-                        bpy.context.view_layer.objects.active = cage_obj
-                        bpy.ops.object.duplicate()
-                        if cage_obj != bpy.context.object and cage_obj.name in bpy.context.object.name:
-                            cage_obj_copy1 = bpy.context.object
-                            top_collection.objects.link(cage_obj_copy1)
-                            cage_collection.objects.unlink(cage_obj_copy1)
-                            inner_cage_obj_list.append(cage_obj_copy1)
-                        else:
-                            # throw exception
-                            raise Exception("ERROR: main(): object duplication failed, obj name=" + cage_obj.name)
-                        bpy.ops.object.select_all(action='DESELECT')
-                        cage_obj.select_set(True)
-                        bpy.context.view_layer.objects.active = cage_obj
-                        bpy.ops.object.duplicate()
-                        if cage_obj != bpy.context.object and cage_obj.name in bpy.context.object.name:
-                            cage_obj_copy2 = bpy.context.object
-                            top_collection.objects.link(cage_obj_copy2)
-                            cage_collection.objects.unlink(cage_obj_copy2)
-                            outer_cage_obj_list.append(cage_obj_copy2)
-                        else:
-                            # throw exception
-                            raise Exception("ERROR: main(): object duplication failed, obj name=" + cage_obj.name)
+                inner_cage = None
+                bpy.ops.object.select_all(action='DESELECT')
+                # retrieve cage_template by name
+                cage_template = bpy.data.objects.get("Template_InnerCage")
+                if cage_template is not None:
+                    cage_template.select_set(True)
+                    bpy.context.view_layer.objects.active = cage_template
+                    bpy.ops.object.duplicate()
+                    if cage_template != bpy.context.object and cage_template.name in bpy.context.object.name:
+                        inner_cage = bpy.context.object
+                if inner_cage is not None:
+                    inner_cage.name = obj.name + "_InnerCage"
+                    cage_collection.objects.unlink(inner_cage)
+                    top_collection.objects.link(inner_cage)
+                else:
+                    # throw exception
+                    raise Exception("ERROR: main(): unable to make inner cage.")
 
-                # join all cages in inner_cage_obj_list
-                if len(inner_cage_obj_list) > 1:
-                    bpy.ops.object.select_all(action='DESELECT')
-                    for cage_obj in inner_cage_obj_list:
-                        cage_obj.select_set(True)
-                    bpy.context.view_layer.objects.active = inner_cage_obj_list[0]
-                    bpy.ops.object.join()
-                if len(inner_cage_obj_list) > 0:
-                    inner_cage_obj = inner_cage_obj_list[0]
-                    inner_cage_obj.name = obj.name + "_InnerCage"
-                    # # add shrinkwrap modifier to inner_cage_obj
-                    # bpy.context.view_layer.objects.active = inner_cage_obj
-                    # bpy.ops.object.modifier_add(type='SHRINKWRAP')
-                    # bpy.context.object.modifiers["Shrinkwrap"].target = obj
-                    # bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
-                    # bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'INSIDE'
-                # join all cages in outer_cage_obj_list
-                if len(outer_cage_obj_list) > 1:
-                    bpy.ops.object.select_all(action='DESELECT')
-                    for cage_obj in outer_cage_obj_list:
-                        cage_obj.select_set(True)
-                    bpy.context.view_layer.objects.active = outer_cage_obj_list[0]
-                    bpy.ops.object.join()
-                if len(outer_cage_obj_list) > 0:
-                    outer_cage_obj = outer_cage_obj_list[0]
-                    outer_cage_obj.name = obj.name + "_OuterCage"
+                outer_cage = None
+                outer_cage = roblox_tools.make_complete_cage()
+                if outer_cage is not None:
+                    # unlink from cage_collection
+                    cage_collection.objects.unlink(outer_cage)
+                    top_collection.objects.link(outer_cage)
+                    outer_cage.name = obj.name + "_OuterCage"
                     # add shrinkwrap modifier to outer_cage_obj
                     bpy.ops.object.select_all(action='DESELECT')
-                    outer_cage_obj.select_set(True)
-                    bpy.context.view_layer.objects.active = outer_cage_obj
+                    outer_cage.select_set(True)
+                    bpy.context.view_layer.objects.active = outer_cage
                     bpy.ops.object.modifier_add(type='SHRINKWRAP')
                     bpy.context.object.modifiers["Shrinkwrap"].target = obj
                     bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
@@ -827,6 +351,10 @@ def _main(argv):
                     #bpy.context.object.modifiers["Shrinkwrap"].offset = 0.0005
                     ## Blender Bug workaround: 0.0005 is actually 0.014 before changing scene scale to 1/28
                     bpy.context.object.modifiers["Shrinkwrap"].offset = 0.014
+                else:
+                    # throw exception
+                    raise Exception("ERROR: main(): unable to make outer cage.")
+
 
     # remove missing or unused images
     print("DEBUG: deleting missing or unused images...")
