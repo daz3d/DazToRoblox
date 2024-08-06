@@ -651,6 +651,11 @@ def make_complete_cage():
     else:
         raise Exception("ERROR: make_complete_cage(): unable to make full cage.")
     full_cage_obj.name = "NEW_OuterCage"
+    # unlink from any hidden collection and relink to top collection
+    top_collection = bpy.context.view_layer.layer_collection
+    for col in full_cage_obj.users_collection:
+        col.objects.unlink(full_cage_obj)
+    top_collection.collection.objects.link(full_cage_obj)
     return full_cage_obj
 
 def make_inner_cage(target_obj_name):
@@ -678,3 +683,160 @@ def make_inner_cage(target_obj_name):
     inner_cage_obj.name = "NEW_InnerCage"
     return inner_cage_obj
 
+
+def make_custom_cage(obj):
+    vertex_group_names = []
+    vertex_group_vertices = {}
+    inner_cage_obj_list = []
+    outer_cage_obj_list = []
+    # num_vert_threshold = len(obj.data.vertices) * 0.05
+    num_vert_threshold = 4
+    weight_threshold = 0.75
+    # get list of names of all vertex groups that are not empty
+    for vertex in obj.data.vertices:
+        for group in vertex.groups:
+            if group.weight > weight_threshold:
+                vg_name = obj.vertex_groups[group.group].name
+                if vg_name not in vertex_group_vertices.keys():
+                    vertex_group_vertices[vg_name] = 1
+                else:
+                    vertex_group_vertices[vg_name] += 1
+                if (vertex_group_vertices[vg_name] > num_vert_threshold):
+                    if vg_name not in vertex_group_names:
+                        vertex_group_names.append(vg_name)
+        if len(vertex_group_names) == len(obj.vertex_groups):
+            break
+
+    for name in vertex_group_names:
+        # get cage name
+        cage_name = name + "_OuterCage"
+        # get obj by name (cage_name)
+        cage_obj = bpy.data.objects.get(cage_name)
+        if cage_obj is not None:
+            bpy.ops.object.select_all(action='DESELECT')
+            cage_obj.select_set(True)
+            bpy.context.view_layer.objects.active = cage_obj
+            bpy.ops.object.duplicate()
+            if cage_obj != bpy.context.object and cage_obj.name in bpy.context.object.name:
+                cage_obj_copy2 = bpy.context.object
+                outer_cage_obj_list.append(cage_obj_copy2)
+            else:
+                # throw exception
+                raise Exception("ERROR: main(): object duplication failed, obj name=" + cage_obj.name)
+
+    # join all cages in outer_cage_obj_list
+    if len(outer_cage_obj_list) > 1:
+        bpy.ops.object.select_all(action='DESELECT')
+        for cage_obj in outer_cage_obj_list:
+            cage_obj.select_set(True)
+        bpy.context.view_layer.objects.active = outer_cage_obj_list[0]
+        bpy.ops.object.join()
+    outer_cage_obj = None
+    if len(outer_cage_obj_list) > 0:
+        outer_cage_obj = outer_cage_obj_list[0]
+        outer_cage_obj.name = obj.name + "_OuterCage"
+
+        # # add shrinkwrap modifier to outer_cage_obj
+        # bpy.ops.object.select_all(action='DESELECT')
+        # outer_cage_obj.select_set(True)
+        # bpy.context.view_layer.objects.active = outer_cage_obj
+        # bpy.ops.object.modifier_add(type='SHRINKWRAP')
+        # bpy.context.object.modifiers["Shrinkwrap"].target = obj
+        # bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
+        # bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'OUTSIDE'
+        # #bpy.context.object.modifiers["Shrinkwrap"].offset = 0.0005
+        # ## Blender Bug workaround: 0.0005 is actually 0.014 before changing scene scale to 1/28
+        # bpy.context.object.modifiers["Shrinkwrap"].offset = 0.014
+        # remove from any hidden collection and relink top collection
+
+        top_collection = bpy.context.view_layer.layer_collection
+        for col in outer_cage_obj.users_collection:
+            col.objects.unlink(outer_cage_obj)
+        top_collection.collection.objects.link(outer_cage_obj)
+
+    return outer_cage_obj
+
+def duplicate_cage(cage_name):
+    cage_obj = None
+    cage_obj_copy = None
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH' and obj.name.lower() == cage_name.lower():
+            cage_obj = obj
+            break
+    if cage_obj is None:
+        print("ERROR: duplicate_cage(): cage name not found: " + cage_name)
+        return None
+    bpy.ops.object.select_all(action='DESELECT')
+    cage_obj.select_set(True)
+    bpy.context.view_layer.objects.active = cage_obj
+    bpy.ops.object.duplicate()
+    if cage_obj != bpy.context.object and cage_obj.name in bpy.context.object.name:
+        cage_obj_copy = bpy.context.object
+        # rename cage_obj_copy
+        cage_obj_copy.name = cage_obj.name + "_Copy"
+    
+    # put in top level collection
+    top_collection = bpy.context.view_layer.layer_collection
+    for col in cage_obj_copy.users_collection:
+        col.objects.unlink(cage_obj_copy)
+    top_collection.collection.objects.link(cage_obj_copy)
+
+    return cage_obj_copy
+
+def make_dummy_target(source_obj_list):
+    if source_obj_list is None:
+        return None
+    dummy_target_obj = None
+    duplicate_obj_list = []
+    for obj in source_obj_list:
+        bpy.ops.object.select_all(action='DESELECT')
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.object.duplicate()
+        if obj != bpy.context.object and obj.name in bpy.context.object.name:
+            duplicate_obj = bpy.context.object
+            duplicate_obj_list.append(duplicate_obj)
+        else:
+            # throw exception
+            raise Exception("ERROR: make_dummy_target(): object duplication failed, obj name=" + obj.name)
+    # join all cages in duplicate_obj_list
+    if len(duplicate_obj_list) > 1:
+        bpy.ops.object.select_all(action='DESELECT')
+        for obj in duplicate_obj_list:
+            obj.select_set(True)
+        bpy.context.view_layer.objects.active = duplicate_obj_list[0]
+        bpy.ops.object.join()
+    dummy_target_obj = bpy.context.object
+    dummy_target_obj.name = source_obj_list[0].name + "_DummyTarget"
+
+    # put in top level collection
+    top_collection = bpy.context.view_layer.layer_collection
+    for col in dummy_target_obj.users_collection:
+        col.objects.unlink(dummy_target_obj)
+    top_collection.collection.objects.link(dummy_target_obj)
+
+    return dummy_target_obj
+
+def make_vertex_group_from_bounding_box(obj, bounding_box, vertex_group_name="bounding_box"):
+    # create vertex group from bounding box
+    vertex_group = obj.vertex_groups.new(name=vertex_group_name)
+    # add vertices to vertex group
+    for vertex in obj.data.vertices:
+        if bounding_box[0] <= vertex.co.x <= bounding_box[1] and \
+            bounding_box[2] <= vertex.co.y <= bounding_box[3] and \
+            bounding_box[4] <= vertex.co.z <= bounding_box[5]:
+            vertex_group.add([vertex.index], 1.0, 'REPLACE')
+    return vertex_group
+
+def get_bounding_box_from_obj(obj):
+    # caclculate bounding cube from obj vertices
+    vertices = obj.data.vertices
+    min_x = min([v.co.x for v in vertices])
+    max_x = max([v.co.x for v in vertices])
+    min_y = min([v.co.y for v in vertices])
+    max_y = max([v.co.y for v in vertices])
+    min_z = min([v.co.z for v in vertices])
+    max_z = max([v.co.z for v in vertices])
+    bounding_box = [min_x, max_x, min_y, max_y, min_z, max_z]
+    return bounding_box
+    

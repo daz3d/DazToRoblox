@@ -323,44 +323,43 @@ def _main(argv):
                 "_att" not in obj.name.lower()
                 ):
 
-                inner_cage = None
-                bpy.ops.object.select_all(action='DESELECT')
-                # retrieve cage_template by name
-                cage_template = bpy.data.objects.get("Template_InnerCage")
-                if cage_template is not None:
-                    cage_template.select_set(True)
-                    bpy.context.view_layer.objects.active = cage_template
-                    bpy.ops.object.duplicate()
-                    if cage_template != bpy.context.object and cage_template.name in bpy.context.object.name:
-                        inner_cage = bpy.context.object
+                inner_cage = roblox_tools.duplicate_cage("Template_InnerCage")
                 if inner_cage is not None:
                     inner_cage.name = obj.name + "_InnerCage"
-                    cage_collection.objects.unlink(inner_cage)
-                    top_collection.objects.link(inner_cage)
                 else:
-                    # throw exception
                     raise Exception("ERROR: main(): unable to make inner cage.")
 
-                outer_cage = None
-                outer_cage = roblox_tools.make_complete_cage()
+                outer_cage = roblox_tools.duplicate_cage("Template_InnerCage")
+                # create dummy target
                 if outer_cage is not None:
-                    # unlink from cage_collection
-                    cage_collection.objects.unlink(outer_cage)
-                    top_collection.objects.link(outer_cage)
-                    outer_cage.name = obj.name + "_OuterCage"
-                    # add shrinkwrap modifier to outer_cage_obj
-                    bpy.ops.object.select_all(action='DESELECT')
-                    outer_cage.select_set(True)
-                    bpy.context.view_layer.objects.active = outer_cage
-                    bpy.ops.object.modifier_add(type='SHRINKWRAP')
-                    bpy.context.object.modifiers["Shrinkwrap"].target = obj
-                    bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
-                    bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'OUTSIDE'
-                    #bpy.context.object.modifiers["Shrinkwrap"].offset = 0.0005
-                    ## Blender Bug workaround: 0.0005 is actually 0.014 before changing scene scale to 1/28
-                    bpy.context.object.modifiers["Shrinkwrap"].offset = 0.014
+                    target_list = []
+                    target_list.append(inner_cage)
+                    target_list.append(obj)
+                    dummy_target = roblox_tools.make_dummy_target(target_list)
+                    if dummy_target is not None:
+                        obj_bounding_box = roblox_tools.get_bounding_box_from_obj(obj)
+                        shrinkable_vertex_group = roblox_tools.make_vertex_group_from_bounding_box(outer_cage, obj_bounding_box, "shrinkable_zone")
+                        # add shrinkwrap modifier to outer_cage_obj
+                        bpy.ops.object.select_all(action='DESELECT')
+                        outer_cage.select_set(True)
+                        bpy.context.view_layer.objects.active = outer_cage
+                        bpy.ops.object.modifier_add(type='SHRINKWRAP')
+                        bpy.context.object.modifiers["Shrinkwrap"].target = dummy_target
+                        bpy.context.object.modifiers["Shrinkwrap"].vertex_group = shrinkable_vertex_group.name
+                        bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
+                        bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'OUTSIDE'
+                        ## Blender Bug workaround: 0.0005 is actually 0.014 before changing scene scale to 1/28
+                        bpy.context.object.modifiers["Shrinkwrap"].offset = 0.06 * 28
+                        # apply
+                        bpy.ops.object.modifier_apply(modifier="Shrinkwrap")
+                        outer_cage.name = obj.name + "_OuterCage"
+                        # delete dummy_target
+                        bpy.ops.object.select_all(action='DESELECT')
+                        dummy_target.select_set(True)
+                        bpy.ops.object.delete()
+                    else:
+                        raise Exception("ERROR: main(): unable to make dummy target for outer cage.")
                 else:
-                    # throw exception
                     raise Exception("ERROR: main(): unable to make outer cage.")
 
 
