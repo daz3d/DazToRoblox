@@ -168,14 +168,14 @@ def _main(argv):
     # Link the new collection to the scene
     bpy.context.scene.collection.children.link(cage_collection)
 
-    # make inner cage
-    print("DEBUG: main(): making inner cage template")
-    cage_template = roblox_tools.make_inner_cage("Genesis9.Shape")
-    if cage_template is not None:
-        cage_template.name = "Template_InnerCage"
-        for col in cage_template.users_collection:
-            col.objects.unlink(cage_template)        
-        cage_collection.objects.link(cage_template)
+    # # make inner cage
+    # print("DEBUG: main(): making inner cage template")
+    # cage_template = roblox_tools.make_inner_cage("Genesis9.Shape")
+    # if cage_template is not None:
+    #     cage_template.name = "Template_InnerCage"
+    #     for col in cage_template.users_collection:
+    #         col.objects.unlink(cage_template)        
+    #     cage_collection.objects.link(cage_template)
 
     figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"]
     for obj in bpy.data.objects:

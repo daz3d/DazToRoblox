@@ -1066,7 +1066,8 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 				"LeftLowerArm_OuterCage" << "LeftLowerLeg_OuterCage" << "LeftUpperArm_OuterCage" <<
 				"LeftUpperLeg_OuterCage" << "LowerTorso_OuterCage" << "RightFoot_OuterCage" <<
 				"RightHand_OuterCage" << "RightLowerArm_OuterCage" << "RightLowerLeg_OuterCage" <<
-				"RightUpperArm_OuterCage" << "RightUpperLeg_OuterCage" << "UpperTorso_OuterCage";
+				"RightUpperArm_OuterCage" << "RightUpperLeg_OuterCage" << "UpperTorso_OuterCage" <<
+				"Template_InnerCage";
 			QStringList aAttachmentNames;
 			aAttachmentNames << "Hair_Att" << "Hat_Att" << "FaceCenter_Att" << "FaceFront_Att" <<
 				"Neck_Att" << "LeftCollar_Att" << "RightCollar_Att" << "BodyBack_Att" << "BodyFront_Att" <<
