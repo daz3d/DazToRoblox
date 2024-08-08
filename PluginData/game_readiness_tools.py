@@ -835,13 +835,19 @@ def are_normals_same(normal1, normal2, threshold=0.01):
     return normal1.normalized().dot(normal2.normalized()) > 1 - threshold
 
 
-def autofit_mesh(source, target, offset_multiplier = 1.0):
+def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iterations=100, pass2_iterations=3):
 
     weight_threshold = 0.55
-    normal_threshold = 0.009
-    
+    normal_threshold = 0.01
+
+    ray_cast_direction = 1
+    offset_multiplier = fit_ratio
+    if fit_ratio < 1:
+        ray_cast_direction = -1
+        offset_multiplier = 2 - fit_ratio
+
     num_zeros = 0
-    for iteration in range(200):
+    for iteration in range(pass1_iterations):
         bm_source = bmesh.new()
         bm_source.from_mesh(source.data)
         bm_source.faces.ensure_lookup_table()
@@ -849,6 +855,8 @@ def autofit_mesh(source, target, offset_multiplier = 1.0):
         moved_vertices = []
         num_verts = 0
         skipped = 0
+        ignored = 0
+        hits = 0
         
         for i, v in enumerate(bm_source.verts):
             normal = Vector((0, 0, 0))
@@ -856,16 +864,17 @@ def autofit_mesh(source, target, offset_multiplier = 1.0):
                 normal += f.normal.normalized()
             normal.normalize()
 
-            ray_cast_direction = 1
-            if offset_multiplier < 1:
-                ray_cast_direction = -1
-
-            hit, loc, face_normal, face_index = target.ray_cast(v.co, normal * ray_cast_direction)
+            hit, loc, face_normal, face_index = target.ray_cast(v.co, normal * ray_cast_direction, distance=distance_cutoff)
             
-            if hit and have_common_vertex_groups_per_vertex(source, i, target, face_index, weight_threshold):
+            if hit:
+                hits += 1
 
-                if are_normals_opposite(face_normal, normal, 0.5) == True:
-                    skipped += 1
+                if have_common_vertex_groups_per_vertex(source, i, target, face_index, weight_threshold) == False:
+                    # ignored += 1
+                    continue
+
+                if are_normals_opposite(face_normal, normal, 0.9) == True:
+                    ignored += 1
                     continue
 
                 if are_normals_same(face_normal, normal, normal_threshold) == False:
@@ -879,17 +888,17 @@ def autofit_mesh(source, target, offset_multiplier = 1.0):
                 moved_vertices.append(v)
                 num_verts += 1
         
-        print(f"DEBUG: autofit_mesh(): num_verts={num_verts}, skipped={skipped}, iteration={iteration}")
+        print(f"DEBUG: autofit_mesh(): [{iteration}] hits={hits}, moved={num_verts}, skipped={skipped}, ignored={ignored}, (offset_multiplier={offset_multiplier:.2f}, fit_ratio={fit_ratio:.2f}), weight={weight_threshold:.2f})")
 
         bm_source.to_mesh(source.data)
         source.data.update()
         bm_source.free()
         if len(moved_vertices) == 0:
             num_zeros += 1
-            if weight_threshold >= 0.1:
+            if weight_threshold >= 0.24:
                 weight_threshold -= 0.05
             if normal_threshold <= 0.1:
-                normal_threshold += 0.005
+                normal_threshold += 0.01
             if num_zeros > 8:
                 break
         else:
@@ -899,7 +908,7 @@ def autofit_mesh(source, target, offset_multiplier = 1.0):
     bm_target.from_mesh(target.data)
     bm_target.faces.ensure_lookup_table()
 
-    for iteration in range(10):
+    for iteration in range(pass2_iterations):
         bm_source = bmesh.new()
         bm_source.from_mesh(source.data)
         bm_source.faces.ensure_lookup_table()
@@ -918,15 +927,21 @@ def autofit_mesh(source, target, offset_multiplier = 1.0):
                 normal += f.normal
             normal.normalize()
             
-            hit, loc, face_normal, face_index = source.ray_cast(v.co, -normal * ray_cast_direction)
+            hit, loc, face_normal, face_index = source.ray_cast(v.co, -normal * ray_cast_direction, distance=distance_cutoff)
             
-            if hit and have_common_vertex_groups_per_vertex(target, i, source, face_index):
+            if hit:
                 total_skip_no_skip += 1
 
-                if are_normals_same(face_normal, normal, 0.005) == True:
-                    same += 1
-                else:
-                    not_skipped += 1
+                if have_common_vertex_groups_per_vertex(target, i, source, face_index) == False:
+                    # ignored += 1
+                    continue
+
+                if are_normals_opposite(face_normal, normal, 1.0) == True:
+                    ignored += 1
+                    continue
+
+                if are_normals_same(face_normal, normal, 0.01) == False:
+                    skipped += 1
                     continue
 
                 offset = v.co - loc
