@@ -835,7 +835,7 @@ def are_normals_same(normal1, normal2, threshold=0.01):
     return normal1.normalized().dot(normal2.normalized()) > 1 - threshold
 
 
-def project_mesh(source, target):
+def autofit_mesh(source, target, offset_multiplier = 1.0):
 
     weight_threshold = 0.55
     normal_threshold = 0.009
@@ -855,23 +855,31 @@ def project_mesh(source, target):
             for f in v.link_faces:
                 normal += f.normal.normalized()
             normal.normalize()
-            
-            hit, loc, face_normal, face_index = target.ray_cast(v.co, normal)
+
+            ray_cast_direction = 1
+            if offset_multiplier < 1:
+                ray_cast_direction = -1
+
+            hit, loc, face_normal, face_index = target.ray_cast(v.co, normal * ray_cast_direction)
             
             if hit and have_common_vertex_groups_per_vertex(source, i, target, face_index, weight_threshold):
+
+                if are_normals_opposite(face_normal, normal, 0.5) == True:
+                    skipped += 1
+                    continue
 
                 if are_normals_same(face_normal, normal, normal_threshold) == False:
                     skipped += 1
                     continue
 
-                offset = (loc + normal * 0.01 * 2 * 28 ) - (v.co)
+                offset = (loc) - (v.co)
                 if v in moved_vertices:
                     continue
-                v.co += offset
+                v.co += offset * offset_multiplier
                 moved_vertices.append(v)
                 num_verts += 1
         
-        print(f"DEBUG: ProjectMesh(): num_verts={num_verts}, skipped={skipped}, iteration={iteration}")
+        print(f"DEBUG: autofit_mesh(): num_verts={num_verts}, skipped={skipped}, iteration={iteration}")
 
         bm_source.to_mesh(source.data)
         source.data.update()
@@ -910,7 +918,7 @@ def project_mesh(source, target):
                 normal += f.normal
             normal.normalize()
             
-            hit, loc, face_normal, face_index = source.ray_cast(v.co, -normal)
+            hit, loc, face_normal, face_index = source.ray_cast(v.co, -normal * ray_cast_direction)
             
             if hit and have_common_vertex_groups_per_vertex(target, i, source, face_index):
                 total_skip_no_skip += 1
@@ -931,7 +939,7 @@ def project_mesh(source, target):
                 for s_v in source_face.verts:
                     if s_v in vertex_moved:
                         continue
-                    s_v.co += offset
+                    s_v.co += offset * offset_multiplier
                     vertex_moved.append(s_v)
                     pass
                 third_pass_faces_moved.append(source_face)
@@ -941,4 +949,4 @@ def project_mesh(source, target):
         source.data.update()
         bm_source.free()
 
-    print("ProjectMesh(): DONE")
+    print("autofit_mesh(): DONE")

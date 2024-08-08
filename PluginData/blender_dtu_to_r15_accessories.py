@@ -97,7 +97,10 @@ def _main(argv):
     for obj in bpy.data.objects:
         print(f"Processing object: {obj.name}")
         # if cage, transfer weights and parent to armature
-        if obj.type == 'MESH' and "_OuterCage" in obj.name:
+        if obj.type == 'MESH' and (
+            "_OuterCage" in obj.name or
+            "_InnerCage" in obj.name
+        ):
             cage_obj_list.append(obj)
             game_readiness_tools.transfer_weights("Genesis9.Shape", obj.name)
         # if attachment, delete
@@ -168,14 +171,20 @@ def _main(argv):
     # Link the new collection to the scene
     bpy.context.scene.collection.children.link(cage_collection)
 
-    # # make inner cage
-    # print("DEBUG: main(): making inner cage template")
-    # cage_template = roblox_tools.make_inner_cage("Genesis9.Shape")
-    # if cage_template is not None:
-    #     cage_template.name = "Template_InnerCage"
-    #     for col in cage_template.users_collection:
-    #         col.objects.unlink(cage_template)        
-    #     cage_collection.objects.link(cage_template)
+    # make inner cage
+    cage_template = bpy.data.objects.get("Template_InnerCage")
+    if cage_template is None:
+        print("DEBUG: main(): making inner cage template")
+        cage_template = roblox_tools.make_inner_cage("Genesis9.Shape")
+        if cage_template is not None:
+            cage_template.name = "Template_InnerCage"
+    else:
+        # shrinkwrap cage to main_obj
+        game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.99)
+    if cage_template is not None:
+        for col in cage_template.users_collection:
+            col.objects.unlink(cage_template)        
+        cage_collection.objects.link(cage_template)
 
     figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"]
     for obj in bpy.data.objects:
@@ -326,13 +335,14 @@ def _main(argv):
                 inner_cage = roblox_tools.duplicate_cage("Template_InnerCage")
                 if inner_cage is not None:
                     inner_cage.name = obj.name + "_InnerCage"
+                    game_readiness_tools.autofit_mesh(inner_cage, obj, 0.99)
                 else:
                     raise Exception("ERROR: main(): unable to make inner cage.")
 
                 outer_cage = roblox_tools.duplicate_cage("Template_InnerCage")
                 # create dummy target
                 if outer_cage is not None:
-                    game_readiness_tools.project_mesh(outer_cage, obj)
+                    game_readiness_tools.autofit_mesh(outer_cage, obj, 1.01)
                     outer_cage.name = obj.name + "_OuterCage"
                     # target_list = []
                     # target_list.append(inner_cage)
