@@ -182,10 +182,6 @@ def _main(argv):
     else:
         # shrinkwrap cage to main_obj
         game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.90)
-    if cage_template is not None:
-        for col in cage_template.users_collection:
-            col.objects.unlink(cage_template)        
-        cage_collection.objects.link(cage_template)
 
     # debug output
     bpy.ops.wm.save_as_mainfile(filepath=blenderFilePath.replace(".blend", "_debug.blend"))
@@ -202,6 +198,7 @@ def _main(argv):
     cage_list = []
     att_list = []
     cage_obj_list = []
+    accessories_list = []
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
             if obj.name.lower() in figure_list:
@@ -209,7 +206,7 @@ def _main(argv):
                 bpy.ops.object.select_all(action='DESELECT')
                 obj.select_set(True)
                 bpy.ops.object.delete()
-            elif "_OuterCage" in obj.name:
+            elif "_OuterCage" in obj.name or "_InnerCage" in obj.name:
                 print("DEBUG: cage obj.name=" + obj.name)
                 cage_list.append(obj.name.lower())
                 cage_obj_list.append(obj)
@@ -218,6 +215,12 @@ def _main(argv):
                 print("DEBUG: attachment obj.name=" + obj.name)
                 att_list.append(obj.name.lower())
                 obj.hide_render = True
+            else:
+                accessories_list.append(obj)
+
+    if len(accessories_list) == 0:
+        _add_to_log("DEBUG: main(): no accessories found.")
+        exit()
 
     # move cages to new collection
     for obj in cage_obj_list:

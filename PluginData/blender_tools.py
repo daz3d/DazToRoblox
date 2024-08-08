@@ -666,6 +666,54 @@ def process_dtu(jsonPath, lowres_mode=None):
         _add_to_log("ERROR: process_dtu(): unable to parse DTU: " + jsonPath)
         return
 
+    # extract object, label and type from materials
+    obj_data_dict = {}
+    for mat in materialsList:
+        obj_asset_name = mat["Asset Name"]
+        obj_asset_label = mat["Asset Label"]
+        obj_asset_type = mat["Value"]
+        if obj_asset_name not in obj_data_dict:
+            obj_data = {
+                "Asset Name": obj_asset_name,
+                "Asset Label": obj_asset_label,
+                "Asset Type": obj_asset_type
+            }
+            obj_data_dict[obj_asset_name] = obj_data
+
+    # process objects, mapping to DTU data
+    for obj in bpy.data.objects:
+        if obj.type != "MESH":
+            continue
+        obj_data = None
+        studio_label = None
+        studio_name = None
+        has_custom_properties = False
+        # if custom properties are present, use them instead of DTU data
+        try:
+            studio_label = obj["StudioNodeLabel"]
+            studio_name = obj["StudioNodeName"]
+            has_custom_properties = True
+        except:
+            print("ERROR: process_dtu(): unable to retrieve StudioNodeLabel/StudioNodeName Custom Proeprties for object: " + obj.name)
+            studio_name = obj.name.replace(".Shape", "")            
+        if studio_name in obj_data_dict:
+            obj_data = obj_data_dict[studio_name]
+            studio_label = obj_data["Asset Label"]
+        # populate custom data using DTU if custom properties were not found
+        if has_custom_properties == False and obj_data is not None:
+            obj["StudioNodeLabel"] = obj_data["Asset Label"]
+            obj["StudioNodeName"] = obj_data["Asset Name"]
+            obj["StudioPresentationType"] = obj_data["Asset Type"]
+        # rename object name to label
+        if studio_label is not None:
+            # skip hardcoded objects
+            if obj.name.lower().replace(".shape","") in ["genesis9tear", "genesis9eyes", "genesis9mouth", "genesis9"]:
+                continue
+            if obj.name.lower() in ["genesis9tear", "genesis9eyes", "genesis9mouth", "genesis9"]:
+                continue
+            print("DEBUG: process_dtu(): renaming object: " + obj.name + " to " + studio_label)
+            obj.name = studio_label
+
     # delete all nodes from materials so that we can rebuild them
     for mat in materialsList:
         matName = mat["Material Name"]
