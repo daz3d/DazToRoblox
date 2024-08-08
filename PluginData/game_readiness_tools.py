@@ -309,3 +309,636 @@ def add_decimate_modifier_per_vertex_group(obj, vertex_group_name, decimation_ra
     new_modifier.use_symmetry = True
     new_modifier.vertex_group = vertex_group_name
 
+def setup_world_lighting(color, strength=5.0):
+    world = bpy.context.scene.world
+    world.use_nodes = True
+    nodes = world.node_tree.nodes
+    nodes.clear()
+    background = nodes.new(type='ShaderNodeBackground')
+    background.inputs['Color'].default_value = color
+    background.inputs['Strength'].default_value = strength
+    world_output = nodes.new(type='ShaderNodeOutputWorld')
+    links = world.node_tree.links
+    links.new(background.outputs['Background'], world_output.inputs['Surface'])
+    bpy.context.scene.world = world   
+    return background
+
+def add_basic_lighting(strength=5.0):
+    bpy.ops.object.light_add(type='SUN', location=(0, 0, 10))
+    sun = bpy.context.active_object
+    sun.data.energy = strength  # Adjust as needed
+    sun.data.use_shadow = False
+    # sun.data.angle = 0.523599
+    return sun
+
+def setup_bake_nodes(material, atlas):
+    nodes = material.node_tree.nodes
+    for node in nodes:
+        node.select = False
+    # Create Image Texture node for baking target
+    bake_node = nodes.new(type='ShaderNodeTexImage')
+    bake_node.image = atlas
+    bake_node.select = True
+    nodes.active = bake_node   
+    return bake_node
+
+def cleanup_bake_nodes(obj, bake_nodes, unlink_emission=False):
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            material = mat_slot.material
+            for bake_node in bake_nodes:
+                if bake_node in material.node_tree.nodes.values():
+                    material.node_tree.nodes.remove(bake_node)
+            if unlink_emission:
+                nodes = material.node_tree.nodes
+                if bpy.app.version >= (4, 0, 0):
+                    material.node_tree.links.remove(nodes['Principled BSDF'].inputs['Emission Color'].links[0])
+                else:
+                    material.node_tree.links.remove(nodes['Principled BSDF'].inputs['Emission'].links[0])
+    return
+
+def find_roughness_node(material):
+    nodes = material.node_tree.nodes
+    for node in nodes:
+        if node.type == 'BSDF_PRINCIPLED':
+            if "Roughness" in node.inputs and node.inputs["Roughness"].is_linked:
+                return node.inputs["Roughness"].links[0].from_node
+    # create placeholder roughness node
+    nodes = material.node_tree.nodes
+    roughness_node = nodes.new(type='ShaderNodeRGB')
+    if nodes.get('Principled BSDF') is not None:
+        roughness_value = nodes['Principled BSDF'].inputs['Roughness'].default_value
+        roughness_node.outputs['Color'].default_value = (roughness_value, roughness_value, roughness_value, 1.0)
+    else:
+        roughness_node.outputs['Color'].default_value = (0.5, 0.5, 0.5, 1.0)
+    return roughness_node
+
+def find_metallic_node(material):
+    nodes = material.node_tree.nodes
+    for node in nodes:
+        if node.type == 'BSDF_PRINCIPLED':
+            if "Metallic" in node.inputs and node.inputs["Metallic"].is_linked:
+                return node.inputs["Metallic"].links[0].from_node
+    # create placeholder metallic node
+    nodes = material.node_tree.nodes
+    metallic_node = nodes.new(type='ShaderNodeRGB')
+    if nodes.get('Principled BSDF') is not None:
+        metallic_value = nodes['Principled BSDF'].inputs['Metallic'].default_value
+        metallic_node.outputs['Color'].default_value = (metallic_value, metallic_value, metallic_value, 1.0)
+    else:
+        metallic_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
+    return metallic_node
+
+def find_diffuse_node(material):
+    nodes = material.node_tree.nodes
+    for node in nodes:
+        if node.type == 'BSDF_PRINCIPLED':
+            if "Base Color" in node.inputs and node.inputs["Base Color"].is_linked:
+                return node.inputs["Base Color"].links[0].from_node
+    # create placeholder diffuse node
+    nodes = material.node_tree.nodes
+    diffuse_node = nodes.new(type='ShaderNodeRGB')
+    if nodes.get('Principled BSDF') is not None:
+        diffuse_node.outputs['Color'].default_value = nodes['Principled BSDF'].inputs['Base Color'].default_value
+    else:
+        diffuse_node.outputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
+    return diffuse_node
+
+def bake_roughness_to_atlas(obj, atlas, bake_quality=4):
+    bpy.ops.object.select_all(action='DESELECT')
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+
+    bpy.context.scene.render.engine = 'CYCLES'
+    bpy.context.scene.cycles.samples = bake_quality
+    bpy.context.scene.cycles.time_limit = 1
+    bpy.context.scene.cycles.bake_type = 'ROUGHNESS'
+    bpy.context.scene.render.bake.margin = 16
+
+    # Setup bake nodes for each material
+    bake_nodes = []
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            print(f"Setting up bake node for material: {mat_slot.material.name}")
+            bake_node = setup_bake_nodes(mat_slot.material, atlas)
+            bake_nodes.append(bake_node)
+        else:
+            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
+    if not bake_nodes:
+        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
+        return
+
+    # Bake
+    print("Starting bake operation...")
+    bpy.ops.object.bake(type='ROUGHNESS')
+    print("Bake operation completed.")
+
+    # Clean up bake nodes
+    cleanup_bake_nodes(obj, bake_nodes)
+
+    return
+
+
+def bake_normal_to_atlas(obj, atlas, bake_quality=4):
+    bpy.ops.object.select_all(action='DESELECT')
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+
+    bpy.context.scene.render.engine = 'CYCLES'
+    bpy.context.scene.cycles.samples = bake_quality
+    bpy.context.scene.cycles.time_limit = 1
+    bpy.context.scene.cycles.bake_type = 'NORMAL'
+    bpy.context.scene.render.bake.margin = 16
+
+    # Setup bake nodes for each material
+    bake_nodes = []
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            print(f"Setting up bake node for material: {mat_slot.material.name}")
+            bake_node = setup_bake_nodes(mat_slot.material, atlas)
+            bake_nodes.append(bake_node)
+        else:
+            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
+    if not bake_nodes:
+        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
+        return
+
+    # Bake
+    print("Starting bake operation...")
+    bpy.ops.object.bake(type='NORMAL')
+    print("Bake operation completed.")
+
+    # Clean up bake nodes
+    cleanup_bake_nodes(obj, bake_nodes)
+
+    return
+
+def bake_metallic_to_atlas(obj, atlas, bake_quality=4):
+    # check metallic is linked to principled bsdf
+    metallic_found = False
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            for node in mat_slot.material.node_tree.nodes:
+                if node.type == 'BSDF_PRINCIPLED':
+                    if "Metallic" in node.inputs and node.inputs["Metallic"].is_linked:
+                        metallic_found = True
+                        break
+            break    
+    if not metallic_found:
+        print("Warning: No metallic map found. Skipping metallic bake.")
+        return
+    
+    bpy.ops.object.select_all(action='DESELECT')
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+
+    bpy.context.scene.render.engine = 'CYCLES'
+    bpy.context.scene.cycles.samples = bake_quality
+    bpy.context.scene.cycles.time_limit = 1
+    bpy.context.scene.cycles.bake_type = 'EMIT'
+    bpy.context.scene.render.bake.use_pass_direct = False
+    bpy.context.scene.render.bake.use_pass_indirect = False
+    bpy.context.scene.render.bake.use_pass_color = False
+    bpy.context.scene.render.bake.use_pass_glossy = False
+    bpy.context.scene.render.bake.use_pass_diffuse = False
+    bpy.context.scene.render.bake.use_pass_emit = True
+    bpy.context.scene.render.bake.margin = 16
+
+    # Setup bake nodes for each material
+    bake_nodes = []
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            print(f"Setting up bake node for material: {mat_slot.material.name}")
+            bake_node = setup_bake_nodes(mat_slot.material, atlas)
+            bake_nodes.append(bake_node)
+            material = mat_slot.material
+            nodes = material.node_tree.nodes
+            metallic_node = find_metallic_node(material)
+            # link image texture color to emission color of Principled BSDF node    
+            if bpy.app.version >= (4, 0, 0):
+                material.node_tree.links.new(metallic_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission Color'])
+            else:
+                material.node_tree.links.new(metallic_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission'])   
+        else:
+            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
+    if not bake_nodes:
+        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
+        return
+
+    # Bake
+    print("Starting bake operation...")
+    bpy.ops.object.bake(type='EMIT')
+    print("Bake operation completed.")
+
+    # Clean up bake nodes
+    cleanup_bake_nodes(obj, bake_nodes, True)
+
+    return
+
+def bake_diffuse_to_atlas(obj, atlas, bake_quality=4):
+    print(f"Starting bake process for object: {obj.name}")
+    bpy.ops.object.select_all(action='DESELECT')
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+    
+    bpy.context.scene.render.engine = 'CYCLES'
+    bpy.context.scene.cycles.samples = bake_quality
+    bpy.context.scene.cycles.time_limit = 1
+    bpy.context.scene.cycles.bake_type = 'COMBINED'
+    bpy.context.scene.render.bake.use_pass_direct = False
+    bpy.context.scene.render.bake.use_pass_indirect = False
+    bpy.context.scene.render.bake.use_pass_color = True
+    bpy.context.scene.render.bake.use_pass_glossy = False
+    bpy.context.scene.render.bake.use_pass_diffuse = True
+    bpy.context.scene.render.bake.use_pass_emit = True
+    bpy.context.scene.render.bake.margin = 16
+
+    # Setup bake nodes for each material
+    bake_nodes = []
+    for mat_slot in obj.material_slots:
+        if mat_slot.material and mat_slot.material.use_nodes:
+            print(f"Setting up bake node for material: {mat_slot.material.name}")
+            bake_node = setup_bake_nodes(mat_slot.material, atlas)
+            bake_nodes.append(bake_node)
+            material = mat_slot.material
+            nodes = material.node_tree.nodes
+            diffuse_node = find_diffuse_node(material)
+            # link image texture color to emission color of Principled BSDF node    
+            if bpy.app.version >= (4, 0, 0):
+                material.node_tree.links.new(diffuse_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission Color'])
+            else:
+                material.node_tree.links.new(diffuse_node.outputs['Color'], nodes['Principled BSDF'].inputs['Emission'])   
+        else:
+            print(f"Warning: Material slot has no material or doesn't use nodes: {mat_slot.name}")    
+    if not bake_nodes:
+        print("Error: No bake nodes were created. Check if the object has materials with nodes.")
+        return
+
+    # Bake
+    print("Starting bake operation...")
+    bpy.ops.object.bake(type='COMBINED')
+    print("Bake operation completed.")
+    
+    # Clean up bake nodes
+    cleanup_bake_nodes(obj, bake_nodes, True)
+
+    return
+
+
+def create_texture_atlas(obj, atlas_size=4096):
+    atlas = bpy.data.images.new(name=f"{obj.name}_Atlas", width=atlas_size, height=atlas_size, alpha=True)
+    atlas_material = bpy.data.materials.new(name=f"{obj.name}_Atlas_Material")
+    atlas_material.use_nodes = True
+    nodes = atlas_material.node_tree.nodes
+    tex_node = nodes.new(type='ShaderNodeTexImage')
+    tex_node.image = atlas
+    atlas_material.node_tree.links.new(tex_node.outputs['Color'], nodes["Principled BSDF"].inputs['Base Color'])
+    # connect alpha channel to alpha output
+    atlas_material.node_tree.links.new(tex_node.outputs['Alpha'], nodes["Principled BSDF"].inputs['Alpha'])
+    return atlas, atlas_material
+
+def create_new_uv_layer(obj, name="AtlasUV"):
+    mesh = obj.data
+    new_uv = mesh.uv_layers.new(name=name)
+    mesh.uv_layers.active = new_uv
+    return new_uv
+
+def repack_uv(obj):
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.uv.select_all(action='SELECT')
+    # bpy.ops.uv.pack_islands(margin=0.001)
+    bpy.ops.uv.pack_islands(udim_source='ACTIVE_UDIM', rotate=True, rotate_method='ANY', scale=True, 
+                            merge_overlap=False, margin_method='SCALED', margin=0.001,
+                            pin=False, pin_method='LOCKED', shape_method='CONCAVE')
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+def unwrap_object(obj):
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.uv.unwrap(method='ANGLE_BASED', fill_holes=True, correct_aspect=True, margin=0.001),
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+def assign_atlas_to_object(obj, atlas_material):
+    original_materials = [slot.material for slot in obj.material_slots]
+    obj.data.materials.clear()
+    obj.data.materials.append(atlas_material)
+    return original_materials
+
+def convert_to_atlas(obj, image_output_path, atlas_size=4096, bake_quality=4):
+    print(f"Starting atlas conversion for object: {obj.name}")
+    
+    # Add basic lighting if the scene has none
+    background = None
+    # if not any(obj.type == 'LIGHT' for obj in bpy.context.scene.objects):
+    #     print("No lights found in the scene. Adding a basic sun light and hdri.")
+    #     background = setup_world_lighting((1.0, 1.0, 1.0, 1.0), 1.0)
+    
+    diffuse_atlas, atlas_material = create_texture_atlas(obj, atlas_size)
+    new_uv_name = "AtlasUV"
+    new_uv = create_new_uv_layer(obj, new_uv_name)
+
+    # unwrap_object(obj)
+    repack_uv(obj)
+
+    bake_diffuse_to_atlas(obj, diffuse_atlas, bake_quality)
+
+    diffuse_atlas_path = image_output_path + "/" + f"{obj.name}_Atlas_D.png"
+    print("DEBUG: saving: " + diffuse_atlas_path)
+    # save atlas image to disk
+    diffuse_atlas.filepath_raw = diffuse_atlas_path
+    diffuse_atlas.file_format = 'PNG'
+    diffuse_atlas.save()
+
+    normal_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_N", width=atlas_size, height=atlas_size)
+    bake_normal_to_atlas(obj, normal_atlas, bake_quality)
+
+    normal_atlas_path = image_output_path + "/" + f"{obj.name}_Atlas_N.jpg"
+    print("DEBUG: saving: " + normal_atlas_path)
+    normal_atlas.filepath_raw = normal_atlas_path
+    normal_atlas.file_format = 'JPEG'
+    normal_atlas.save()
+
+    metallic_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_M", width=atlas_size, height=atlas_size)
+    bake_metallic_to_atlas(obj, metallic_atlas, bake_quality)
+
+    metallic_atlas_path = image_output_path + "/" + f"{obj.name}_Atlas_M.jpg"
+    print("DEBUG: saving: " + metallic_atlas_path)
+    metallic_atlas.filepath_raw = metallic_atlas_path
+    metallic_atlas.file_format = 'JPEG'
+    metallic_atlas.save()
+
+    roughness_atlas = bpy.data.images.new(name=f"{obj.name}_Atlas_R", width=atlas_size, height=atlas_size)
+    bake_roughness_to_atlas(obj, roughness_atlas, bake_quality)
+
+    roughness_atlas_path = image_output_path + "/" + f"{obj.name}_Atlas_R.jpg"
+    print("DEBUG: saving: " + roughness_atlas_path)
+    roughness_atlas.filepath_raw = roughness_atlas_path
+    roughness_atlas.file_format = 'JPEG'
+    roughness_atlas.save()
+
+    nodes = atlas_material.node_tree.nodes
+    # link normal atlas to atlas material
+    normal_tex_node = nodes.new(type='ShaderNodeTexImage')
+    normal_tex_node.image = normal_atlas
+    normal_tex_node.image.colorspace_settings.name = 'Non-Color'
+    normal_node = nodes.new(type='ShaderNodeNormalMap')
+    atlas_material.node_tree.links.new(normal_tex_node.outputs['Color'], normal_node.inputs['Color'])
+    atlas_material.node_tree.links.new(normal_node.outputs['Normal'], nodes["Principled BSDF"].inputs['Normal'])
+    # link roughness atlas to atlas material
+    roughness_node = nodes.new(type='ShaderNodeTexImage')
+    roughness_node.image = roughness_atlas
+#    roughness_node.image.colorspace_settings.name = 'Non-Color'
+    atlas_material.node_tree.links.new(roughness_node.outputs['Color'], nodes["Principled BSDF"].inputs['Roughness'])
+    # link metallic atlas to atlas material
+    metallic_node = nodes.new(type='ShaderNodeTexImage')
+    metallic_node.image = metallic_atlas
+#    metallic_node.image.colorspace_settings.name = 'Non-Color'
+    atlas_material.node_tree.links.new(metallic_node.outputs['Color'], nodes["Principled BSDF"].inputs['Metallic'])
+
+    original_materials = assign_atlas_to_object(obj, atlas_material)
+
+    # print("DEBUG: new_uv.name=" + str(new_uv.name))
+    try:
+        if str(new_uv.name) != "":
+            obj.data.uv_layers[str(new_uv.name)].active_render = True
+        else:
+            obj.data.uv_layers[new_uv_name].active_render = True
+    except:
+        print("ERROR: retrying to set uv layer: " + new_uv_name)
+        try:
+            obj.data.uv_layers[new_uv_name].active_render = True
+        except:
+            print("ERROR: Unable to set active_render for uv layer: " + new_uv.name)
+    
+    # remove other UVs
+    uv_layer_names_to_remove = []
+    for uv_layer in obj.data.uv_layers:
+        current_uv_name = str(uv_layer.name)
+        if current_uv_name != new_uv_name:
+            uv_layer_names_to_remove.append(current_uv_name)
+    
+    for uv_layer_name in uv_layer_names_to_remove:
+        uv_layer = obj.data.uv_layers.get(uv_layer_name)
+        if uv_layer is not None:
+            print("DEBUG: removing uv_layer: " + uv_layer_name)
+            obj.data.uv_layers.remove(uv_layer)
+
+    # # remove world lighting
+    # if background:
+    #     background.inputs['Strength'].default_value = 0.0
+    # # bpy.context.scene.world.use_nodes = False
+
+    print("Atlas conversion completed.")
+
+    return diffuse_atlas, atlas_material, original_materials
+
+def transfer_weights(source_mesh_name, target_mesh_name):
+    # Ensure objects exist
+    if source_mesh_name not in bpy.data.objects or target_mesh_name not in bpy.data.objects:
+        raise ValueError(f"One or both of the specified meshes do not exist in the scene: {source_mesh_name}, {target_mesh_name}")
+
+    # Get source and target objects
+    source_obj = bpy.data.objects[source_mesh_name]
+    target_obj = bpy.data.objects[target_mesh_name]
+
+    # Switch to Object Mode
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+    # Deselect all objects
+    bpy.ops.object.select_all(action='DESELECT')
+
+    # Select and activate the target mesh
+    target_obj.select_set(True)
+    bpy.context.view_layer.objects.active = target_obj
+
+    # Delete existing vertex groups on the target mesh
+    if target_obj.vertex_groups:
+        bpy.ops.object.vertex_group_remove(all=True)
+
+    # Create corresponding vertex groups in the target mesh
+    for src_vg in source_obj.vertex_groups:
+        target_obj.vertex_groups.new(name=src_vg.name)
+
+    # Ensure both objects are selected and source is active
+    source_obj.select_set(True)
+    target_obj.select_set(True)
+    bpy.context.view_layer.objects.active = source_obj
+
+    # Use data_transfer operator to transfer vertex group weights
+    bpy.ops.object.data_transfer(
+        data_type='VGROUP_WEIGHTS',
+        use_create=True,
+        vert_mapping='POLYINTERP_NEAREST',
+        layers_select_src='ALL',
+        layers_select_dst='NAME',
+        mix_mode='REPLACE',
+        mix_factor=1.0
+    )
+
+    # Switch back to Object Mode
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+    # get armature from source_obj and parent target_obj to same armature
+    armature_name = None
+    for mod in source_obj.modifiers:
+        if mod.type == "ARMATURE":
+            armature_name = mod.object.name
+            break
+    if armature_name is not None:
+        # deselect all
+        bpy.ops.object.select_all(action='DESELECT')
+        # select target_obj
+        target_obj.select_set(True)
+        bpy.data.objects[armature_name].select_set(True)
+        bpy.context.view_layer.objects.active = bpy.data.objects[armature_name]
+        bpy.ops.object.parent_set(type='ARMATURE')
+        for mod in target_obj.modifiers:
+            if mod.type == "ARMATURE":
+                mod.name = armature_name
+
+    print(f"Weights transferred successfully from {source_mesh_name} to {target_mesh_name}!")
+
+import bmesh
+from mathutils import Vector
+
+def get_significant_vertex_group_names(obj, vertex_index, weight_threshold):
+    vertex = obj.data.vertices[vertex_index]
+    return [obj.vertex_groups[g.group].name for g in vertex.groups if g.weight >= weight_threshold]
+
+def have_common_vertex_groups_per_vertex(source_obj, source_vert_index, target_obj, target_face_index, weight_threshold=0.55):
+    source_groups = set(get_significant_vertex_group_names(source_obj, source_vert_index, weight_threshold))
+    target_face = target_obj.data.polygons[target_face_index]
+    target_groups = set()
+    for vert in target_face.vertices:
+        target_groups.update(get_significant_vertex_group_names(target_obj, vert, weight_threshold))
+    return bool(source_groups.intersection(target_groups))
+
+def have_common_vertex_groups_per_face(source_obj, source_face, target_obj, target_face_index, weight_threshold=0.55):
+    source_groups = set()
+    for vert in source_face.verts:
+        source_groups.update(get_significant_vertex_group_names(source_obj, vert.index, weight_threshold))
+
+    target_face = target_obj.data.polygons[target_face_index]
+    target_groups = set()
+    for vert in target_face.vertices:
+        target_groups.update(get_significant_vertex_group_names(target_obj, vert, weight_threshold))
+
+    return bool(source_groups.intersection(target_groups))
+
+def are_normals_opposite(normal1, normal2, threshold=0.01):
+    return normal1.normalized().dot(normal2.normalized()) < -1 + threshold
+
+def are_normals_same(normal1, normal2, threshold=0.01):
+    return normal1.normalized().dot(normal2.normalized()) > 1 - threshold
+
+
+def project_mesh(source, target):
+
+    weight_threshold = 0.55
+    normal_threshold = 0.009
+    
+    num_zeros = 0
+    for iteration in range(200):
+        bm_source = bmesh.new()
+        bm_source.from_mesh(source.data)
+        bm_source.faces.ensure_lookup_table()
+        
+        moved_vertices = []
+        num_verts = 0
+        skipped = 0
+        
+        for i, v in enumerate(bm_source.verts):
+            normal = Vector((0, 0, 0))
+            for f in v.link_faces:
+                normal += f.normal.normalized()
+            normal.normalize()
+            
+            hit, loc, face_normal, face_index = target.ray_cast(v.co, normal)
+            
+            if hit and have_common_vertex_groups_per_vertex(source, i, target, face_index, weight_threshold):
+
+                if are_normals_same(face_normal, normal, normal_threshold) == False:
+                    skipped += 1
+                    continue
+
+                offset = (loc + normal * 0.01 * 2 * 28 ) - (v.co)
+                if v in moved_vertices:
+                    continue
+                v.co += offset
+                moved_vertices.append(v)
+                num_verts += 1
+        
+        print(f"DEBUG: ProjectMesh(): num_verts={num_verts}, skipped={skipped}, iteration={iteration}")
+
+        bm_source.to_mesh(source.data)
+        source.data.update()
+        bm_source.free()
+        if len(moved_vertices) == 0:
+            num_zeros += 1
+            if weight_threshold >= 0.1:
+                weight_threshold -= 0.05
+            if normal_threshold <= 0.1:
+                normal_threshold += 0.005
+            if num_zeros > 8:
+                break
+        else:
+            num_zeros = 0
+
+    bm_target = bmesh.new()
+    bm_target.from_mesh(target.data)
+    bm_target.faces.ensure_lookup_table()
+
+    for iteration in range(10):
+        bm_source = bmesh.new()
+        bm_source.from_mesh(source.data)
+        bm_source.faces.ensure_lookup_table()
+
+        third_pass_faces_moved = []
+        num_third_pass_faces = 0
+        skipped_faces = 0
+        not_skipped = 0
+        total_skip_no_skip = 0
+        opposite = 0
+        same = 0
+        vertex_moved = []
+        for i, v in enumerate(bm_target.verts):
+            normal = Vector((0, 0, 0))
+            for f in v.link_faces:
+                normal += f.normal
+            normal.normalize()
+            
+            hit, loc, face_normal, face_index = source.ray_cast(v.co, -normal)
+            
+            if hit and have_common_vertex_groups_per_vertex(target, i, source, face_index):
+                total_skip_no_skip += 1
+
+                if are_normals_same(face_normal, normal, 0.005) == True:
+                    same += 1
+                else:
+                    not_skipped += 1
+                    continue
+
+                offset = v.co - loc
+
+                bm_source.faces.ensure_lookup_table()
+                source_face = bm_source.faces[face_index]
+                if source_face in third_pass_faces_moved:
+                    continue
+
+                for s_v in source_face.verts:
+                    if s_v in vertex_moved:
+                        continue
+                    s_v.co += offset
+                    vertex_moved.append(s_v)
+                    pass
+                third_pass_faces_moved.append(source_face)
+                num_third_pass_faces += 1
+
+        bm_source.to_mesh(source.data)
+        source.data.update()
+        bm_source.free()
+
+    print("ProjectMesh(): DONE")

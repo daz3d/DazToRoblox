@@ -678,6 +678,7 @@ def make_inner_cage(target_obj_name):
     bpy.context.object.modifiers["Shrinkwrap"].target = target_obj
     bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
     bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'INSIDE'
+    bpy.context.object.modifiers["Shrinkwrap"].offset = 0.5
     # apply shrinkwrap modifier
     bpy.ops.object.modifier_apply(modifier="Shrinkwrap")
     inner_cage_obj.name = "NEW_InnerCage"

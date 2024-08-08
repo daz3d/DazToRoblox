@@ -99,7 +99,7 @@ def _main(argv):
         # if cage, transfer weights and parent to armature
         if obj.type == 'MESH' and "_OuterCage" in obj.name:
             cage_obj_list.append(obj)
-            transfer_weights("Genesis9.Shape", obj.name)
+            game_readiness_tools.transfer_weights("Genesis9.Shape", obj.name)
         # if attachment, delete
         if obj.type == 'MESH' and "_Att" in obj.name:
             bpy.ops.object.select_all(action='DESELECT')
@@ -270,7 +270,7 @@ def _main(argv):
             if len(image_list) <= 1:
                 continue
             print("DEBUG: running texture atlas for obj: " + obj.name + ", num materials: " + str(num_materials) + ", images: " + str(image_list))
-            atlas, atlas_material, _ = blender_tools.convert_to_atlas(obj, intermediate_folder_path, roblox_texture_size, texture_bake_quality)
+            atlas, atlas_material, _ = game_readiness_tools.convert_to_atlas(obj, intermediate_folder_path, roblox_texture_size, texture_bake_quality)
             safe_material_names_list.append(atlas_material.name.lower())
 
     # Remove multilpe materials
@@ -332,33 +332,35 @@ def _main(argv):
                 outer_cage = roblox_tools.duplicate_cage("Template_InnerCage")
                 # create dummy target
                 if outer_cage is not None:
-                    target_list = []
-                    target_list.append(inner_cage)
-                    target_list.append(obj)
-                    dummy_target = roblox_tools.make_dummy_target(target_list)
-                    if dummy_target is not None:
-                        obj_bounding_box = roblox_tools.get_bounding_box_from_obj(obj)
-                        shrinkable_vertex_group = roblox_tools.make_vertex_group_from_bounding_box(outer_cage, obj_bounding_box, "shrinkable_zone")
-                        # add shrinkwrap modifier to outer_cage_obj
-                        bpy.ops.object.select_all(action='DESELECT')
-                        outer_cage.select_set(True)
-                        bpy.context.view_layer.objects.active = outer_cage
-                        bpy.ops.object.modifier_add(type='SHRINKWRAP')
-                        bpy.context.object.modifiers["Shrinkwrap"].target = dummy_target
-                        bpy.context.object.modifiers["Shrinkwrap"].vertex_group = shrinkable_vertex_group.name
-                        bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
-                        bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'OUTSIDE'
-                        ## Blender Bug workaround: 0.0005 is actually 0.014 before changing scene scale to 1/28
-                        bpy.context.object.modifiers["Shrinkwrap"].offset = 0.06 * 28
-                        # apply
-                        bpy.ops.object.modifier_apply(modifier="Shrinkwrap")
-                        outer_cage.name = obj.name + "_OuterCage"
-                        # delete dummy_target
-                        bpy.ops.object.select_all(action='DESELECT')
-                        dummy_target.select_set(True)
-                        bpy.ops.object.delete()
-                    else:
-                        raise Exception("ERROR: main(): unable to make dummy target for outer cage.")
+                    game_readiness_tools.project_mesh(outer_cage, obj)
+                    outer_cage.name = obj.name + "_OuterCage"
+                    # target_list = []
+                    # target_list.append(inner_cage)
+                    # target_list.append(obj)
+                    # dummy_target = roblox_tools.make_dummy_target(target_list)
+                    # if dummy_target is not None:
+                    #     obj_bounding_box = roblox_tools.get_bounding_box_from_obj(obj)
+                    #     shrinkable_vertex_group = roblox_tools.make_vertex_group_from_bounding_box(outer_cage, obj_bounding_box, "shrinkable_zone")
+                    #     # add shrinkwrap modifier to outer_cage_obj
+                    #     bpy.ops.object.select_all(action='DESELECT')
+                    #     outer_cage.select_set(True)
+                    #     bpy.context.view_layer.objects.active = outer_cage
+                    #     bpy.ops.object.modifier_add(type='SHRINKWRAP')
+                    #     bpy.context.object.modifiers["Shrinkwrap"].target = dummy_target
+                    #     bpy.context.object.modifiers["Shrinkwrap"].vertex_group = shrinkable_vertex_group.name
+                    #     bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
+                    #     bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'OUTSIDE'
+                    #     ## Blender Bug workaround: 0.0005 is actually 0.014 before changing scene scale to 1/28
+                    #     bpy.context.object.modifiers["Shrinkwrap"].offset = 0.06 * 28
+                    #     # apply
+                    #     bpy.ops.object.modifier_apply(modifier="Shrinkwrap")
+                    #     outer_cage.name = obj.name + "_OuterCage"
+                    #     # delete dummy_target
+                    #     bpy.ops.object.select_all(action='DESELECT')
+                    #     dummy_target.select_set(True)
+                    #     bpy.ops.object.delete()
+                    # else:
+                    #     raise Exception("ERROR: main(): unable to make dummy target for outer cage.")
                 else:
                     raise Exception("ERROR: main(): unable to make outer cage.")
 
@@ -444,6 +446,7 @@ def _main(argv):
                                  embed_textures = True,
                                  use_visible = True,
                                  use_custom_props = True,
+                                 bake_anim=False,
                                  bake_anim_use_nla_strips = False,
                                  bake_anim_use_all_actions = False
                                  )
@@ -624,73 +627,6 @@ def add_decimate_modifier_old():
             bpy.context.view_layer.objects.active = obj
             bpy.ops.object.modifier_add(type='DECIMATE')
             bpy.context.object.modifiers["Decimate"].ratio = 0.2
-
-
-def transfer_weights(source_mesh_name, target_mesh_name):
-    # Ensure objects exist
-    if source_mesh_name not in bpy.data.objects or target_mesh_name not in bpy.data.objects:
-        raise ValueError(f"One or both of the specified meshes do not exist in the scene: {source_mesh_name}, {target_mesh_name}")
-
-    # Get source and target objects
-    source_obj = bpy.data.objects[source_mesh_name]
-    target_obj = bpy.data.objects[target_mesh_name]
-
-    # Switch to Object Mode
-    bpy.ops.object.mode_set(mode='OBJECT')
-
-    # Deselect all objects
-    bpy.ops.object.select_all(action='DESELECT')
-
-    # Select and activate the target mesh
-    target_obj.select_set(True)
-    bpy.context.view_layer.objects.active = target_obj
-
-    # Delete existing vertex groups on the target mesh
-    if target_obj.vertex_groups:
-        bpy.ops.object.vertex_group_remove(all=True)
-
-    # Create corresponding vertex groups in the target mesh
-    for src_vg in source_obj.vertex_groups:
-        target_obj.vertex_groups.new(name=src_vg.name)
-
-    # Ensure both objects are selected and source is active
-    source_obj.select_set(True)
-    target_obj.select_set(True)
-    bpy.context.view_layer.objects.active = source_obj
-
-    # Use data_transfer operator to transfer vertex group weights
-    bpy.ops.object.data_transfer(
-        data_type='VGROUP_WEIGHTS',
-        use_create=True,
-        vert_mapping='POLYINTERP_NEAREST',
-        layers_select_src='ALL',
-        layers_select_dst='NAME',
-        mix_mode='REPLACE',
-        mix_factor=1.0
-    )
-
-    # Switch back to Object Mode
-    bpy.ops.object.mode_set(mode='OBJECT')
-
-    # get armature from source_obj and parent target_obj to same armature
-    armature_name = None
-    for mod in source_obj.modifiers:
-        if mod.type == "ARMATURE":
-            armature_name = mod.object.name
-            break
-    if armature_name is not None:
-        # deselect all
-        bpy.ops.object.select_all(action='DESELECT')
-        # select target_obj
-        target_obj.select_set(True)
-        bpy.data.objects[armature_name].select_set(True)
-        bpy.context.view_layer.objects.active = bpy.data.objects[armature_name]
-        bpy.ops.object.parent_set(type='ARMATURE')
-        for mod in target_obj.modifiers:
-            if mod.type == "ARMATURE":
-                mod.name = armature_name
-
-    print(f"Weights transferred successfully from {source_mesh_name} to {target_mesh_name}!")
 
 def find_layer_collection(collection, layer_collection = None):
     """Recursively search for the layer collection that corresponds to the given collection."""
