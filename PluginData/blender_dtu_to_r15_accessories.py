@@ -176,9 +176,6 @@ def _main(argv):
             # game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.90)
             game_readiness_tools.scale_by_face_normals(cage_template, 0.90)
 
-    # debug output
-    bpy.ops.wm.save_as_mainfile(filepath=blenderFilePath.replace(".blend", "_debug.blend"))
-
     figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"]
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and (
@@ -190,29 +187,20 @@ def _main(argv):
     cage_list = []
     cage_obj_list = []
     accessories_list = []
+    delete_list = []
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
             if obj.name.lower() in figure_list:
-                print("DEBUG: deleting figure_list obj.name=" + obj.name)
-                bpy.ops.object.select_all(action='DESELECT')
-                obj.select_set(True)
-                bpy.ops.object.delete()
+                delete_list.append(obj)
             elif "_OuterCage" in obj.name or "_InnerCage" in obj.name:
                 print("DEBUG: cage obj.name=" + obj.name)
                 cage_list.append(obj.name.lower())
                 cage_obj_list.append(obj)
                 obj.hide_render = True
             elif "_Att" in obj.name:
-                # delete attachment points
-                bpy.ops.object.select_all(action='DESELECT')
-                obj.select_set(True)
-                bpy.ops.object.delete()
+                delete_list.append(obj)
             else:
                 accessories_list.append(obj)
-
-    if len(accessories_list) == 0:
-        _add_to_log("DEBUG: main(): no accessories found.")
-        exit()
 
     # move cages to new collection
     for obj in cage_obj_list:
@@ -221,6 +209,20 @@ def _main(argv):
             col.objects.unlink(obj)
         # Link the object to the new collection
         cage_collection.objects.link(obj)
+
+    # debug output
+    bpy.ops.wm.save_as_mainfile(filepath=blenderFilePath.replace(".blend", "_debug.blend"))
+
+    # delete objects
+    for obj in delete_list:
+        print("DEBUG: deleting obj.name=" + obj.name)
+        bpy.ops.object.select_all(action='DESELECT')
+        obj.select_set(True)
+        bpy.ops.object.delete()
+
+    if len(accessories_list) == 0:
+        _add_to_log("DEBUG: main(): no accessories found.")
+        exit()
 
     if bake_single_outfit:
         # join all mesh objects together
