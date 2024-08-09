@@ -965,3 +965,104 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         bm_source.free()
 
     print("autofit_mesh(): DONE")
+
+
+# scale object by face normals
+def scale_by_face_normals(obj, scale_factor=1.0):
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+
+    previous_mesh = bmesh.new()
+    previous_mesh.from_mesh(obj.data)
+
+    # flip normal depending on scale_factor
+    normal_direction = 1
+    if scale_factor < 1:
+        normal_direction = -1
+
+    bm.faces.ensure_lookup_table()
+    # Store the original face normals
+    original_normals = [face.normal.copy() for face in bm.faces]
+
+    bm.verts.ensure_lookup_table()
+    # calculate average distance between vertices
+    total_average_distances = 0
+    num_average_distances = 0
+    for vert in bm.verts:
+        # find linked verts
+        total_distances = 0
+        num_distances = 0
+        for neighbor in vert.link_edges:
+            # calculate distance
+            distance = (neighbor.verts[0].co - neighbor.verts[1].co).length
+            total_distances += distance
+            num_distances += 1
+        average_distances = total_distances / num_distances
+        total_average_distances += average_distances
+        num_average_distances += 1
+    average_distance = total_average_distances / num_average_distances
+
+    # calculate offset
+    offset = average_distance * abs(1 - scale_factor)
+    print(f"DEBUG: scale_by_face_normals(): offset={offset}, average_distance={average_distance}, scale_factor={scale_factor}")
+
+    flipped_normals = False
+    locked_verts = []
+    num_iterations = 200
+    for iteration in range(num_iterations):
+        previous_mesh.from_mesh(obj.data)
+        previous_mesh.faces.ensure_lookup_table()
+        bm.verts.ensure_lookup_table()
+
+        # iterate by vertex
+        for vert in bm.verts:
+            if vert in locked_verts:
+                continue
+            normal = Vector((0, 0, 0))
+            for f in vert.link_faces:
+                normal += f.normal
+            normal = normal.normalized() * normal_direction
+            vert.co += normal * (offset/num_iterations)
+        
+        # calculate if normals were flipped by the operation
+        result, face_indexes = calculate_if_normals_were_flipped(bm, original_normals)
+        if result:
+            for face_index in face_indexes:
+                current_face = bm.faces[face_index]
+                previous_face = previous_mesh.faces[face_index]
+                for i, current_vert in enumerate(current_face.verts):
+                    print(f"DEBUG: Flip detected, undoing offset for vertex {current_vert.index}")
+                    current_vert.co = previous_face.verts[i].co
+                    locked_verts.append(vert)
+        
+        # recheck for flipped normals
+        result, _ = calculate_if_normals_were_flipped(bm, original_normals)
+        if result:
+            flipped_normals = True
+            break
+
+        if flipped_normals == False:
+            bm.to_mesh(obj.data)
+        else:
+            break
+    print(f"DEBUG: scale_by_face_normals(): iteration={iteration}, flipped_normals={flipped_normals}")
+    obj.data.update()
+    bm.free()
+    previous_mesh.free()
+
+    print("DEBUG: scale_by_face_normals(): DONE")
+
+
+def calculate_if_normals_were_flipped(bm, original_normals):
+    bm.faces.ensure_lookup_table()
+    bm.normal_update()
+    face_index_array = []
+    normals_flipped = False
+    for i, face in enumerate(bm.faces):
+        new_normal = face.normal.normalized()
+        original_normal = original_normals[i]
+        if new_normal.dot(original_normal) < 0:  # Normal has flipped
+            normals_flipped = True
+            face_index_array.append(i)
+
+    return normals_flipped, face_index_array

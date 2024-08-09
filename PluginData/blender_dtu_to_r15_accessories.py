@@ -173,11 +173,11 @@ def _main(argv):
                 cage_template.name = "Template_InnerCage"
         else:
             # shrinkwrap cage to main_obj
-            game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.90)
+            # game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.90)
+            game_readiness_tools.scale_by_face_normals(cage_template, 0.90)
 
     # debug output
     bpy.ops.wm.save_as_mainfile(filepath=blenderFilePath.replace(".blend", "_debug.blend"))
-    # exit()
 
     figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"]
     for obj in bpy.data.objects:
