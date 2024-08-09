@@ -92,22 +92,13 @@ def _main(argv):
     blender_tools.import_fbx(fbxPath)
 
     bpy.ops.object.select_all(action="SELECT")
-    # Loop through all objects in the scene
-    cage_obj_list = []
     for obj in bpy.data.objects:
-        print(f"Processing object: {obj.name}")
         # if cage, transfer weights and parent to armature
         if obj.type == 'MESH' and (
             "_OuterCage" in obj.name or
             "_InnerCage" in obj.name
         ):
-            cage_obj_list.append(obj)
             game_readiness_tools.transfer_weights("Genesis9.Shape", obj.name)
-        # if attachment, delete
-        if obj.type == 'MESH' and "_Att" in obj.name:
-            bpy.ops.object.select_all(action='DESELECT')
-            obj.select_set(True)
-            bpy.ops.object.delete()
 
     blender_tools.center_all_viewports()
     jsonPath = fbxPath.replace(".fbx", ".dtu")
@@ -172,16 +163,17 @@ def _main(argv):
     bpy.context.scene.collection.children.link(cage_collection)
 
     # make inner cage
-    # roblox_tools.duplicate_cage("Template_InnerCage")
-    cage_template = bpy.data.objects.get("Template_InnerCage")
-    if cage_template is None:
-        print("DEBUG: main(): making inner cage template")
-        cage_template = roblox_tools.make_inner_cage("Genesis9.Shape")
-        if cage_template is not None:
-            cage_template.name = "Template_InnerCage"
-    else:
-        # shrinkwrap cage to main_obj
-        game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.90)
+    if "layered" in roblox_asset_type or "ALL" in roblox_asset_type:
+        # roblox_tools.duplicate_cage("Template_InnerCage")
+        cage_template = bpy.data.objects.get("Template_InnerCage")
+        if cage_template is None:
+            print("DEBUG: main(): making inner cage template")
+            cage_template = roblox_tools.make_inner_cage("Genesis9.Shape")
+            if cage_template is not None:
+                cage_template.name = "Template_InnerCage"
+        else:
+            # shrinkwrap cage to main_obj
+            game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.90)
 
     # debug output
     bpy.ops.wm.save_as_mainfile(filepath=blenderFilePath.replace(".blend", "_debug.blend"))
@@ -196,7 +188,6 @@ def _main(argv):
         ) :
             figure_list.append(obj.name.lower())
     cage_list = []
-    att_list = []
     cage_obj_list = []
     accessories_list = []
     for obj in bpy.data.objects:
@@ -212,9 +203,10 @@ def _main(argv):
                 cage_obj_list.append(obj)
                 obj.hide_render = True
             elif "_Att" in obj.name:
-                print("DEBUG: attachment obj.name=" + obj.name)
-                att_list.append(obj.name.lower())
-                obj.hide_render = True
+                # delete attachment points
+                bpy.ops.object.select_all(action='DESELECT')
+                obj.select_set(True)
+                bpy.ops.object.delete()
             else:
                 accessories_list.append(obj)
 
