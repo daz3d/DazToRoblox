@@ -835,7 +835,7 @@ def are_normals_same(normal1, normal2, threshold=0.01):
     return normal1.normalized().dot(normal2.normalized()) > 1 - threshold
 
 
-def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iterations=100, pass2_iterations=3):
+def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iterations=200, pass2_iterations=5):
 
     weight_threshold = 0.55
     normal_threshold = 0.01
@@ -847,11 +847,23 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         offset_multiplier = 2 - fit_ratio
 
     num_zeros = 0
+
+    previous_source_mesh = bmesh.new()
+    previous_source_mesh.from_mesh(source.data)
+
+    previous_source_mesh.faces.ensure_lookup_table()
+    original_normals = [f.normal.copy() for f in previous_source_mesh.faces]
+    locked_verts = []
+
+    bm_source = bmesh.new()
+    bm_source.from_mesh(source.data)
+
+    unrecoverable_flipped_normals = False
+
     for iteration in range(pass1_iterations):
-        bm_source = bmesh.new()
-        bm_source.from_mesh(source.data)
         bm_source.faces.ensure_lookup_table()
-        
+        previous_source_mesh.from_mesh(source.data)
+
         moved_vertices = []
         num_verts = 0
         skipped = 0
@@ -859,6 +871,9 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         hits = 0
         
         for i, v in enumerate(bm_source.verts):
+            if v in locked_verts:
+                continue
+
             normal = Vector((0, 0, 0))
             for f in v.link_faces:
                 normal += f.normal.normalized()
@@ -887,12 +902,30 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                 v.co += offset * offset_multiplier
                 moved_vertices.append(v)
                 num_verts += 1
-        
-        print(f"DEBUG: autofit_mesh(): [{iteration}] hits={hits}, moved={num_verts}, skipped={skipped}, ignored={ignored}, (offset_multiplier={offset_multiplier:.2f}, fit_ratio={fit_ratio:.2f}), weight={weight_threshold:.2f})")
+
+        result, face_indexes = calculate_if_normals_were_flipped(bm_source, original_normals)
+        if result:
+            print(f"DEBUG: (pass1) Flip detected, undoing offset for {len(face_indexes)} faces")
+            previous_source_mesh.faces.ensure_lookup_table()
+            for face_index in face_indexes:
+                current_face = bm_source.faces[face_index]
+                previous_face = previous_source_mesh.faces[face_index]
+                for i, current_vert in enumerate(current_face.verts):
+                    current_vert.co = previous_face.verts[i].co
+                    locked_verts.append(current_vert)
+
+        result, _ = calculate_if_normals_were_flipped(bm_source, original_normals)
+        if result:
+            print("DEBUG: autofit_mesh(): Flipped normals detected. Aborting.")
+            unrecoverable_flipped_normals = True
+            bm_source.free()
+            previous_source_mesh.free()
+            return
+
+        print(f"DEBUG: autofit_mesh(): PASS1: [{iteration}] hits={hits}, moved={num_verts}, skipped={skipped}, ignored={ignored}, (offset_multiplier={offset_multiplier:.2f}, fit_ratio={fit_ratio:.2f}), weight={weight_threshold:.2f})")
 
         bm_source.to_mesh(source.data)
         source.data.update()
-        bm_source.free()
         if len(moved_vertices) == 0:
             num_zeros += 1
             if weight_threshold >= 0.24:
@@ -909,9 +942,8 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
     bm_target.faces.ensure_lookup_table()
 
     for iteration in range(pass2_iterations):
-        bm_source = bmesh.new()
-        bm_source.from_mesh(source.data)
         bm_source.faces.ensure_lookup_table()
+        previous_source_mesh.from_mesh(source.data)
 
         third_pass_faces_moved = []
         num_third_pass_faces = 0
@@ -920,6 +952,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         total_skip_no_skip = 0
         opposite = 0
         same = 0
+        not_same = 0
         vertex_moved = []
         for i, v in enumerate(bm_target.verts):
             normal = Vector((0, 0, 0))
@@ -933,16 +966,20 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                 total_skip_no_skip += 1
 
                 if have_common_vertex_groups_per_vertex(target, i, source, face_index) == False:
-                    # ignored += 1
+                    skipped_faces += 1
                     continue
 
                 if are_normals_opposite(face_normal, normal, 1.0) == True:
-                    ignored += 1
+                    # skipped_faces += 1
+                    opposite += 1
                     continue
 
                 if are_normals_same(face_normal, normal, 0.01) == False:
-                    skipped += 1
+                    # skipped_faces += 1
+                    # opposite += 1
+                    not_same += 1
                     continue
+                same += 1
 
                 offset = v.co - loc
 
@@ -952,6 +989,8 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                     continue
 
                 for s_v in source_face.verts:
+                    if s_v in locked_verts:
+                        continue
                     if s_v in vertex_moved:
                         continue
                     s_v.co += offset * offset_multiplier
@@ -960,9 +999,34 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                 third_pass_faces_moved.append(source_face)
                 num_third_pass_faces += 1
 
+        result, face_indexes = calculate_if_normals_were_flipped(bm_source, original_normals)
+        if result:
+            print(f"DEBUG: (pass2) Flip detected, undoing offset for {len(face_indexes)} faces")
+            previous_source_mesh.faces.ensure_lookup_table()
+            for face_index in face_indexes:
+                current_face = bm_source.faces[face_index]
+                previous_face = previous_source_mesh.faces[face_index]
+                for i, current_vert in enumerate(current_face.verts):
+                    current_vert.co = previous_face.verts[i].co
+                    locked_verts.append(current_vert)
+
+        result, _ = calculate_if_normals_were_flipped(bm_source, original_normals)
+        if result:
+            print("DEBUG: autofit_mesh(): Flipped normals detected. Aborting.")
+            unrecoverable_flipped_normals = True
+            bm_source.free()
+            previous_source_mesh.free()
+            bm_target.free()
+            return
+
+        print(f"DEBUG: autofit_mesh(): PASS2: [{iteration}] total_skip_no_skip={total_skip_no_skip}, moved={num_third_pass_faces}, skipped={skipped_faces}, opposite={opposite}, same={same}, not_same={not_same}")
+
         bm_source.to_mesh(source.data)
         source.data.update()
-        bm_source.free()
+    
+    bm_source.free()
+    bm_target.free()
+    previous_source_mesh.free()
 
     print("autofit_mesh(): DONE")
 
