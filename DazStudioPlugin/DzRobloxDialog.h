@@ -53,6 +53,8 @@ public:
 
 	Q_INVOKABLE bool showDisclaimer();
 
+	DzBasicDialog* m_wEulaAgreementDialog;
+
 public slots:
 	void HandleTextChanged( const QString &text);
 
@@ -69,6 +71,8 @@ protected slots:
 	void HandleSelectBlenderExecutablePathButton();
 	bool HandleAcceptButtonValidationFeedback();
 	void HandleCustomModestyOverlayActivated(int index);
+
+	void HandleAgreeEulaCheckbox(bool checked);
 
 	void accept() override;
 

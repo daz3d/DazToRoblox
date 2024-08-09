@@ -44,6 +44,43 @@ public:
 
 };
 
+#define DAZTOROBLOX_EULA tr("\
+<div><font size=\"4\"><p>By using Daz to Roblox Studio, you agree to these Daz to Roblox Studio Terms \
+(\"Supplemental Terms\") which you agree supplement your obligations under the \
+<a href=\"https://www.daz3d.com/eula/\">Daz End User License Agreement</a> (\"EULA\").</p>\
+<p><ol type=\"A\">\
+<li>Supplement to Interactive License Restrictions:<br> \
+Importing Daz Characters into Roblox Studio requires this supplement to the standard \
+<a href=\"https://www.daz3d.com/interactive-license-info\">Daz Interactive License</a>, \
+as described in Section 3.0 of the EULA, because the assets are uploaded to the Roblox servers. \
+As a limited exception to the EULA and Interactive License, these Supplemental Terms grant you the right to upload \
+assets that you have purchased from the Daz store using your own account into a single Roblox account which is also \
+your personal account. You hereby agree that:\
+(1) you must have an Interactive License (as modified by these Supplemental Terms) for all Daz Studio assets \
+including characters, textures and morphs which are used in the process of exporting and \
+uploading characters to the Roblox servers; \
+(2) these Supplemental Terms are specific to Roblox and do not permit you to upload Daz Studio Assets to any other \
+third-party platform; \
+(3) you are only permitted to upload the Daz Studio assets to a single Roblox account for your own personal use; and \
+(4) you still must purchase all applicable assets from Daz before uploading them to Roblox in accordance with these \
+Supplemental Terms.</li><br>\
+<li>Monitoring of Content; Liability and Disclaimers:<br> \
+You understand and agree that Roblox uses both automated and human moderation to review assets uploaded to its servers. \
+Uploaded assets which are rejected by Roblox moderation may result in actions by the Roblox moderation team including \
+removal of assets from the Roblox servers and/or banning of your Roblox account. It is the your responsibility to ensure \
+that assets uploaded to the Roblox servers comply with \
+<a href=\"https://en.help.roblox.com/hc/en-us/articles/203313410-Roblox-Community-Standards\">Roblox Community Standards</a>, \
+especially regarding Sexual Content and \
+<a href=\"https://create.roblox.com/docs/art/marketplace/marketplace-policy#age-appropriate\">Age Appropriate Avatar bodies</a> \
+(\"Roblox Policies\"). Notwithstanding anything to the contrary herin or in the EULA, \
+Daz will not be liable for any damages arising from your use of Roblox, breach of the Roblox Policies, \
+or any dispute between you and any other user on Roblox. In addition to your indemnification obligations in the EULA, \
+you will indemnify, defend and hold Daz harmless from and against any third-party claim, including, without limitation, \
+claims brought by Roblox or users of Roblox, relating to your breach of the Roblox Policies or otherwise arising from any \
+dispute between you and another Roblox User.</li><br>\
+<li>General: The EULA will remain in full force in effect and is modified by these Supplemental Terms solely with respect \
+to your use of Daz to Roblox Studio.</li></ol></div>")
+
 
 class DzRobloxAction : public DZ_BRIDGE_NAMESPACE::DzBridgeAction {
 	Q_OBJECT
@@ -70,6 +107,7 @@ public:
 	QList<DzNode*> m_aGeograftConversionHelpers;
 
 	Q_INVOKABLE bool showDisclaimer();
+	Q_INVOKABLE bool resetEula();
 
 protected:
 	unsigned char m_nPythonExceptionExitCode = 11; // arbitrary exit code to check for blener python exceptions

@@ -28,6 +28,7 @@
 #include "qstandarditemmodel.h"
 
 #include "DzRobloxDialog.h"
+#include "DzRobloxAction.h"
 #include "DzBridgeMorphSelectionDialog.h"
 #include "DzBridgeSubdivisionDialog.h"
 
@@ -561,47 +562,87 @@ void DzRobloxDialog::accept()
 
 }
 
+#include "qdatetime.h"
+#include "dzauthor.h"
+
 bool DzRobloxDialog::showDisclaimer()
 {
-	QString content = tr("\
-<div><font size=\"4\"><p>By using Daz to Roblox Studio, the user agrees to the following:</p>\
-<p><b>Interactive License Requirement:</b></p>\
-<p>Importing Daz Characters into Roblox Studio requires an \
-<a href=\"https://www.daz3d.com/interactive-license-info\">Interactive License</a> \
-because the assets are uploaded to the Roblox servers. The user must have an Interactive License for all \
-Daz Studio assets including characters, textures and morphs which are used in the process of exporting and \
-uploading characters to the Roblox servers.</p>\
-<p><b>Disclaimer:</b></p>\
-<p>Roblox uses both automated and human moderation to review assets uploaded to its servers. \
-Uploaded assets which are rejected by Roblox moderation may result actions by the Roblox moderation team including removal \
-of assets from the Roblox servers and/or banning of the user's Roblox account. It is the user's responsibility to ensure \
-assets uploaded to the Roblox servers comply with \
-<a href=\"https://en.help.roblox.com/hc/en-us/articles/203313410-Roblox-Community-Standards\">Roblox Community Standards</a>, \
-especially regarding Sexual Content and \
-<a href=\"https://create.roblox.com/docs/art/marketplace/marketplace-policy#age-appropriate\">Age Appropriate Avatar bodies</a>. \
-Daz 3D will not be liable for any damages arising from the use of this software.</p></div>");
+
+	QString sSettingsUsername = settings->value("EulaAgreement_Username", "").toString();
+	QString sSettingsPluginVersion = settings->value("EulaAgreement_PluginVersion", "").toString();
+	QDateTime oSettingsCurrentDateTime = settings->value("EulaAgreement_Date", QDateTime::currentDateTime()).toDateTime();
+
+
+	QString sUsername = QString::fromLocal8Bit(qgetenv("USER"));
+	if (sUsername == "") {
+		sUsername = QString::fromLocal8Bit(qgetenv("USERNAME"));
+	}
+	QString sPluginVersion = QString("%1.%2.%3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD);
+	QDateTime oCurrentDateTime = QDateTime::currentDateTime();
+
+	int nDaysPassed = oSettingsCurrentDateTime.daysTo(oCurrentDateTime);
+
+	bool bAlreadyAgreed = false;
+	if ( sUsername == sSettingsUsername && sSettingsPluginVersion == sPluginVersion )
+	{
+		bAlreadyAgreed = true;
+		if (nDaysPassed > 365) {
+			bAlreadyAgreed = false;
+		}
+	}
+
+	if (bAlreadyAgreed) {
+		return true;
+	}
+
+	QString content = DAZTOROBLOX_EULA;
 
 	QTextBrowser* wContent = new QTextBrowser();
 	wContent->setText(content);
 	wContent->setOpenExternalLinks(true);
 
-	QString sWindowTitle = tr("Daz To Roblox Studio EULA");
-	DzBasicDialog* wDialog = new DzBasicDialog(NULL, sWindowTitle);
-	wDialog->setAcceptButtonText(tr("Accept EULA"));
-	wDialog->setCancelButtonText(tr("Decline"));
-	wDialog->setWindowTitle(sWindowTitle);
-	wDialog->setMinimumWidth(500);
-	wDialog->setMinimumHeight(450);
-	QGridLayout* layout = new QGridLayout(wDialog);
+	QString sWindowTitle = tr("Daz To Roblox Studio Terms");
+	m_wEulaAgreementDialog = new DzBasicDialog(NULL, sWindowTitle);
+	QCheckBox* wAgreeCheckbox = new QCheckBox(tr("I agree to the Daz to Roblox Studio Terms."));
+	wAgreeCheckbox->setChecked(false);
+	connect(wAgreeCheckbox, SIGNAL(toggled(bool)), this, SLOT(HandleAgreeEulaCheckbox(bool)));
+
+	m_wEulaAgreementDialog->setAcceptButtonText(tr("Accept Terms"));
+	m_wEulaAgreementDialog->setAcceptButtonEnabled(false);
+
+	m_wEulaAgreementDialog->setCancelButtonText(tr("Decline"));
+	m_wEulaAgreementDialog->setWindowTitle(sWindowTitle);
+	m_wEulaAgreementDialog->setMinimumWidth(500);
+	m_wEulaAgreementDialog->setMinimumHeight(450);
+	QGridLayout* layout = new QGridLayout(m_wEulaAgreementDialog);
 	layout->addWidget(wContent);
-	wDialog->addLayout(layout);
-	int result = wDialog->exec();
+	layout->addWidget(wAgreeCheckbox, 1, 0, Qt::AlignHCenter);
+	m_wEulaAgreementDialog->addLayout(layout);
+	int result = m_wEulaAgreementDialog->exec();
 
 	if (result == QDialog::DialogCode::Rejected || result != QDialog::DialogCode::Accepted) {
 		return false;
 	}
 
+	// record in Settings (registry)
+	settings->setValue("EulaAgreement_Username", sUsername);
+	settings->setValue("EulaAgreement_Date", oCurrentDateTime);
+	settings->setValue("EulaAgreement_PluginVersion", sPluginVersion);
+
 	return true;
+}
+
+void DzRobloxDialog::HandleAgreeEulaCheckbox(bool checked) {
+
+	if (!m_wEulaAgreementDialog) return;
+
+	if (checked) {
+		m_wEulaAgreementDialog->setAcceptButtonEnabled(true);
+	}
+	else {
+		m_wEulaAgreementDialog->setAcceptButtonEnabled(false);
+	}
+
 }
 
 void DzRobloxDialog::HandleCustomModestyOverlayActivated(int index)
