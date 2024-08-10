@@ -173,8 +173,8 @@ def _main(argv):
                 cage_template.name = "Template_InnerCage"
         else:
             # shrinkwrap cage to main_obj
-            # game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.90)
-            game_readiness_tools.scale_by_face_normals(cage_template, 0.90)
+            game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.9)
+            # game_readiness_tools.scale_by_face_normals(cage_template, 0.90)
 
     figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"]
     for obj in bpy.data.objects:
@@ -210,8 +210,28 @@ def _main(argv):
         # Link the object to the new collection
         cage_collection.objects.link(obj)
 
-    # debug output
-    bpy.ops.wm.save_as_mainfile(filepath=blenderFilePath.replace(".blend", "_debug.blend"))
+    DEBUG_INNERCAGE_ON = 0
+    if DEBUG_INNERCAGE_ON:
+        # create debug filter collection
+        debug_filter_collection = bpy.data.collections.new(name="Debug Filter")
+        bpy.context.scene.collection.children.link(debug_filter_collection)
+        # hide junk
+        layer_collection = find_layer_collection(debug_filter_collection)
+        if layer_collection is not None:
+            layer_collection.exclude = True
+        else:
+            debug_filter_collection.hide_viewport = True
+        for obj in bpy.data.objects:
+            if obj.type == 'MESH':
+                if obj.name == "Genesis9.Shape" or obj.name == "Template_InnerCage":
+                    pass
+                else:
+                    # add to junk
+                    for col in obj.users_collection:
+                        col.objects.unlink(obj)
+                    debug_filter_collection.objects.link(obj)
+        bpy.ops.wm.save_as_mainfile(filepath=blenderFilePath.replace(".blend", "_debug.blend"))
+        exit()
 
     # delete objects
     for obj in delete_list:
@@ -334,6 +354,15 @@ def _main(argv):
                 "_att" not in obj.name.lower()
                 ):
 
+                DEBUG_BOOTS_ON = 0
+                if DEBUG_BOOTS_ON:
+                    if "boots" not in obj.name.lower():
+                        # delete object
+                        bpy.ops.object.select_all(action='DESELECT')
+                        obj.select_set(True)
+                        bpy.ops.object.delete()
+                        continue
+
                 inner_cage = roblox_tools.duplicate_cage("Template_InnerCage")
                 if inner_cage is not None:
                     inner_cage.name = obj.name + "_InnerCage"
@@ -344,35 +373,8 @@ def _main(argv):
                 outer_cage = roblox_tools.duplicate_cage("Template_InnerCage")
                 # create dummy target
                 if outer_cage is not None:
-                    game_readiness_tools.autofit_mesh(outer_cage, obj, 2.0, 1.1)
+                    game_readiness_tools.autofit_mesh(outer_cage, obj, 1.01, 10.0)
                     outer_cage.name = obj.name + "_OuterCage"
-                    # target_list = []
-                    # target_list.append(inner_cage)
-                    # target_list.append(obj)
-                    # dummy_target = roblox_tools.make_dummy_target(target_list)
-                    # if dummy_target is not None:
-                    #     obj_bounding_box = roblox_tools.get_bounding_box_from_obj(obj)
-                    #     shrinkable_vertex_group = roblox_tools.make_vertex_group_from_bounding_box(outer_cage, obj_bounding_box, "shrinkable_zone")
-                    #     # add shrinkwrap modifier to outer_cage_obj
-                    #     bpy.ops.object.select_all(action='DESELECT')
-                    #     outer_cage.select_set(True)
-                    #     bpy.context.view_layer.objects.active = outer_cage
-                    #     bpy.ops.object.modifier_add(type='SHRINKWRAP')
-                    #     bpy.context.object.modifiers["Shrinkwrap"].target = dummy_target
-                    #     bpy.context.object.modifiers["Shrinkwrap"].vertex_group = shrinkable_vertex_group.name
-                    #     bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'NEAREST_SURFACEPOINT'
-                    #     bpy.context.object.modifiers["Shrinkwrap"].wrap_mode = 'OUTSIDE'
-                    #     ## Blender Bug workaround: 0.0005 is actually 0.014 before changing scene scale to 1/28
-                    #     bpy.context.object.modifiers["Shrinkwrap"].offset = 0.06 * 28
-                    #     # apply
-                    #     bpy.ops.object.modifier_apply(modifier="Shrinkwrap")
-                    #     outer_cage.name = obj.name + "_OuterCage"
-                    #     # delete dummy_target
-                    #     bpy.ops.object.select_all(action='DESELECT')
-                    #     dummy_target.select_set(True)
-                    #     bpy.ops.object.delete()
-                    # else:
-                    #     raise Exception("ERROR: main(): unable to make dummy target for outer cage.")
                 else:
                     raise Exception("ERROR: main(): unable to make outer cage.")
 
