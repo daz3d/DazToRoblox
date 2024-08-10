@@ -858,8 +858,6 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
     bm_source = bmesh.new()
     bm_source.from_mesh(source.data)
 
-    unrecoverable_flipped_normals = False
-
     for iteration in range(pass1_iterations):
         bm_source.faces.ensure_lookup_table()
         previous_source_mesh.from_mesh(source.data)
@@ -893,6 +891,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                     continue
 
                 if are_normals_same(face_normal, normal, normal_threshold) == False:
+                # if are_normals_same(face_normal, normal, 0.3) == False:
                     skipped += 1
                     continue
 
@@ -913,16 +912,40 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                 for i, current_vert in enumerate(current_face.verts):
                     current_vert.co = previous_face.verts[i].co
                     locked_verts.append(current_vert)
-
+        # double check
         result, _ = calculate_if_normals_were_flipped(bm_source, original_normals)
         if result:
             print("DEBUG: autofit_mesh(): Flipped normals detected. Aborting.")
-            unrecoverable_flipped_normals = True
+            bm_source.free()
+            previous_source_mesh.free()
+            return
+        
+        bm_source.verts.ensure_lookup_table()
+        bm_source.faces.ensure_lookup_table()
+        bm_source.normal_update()
+        result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
+        if result2:
+            # revert to position in previous mesh
+            print(f"DEBUG: (pass1) Self poke through detected, undoing offset for {len(vertex_indexes)} vertices")
+            print("DEBUG: vertices: " + str(vertex_indexes))
+            previous_source_mesh.verts.ensure_lookup_table()
+            for vertex_index in vertex_indexes:
+                current_vert = bm_source.verts[vertex_index]
+                previous_vert = previous_source_mesh.verts[vertex_index]
+                current_vert.co = previous_vert.co
+                locked_verts.append(current_vert)
+        # double check
+        result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
+        if result2:
+            print(f"DEBUG: autofit_mesh(): Self poke through still detected for {len(vertex_indexes)} vertices. Aborting.")
+            print("DEBUG: vertices: " + str(vertex_indexes))
+            bm_source.to_mesh(source.data)
+            source.data.update()
             bm_source.free()
             previous_source_mesh.free()
             return
 
-        print(f"DEBUG: autofit_mesh(): PASS1: [{iteration}] hits={hits}, moved={num_verts}, skipped={skipped}, ignored={ignored}, (offset_multiplier={offset_multiplier:.2f}, fit_ratio={fit_ratio:.2f}), weight={weight_threshold:.2f})")
+        print(f"DEBUG: autofit_mesh(): PASS1: [{iteration}] hits={hits}, moved={num_verts}, skipped={skipped}, ignored={ignored}, (offset_multiplier={offset_multiplier:.2f}, fit_ratio={fit_ratio:.2f}), normal={normal_threshold:.2f}, weight={weight_threshold:.2f})")
 
         bm_source.to_mesh(source.data)
         source.data.update()
@@ -930,9 +953,10 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
             num_zeros += 1
             if weight_threshold >= 0.24:
                 weight_threshold -= 0.05
-            if normal_threshold <= 0.1:
+            # if normal_threshold <= 0.1:
+            if normal_threshold <= 0.99:
                 normal_threshold += 0.01
-            if num_zeros > 8:
+            if num_zeros > 18:
                 break
         else:
             num_zeros = 0
@@ -942,6 +966,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
     bm_target.faces.ensure_lookup_table()
 
     for iteration in range(pass2_iterations):
+    # for iteration in range(0):
         bm_source.faces.ensure_lookup_table()
         previous_source_mesh.from_mesh(source.data)
 
@@ -1009,7 +1034,6 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                 for i, current_vert in enumerate(current_face.verts):
                     current_vert.co = previous_face.verts[i].co
                     locked_verts.append(current_vert)
-
         result, _ = calculate_if_normals_were_flipped(bm_source, original_normals)
         if result:
             print("DEBUG: autofit_mesh(): Flipped normals detected. Aborting.")
@@ -1019,11 +1043,40 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
             bm_target.free()
             return
 
+        bm_source.verts.ensure_lookup_table()
+        bm_source.faces.ensure_lookup_table()
+        bm_source.normal_update()
+        result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
+        if result2:
+            # revert to position in previous mesh
+            print(f"DEBUG: (pass2) Self poke through detected, undoing offset for {len(vertex_indexes)} vertices")
+            print("DEBUG: vertices: " + str(vertex_indexes))
+            previous_source_mesh.verts.ensure_lookup_table()
+            for vertex_index in vertex_indexes:
+                current_vert = bm_source.verts[vertex_index]
+                previous_vert = previous_source_mesh.verts[vertex_index]
+                current_vert.co = previous_vert.co
+                locked_verts.append(current_vert)
+        # double check
+        result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
+        if result2:
+            print(f"DEBUG: autofit_mesh(): Self poke through still detected for {len(vertex_indexes)} vertices. Aborting.")
+            print("DEBUG: vertices: " + str(vertex_indexes))
+            bm_source.to_mesh(source.data)
+            source.data.update()
+            bm_source.free()
+            previous_source_mesh.free()
+            return
+
+
         print(f"DEBUG: autofit_mesh(): PASS2: [{iteration}] total_skip_no_skip={total_skip_no_skip}, moved={num_third_pass_faces}, skipped={skipped_faces}, opposite={opposite}, same={same}, not_same={not_same}")
 
         bm_source.to_mesh(source.data)
         source.data.update()
-    
+
+    locked_vert_indexes = [v.index for v in locked_verts]
+    print(f"DEBUG: locked_verts [{len(locked_vert_indexes)}] = " + str(locked_vert_indexes))
+
     bm_source.free()
     bm_target.free()
     previous_source_mesh.free()
@@ -1130,3 +1183,50 @@ def calculate_if_normals_were_flipped(bm, original_normals):
             face_index_array.append(i)
 
     return normals_flipped, face_index_array
+
+import mathutils
+
+def calculate_if_self_pokethrough(mesh, bm):
+    bm.normal_update()
+    bm.faces.ensure_lookup_table()
+    bm.verts.ensure_lookup_table()
+
+    self_pokethrough = False
+    vertex_index_list = []
+    for i, vert in enumerate(bm.verts):
+        normal = Vector((0, 0, 0))
+        for f in vert.link_faces:
+            normal += f.normal
+        normal = normal.normalized()
+        # ray cast against self, get face and face normal
+        hit, loc, face_normal, face_index = mesh.ray_cast(vert.co, normal)
+        if hit and face_normal.dot(normal) < 0:
+            # check if edges intersect with face
+            for edge in vert.link_edges:
+                hit_loc = mathutils.geometry.intersect_line_plane(edge.verts[0].co, edge.verts[1].co, loc, face_normal)
+                if hit_loc is not None:
+                    # check if hit_loc is on the edge
+                    v1 = hit_loc - edge.verts[0].co
+                    v2 = hit_loc - edge.verts[1].co
+                    if v1.dot(v2) <= 0:
+                        face_verts = bm.faces[face_index].verts
+                        if mathutils.geometry.intersect_point_tri(hit_loc, face_verts[0].co, face_verts[1].co, face_verts[2].co) is not None:
+                            self_pokethrough = True
+                            vertex_index_list.append(i)
+                            break
+
+    return self_pokethrough, vertex_index_list
+
+
+def create_vertex_at_loc(bm, location):
+        
+    # Create a new vertex at the hit location
+    new_vert = bm.verts.new(location)
+    bm.verts.index_update()
+    bm.verts.ensure_lookup_table()
+    bm.faces.ensure_lookup_table()
+    bm.normal_update()
+        
+    return new_vert
+
+
