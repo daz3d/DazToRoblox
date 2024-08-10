@@ -921,7 +921,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         # double check
         result, _ = calculate_if_normals_were_flipped(bm_source, original_normals)
         if result:
-            print("DEBUG: autofit_mesh(): Flipped normals detected. Aborting.")
+            # print("DEBUG: autofit_mesh(): Flipped normals detected. Aborting.")
             bm_source.free()
             previous_source_mesh.free()
             return
@@ -931,9 +931,9 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         bm_source.normal_update()
         result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
         if result2:
-            # revert to position in previous mesh
-            print(f"DEBUG: (pass1) Self poke through detected, undoing offset for {len(vertex_indexes)} vertices")
-            print("DEBUG: vertices: " + str(vertex_indexes))
+            ## revert to position in previous mesh
+            # print(f"DEBUG: (pass1) Self poke through detected, undoing offset for {len(vertex_indexes)} vertices")
+            # print("DEBUG: vertices: " + str(vertex_indexes))
             previous_source_mesh.verts.ensure_lookup_table()
             for vertex_index in vertex_indexes:
                 current_vert = bm_source.verts[vertex_index]
@@ -945,15 +945,15 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         # double check
         result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
         if result2:
-            print(f"DEBUG: autofit_mesh(): Self poke through still detected for {len(vertex_indexes)} vertices. Aborting.")
-            print("DEBUG: vertices: " + str(vertex_indexes))
+            # print(f"DEBUG: autofit_mesh(): Self poke through still detected for {len(vertex_indexes)} vertices. Aborting.")
+            # print("DEBUG: vertices: " + str(vertex_indexes))
             bm_source.to_mesh(source.data)
             source.data.update()
             bm_source.free()
             previous_source_mesh.free()
             return
 
-        print(f"DEBUG: autofit_mesh(): PASS1: [{iteration}] hits={hits}, moved={num_verts}, skipped={skipped}, ignored={ignored}, (offset_multiplier={offset_multiplier:.2f}, fit_ratio={fit_ratio:.2f}), normal={normal_threshold:.2f}, weight={weight_threshold:.2f})")
+        # print(f"DEBUG: autofit_mesh(): PASS1: [{iteration}] hits={hits}, moved={num_verts}, skipped={skipped}, ignored={ignored}, (offset_multiplier={offset_multiplier:.2f}, fit_ratio={fit_ratio:.2f}), normal={normal_threshold:.2f}, weight={weight_threshold:.2f})")
 
         bm_source.to_mesh(source.data)
         source.data.update()
@@ -1034,7 +1034,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
 
         result, face_indexes = calculate_if_normals_were_flipped(bm_source, original_normals)
         if result:
-            print(f"DEBUG: (pass2) Flip detected, undoing offset for {len(face_indexes)} faces")
+            # print(f"DEBUG: (pass2) Flip detected, undoing offset for {len(face_indexes)} faces")
             previous_source_mesh.faces.ensure_lookup_table()
             for face_index in face_indexes:
                 current_face = bm_source.faces[face_index]
@@ -1044,7 +1044,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                     add_tagged_verts(current_vert)
         result, _ = calculate_if_normals_were_flipped(bm_source, original_normals)
         if result:
-            print("DEBUG: autofit_mesh(): Flipped normals detected. Aborting.")
+            # print("DEBUG: autofit_mesh(): Flipped normals detected. Aborting.")
             unrecoverable_flipped_normals = True
             bm_source.free()
             previous_source_mesh.free()
@@ -1056,9 +1056,9 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         bm_source.normal_update()
         result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
         if result2:
-            # revert to position in previous mesh
-            print(f"DEBUG: (pass2) Self poke through detected, undoing offset for {len(vertex_indexes)} vertices")
-            print("DEBUG: vertices: " + str(vertex_indexes))
+            ## revert to position in previous mesh
+            # print(f"DEBUG: (pass2) Self poke through detected, undoing offset for {len(vertex_indexes)} vertices")
+            # print("DEBUG: vertices: " + str(vertex_indexes))
             previous_source_mesh.verts.ensure_lookup_table()
             for vertex_index in vertex_indexes:
                 current_vert = bm_source.verts[vertex_index]
@@ -1068,8 +1068,8 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         # double check
         result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
         if result2:
-            print(f"DEBUG: autofit_mesh(): Self poke through still detected for {len(vertex_indexes)} vertices. Aborting.")
-            print("DEBUG: vertices: " + str(vertex_indexes))
+            # print(f"DEBUG: autofit_mesh(): Self poke through still detected for {len(vertex_indexes)} vertices. Aborting.")
+            # print("DEBUG: vertices: " + str(vertex_indexes))
             bm_source.to_mesh(source.data)
             source.data.update()
             bm_source.free()
@@ -1077,13 +1077,13 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
             return
 
 
-        print(f"DEBUG: autofit_mesh(): PASS2: [{iteration}] total_skip_no_skip={total_skip_no_skip}, moved={num_third_pass_faces}, skipped={skipped_faces}, opposite={opposite}, same={same}, not_same={not_same}")
+        # print(f"DEBUG: autofit_mesh(): PASS2: [{iteration}] total_skip_no_skip={total_skip_no_skip}, moved={num_third_pass_faces}, skipped={skipped_faces}, opposite={opposite}, same={same}, not_same={not_same}")
 
         bm_source.to_mesh(source.data)
         source.data.update()
 
     tagged_vert_indexes = [v.index for v in tagged_verts]
-    print(f"DEBUG: tagged_verts [{len(tagged_vert_indexes)}] = " + str(tagged_vert_indexes))
+    # print(f"DEBUG: tagged_verts [{len(tagged_vert_indexes)}] = " + str(tagged_vert_indexes))
 
     bm_source.free()
     bm_target.free()
@@ -1238,3 +1238,116 @@ def create_vertex_at_loc(bm, location):
     return new_vert
 
 
+def remove_obscured_faces(obj, threshold_list=[0.005, 0.010, 0.015]):
+    # Object Mode
+    bpy.ops.object.mode_set(mode='OBJECT')
+
+    # Create a bmesh
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bm.faces.ensure_lookup_table()
+    
+    # Get the scene for ray_cast
+    scene = bpy.context.scene
+    faces_to_remove = []
+
+    # Define a very small offset, about 1/1000th of the figure's depth
+    figure_depth = 0.01
+    offset = figure_depth * 0.0001
+
+    # for threshold in [offset*500, offset*1000, offset*2000, offset*3000, offset*4000]:
+    # for threshold in [0.005, 0.010, 0.015]:
+    for threshold in threshold_list:
+        bm.faces.ensure_lookup_table()
+        print(f"DEBUG: threshold = {threshold:.4f}")
+
+        for face in bm.faces:
+            obscured_verts = []
+            if face in faces_to_remove:
+                continue
+            for v in face.verts:
+                obscured_face_normal = []
+                for f in v.link_faces:
+                    vert_normal = f.normal
+                    ray_origin = v.co + vert_normal * offset
+                    ray_direction = vert_normal                
+
+                    result, location, normal, index, hit_obj, _ = scene.ray_cast(bpy.context.view_layer.depsgraph, ray_origin, ray_direction)
+                    # If ray hit something and it's not the current face, mark for removal
+                    if result and (hit_obj != obj or (hit_obj == obj and index != face.index)):
+                        # if location is far away, it's not an occluder
+                        # print(f"DEBUG: [{v}] length = {(location - ray_origin).length:.2f} vs threshold={threshold:.2f}")
+                        if (location - ray_origin).length > threshold:
+                            continue
+                        obscured_face_normal.append(f)
+                # If all linked face normal directions are obscured, mark vertex for removal
+                # print(f"DEBUG: [{v}] obscured_face_normal = {len(obscured_face_normal)} vs link_normals={len(v.link_faces)}")
+                if len(obscured_face_normal) == len(v.link_faces):
+                    obscured_verts.append(v)
+            # If all verts are obscured, mark face for removal
+            # print(f"DEBUG: obscured_verts = {len(obscured_verts)} vs face.verts={len(face.verts)}")
+            if len(obscured_verts) == len(face.verts):
+                faces_to_remove.append(face)               
+    
+    # Remove marked faces
+    bmesh.ops.delete(bm, geom=faces_to_remove, context='FACES')
+    
+    # Update mesh
+    bm.to_mesh(obj.data)
+    obj.data.update()
+    
+    # Free bmesh
+    bm.free()
+    
+    print(f"Removed {len(faces_to_remove)} obscured faces")
+
+def get_triangle_count(obj):
+    # Create a derived mesh to evaluate the modifier without applying it
+    depsgraph = bpy.context.evaluated_depsgraph_get()
+    obj_eval = obj.evaluated_get(depsgraph)
+    mesh_eval = obj_eval.to_mesh()
+
+    # Count the number of triangles in the evaluated mesh
+    triangles_count = sum(len(poly.vertices) - 2 for poly in mesh_eval.polygons)
+
+    # Clean up the evaluated mesh data to free up memory
+    obj_eval.to_mesh_clear()
+    
+    return triangles_count
+
+def adjust_decimation_to_target(obj, target_triangles, tolerance=0.01):
+    # Ensure the object has a Decimate modifier
+    decimate_mod = next((mod for mod in obj.modifiers if mod.type == 'DECIMATE'), None)
+    if not decimate_mod:
+        decimate_mod = obj.modifiers.new(name="Decimate", type='DECIMATE')
+    
+    decimate_mod.decimate_type = 'COLLAPSE'
+    
+    # Initial bounds for binary search
+    low_ratio, high_ratio = 0.0, 1.0
+    
+    max_iterations = 50
+    for iterations in range(max_iterations):
+        # Set the current ratio
+        current_ratio = (low_ratio + high_ratio) / 2
+        decimate_mod.ratio = current_ratio
+
+        # Update the mesh
+        bpy.context.view_layer.update()
+        
+        # Get the current triangle count
+        current_triangles = get_triangle_count(obj)
+
+        print(f"DEBUG: Iteration {iterations}, Ratio: {current_ratio:.8f}, Triangles: {current_triangles}, Target: {target_triangles}")
+
+        # Check if we're within tolerance
+        if abs(current_triangles - target_triangles) <= tolerance * target_triangles:
+            break
+        
+        # Adjust the bounds
+        if current_triangles > target_triangles:
+            high_ratio = current_ratio
+        else:
+            low_ratio = current_ratio
+
+    print(f"Final ratio: {current_ratio:.4f}, Triangles: {current_triangles}")

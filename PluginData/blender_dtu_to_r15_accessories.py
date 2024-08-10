@@ -363,6 +363,15 @@ def _main(argv):
                         bpy.ops.object.delete()
                         continue
 
+                # remove hidden faces
+                thresholds = [0.005, 0.010, 0.015]
+                game_readiness_tools.remove_obscured_faces(obj, thresholds)
+
+                # decimate
+                tolerance = 0.005
+                target_triangles = 4000 * (1-tolerance)
+                game_readiness_tools.adjust_decimation_to_target(obj, target_triangles)
+
                 inner_cage = roblox_tools.duplicate_cage("Template_InnerCage")
                 if inner_cage is not None:
                     inner_cage.name = obj.name + "_InnerCage"
