@@ -853,7 +853,10 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
 
     previous_source_mesh.faces.ensure_lookup_table()
     original_normals = [f.normal.copy() for f in previous_source_mesh.faces]
-    locked_verts = []
+    tagged_verts = []
+    def add_tagged_verts(v):
+        if v not in tagged_verts:
+            tagged_verts.append(v)
 
     bm_source = bmesh.new()
     bm_source.from_mesh(source.data)
@@ -869,8 +872,9 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         hits = 0
         
         for i, v in enumerate(bm_source.verts):
-            if v in locked_verts:
-                continue
+            if v in tagged_verts:
+                pass
+                # continue
 
             normal = Vector((0, 0, 0))
             for f in v.link_faces:
@@ -911,7 +915,9 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                 previous_face = previous_source_mesh.faces[face_index]
                 for i, current_vert in enumerate(current_face.verts):
                     current_vert.co = previous_face.verts[i].co
-                    locked_verts.append(current_vert)
+                    add_tagged_verts(current_vert)
+                    if current_vert in moved_vertices:
+                        moved_vertices.remove(current_vert)
         # double check
         result, _ = calculate_if_normals_were_flipped(bm_source, original_normals)
         if result:
@@ -933,7 +939,9 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                 current_vert = bm_source.verts[vertex_index]
                 previous_vert = previous_source_mesh.verts[vertex_index]
                 current_vert.co = previous_vert.co
-                locked_verts.append(current_vert)
+                add_tagged_verts(current_vert)
+                if current_vert in moved_vertices:
+                    moved_vertices.remove(current_vert)
         # double check
         result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
         if result2:
@@ -1014,7 +1022,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                     continue
 
                 for s_v in source_face.verts:
-                    if s_v in locked_verts:
+                    if s_v in tagged_verts:
                         continue
                     if s_v in vertex_moved:
                         continue
@@ -1033,7 +1041,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                 previous_face = previous_source_mesh.faces[face_index]
                 for i, current_vert in enumerate(current_face.verts):
                     current_vert.co = previous_face.verts[i].co
-                    locked_verts.append(current_vert)
+                    add_tagged_verts(current_vert)
         result, _ = calculate_if_normals_were_flipped(bm_source, original_normals)
         if result:
             print("DEBUG: autofit_mesh(): Flipped normals detected. Aborting.")
@@ -1056,7 +1064,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                 current_vert = bm_source.verts[vertex_index]
                 previous_vert = previous_source_mesh.verts[vertex_index]
                 current_vert.co = previous_vert.co
-                locked_verts.append(current_vert)
+                add_tagged_verts(current_vert)
         # double check
         result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
         if result2:
@@ -1074,8 +1082,8 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         bm_source.to_mesh(source.data)
         source.data.update()
 
-    locked_vert_indexes = [v.index for v in locked_verts]
-    print(f"DEBUG: locked_verts [{len(locked_vert_indexes)}] = " + str(locked_vert_indexes))
+    tagged_vert_indexes = [v.index for v in tagged_verts]
+    print(f"DEBUG: tagged_verts [{len(tagged_vert_indexes)}] = " + str(tagged_vert_indexes))
 
     bm_source.free()
     bm_target.free()
@@ -1150,7 +1158,7 @@ def scale_by_face_normals(obj, scale_factor=1.0):
                 for i, current_vert in enumerate(current_face.verts):
                     print(f"DEBUG: Flip detected, undoing offset for vertex {current_vert.index}")
                     current_vert.co = previous_face.verts[i].co
-                    locked_verts.append(vert)
+                    add_locked_verts(vert)
         
         # recheck for flipped normals
         result, _ = calculate_if_normals_were_flipped(bm, original_normals)
