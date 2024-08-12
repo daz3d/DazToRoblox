@@ -20,8 +20,14 @@ class UnitTest_DzRobloxDialog;
 enum eModestyOverlay {
 	SportsBra_Shorts = 1,
 	TankTop_Shorts = 2,
-	StraplessBra_Bikini =3,
+	StraplessBra_Bikini = 3,
 	CustomModestyOverlay = -1
+};
+
+enum eReplacementAsset {
+	CurrentlyUsed = 1,
+	DefaultReplacement = 2,
+	CustomReplacement = -1
 };
 
 class DzFileValidator : public QValidator {

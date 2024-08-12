@@ -1471,14 +1471,37 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 		m_bBakeSingleOutfit = pRobloxDialog->m_wBakeSingleOutfitCheckbox->isChecked();
 
 		// modesty overlay
-		QVariant vItemData = pRobloxDialog->m_wModestyOverlayCombo->itemData(pRobloxDialog->m_wModestyOverlayCombo->currentIndex());
-		if (vItemData.type() == QVariant::String) {
+		QVariant vModestyData = pRobloxDialog->m_wModestyOverlayCombo->itemData(pRobloxDialog->m_wModestyOverlayCombo->currentIndex());
+		if (vModestyData.type() == QVariant::String) {
 			m_nModestyOverlay = eModestyOverlay::CustomModestyOverlay;
-			m_sModestyOverlayCustomFilePath = vItemData.toString();
+			m_sModestyOverlayCustomFilePath = vModestyData.toString();
 		}
 		else {
-			m_nModestyOverlay = vItemData.toInt();
+			m_nModestyOverlay = vModestyData.toInt();
 			m_sModestyOverlayCustomFilePath = "";
+		}
+
+		// TODO: complepte custom eyelash/eyebrow pathway
+		// replacement eyebrows
+		QVariant vEyebrowData = pRobloxDialog->m_wEyebrowReplacement->itemData(pRobloxDialog->m_wEyebrowReplacement->currentIndex());
+		if (vEyebrowData.type() == QVariant::String) {
+			m_nReplaceEyebrows = eReplacementAsset::CustomReplacement;
+//			m_sModestyOverlayCustomFilePath = vItemData.toString();
+		}
+		else {
+			m_nReplaceEyebrows = vEyebrowData.toInt();
+//			m_sModestyOverlayCustomFilePath = "";
+		}
+
+		// replace eyelashes
+		QVariant vEyelashData = pRobloxDialog->m_wEyelashReplacement->itemData(pRobloxDialog->m_wEyelashReplacement->currentIndex());
+		if (vEyelashData.type() == QVariant::String) {
+			m_nReplaceEyelashes = eReplacementAsset::CustomReplacement;
+//			m_sModestyOverlayCustomFilePath = vItemData.toString();
+		}
+		else {
+			m_nReplaceEyelashes = vEyelashData.toInt();
+//			m_sModestyOverlayCustomFilePath = "";
 		}
 	}
 	else
@@ -1663,10 +1686,10 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 
 	QString tempPath = dzApp->getTempPath();
 
+	// TODO: complepte custom eyelash/eyebrow pathway
 	//////////////// Remove incompatible nodes, replace with game-ready equivalents
 	// Remove eyebrows
-	bool bReplaceEyebrows = true;
-	if (bReplaceEyebrows) {
+	if (m_nReplaceEyebrows == eReplacementAsset::DefaultReplacement) {
 		DzFigure* pFigureNode = qobject_cast<DzFigure*>(dzScene->getPrimarySelection());
 		if (pFigureNode && pFigureNode->getName() == "Genesis9")
 		{
@@ -1691,8 +1714,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		}
 	}
 	// Remove eyelashes
-	bool bReplaceEyelashes = true;
-	if (bReplaceEyelashes) {
+	if (m_nReplaceEyelashes == eReplacementAsset::DefaultReplacement) {
 		robloxPreProcessProgress.setCurrentInfo("Replacing eyebrows...");
 		robloxPreProcessProgress.step();
 		DzFigure* pFigureNode = qobject_cast<DzFigure*>(dzScene->getPrimarySelection());

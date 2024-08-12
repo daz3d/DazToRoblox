@@ -138,18 +138,19 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wBreastsGoneCheckbox->setToolTip("Optional Remove Breasts. REQUIRES Genesis 9 Body Shapes Add-On");
 	 m_wBreastsGoneCheckbox->setChecked(true);
 
+	 // TODO: complepte custom eyelash/eyebrow pathway
 	 // Eyebrow replacer Option
 	 QHBoxLayout* wReplacementPartsLayout = new QHBoxLayout();
 	 m_wEyebrowReplacement = new QComboBox();
-	 m_wEyebrowReplacement->addItem(tr("Replace Eyebrows"), "replace_eyebrows");
-	 m_wEyebrowReplacement->addItem(tr("Use Current Eyebrows"), "use_current_eyebrows");
-	 m_wEyebrowReplacement->addItem(tr("Use Custom Replacement..."), "use_custom_eyebrows");
+	 m_wEyebrowReplacement->addItem(tr("Replace Eyebrows"), eReplacementAsset::DefaultReplacement);
+	 m_wEyebrowReplacement->addItem(tr("Use Current Eyebrows"), eReplacementAsset::CurrentlyUsed);
+//	 m_wEyebrowReplacement->addItem(tr("Use Custom Replacement..."), eReplacementAsset::CustomReplacement);
 	 m_wEyebrowReplacement->setToolTip(tr("Replace eyebrows with something else."));
 	 m_wEyebrowReplacement->setCurrentIndex(0);
 	 m_wEyelashReplacement = new QComboBox();
-	 m_wEyelashReplacement->addItem(tr("Replace Eyelashes"), "replace_eyelashes");
-	 m_wEyelashReplacement->addItem(tr("Use Current Eyelashes"), "use_current_eyelashes");
-	 m_wEyelashReplacement->addItem(tr("Use Custom Replacement..."), "use_custom_eyelashes");
+	 m_wEyelashReplacement->addItem(tr("Replace Eyelashes"), eReplacementAsset::DefaultReplacement);
+	 m_wEyelashReplacement->addItem(tr("Use Current Eyelashes"), eReplacementAsset::CurrentlyUsed);
+//	 m_wEyelashReplacement->addItem(tr("Use Custom Replacement..."), eReplacementAsset::CustomReplacement);
 	 m_wEyelashReplacement->setCurrentIndex(0);
 	 m_wEyelashReplacement->setToolTip(tr("Replace eyelashes with something else."));
 	 wReplacementPartsLayout->addWidget(m_wEyebrowReplacement);
