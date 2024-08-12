@@ -835,10 +835,15 @@ def are_normals_same(normal1, normal2, threshold=0.01):
     return normal1.normalized().dot(normal2.normalized()) > 1 - threshold
 
 
-def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iterations=200, pass2_iterations=5):
+def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iterations=200, pass2_iterations=5, lock_tagged_verts=True):
 
     weight_threshold = 0.55
     normal_threshold = 0.01
+
+    weight_threshold_end = 0.20
+    normal_threshold_end = 0.99
+    weight_threshold_step = (weight_threshold_end - weight_threshold) / pass1_iterations
+    normal_threshold_step = (normal_threshold_end - normal_threshold) / pass1_iterations
 
     ray_cast_direction = 1
     offset_multiplier = fit_ratio
@@ -872,9 +877,8 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         hits = 0
         
         for i, v in enumerate(bm_source.verts):
-            if v in tagged_verts:
-                pass
-                # continue
+            if v in tagged_verts and lock_tagged_verts:
+                continue
 
             normal = Vector((0, 0, 0))
             for f in v.link_faces:
@@ -882,20 +886,16 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
             normal.normalize()
 
             hit, loc, face_normal, face_index = target.ray_cast(v.co, normal * ray_cast_direction, distance=distance_cutoff)
-            
             if hit:
                 hits += 1
-
                 if have_common_vertex_groups_per_vertex(source, i, target, face_index, weight_threshold) == False:
                     # ignored += 1
                     continue
-
                 if are_normals_opposite(face_normal, normal, 0.9) == True:
                     ignored += 1
                     continue
-
                 if are_normals_same(face_normal, normal, normal_threshold) == False:
-                # if are_normals_same(face_normal, normal, 0.3) == False:
+                # if are_normals_same(face_normal, normal, 0.9) == False:
                     skipped += 1
                     continue
 
@@ -905,10 +905,81 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                 v.co += offset * offset_multiplier
                 moved_vertices.append(v)
                 num_verts += 1
+        
+        # print(f"DEBUG: [{iteration}] PASS1: CHECKING FOR SELF-POKETHROUGH....")
+        # bm_source.verts.ensure_lookup_table()
+        # bm_source.faces.ensure_lookup_table()
+        # bm_source.normal_update()
+        # result2a, vertex_indexes_a = calculate_if_self_pokethrough(source, bm_source)
+        # if result2a:
+        #     ##############################################
+        #     print(f"DEBUG:::: EXIT DUMP")
+        #     print("DEBUG: vertices: " + str(vertex_indexes_a))
+        #     bm_source.to_mesh(source.data)
+        #     source.data.update()
+        #     bm_source.free()
+        #     previous_source_mesh.free()
+        #     return
 
+        #     ##############################################
+        #     ## revert to position in previous mesh
+        #     print(f"DEBUG: (PASS1) Self poke through detected, undoing offset for {len(vertex_indexes_a)} vertices")
+        #     print("DEBUG: vertices: " + str(vertex_indexes_a))
+        #     previous_source_mesh.verts.ensure_lookup_table()
+        #     for vertex_index in vertex_indexes_a:
+        #         current_vert = bm_source.verts[vertex_index]
+        #         previous_vert = previous_source_mesh.verts[vertex_index]
+        #         if current_vert.co == previous_vert.co:
+        #             # this vert was not moved, undo the neighboring verts
+        #             print(f"DEBUG: UNDO WARNING: vert was not moved: vertex_index={vertex_index}, current_vert={current_vert.co}, previous_vert={previous_vert.co}")
+        #         else:
+        #             print(f"DEBUG: UNDO: vertex_index={vertex_index}, current_vert={current_vert.co}, previous_vert={previous_vert.co}")
+        #             current_vert.co = previous_vert.co
+        #             add_tagged_verts(current_vert)
+        #             if current_vert in moved_vertices:
+        #                 moved_vertices.remove(current_vert)
+        # else:
+        #     print("DEBUG: (PASS1) No self poke through detected.")
+        # # double check
+        # result2b, vertex_indexes_b = calculate_if_self_pokethrough(source, bm_source)
+        # if result2b:
+        #     # find overlap between vertex_indexes and vertex_indexesb
+        #     overlap = [value for value in vertex_indexes_b if value in vertex_indexes_a]
+        #     not_overlap = [value for value in vertex_indexes_b if value not in vertex_indexes_a]
+        #     if len(overlap) > 0:
+        #         print(f"DEBUG: autofit_mesh(): PASS1: [{source.name}] Self poke through still detected for {len(overlap)} vertices. Aborting.")
+        #         print("DEBUG: vertices: overlap=" + str(overlap) + ", not_overlap=" + str(not_overlap))
+        #         bm_source.to_mesh(source.data)
+        #         source.data.update()
+        #         bm_source.free()
+        #         previous_source_mesh.free()
+        #         return
+        #     else:
+        #         print(f"**ERROR**: Secondary pokethrough created by UNDO: {len(vertex_indexes_b)} vertices")
+        #         print("DEBUG: secondary vertices: " + str(vertex_indexes_b))
+        #         previous_source_mesh.verts.ensure_lookup_table()
+        #         for vertex_index in vertex_indexes_b:
+        #             current_vert = bm_source.verts[vertex_index]
+        #             if current_vert in moved_vertices:
+        #                 previous_vert = previous_source_mesh.verts[vertex_index]
+        #                 current_vert.co = previous_vert.co
+        #                 add_tagged_verts(bm_source.verts[vertex_index])
+        #                 moved_vertices.remove(current_vert)
+        #             else:
+        #                 print(f"****ERROR****: unfixable secondary pokethrough, aborting: {vertex_index}")
+        #                 bm_source.to_mesh(source.data)
+        #                 source.data.update()
+        #                 bm_source.free()
+        #                 previous_source_mesh.free()
+        #                 return
+
+        # print(f"DEBUG: [{iteration}] PASS1: CHECKING FOR FLIPPED FACE NORMALS....")
+        bm_source.verts.ensure_lookup_table()
+        bm_source.faces.ensure_lookup_table()
+        bm_source.normal_update()
         result, face_indexes = calculate_if_normals_were_flipped(bm_source, original_normals)
         if result:
-            print(f"DEBUG: (pass1) Flip detected, undoing offset for {len(face_indexes)} faces")
+            print(f"DEBUG: (PASS1) Flip detected, undoing offset for {len(face_indexes)} faces")
             previous_source_mesh.faces.ensure_lookup_table()
             for face_index in face_indexes:
                 current_face = bm_source.faces[face_index]
@@ -921,49 +992,27 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         # double check
         result, _ = calculate_if_normals_were_flipped(bm_source, original_normals)
         if result:
-            # print("DEBUG: autofit_mesh(): Flipped normals detected. Aborting.")
-            bm_source.free()
-            previous_source_mesh.free()
-            return
-        
-        bm_source.verts.ensure_lookup_table()
-        bm_source.faces.ensure_lookup_table()
-        bm_source.normal_update()
-        result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
-        if result2:
-            ## revert to position in previous mesh
-            # print(f"DEBUG: (pass1) Self poke through detected, undoing offset for {len(vertex_indexes)} vertices")
-            # print("DEBUG: vertices: " + str(vertex_indexes))
-            previous_source_mesh.verts.ensure_lookup_table()
-            for vertex_index in vertex_indexes:
-                current_vert = bm_source.verts[vertex_index]
-                previous_vert = previous_source_mesh.verts[vertex_index]
-                current_vert.co = previous_vert.co
-                add_tagged_verts(current_vert)
-                if current_vert in moved_vertices:
-                    moved_vertices.remove(current_vert)
-        # double check
-        result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
-        if result2:
-            # print(f"DEBUG: autofit_mesh(): Self poke through still detected for {len(vertex_indexes)} vertices. Aborting.")
-            # print("DEBUG: vertices: " + str(vertex_indexes))
-            bm_source.to_mesh(source.data)
-            source.data.update()
+            print("DEBUG: autofit_mesh(): PASS1: Flipped normals detected. Aborting.")
             bm_source.free()
             previous_source_mesh.free()
             return
 
-        # print(f"DEBUG: autofit_mesh(): PASS1: [{iteration}] hits={hits}, moved={num_verts}, skipped={skipped}, ignored={ignored}, (offset_multiplier={offset_multiplier:.2f}, fit_ratio={fit_ratio:.2f}), normal={normal_threshold:.2f}, weight={weight_threshold:.2f})")
+
+        print(f"DEBUG: autofit_mesh(): PASS1: [{iteration}] hits={hits}, moved={num_verts}, skipped={skipped}, ignored={ignored}, (offset_multiplier={offset_multiplier:.2f}, fit_ratio={fit_ratio:.2f}), normal={normal_threshold:.3f}, weight={weight_threshold:.3f})")
 
         bm_source.to_mesh(source.data)
         source.data.update()
+
+        weight_threshold += weight_threshold_step
+        normal_threshold += normal_threshold_step
+
         if len(moved_vertices) == 0:
             num_zeros += 1
-            if weight_threshold >= 0.24:
-                weight_threshold -= 0.05
-            # if normal_threshold <= 0.1:
-            if normal_threshold <= 0.99:
-                normal_threshold += 0.01
+            # if weight_threshold >= 0.24:
+            #     weight_threshold -= 0.05
+            # # if normal_threshold <= 0.1:
+            # if normal_threshold <= 1:
+            #     normal_threshold += 0.01
             if num_zeros > 18:
                 break
         else:
@@ -994,19 +1043,15 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
             normal.normalize()
             
             hit, loc, face_normal, face_index = source.ray_cast(v.co, -normal * ray_cast_direction, distance=distance_cutoff)
-            
             if hit:
                 total_skip_no_skip += 1
-
                 if have_common_vertex_groups_per_vertex(target, i, source, face_index) == False:
                     skipped_faces += 1
                     continue
-
                 if are_normals_opposite(face_normal, normal, 1.0) == True:
                     # skipped_faces += 1
                     opposite += 1
                     continue
-
                 if are_normals_same(face_normal, normal, 0.01) == False:
                     # skipped_faces += 1
                     # opposite += 1
@@ -1034,7 +1079,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
 
         result, face_indexes = calculate_if_normals_were_flipped(bm_source, original_normals)
         if result:
-            # print(f"DEBUG: (pass2) Flip detected, undoing offset for {len(face_indexes)} faces")
+            # print(f"DEBUG: (PASS2) Flip detected, undoing offset for {len(face_indexes)} faces")
             previous_source_mesh.faces.ensure_lookup_table()
             for face_index in face_indexes:
                 current_face = bm_source.faces[face_index]
@@ -1044,8 +1089,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
                     add_tagged_verts(current_vert)
         result, _ = calculate_if_normals_were_flipped(bm_source, original_normals)
         if result:
-            # print("DEBUG: autofit_mesh(): Flipped normals detected. Aborting.")
-            unrecoverable_flipped_normals = True
+            # print("DEBUG: autofit_mesh(): PASS2: Flipped normals detected. Aborting.")
             bm_source.free()
             previous_source_mesh.free()
             bm_target.free()
@@ -1057,7 +1101,7 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
         if result2:
             ## revert to position in previous mesh
-            # print(f"DEBUG: (pass2) Self poke through detected, undoing offset for {len(vertex_indexes)} vertices")
+            # print(f"DEBUG: (PASS2) Self poke through detected, undoing offset for {len(vertex_indexes)} vertices")
             # print("DEBUG: vertices: " + str(vertex_indexes))
             previous_source_mesh.verts.ensure_lookup_table()
             for vertex_index in vertex_indexes:
@@ -1068,28 +1112,30 @@ def autofit_mesh(source, target, fit_ratio=1.0, distance_cutoff=10.0, pass1_iter
         # double check
         result2, vertex_indexes = calculate_if_self_pokethrough(source, bm_source)
         if result2:
-            # print(f"DEBUG: autofit_mesh(): Self poke through still detected for {len(vertex_indexes)} vertices. Aborting.")
-            # print("DEBUG: vertices: " + str(vertex_indexes))
+            print(f"DEBUG: autofit_mesh(): PASS2: Self poke through still detected for {len(vertex_indexes)} vertices. Aborting.")
+            print("DEBUG: vertices: " + str(vertex_indexes))
             bm_source.to_mesh(source.data)
             source.data.update()
             bm_source.free()
             previous_source_mesh.free()
             return
 
-
-        # print(f"DEBUG: autofit_mesh(): PASS2: [{iteration}] total_skip_no_skip={total_skip_no_skip}, moved={num_third_pass_faces}, skipped={skipped_faces}, opposite={opposite}, same={same}, not_same={not_same}")
-
+        print(f"DEBUG: autofit_mesh(): PASS2: [{iteration}] total_skip_no_skip={total_skip_no_skip}, moved={num_third_pass_faces}, skipped={skipped_faces}, opposite={opposite}, same={same}, not_same={not_same}")
         bm_source.to_mesh(source.data)
         source.data.update()
 
     tagged_vert_indexes = [v.index for v in tagged_verts]
-    # print(f"DEBUG: tagged_verts [{len(tagged_vert_indexes)}] = " + str(tagged_vert_indexes))
+    if lock_tagged_verts:
+        lock_string = "locked verts"
+    else:
+        lock_string = "tagged verts"
+    print(f"DEBUG: {lock_string} [{len(tagged_vert_indexes)}] = " + str(tagged_vert_indexes))
 
     bm_source.free()
     bm_target.free()
     previous_source_mesh.free()
 
-    print("autofit_mesh(): DONE")
+    print(f"autofit_mesh(): obj={source.name} DONE")
 
 
 # scale object by face normals
@@ -1133,6 +1179,10 @@ def scale_by_face_normals(obj, scale_factor=1.0):
 
     flipped_normals = False
     locked_verts = []
+    def add_locked_verts(v):
+        if v not in locked_verts:
+            locked_verts.append(v)
+
     num_iterations = 200
     for iteration in range(num_iterations):
         previous_mesh.from_mesh(obj.data)
@@ -1184,8 +1234,10 @@ def calculate_if_normals_were_flipped(bm, original_normals):
     face_index_array = []
     normals_flipped = False
     for i, face in enumerate(bm.faces):
-        new_normal = face.normal.normalized()
+        new_normal = face.normal
         original_normal = original_normals[i]
+        new_normal = new_normal.normalized()
+        original_normal = original_normal.normalized()
         if new_normal.dot(original_normal) < 0:  # Normal has flipped
             normals_flipped = True
             face_index_array.append(i)
@@ -1194,7 +1246,7 @@ def calculate_if_normals_were_flipped(bm, original_normals):
 
 import mathutils
 
-def calculate_if_self_pokethrough(mesh, bm):
+def calculate_if_self_pokethrough(obj, bm):
     bm.normal_update()
     bm.faces.ensure_lookup_table()
     bm.verts.ensure_lookup_table()
@@ -1202,26 +1254,113 @@ def calculate_if_self_pokethrough(mesh, bm):
     self_pokethrough = False
     vertex_index_list = []
     for i, vert in enumerate(bm.verts):
-        normal = Vector((0, 0, 0))
-        for f in vert.link_faces:
-            normal += f.normal
+        ###### DB 2024/8/11, average of linked face normals may not be equivalent to vertex normal ==> USE VERTEX NORMAL
+        # normal = Vector((0, 0, 0))
+        # for f in vert.link_faces:
+        #     normal += f.normal
+        # normal = normal.normalized()
+        #######
+        normal = vert.normal
         normal = normal.normalized()
+
         # ray cast against self, get face and face normal
-        hit, loc, face_normal, face_index = mesh.ray_cast(vert.co, normal)
-        if hit and face_normal.dot(normal) < 0:
-            # check if edges intersect with face
-            for edge in vert.link_edges:
-                hit_loc = mathutils.geometry.intersect_line_plane(edge.verts[0].co, edge.verts[1].co, loc, face_normal)
-                if hit_loc is not None:
-                    # check if hit_loc is on the edge
-                    v1 = hit_loc - edge.verts[0].co
-                    v2 = hit_loc - edge.verts[1].co
-                    if v1.dot(v2) <= 0:
-                        face_verts = bm.faces[face_index].verts
-                        if mathutils.geometry.intersect_point_tri(hit_loc, face_verts[0].co, face_verts[1].co, face_verts[2].co) is not None:
-                            self_pokethrough = True
-                            vertex_index_list.append(i)
-                            break
+        hit, loc, face_normal, face_index = obj.ray_cast(vert.co, normal)
+        if hit:
+            # if loc == vert.co:
+            #     # print(f"DEBUG: premature self-pokethrough detection trigger, skipping: hit loc={loc}, vert.co={vert.co}")
+            #     continue
+            linked_face_indexes = [f.index for f in vert.link_faces]
+            if face_index in linked_face_indexes:
+                # print(f"DEBUG: Invalid hit: face_index={face_index}, vert.link_faces={str(linked_face_indexes)}")
+                continue
+            # else:
+            #     print(f"DEBUG: calculate_if_self_pokethrough(): v[{vert.index}][{i}]  New hit hypothesis: face_index={face_index}, vert.link_faces={str(linked_face_indexes)}")
+            #     self_pokethrough = True
+            #     if i not in vertex_index_list:                                
+            #         vertex_index_list.append(i)
+            #     continue
+            ##############################            
+            face_normal = face_normal.normalized()
+            # print(f"****** v[{vert.index}] = {vert.co}")
+            if face_normal.dot(normal) < 0:
+                # check if edges intersect with face
+                for edge in vert.link_edges:
+                    if vert.co == edge.verts[0].co:
+                        point_a = edge.verts[0].co
+                        point_b = edge.verts[1].co
+                        vert_b = edge.verts[1]
+                    else:
+                        point_a = edge.verts[1].co
+                        point_b = edge.verts[0].co
+                        vert_b = edge.verts[0]
+                    edge_vector = point_b - point_a
+                    edge_vector.normalize()
+                    # hit_loc = mathutils.geometry.intersect_line_plane(point_a, point_b, loc, face_normal)
+                    hit2, hit_loc, _, _ = obj.ray_cast(point_a, edge_vector)
+                    if hit2 and hit_loc is not None:
+                        if hit_loc == point_a or (hit_loc - point_a).length < 0.0001:
+                            # print(f"DEBUG: Invalid result (condition1): [{i}] hit_loc={hit_loc}, vert.co={vert.co}, skipping")
+                            continue
+                        if hit_loc == point_b or (hit_loc - point_b).length < 0.0001:
+                            # print(f"DEBUG: Invalid result (condition2): [{i}] hit_loc={hit_loc}, neighbor={point_b}, skipping")
+                            continue
+                        # check if hit_loc is on the edge
+                        v1 = hit_loc - point_a
+                        v2 = hit_loc - point_b
+                        # v1_whut = v1.normalized()
+                        # v1_norm = v1 / v1.length
+                        # v2_whut = v2.normalized()
+                        # v2_norm = v2 / v2.length
+                        # if v1_whut == v1_norm:
+                        #     v1 = v1_norm
+                        # else:
+                        #     print(f"DEBUG: OH NO!!!!!! MATH IS BROKEN!!!!!! v1_whut={v1_whut}, v1_norm={v1_norm}")
+                        # if v2_whut == v2_norm:
+                        #     v2 = v2_norm
+                        # else:
+                        #     print(f"DEBUG: OH NO!!!!!! MATH IS BROKEN!!!!!! v2_whut={v2_whut}, v2_norm={v2_norm}")
+                        v1.normalize()
+                        v2.normalize()
+                        # print(f"DEBUG: v1={v1}, v2={v2}, v1_norm={v1_norm}, v1_whut={v1_whut}, v2_norm={v2_norm}, v2_whut={v2_whut}")
+                        # must be near -1
+                        epsilon = 0.1
+                        dot = v1.dot(v2)
+                        # if abs((-1) - dot) < epsilon:
+                        # print(f"HOW??? dot={dot:.10f}, v={vert.index}, edge=({point_a}, {point_b}), hit_loc={hit_loc}, loc={loc}")
+                        if dot <= 0:
+                            face_verts = bm.faces[face_index].verts
+                            result = mathutils.geometry.intersect_point_tri(hit_loc, face_verts[0].co, face_verts[1].co, face_verts[2].co)
+                            if result is not None:
+                                print(f"DEBUG: Self poke through detected for vertex {i}: vert_index={vert.index} {vert.co}, hit_loc={hit_loc}, edge=({edge.verts[0].co}, {edge.verts[1].co})")
+                                # print(f"DEBUG2: dot={v1.dot(v2):5f}, v1={v1}, v2={v2}, hit_loc={hit_loc}, loc={loc}")
+                                print(f"HOW??? dot={dot:.10f}, v={vert.index}, edge=({point_a}, {point_b}), hit_loc={hit_loc}, loc={loc}")
+                                # print(f"DEBUG: v1={v1}, v1_norm={v1_norm}, v1_whut={v1_whut}\n v2={v2}, v2_norm={v2_norm}, v2_whut={v2_whut}")
+
+                                print(f"****** v[{vert.index}] = {vert.co}")
+                                self_pokethrough = True
+                                if i not in vertex_index_list:                                
+                                    vertex_index_list.append(i)
+                                # hit_loc_vert = create_vertex_at_loc(bm, hit_loc)
+                                # vertex_index_list.append(hit_loc_vert.index)
+                                break
+                            # else:
+                            #     print(f"DEBUG: Invalid result (condition4): [{i}] dot={dot:.5f}, hit_loc={hit_loc}, edge.verts[0]={edge.verts[0].co}, edge.verts[1]={edge.verts[1].co}, skipping")
+                            #     self_pokethrough = True
+                            #     if i not in vertex_index_list:
+                            #         vertex_index_list.append(i)
+                            #     if vert_b.index not in vertex_index_list:
+                            #         vertex_index_list.append(vert_b.index)
+                            #     hit_vert = create_vertex_at_loc(bm, hit_loc)
+                            #     bm.verts.index_update()
+                            #     bm.verts.ensure_lookup_table()
+                            #     vertex_index_list.append(hit_vert.index)
+                            #     break
+                        # else:
+                        #     print(f"DEBUG: Invalid result (condition3): [{i}] dot={dot:.5f}, hit_loc={hit_loc}, edge.verts[0]={edge.verts[0].co}, edge.verts[1]={edge.verts[1].co}, skipping")
+                        #     self_pokethrough = True
+                        #     if i not in vertex_index_list:
+                        #         vertex_index_list.append(i)
+                        #         break
 
     return self_pokethrough, vertex_index_list
 
@@ -1238,22 +1377,19 @@ def create_vertex_at_loc(bm, location):
     return new_vert
 
 
-def remove_obscured_faces(obj, threshold_list=[0.005, 0.010, 0.015]):
+def remove_obscured_faces(obj, offset=0.001, threshold_list=[0.5, 1.0, 1.5]):
     # Object Mode
     bpy.ops.object.mode_set(mode='OBJECT')
 
     # Create a bmesh
     bm = bmesh.new()
     bm.from_mesh(obj.data)
-    bm.faces.ensure_lookup_table()
     
     # Get the scene for ray_cast
     scene = bpy.context.scene
+    depsgraph = bpy.context.evaluated_depsgraph_get()
+    depsgraph.update()
     faces_to_remove = []
-
-    # Define a very small offset, about 1/1000th of the figure's depth
-    figure_depth = 0.01
-    offset = figure_depth * 0.0001
 
     # for threshold in [offset*500, offset*1000, offset*2000, offset*3000, offset*4000]:
     # for threshold in [0.005, 0.010, 0.015]:
@@ -1272,16 +1408,21 @@ def remove_obscured_faces(obj, threshold_list=[0.005, 0.010, 0.015]):
                     ray_origin = v.co + vert_normal * offset
                     ray_direction = vert_normal                
 
-                    result, location, normal, index, hit_obj, _ = scene.ray_cast(bpy.context.view_layer.depsgraph, ray_origin, ray_direction)
+                    # result, location, normal, index, hit_obj, _ = scene.ray_cast(depsgraph, ray_origin, ray_direction)
+                    result, location, normal, index, = obj.ray_cast(ray_origin, ray_direction)
                     # If ray hit something and it's not the current face, mark for removal
-                    if result and (hit_obj != obj or (hit_obj == obj and index != face.index)):
+                    # if result and (hit_obj != obj or (hit_obj == obj and index != face.index)):
+                    if result and index != face.index:
                         # if location is far away, it's not an occluder
-                        # print(f"DEBUG: [{v}] length = {(location - ray_origin).length:.2f} vs threshold={threshold:.2f}")
+                        # print(f"DEBUG: ray_cast:[{v.index}] length = {(location - ray_origin).length:.2f} vs threshold={threshold:.2f}")
                         if (location - ray_origin).length > threshold:
                             continue
                         obscured_face_normal.append(f)
+                    else:
+                        # print(f"DEBUG: ray_cast:[{v.index}] no hit, offset={offset}, threshold={threshold:.2f}")
+                        pass
                 # If all linked face normal directions are obscured, mark vertex for removal
-                # print(f"DEBUG: [{v}] obscured_face_normal = {len(obscured_face_normal)} vs link_normals={len(v.link_faces)}")
+                # print(f"DEBUG: [{v.index}] obscured_face_normal = {len(obscured_face_normal)} vs link_normals={len(v.link_faces)}")
                 if len(obscured_face_normal) == len(v.link_faces):
                     obscured_verts.append(v)
             # If all verts are obscured, mark face for removal

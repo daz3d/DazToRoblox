@@ -8,6 +8,7 @@ def select_verts_by_index(obj, indices):
     
     # Get the BMesh
     bm = bmesh.from_edit_mesh(obj.data)
+    bm.verts.index_update()
     bm.verts.ensure_lookup_table()
     
     # Deselect all vertices first

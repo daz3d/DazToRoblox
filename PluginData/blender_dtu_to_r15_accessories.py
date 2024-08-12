@@ -143,7 +143,6 @@ def _main(argv):
 
     daz_generation = dtu_dict["Asset Id"]
 
-
     main_obj = None
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
@@ -173,7 +172,9 @@ def _main(argv):
                 cage_template.name = "Template_InnerCage"
         else:
             # shrinkwrap cage to main_obj
-            game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.9)
+            # game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.90, 10, 50, 3)
+            # game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.2, 10, 200, 0, False)
+            game_readiness_tools.autofit_mesh(cage_template, main_obj, 0.9, 10, 25, 0, False)
             # game_readiness_tools.scale_by_face_normals(cage_template, 0.90)
 
     figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"]
@@ -223,6 +224,7 @@ def _main(argv):
             debug_filter_collection.hide_viewport = True
         for obj in bpy.data.objects:
             if obj.type == 'MESH':
+                # if obj.name == "Genesis9.Shape" or obj.name == "Template_InnerCage" or obj.name == "Template_InnerCage_Copy":
                 if obj.name == "Genesis9.Shape" or obj.name == "Template_InnerCage":
                     pass
                 else:
@@ -363,15 +365,6 @@ def _main(argv):
                         bpy.ops.object.delete()
                         continue
 
-                # remove hidden faces
-                thresholds = [0.005, 0.010, 0.015]
-                game_readiness_tools.remove_obscured_faces(obj, thresholds)
-
-                # decimate
-                tolerance = 0.005
-                target_triangles = 4000 * (1-tolerance)
-                game_readiness_tools.adjust_decimation_to_target(obj, target_triangles)
-
                 inner_cage = roblox_tools.duplicate_cage("Template_InnerCage")
                 if inner_cage is not None:
                     inner_cage.name = obj.name + "_InnerCage"
@@ -380,12 +373,22 @@ def _main(argv):
                     raise Exception("ERROR: main(): unable to make inner cage.")
 
                 outer_cage = roblox_tools.duplicate_cage("Template_InnerCage")
-                # create dummy target
                 if outer_cage is not None:
-                    game_readiness_tools.autofit_mesh(outer_cage, obj, 1.01, 10.0)
                     outer_cage.name = obj.name + "_OuterCage"
+                    # game_readiness_tools.autofit_mesh(outer_cage, obj, 1.5, 10)
+                    game_readiness_tools.autofit_mesh(outer_cage, obj, 1.05, 2, 25, 3, False)
                 else:
                     raise Exception("ERROR: main(): unable to make outer cage.")
+
+                # remove hidden faces
+                thresholds = [t * 28 for t in [0.005, 0.010, 0.015]]
+                # game_readiness_tools.remove_obscured_faces(obj, 0.0001, [1000000])
+                game_readiness_tools.remove_obscured_faces(obj)
+
+                # decimate
+                tolerance = 0.005
+                target_triangles = 4000 * (1-tolerance)
+                game_readiness_tools.adjust_decimation_to_target(obj, target_triangles, tolerance)
 
 
     # remove missing or unused images
@@ -614,7 +617,7 @@ def move_root_node_to_origin():
     print("DEBUG: move_root_node_to_origin(): bpy.data.objects=" + str(bpy.data.objects))
     # move root node to origin
     for obj in bpy.data.objects:
-        print("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
+        # print("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
         if obj.type == 'ARMATURE':
             # deselect all objects
             bpy.ops.object.select_all(action='DESELECT')
@@ -626,7 +629,7 @@ def move_root_node_to_origin():
             bpy.context.object.data.bones["LowerTorso"].select = True
             bone_head_pos_y = bpy.context.object.data.bones["LowerTorso"].head.y
             bone_head_pos_z = bpy.context.object.data.bones["LowerTorso"].head.z            
-            print("DEBUG: move_root_node_to_origin(): bone_head_pos_y=" + str(bone_head_pos_y) + ", bone_head_pos_z=" + str(bone_head_pos_z))
+            # print("DEBUG: move_root_node_to_origin(): bone_head_pos_y=" + str(bone_head_pos_y) + ", bone_head_pos_z=" + str(bone_head_pos_z))
             bpy.ops.object.mode_set(mode="OBJECT")
             # select all objects in object mode
             bpy.ops.object.select_all(action='SELECT')
@@ -638,7 +641,7 @@ def move_root_node_to_origin():
             # inverse_bone_head_pos_x = -0.01 * bone_head_pos_z
             inverse_bone_head_pos_x = 0
             
-            print("DEBUG: move_root_node_to_origin(): inverse_bone_head_pos_x=" + str(inverse_bone_head_pos_x) + ", inverse_bone_head_pos_z=" + str(inverse_bone_head_pos_z))
+            # print("DEBUG: move_root_node_to_origin(): inverse_bone_head_pos_x=" + str(inverse_bone_head_pos_x) + ", inverse_bone_head_pos_z=" + str(inverse_bone_head_pos_z))
             bpy.ops.transform.translate(value=(inverse_bone_head_pos_x, 0, inverse_bone_head_pos_z))
             # apply transformation
             bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
