@@ -1558,8 +1558,8 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 			{
 				QString sTimeoutText = tr("\
 The current Blender operation is taking a long time.\n\
-Do you want to Ignore this message and keep going. or\
-Do you want to Abort the operation?");
+Do you want to Ignore this time-out and wait a little longer, or \n\
+Do you want to Abort the operation now?");
 				int result = QMessageBox::critical(0, 
 					tr("Daz To Roblox: Blender Timout Error"), 
 					sTimeoutText, 

@@ -1358,6 +1358,7 @@ def create_vertex_at_loc(bm, location):
 
 
 def remove_obscured_faces(obj, offset=0.001, threshold_list=[0.5, 1.0, 1.5]):
+    print(f"DEBUG: remove_obscured_faces(): obj={obj.name}, offset={offset}, threshold_list={threshold_list}")
     # Object Mode
     bpy.ops.object.mode_set(mode='OBJECT')
 
@@ -1437,6 +1438,7 @@ def get_triangle_count(obj):
     return triangles_count
 
 def adjust_decimation_to_target(obj, target_triangles, tolerance=0.01):
+    print(f"DEBUG: adjust_decimation_to_target(): obj={obj.name}, target_triangles={target_triangles}, tolerance={tolerance}")
     # Ensure the object has a Decimate modifier
     decimate_mod = next((mod for mod in obj.modifiers if mod.type == 'DECIMATE'), None)
     if not decimate_mod:
@@ -1471,4 +1473,4 @@ def adjust_decimation_to_target(obj, target_triangles, tolerance=0.01):
         else:
             low_ratio = current_ratio
 
-    print(f"Final ratio: {current_ratio:.4f}, Triangles: {current_triangles}")
+    print(f"Final decimation ratio: {current_ratio:.4f}, Triangles: {current_triangles}")
