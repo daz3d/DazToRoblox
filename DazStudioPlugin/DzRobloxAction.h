@@ -72,7 +72,7 @@ that assets uploaded to the Roblox servers comply with \
 <a href=\"https://en.help.roblox.com/hc/en-us/articles/203313410-Roblox-Community-Standards\">Roblox Community Standards</a>, \
 especially regarding Sexual Content and \
 <a href=\"https://create.roblox.com/docs/art/marketplace/marketplace-policy#age-appropriate\">Age Appropriate Avatar bodies</a> \
-(\"Roblox Policies\"). Notwithstanding anything to the contrary herin or in the EULA, \
+(\"Roblox Policies\"). Notwithstanding anything to the contrary herein or in the EULA, \
 Daz will not be liable for any damages arising from your use of Roblox, breach of the Roblox Policies, \
 or any dispute between you and any other user on Roblox. In addition to your indemnification obligations in the EULA, \
 you will indemnify, defend and hold Daz harmless from and against any third-party claim, including, without limitation, \
