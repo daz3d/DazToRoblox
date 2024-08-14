@@ -1358,6 +1358,17 @@ def create_vertex_at_loc(bm, location):
 
 
 def remove_obscured_faces(obj, offset=0.001, threshold_list=[0.5, 1.0, 1.5]):
+    if "StudioPresentationType" in obj:
+        asset_type = obj["StudioPresentationType"]
+        if "Hair" in asset_type:
+            # hair_thresholds = [0.25]
+            # if threshold_list[0] > hair_thresholds[0]:
+            #     threshold_list = hair_thresholds
+            # else:
+            #     threshold_list = [threshold_list[0]]
+            # print(f"DEBUG: Hair asset deteted: Using reduced settings for : {obj.name}, thresholds={[str(threshold_list)]}")
+            print(f"DEBUG: Hair asset deteted: skipping hidden surface removal : {obj.name}")
+
     print(f"DEBUG: remove_obscured_faces(): obj={obj.name}, offset={offset}, threshold_list={threshold_list}")
     # Object Mode
     bpy.ops.object.mode_set(mode='OBJECT')

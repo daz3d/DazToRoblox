@@ -1370,6 +1370,7 @@ void DzRobloxAction::writeConfiguration()
 	writer.addMember("Bake Single Outfit", m_bBakeSingleOutfit);
 	writer.addMember("Texture Size", m_nRobloxTextureSize);
 	writer.addMember("Texture Bake Quality", m_nBlenderTextureBakeQuality);
+	writer.addMember("Hidden Surface Removal", m_bHiddenSurfaceRemoval);
 
 	if (true)
 	{
@@ -1469,6 +1470,7 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 		if (m_sBlenderExecutablePath == "" || m_nNonInteractiveMode == 0) m_sBlenderExecutablePath = pRobloxDialog->m_wBlenderExecutablePathEdit->text().replace("\\", "/");
 		m_bEnableBreastsGone = pRobloxDialog->m_wBreastsGoneCheckbox->isChecked();
 		m_bBakeSingleOutfit = pRobloxDialog->m_wBakeSingleOutfitCheckbox->isChecked();
+		m_bHiddenSurfaceRemoval = pRobloxDialog->m_wHiddenSurfaceRemovalCheckbox->isChecked();
 
 		// modesty overlay
 		QVariant vModestyData = pRobloxDialog->m_wModestyOverlayCombo->itemData(pRobloxDialog->m_wModestyOverlayCombo->currentIndex());

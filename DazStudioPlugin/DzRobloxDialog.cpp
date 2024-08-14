@@ -158,9 +158,15 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 QLabel* wReplacementPartsRowLabel = new QLabel(tr("Replacement Assets"));
 
 	 // Accessory Export Options
+	 QHBoxLayout* wClothingOptionsLayout = new QHBoxLayout();
 	 m_wBakeSingleOutfitCheckbox = new QCheckBox(tr("Bake Single Outfit"));
 	 m_wBakeSingleOutfitCheckbox->setToolTip(tr("Bake all items into a single layered clothing outfit"));
 	 m_wBakeSingleOutfitCheckbox->setChecked(true);
+	 m_wHiddenSurfaceRemovalCheckbox = new QCheckBox(tr("Enable Hidden Surface Removal"));
+	 m_wHiddenSurfaceRemovalCheckbox->setToolTip(tr("Remove triangles which are hidden underneath other triangles"));
+	 m_wHiddenSurfaceRemovalCheckbox->setChecked(true);
+	 wClothingOptionsLayout->addWidget(m_wBakeSingleOutfitCheckbox);
+	 wClothingOptionsLayout->addWidget(m_wHiddenSurfaceRemovalCheckbox);
 	 QLabel* wLayeredClothingRowLabel = new QLabel(tr("Layered Clothing"));
 
 	 // Add GUI to layout
@@ -171,7 +177,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 QLabel* wContentModerationRowLabel = new QLabel(tr("Content Moderation"));
 	 mainLayout->addRow(wContentModerationRowLabel, m_wBreastsGoneCheckbox);
 	 mainLayout->addRow(wReplacementPartsRowLabel, wReplacementPartsLayout);
-	 mainLayout->addRow(wLayeredClothingRowLabel, m_wBakeSingleOutfitCheckbox);
+	 mainLayout->addRow(wLayeredClothingRowLabel, wClothingOptionsLayout);
 
 	 // Select Blender Executable Path GUI
 	 QHBoxLayout* blenderExecutablePathLayout = new QHBoxLayout();

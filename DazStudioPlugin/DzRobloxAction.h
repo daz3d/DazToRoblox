@@ -138,9 +138,9 @@ protected:
 	bool m_bBakeSingleOutfit = false;
 	int m_nRobloxTextureSize = 1024;
 	int m_nBlenderTextureBakeQuality = 1; // number of samples per texel
-
 	int m_nReplaceEyebrows = 0;
 	int m_nReplaceEyelashes = 0;
+	bool m_bHiddenSurfaceRemoval = false;
 
 	friend class DzRobloxUtils;
 

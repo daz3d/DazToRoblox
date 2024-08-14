@@ -103,6 +103,8 @@ protected:
 	QComboBox* m_wEyebrowReplacement;
 	QComboBox* m_wEyelashReplacement;
 
+	QCheckBox* m_wHiddenSurfaceRemovalCheckbox;
+
 	virtual void refreshAsset() override;
 
 #ifdef UNITTEST_DZBRIDGE

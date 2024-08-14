@@ -121,6 +121,10 @@ def _main(argv):
         bake_single_outfit = dtu_dict["Bake Single Outfit"]
     else:
         bake_single_outfit = False
+    if "Hidden Surface Removal" in dtu_dict:
+        hidden_surface_removal = dtu_dict["Hidden Surface Removal"]
+    else:
+        hidden_surface_removal = False
 
     if "Has Animation" in dtu_dict:
         bHasAnimation = dtu_dict["Has Animation"]
@@ -380,10 +384,11 @@ def _main(argv):
                 else:
                     raise Exception("ERROR: main(): unable to make outer cage.")
 
-                # remove hidden faces
-                thresholds = [t * 28 for t in [0.005, 0.010, 0.015]]
-                # game_readiness_tools.remove_obscured_faces(obj, 0.0001, [1000000])
-                game_readiness_tools.remove_obscured_faces(obj)
+                if hidden_surface_removal:
+                    # remove hidden faces
+                    thresholds = [t * 28 for t in [0.005, 0.010, 0.015]]
+                    # game_readiness_tools.remove_obscured_faces(obj, 0.0001, [1000000])
+                    game_readiness_tools.remove_obscured_faces(obj)
 
                 # decimate
                 tolerance = 0.005
