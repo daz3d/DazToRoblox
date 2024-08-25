@@ -41,6 +41,7 @@
 #include "dzjsondom.h"
 #include "dzviewportmgr.h"
 #include "dzviewtool.h"
+#include "dzassetmgr.h"
 
 #include "DzRobloxAction.h"
 #include "DzRobloxDialog.h"
@@ -58,6 +59,58 @@
 #include "FbxTools.h"
 #include "MvcTools.h"
 
+
+DzNode* DzRobloxUtils::FindRootNode(DzNode* pNode) {
+	// recurse until there is no parent
+	DzNode* pParent = pNode->getNodeParent();
+	if (pParent) {
+		return FindRootNode(pParent);
+	}
+	// if no parent, return pNode
+	return pNode;
+
+}
+
+DzNode* DzRobloxUtils::FindActorParent(DzNode* pNode) {
+	// check if pNode is an actor
+	if (pNode->inherits("DzFigure") || pNode->inherits("DzLegacyFigure"))
+	{
+		QString sContentType = dzApp->getAssetMgr()->getTypeForNode(pNode);
+		if (sContentType == "Actor/Character" || sContentType == "Actor")
+		{
+			return pNode;
+		}
+	}
+	// if not, recursively check each ancestor
+	DzNode* pParent = pNode->getNodeParent();
+	if (pParent) {
+		return FindActorParent(pParent);
+	}
+	// if no parent, return NULL
+	return NULL;
+}
+
+DzNode* DzRobloxUtils::FindGenesisParent(DzNode* pNode, QString sGenerationName) {
+	// check if pNode is an actor
+	if (pNode->inherits("DzFigure"))
+	{
+		QString sContentType = dzApp->getAssetMgr()->getTypeForNode(pNode);
+		if (sContentType == "Actor/Character" || sContentType == "Actor")
+		{
+			QString sName = pNode->getName();
+			if (sName.contains(sGenerationName, Qt::CaseInsensitive)) {
+				return pNode;
+			}
+		}
+	}
+	// if not, recursively check each ancestor
+	DzNode* pParent = pNode->getNodeParent();
+	if (pParent) {
+		return FindGenesisParent(pParent, sGenerationName);
+	}
+	// if no parent, return NULL
+	return NULL;
+}
 
 void DzRobloxUtils::FACSexportSkeleton(DzNode* Node, DzNode* Parent, FbxNode* FbxParent, FbxScene* Scene, QMap<DzNode*, FbxNode*>& BoneMap)
 {
@@ -543,24 +596,6 @@ bool DzRobloxAction::createUI()
 		return false;
 	}
 
-	if (dzScene->getNumSelectedNodes() != 1)
-	{
-		DzNodeList rootNodes = buildRootNodeList();
-		if (rootNodes.length() == 1)
-		{
-			dzScene->setPrimarySelection(rootNodes[0]);
-		}
-		else if (rootNodes.length() > 1)
-		{
-			if (m_nNonInteractiveMode == 0)
-			{
-				QMessageBox::warning(0, tr("Error"),
-					tr("Please select one Character to send."), QMessageBox::Ok);
-			}
-			return false;
-		}
-	}
-
 	 // Create the dialog
 	if (!m_bridgeDialog)
 	{
@@ -753,28 +788,54 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		}
 	}
 
-
-	// CreateUI() disabled for debugging -- 2022-Feb-25
-	/*
-		 // Create and show the dialog. If the user cancels, exit early,
-		 // otherwise continue on and do the thing that required modal
-		 // input from the user.
-		 if (createUI() == false)
-			 return;
-	*/
-
-	// Sanity Check, Create the dialog
-	if (m_bridgeDialog == nullptr)
+	// Low Friction Scene Selection Resolution
+	// If zero selection or multiple selection, look for one root
+	// If selection is non-G9, look for G9 parent
+	// If selection has hair or clothing asset, pre-configure Asset Type
+	if (dzScene->getNumSelectedNodes() != 1)
 	{
-		m_bridgeDialog = new DzRobloxDialog(mw);
+		DzNodeList rootNodes = buildRootNodeList();
+		if (rootNodes.length() == 1)
+		{
+			dzScene->selectAllNodes(false);
+			dzScene->setPrimarySelection(rootNodes[0]);
+		}
+		else if (rootNodes.length() > 1)
+		{
+			if (m_nNonInteractiveMode == 0)
+			{
+				QMessageBox::warning(0, tr("Error"),
+					tr("Please select one Character to send."), QMessageBox::Ok);
+			}
+			return;
+		}
 	}
-	else
-	{
+	DzNode* pOriginalSelection = dzScene->getPrimarySelection();
+	// hardcode check for Genesis 9, fail gracefully if Genesis 8
+	DzNode* pGenesisParent = DzRobloxUtils::FindGenesisParent(pOriginalSelection, "Genesis9");
+	if (pGenesisParent == NULL) {
 		if (m_nNonInteractiveMode == 0)
 		{
-			qobject_cast<DzRobloxDialog*>(m_bridgeDialog)->enableModestyOptions(true);
-			m_bridgeDialog->resetToDefaults();
-			m_bridgeDialog->loadSavedSettings();
+			QMessageBox::warning(0, tr("Genesis 9 Character Required"),
+				tr("Please make sure you have selected the root node of a Genesis 9 character. ") +
+				tr("Only Genesis 9 characters are currently supported."), QMessageBox::Ok);
+		}
+		return;
+	}
+	dzScene->selectAllNodes(false);
+	dzScene->setPrimarySelection(pGenesisParent);
+
+	if (createUI() == false)
+		return;
+
+	// PreConfigure Asset Type Combo, depending on pOriginalSelection
+	if (pOriginalSelection->inherits("DzFigure")) {
+		QString sContentType = dzApp->getAssetMgr()->getTypeForNode(pOriginalSelection);
+		if (sContentType.contains("hair", Qt::CaseInsensitive) ||
+			sContentType.contains("follower", Qt::CaseInsensitive)) 
+		{
+			// TODO: Set asset type to Layered Clothing or Hair
+			int nop = 1;
 		}
 	}
 
@@ -783,17 +844,6 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 	DzNode* testNode = dzScene->getPrimarySelection();
 	if (testNode) {
 		if (testNode->inherits("DzFigure")) {
-			// hardcode check for Genesis 9, fail gracefully if Genesis 8
-			if (testNode->getName() != "Genesis9") {
-				if (m_nNonInteractiveMode == 0)
-				{
-					QMessageBox::warning(0, tr("Genesis 9 Character Required"),
-						tr("Please make sure you have selected the root node of a Genesis 9 character. ") +
-						tr("Only Genesis 9 characters are currently supported."), QMessageBox::Ok);
-				}
-				return;
-			}
-
 			// 2. get UV property
 			DzObject* obj = testNode->getObject();
 			if (obj) {
@@ -809,26 +859,12 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 						int combinedUvVal = uvset->findItemString(COMBINED_UVSET_STRING);
 						int currentVal = uvset->getValue();
 						if (currentVal == combinedUvVal) {
-							if (m_nNonInteractiveMode == 0)
-							{
-								qobject_cast<DzRobloxDialog*>(m_bridgeDialog)->enableModestyOptions(false);
-							}
+							qobject_cast<DzRobloxDialog*>(m_bridgeDialog)->enableModestyOptions(false);
 							break;
 						}
 					}
 				}
 			}
-		}
-		else {
-			// gracefully exit, primary selection must be character (DzFigure)
-			if (m_nNonInteractiveMode == 0)
-			{
-				QMessageBox::warning(0, tr("Genesis 9 Character Required"),
-					tr("Please make sure you have selected the root node of a Genesis 9 character. ") +
-					tr("Only Genesis 9 characters are currently supported."), QMessageBox::Ok);
-			}
-			return;
-
 		}
 	}
 
@@ -1682,6 +1718,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	// TODO: complepte custom eyelash/eyebrow pathway
 	//////////////// Remove incompatible nodes, replace with game-ready equivalents
 	// Remove eyebrows
+	dzScene->selectAllNodes(false);
+	dzScene->setPrimarySelection(parentNode);
 	if (m_nReplaceEyebrows == eReplacementAsset::DefaultReplacement) {
 		DzFigure* pFigureNode = qobject_cast<DzFigure*>(dzScene->getPrimarySelection());
 		if (pFigureNode && pFigureNode->getName() == "Genesis9")
@@ -1706,9 +1744,11 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 			}
 		}
 	}
+	dzScene->selectAllNodes(false);
+	dzScene->setPrimarySelection(parentNode);
 	// Remove eyelashes
 	if (m_nReplaceEyelashes == eReplacementAsset::DefaultReplacement) {
-		robloxPreProcessProgress.setCurrentInfo("Replacing eyebrows...");
+		robloxPreProcessProgress.setCurrentInfo("Replacing eylashes...");
 		robloxPreProcessProgress.step();
 		DzFigure* pFigureNode = qobject_cast<DzFigure*>(dzScene->getPrimarySelection());
 		if (pFigureNode && pFigureNode->getName() == "Genesis9")
@@ -1732,6 +1772,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		}
 	}
 
+	dzScene->selectAllNodes(false);
+	dzScene->setPrimarySelection(parentNode);
 	// apply optional morphs
 	if (m_bEnableBreastsGone)
 	{
@@ -1765,6 +1807,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		}
 	}
 
+	dzScene->selectAllNodes(false);
+	dzScene->setPrimarySelection(parentNode);
 	////// apply geografts
 	// check if geograft present
 	robloxPreProcessProgress.setCurrentInfo("Applying conversion geografts...");
@@ -1776,6 +1820,9 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 			applyGeograft(mouthNode, tempPath + "/game_engine_mouth_geograft.duf", "game_engine_mouth_geograft_0");
 		}
 	}
+
+	dzScene->selectAllNodes(false);
+	dzScene->setPrimarySelection(parentNode);
 	if (dzScene->findNodeByLabel("game_engine_eye_geograft") == NULL &&
 		dzScene->findNode("game_engine_eye_geograft_0") == NULL) {
 		DzNode* eyesNode = dzScene->findNode("Genesis9Eyes");
@@ -1783,7 +1830,10 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 			applyGeograft(eyesNode, tempPath + "/game_engine_eye_geograft.duf", "game_engine_eye_geograft_0");
 		}
 	}
+
 	// groin geograft (no butt cleavage mod)
+	dzScene->selectAllNodes(false);
+	dzScene->setPrimarySelection(parentNode);
 	if (dzScene->findNodeByLabel("game_engine_groin_geograft") == NULL &&
 		dzScene->findNode("game_engine_groin_geograft_0") == NULL) {
 		DzNode* baseFigureNode = dzScene->findNode("Genesis9");
@@ -1805,6 +1855,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	QScopedPointer<DzScript> Script(new DzScript());
 
 	// APPLY HAND POSE
+	dzScene->selectAllNodes(false);
+	dzScene->setPrimarySelection(parentNode);
 	bool bApplyHandPose = true;
 	if (bApplyHandPose) {
 		robloxPreProcessProgress.setCurrentInfo("Applying Roblox hand grip pose...");
@@ -2006,6 +2058,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		aArgs.append(QVariant(slNormalOverlays));
 		aArgs.append(QVariant(slRoughnessOverlays));
 		aArgs.append(QVariant(slMetallicOverlays));
+		dzScene->selectAllNodes(false);
+		dzScene->setPrimarySelection(parentNode);
 		ScriptWithArgs->execute(aArgs);
 	}
 	// copy modesty overlaid materials to geografts
@@ -2077,7 +2131,8 @@ bool DzRobloxAction::addAccessory(DzNode* pBaseNode, QString accessoryFilename, 
 		//		DzBridgeAction::copyFile(&srcFile, &tempPath, true);
 			//	if (contentMgr->openFile(tempPath, true))
 
-				// deselect all ndoes
+		// deselect all ndoes
+		dzScene->selectAllNodes(false);
 		dzScene->setPrimarySelection(NULL);
 		if (contentMgr->openFile(accessoryFilename, true))
 		{
@@ -2115,6 +2170,7 @@ bool DzRobloxAction::applyGeograft(DzNode* pBaseNode, QString geograftFilename, 
 	//	if (contentMgr->openFile(tempPath, true))
 
 		// deselect all ndoes
+		dzScene->selectAllNodes(false);
 		dzScene->setPrimarySelection(NULL);
 		if (contentMgr->openFile(geograftFilename, true))
 		{

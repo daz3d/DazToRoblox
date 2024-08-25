@@ -42,6 +42,10 @@ public:
 	static bool generateFacs50(DzRobloxAction* that);
 	static bool generateBlenderBatchFile(QString batchFilePath, QString sBlenderExecutablePath, QString sCommandArgs);
 
+	static DzNode* FindRootNode(DzNode* pNode);
+	static DzNode* FindActorParent(DzNode* pNode);
+	static DzNode* FindGenesisParent(DzNode* pNode, QString sGenerationName = "Genesis");
+
 };
 
 #define DAZTOROBLOX_EULA tr("\
