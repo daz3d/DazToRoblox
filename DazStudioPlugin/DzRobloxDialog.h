@@ -40,6 +40,30 @@ class DzRobloxDialog : public DZ_BRIDGE_NAMESPACE::DzBridgeDialog{
 	Q_OBJECT
 	Q_PROPERTY(QWidget* intermediateFolderEdit READ getIntermediateFolderEdit)
 public:
+
+//	QString sNonBaseUvWarning = tr("\
+//The character is already using the \"Combined Head and Body\" UV Set for Roblox export.  Modesty layer will NOT be re-applied.  \
+//Please make sure that your character already has a Roblox compliant modesty layer applied.\
+//\n\n\
+//The character must be using the \"Base Multi UDIM\" UV Set in order for the modesty layer to be applied.  \
+//If you want to re-apply the modesty layer, then please first apply another material by double-clicking a compatible \
+//character material from the \"Smart Content\" or \"Content Library\" pane.\
+//");
+	QString m_sModestyOverlayDisabledNotice = tr("\
+<p>Your character is already configured for exporting to Roblox, with the head and body materials combined together. \
+Because of this, the modesty layer cannot be re-applied automatically.  If your character already has a modesty layer \
+that meets Roblox guidelines, you can proceed with the transfer.</p>\
+<p>To add or re-add a modesty layer, your character needs to be reset to the original Daz material settings:</p>\
+<ol>\
+<li>Select the root node of the character in the Scene pane.</li>\
+<li>Then double-click a compatible character Material from Materials section of the \"Smart Content\" or \"Content Library\" pane.</li>\
+<li>Once the Material is applied, the modesty layer options will become available again.</li>\
+</ol>\
+");
+	QString m_sModestyOverlayHelp = tr("\
+Select a modesty layer to be overlaid on top of the unclothed Genesis skin texture.\
+");
+
 	Q_INVOKABLE QLineEdit* getIntermediateFolderEdit() { return intermediateFolderEdit; }
 
 	/** Constructor **/
@@ -58,6 +82,7 @@ public:
 	Q_INVOKABLE bool disableAcceptUntilAllRequirementsValid();
 
 	Q_INVOKABLE bool showDisclaimer();
+	Q_INVOKABLE void enableModestyOptions(bool bEnable);
 
 	DzBasicDialog* m_wEulaAgreementDialog;
 

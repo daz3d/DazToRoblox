@@ -543,13 +543,22 @@ bool DzRobloxAction::createUI()
 		return false;
 	}
 
-	// m_subdivisionDialog creation REQUIRES valid Character or Prop selected
 	if (dzScene->getNumSelectedNodes() != 1)
 	{
-		if (m_nNonInteractiveMode == 0) QMessageBox::warning(0, tr("Error"),
-			tr("Please select one Character to send."), QMessageBox::Ok);
-
-		return false;
+		DzNodeList rootNodes = buildRootNodeList();
+		if (rootNodes.length() == 1)
+		{
+			dzScene->setPrimarySelection(rootNodes[0]);
+		}
+		else if (rootNodes.length() > 1)
+		{
+			if (m_nNonInteractiveMode == 0)
+			{
+				QMessageBox::warning(0, tr("Error"),
+					tr("Please select one Character to send."), QMessageBox::Ok);
+			}
+			return false;
+		}
 	}
 
 	 // Create the dialog
@@ -562,6 +571,7 @@ bool DzRobloxAction::createUI()
 		DzRobloxDialog* robloxDialog = qobject_cast<DzRobloxDialog*>(m_bridgeDialog);
 		if (robloxDialog)
 		{
+			robloxDialog->enableModestyOptions(true);
 			robloxDialog->resetToDefaults();
 			robloxDialog->loadSavedSettings();
 		}
@@ -689,15 +699,6 @@ bool DzRobloxAction::deepCopyNode(FbxNode* pDestinationRoot, FbxNode* pSourceNod
 void DzRobloxAction::executeAction()
 {
 
-	// CreateUI() disabled for debugging -- 2022-Feb-25
-	/*
-		 // Create and show the dialog. If the user cancels, exit early,
-		 // otherwise continue on and do the thing that required modal
-		 // input from the user.
-		 if (createUI() == false)
-			 return;
-	*/
-
 	// Check if the main window has been created yet.
 	// If it hasn't, alert the user and exit early.
 	DzMainWindow* mw = dzApp->getInterface();
@@ -712,6 +713,7 @@ void DzRobloxAction::executeAction()
 	}
 
 	// Make sure geometry edit tool is not active
+//	DzMainWindow* mw = dzApp->getInterface();
 	DzViewportMgr* pViewportMgr = mw->getViewportMgr();
 	DzViewTool* pNodeTool = pViewportMgr->findTool("Node Selection");
 	if (!pNodeTool) {
@@ -752,23 +754,27 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 	}
 
 
-	// Create and show the dialog. If the user cancels, exit early,
-	// otherwise continue on and do the thing that required modal
-	// input from the user.
-	if (dzScene->getNumSelectedNodes() != 1)
+	// CreateUI() disabled for debugging -- 2022-Feb-25
+	/*
+		 // Create and show the dialog. If the user cancels, exit early,
+		 // otherwise continue on and do the thing that required modal
+		 // input from the user.
+		 if (createUI() == false)
+			 return;
+	*/
+
+	// Sanity Check, Create the dialog
+	if (m_bridgeDialog == nullptr)
 	{
-		DzNodeList rootNodes = buildRootNodeList();
-		if (rootNodes.length() == 1)
+		m_bridgeDialog = new DzRobloxDialog(mw);
+	}
+	else
+	{
+		if (m_nNonInteractiveMode == 0)
 		{
-			dzScene->setPrimarySelection(rootNodes[0]);
-		}
-		else if (rootNodes.length() > 1)
-		{
-			if (m_nNonInteractiveMode == 0)
-			{
-				QMessageBox::warning(0, tr("Error"),
-					tr("Please select one Character to send."), QMessageBox::Ok);
-			}
+			qobject_cast<DzRobloxDialog*>(m_bridgeDialog)->enableModestyOptions(true);
+			m_bridgeDialog->resetToDefaults();
+			m_bridgeDialog->loadSavedSettings();
 		}
 	}
 
@@ -781,7 +787,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 			if (testNode->getName() != "Genesis9") {
 				if (m_nNonInteractiveMode == 0)
 				{
-					QMessageBox::warning(0, tr("Error"),
+					QMessageBox::warning(0, tr("Genesis 9 Character Required"),
 						tr("Please make sure you have selected the root node of a Genesis 9 character. ") +
 						tr("Only Genesis 9 characters are currently supported."), QMessageBox::Ok);
 				}
@@ -805,8 +811,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 						if (currentVal == combinedUvVal) {
 							if (m_nNonInteractiveMode == 0)
 							{
-								QMessageBox::warning(0, tr("Warning"),
-									tr("A non-standard UV Set was detected, overlay will NOT be applied."), QMessageBox::Ok);
+								qobject_cast<DzRobloxDialog*>(m_bridgeDialog)->enableModestyOptions(false);
 							}
 							break;
 						}
@@ -818,26 +823,12 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 			// gracefully exit, primary selection must be character (DzFigure)
 			if (m_nNonInteractiveMode == 0)
 			{
-				QMessageBox::warning(0, tr("Error"),
+				QMessageBox::warning(0, tr("Genesis 9 Character Required"),
 					tr("Please make sure you have selected the root node of a Genesis 9 character. ") +
 					tr("Only Genesis 9 characters are currently supported."), QMessageBox::Ok);
 			}
 			return;
 
-		}
-	} 
-
-	// Create the dialog
-	if (m_bridgeDialog == nullptr)
-	{
-		m_bridgeDialog = new DzRobloxDialog(mw);
-	}
-	else
-	{
-		if (m_nNonInteractiveMode == 0)
-		{
-			m_bridgeDialog->resetToDefaults();
-			m_bridgeDialog->loadSavedSettings();
 		}
 	}
 

@@ -112,7 +112,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_enableExperimentalOptionsCheckBox->hide();
 	 m_wEnableExperimentalRowLabelWidget->hide();
 
-	 // Figure Export Options
+	 // Modesty Overlay Options
 	 m_wModestyOverlayCombo = new QComboBox();
 	 m_wModestyOverlayCombo->addItem("Strapless bra and bikini", eModestyOverlay::StraplessBra_Bikini);
 	 m_wModestyOverlayCombo->addItem("Sports bra and shorts", eModestyOverlay::SportsBra_Shorts);
@@ -135,7 +135,9 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 
 	 // Add No Breast Option
 	 m_wBreastsGoneCheckbox = new QCheckBox("Breasts Gone Morph");
-	 m_wBreastsGoneCheckbox->setToolTip("Optional Remove Breasts. REQUIRES Genesis 9 Body Shapes Add-On");
+	 QString sBreastsGone = tr("Optional Remove Breasts. REQUIRES Genesis 9 Body Shapes Add-On");
+	 m_wBreastsGoneCheckbox->setToolTip(sBreastsGone);
+	 m_wBreastsGoneCheckbox->setWhatsThis(sBreastsGone);
 	 m_wBreastsGoneCheckbox->setChecked(true);
 
 	 // TODO: complepte custom eyelash/eyebrow pathway
@@ -159,12 +161,16 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 
 	 // Accessory Export Options
 	 QHBoxLayout* wClothingOptionsLayout = new QHBoxLayout();
-	 m_wBakeSingleOutfitCheckbox = new QCheckBox(tr("Bake Single Outfit"));
-	 m_wBakeSingleOutfitCheckbox->setToolTip(tr("Bake all items into a single layered clothing outfit"));
-	 m_wBakeSingleOutfitCheckbox->setChecked(true);
-	 m_wHiddenSurfaceRemovalCheckbox = new QCheckBox(tr("Enable Hidden Surface Removal"));
-	 m_wHiddenSurfaceRemovalCheckbox->setToolTip(tr("Remove triangles which are hidden underneath other triangles"));
-	 m_wHiddenSurfaceRemovalCheckbox->setChecked(true);
+	 m_wBakeSingleOutfitCheckbox = new QCheckBox(tr("Merge all clothing together"));
+	 QString sBakeSingleOutfit = tr("Merge all clothing and hair items togother so that they use a single Roblox clothing slot");
+	 m_wBakeSingleOutfitCheckbox->setToolTip(sBakeSingleOutfit);
+	 m_wBakeSingleOutfitCheckbox->setWhatsThis(sBakeSingleOutfit);
+	 m_wBakeSingleOutfitCheckbox->setChecked(false);
+	 m_wHiddenSurfaceRemovalCheckbox = new QCheckBox(tr("Hidden Geometry Removal"));
+	 QString sHiddenSurfaceRemoval = tr("Remove unnecessary triangles which are hidden underneath other triangles and visible (Experimental)");
+	 m_wHiddenSurfaceRemovalCheckbox->setToolTip(sHiddenSurfaceRemoval);
+	 m_wHiddenSurfaceRemovalCheckbox->setWhatsThis(sHiddenSurfaceRemoval);
+	 m_wHiddenSurfaceRemovalCheckbox->setChecked(false);
 	 wClothingOptionsLayout->addWidget(m_wBakeSingleOutfitCheckbox);
 	 wClothingOptionsLayout->addWidget(m_wHiddenSurfaceRemovalCheckbox);
 	 QLabel* wLayeredClothingRowLabel = new QLabel(tr("Layered Clothing"));
@@ -237,7 +243,11 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 assetTypeCombo->setWhatsThis("Skeletal Mesh for something with moving parts, like a character\nStatic Mesh for things like props\nAnimation for a character animation.");
 	 intermediateFolderEdit->setWhatsThis("Roblox Studio Exporter will collect the assets in a subfolder under this folder.");
 	 intermediateFolderButton->setWhatsThis("Roblox Studio Exporter will collect the assets in a subfolder under this folder.");
-	 //m_wTargetPluginInstaller->setWhatsThis("You can install the Godot Plugin by selecting the desired Godot version and then clicking Install.");
+
+	 m_wModestyOverlayCombo->setToolTip(m_sModestyOverlayHelp);
+	 m_wModestyOverlayCombo->setWhatsThis(m_sModestyOverlayHelp);
+	 m_wModestyOverlayRowLabel->setToolTip(m_sModestyOverlayHelp);
+	 m_wModestyOverlayRowLabel->setWhatsThis(m_sModestyOverlayHelp);
 
 	 // Set Defaults
 	 resetToDefaults();
@@ -678,6 +688,27 @@ void DzRobloxDialog::HandleCustomModestyOverlayActivated(int index)
 			}
 		}
 	}
+}
+
+void DzRobloxDialog::enableModestyOptions(bool bEnable)
+{
+	m_wModestyOverlayCombo->setDisabled(!bEnable);
+
+	if (bEnable) {
+		m_wModestyOverlayCombo->setToolTip(m_sModestyOverlayHelp);
+		m_wModestyOverlayCombo->setWhatsThis(m_sModestyOverlayHelp);
+		m_wModestyOverlayRowLabel->setToolTip(m_sModestyOverlayHelp);
+		m_wModestyOverlayRowLabel->setWhatsThis(m_sModestyOverlayHelp);
+	}
+	else {
+		// update help to disabled widget help
+		m_wModestyOverlayCombo->setToolTip(m_sModestyOverlayDisabledNotice);
+		m_wModestyOverlayCombo->setWhatsThis(m_sModestyOverlayDisabledNotice);
+		m_wModestyOverlayRowLabel->setToolTip(m_sModestyOverlayDisabledNotice);
+		m_wModestyOverlayRowLabel->setWhatsThis(m_sModestyOverlayDisabledNotice);
+	}
+
+	return;
 }
 
 #include "moc_DzRobloxDialog.cpp"
