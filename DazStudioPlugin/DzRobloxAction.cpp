@@ -1940,7 +1940,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		if (m_nModestyOverlay == eModestyOverlay::StraplessBra_Bikini)
 		{
 			sDiffuseOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_d.png";
-			sNormalOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_nm.png";
+			sNormalOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_n.png";
 			sRoughnessOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_r.png";
 			sMetallicOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_m.png";
 		}
@@ -1982,7 +1982,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 			// clean and generate template string
 			QString sTemplateString = m_sModestyOverlayCustomFilePath;
 			sTemplateString = sTemplateString.replace("_d.png", "", Qt::CaseInsensitive);
-			sTemplateString = sTemplateString.replace("_nm.png", "", Qt::CaseInsensitive);
+			sTemplateString = sTemplateString.replace("_n.png", "", Qt::CaseInsensitive);
 			sTemplateString = sTemplateString.replace("_r.png", "", Qt::CaseInsensitive);
 			sTemplateString = sTemplateString.replace("_m.png", "", Qt::CaseInsensitive);
 			sTemplateString = sTemplateString.replace("_torso_modesty_overlay", "_*_modesty_overlay", Qt::CaseInsensitive);
@@ -1993,9 +1993,9 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 			sDiffuseOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_d.png";
 			sDiffuseOverlayHead = QString(sTemplateString).replace("_*_modesty_overlay", "_head_modesty_overlay") + "_d.png";
 
-			sNormalOverlayTorso = QString(sTemplateString).replace("_*_modesty_overlay", "_torso_modesty_overlay") + "_nm.png";
-			sNormalOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_nm.png";
-			sNormalOverlayHead = QString(sTemplateString).replace("_*_modesty_overlay", "_head_modesty_overlay") + "_nm.png";
+			sNormalOverlayTorso = QString(sTemplateString).replace("_*_modesty_overlay", "_torso_modesty_overlay") + "_n.png";
+			sNormalOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_n.png";
+			sNormalOverlayHead = QString(sTemplateString).replace("_*_modesty_overlay", "_head_modesty_overlay") + "_n.png";
 
 			sRoughnessOverlayTorso = QString(sTemplateString).replace("_*_modesty_overlay", "_torso_modesty_overlay") + "_r.png";
 			sRoughnessOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_r.png";
