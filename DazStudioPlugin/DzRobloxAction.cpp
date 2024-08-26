@@ -91,6 +91,8 @@ DzNode* DzRobloxUtils::FindActorParent(DzNode* pNode) {
 }
 
 DzNode* DzRobloxUtils::FindGenesisParent(DzNode* pNode, QString sGenerationName) {
+	if (pNode == NULL) return NULL;
+
 	// check if pNode is an actor
 	if (pNode->inherits("DzFigure"))
 	{
@@ -788,6 +790,9 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		}
 	}
 
+	if (createUI() == false)
+		return;
+
 	// Low Friction Scene Selection Resolution
 	// If zero selection or multiple selection, look for one root
 	// If selection is non-G9, look for G9 parent
@@ -813,31 +818,32 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 	DzNode* pOriginalSelection = dzScene->getPrimarySelection();
 	// hardcode check for Genesis 9, fail gracefully if Genesis 8
 	DzNode* pGenesisParent = DzRobloxUtils::FindGenesisParent(pOriginalSelection, "Genesis9");
-	if (pGenesisParent == NULL) {
-		if (m_nNonInteractiveMode == 0)
-		{
-			QMessageBox::warning(0, tr("Genesis 9 Character Required"),
-				tr("Please make sure you have selected the root node of a Genesis 9 character. ") +
-				tr("Only Genesis 9 characters are currently supported."), QMessageBox::Ok);
+	if (pOriginalSelection) {
+		if (pGenesisParent == NULL) {
+			if (m_nNonInteractiveMode == 0)
+			{
+				QMessageBox::warning(0, tr("Genesis 9 Character Required"),
+					tr("Please make sure you have selected the root node of a Genesis 9 character. ") +
+					tr("Only Genesis 9 characters are currently supported."), QMessageBox::Ok);
+			}
+			//		return;
 		}
-		return;
-	}
-	dzScene->selectAllNodes(false);
-	dzScene->setPrimarySelection(pGenesisParent);
+		dzScene->selectAllNodes(false);
+		dzScene->setPrimarySelection(pGenesisParent);
 
-	if (createUI() == false)
-		return;
-
-	// PreConfigure Asset Type Combo, depending on pOriginalSelection
-	if (pOriginalSelection->inherits("DzFigure")) {
-		QString sContentType = dzApp->getAssetMgr()->getTypeForNode(pOriginalSelection);
-		if (sContentType.contains("hair", Qt::CaseInsensitive) ||
-			sContentType.contains("follower", Qt::CaseInsensitive)) 
-		{
-			// TODO: Set asset type to Layered Clothing or Hair
-			int nop = 1;
+		// PreConfigure Asset Type Combo, depending on pOriginalSelection
+		if (pOriginalSelection->inherits("DzFigure")) {
+			QString sContentType = dzApp->getAssetMgr()->getTypeForNode(pOriginalSelection);
+			if (sContentType.contains("hair", Qt::CaseInsensitive) ||
+				sContentType.contains("follower", Qt::CaseInsensitive))
+			{
+				// TODO: Set asset type to Layered Clothing or Hair
+				int nop = 1;
+			}
 		}
+
 	}
+
 
 	// if UV is not default, then issue error and return
 	// 1. get UV of selected node
