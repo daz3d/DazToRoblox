@@ -160,20 +160,26 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 QLabel* wReplacementPartsRowLabel = new QLabel(tr("Replacement Assets"));
 
 	 // Accessory Export Options
-	 QHBoxLayout* wClothingOptionsLayout = new QHBoxLayout();
+	 QVBoxLayout* wClothingOptionsLayout = new QVBoxLayout();
 	 m_wBakeSingleOutfitCheckbox = new QCheckBox(tr("Merge all clothing together"));
 	 QString sBakeSingleOutfit = tr("Merge all clothing and hair items togother so that they use a single Roblox clothing slot");
 	 m_wBakeSingleOutfitCheckbox->setToolTip(sBakeSingleOutfit);
 	 m_wBakeSingleOutfitCheckbox->setWhatsThis(sBakeSingleOutfit);
 	 m_wBakeSingleOutfitCheckbox->setChecked(false);
-	 m_wHiddenSurfaceRemovalCheckbox = new QCheckBox(tr("Hidden Geometry Removal"));
+	 m_wHiddenSurfaceRemovalCheckbox = new QCheckBox(tr("Remove Hidden Geometry"));
 	 QString sHiddenSurfaceRemoval = tr("Remove unnecessary triangles which are hidden underneath other triangles and visible (Experimental)");
 	 m_wHiddenSurfaceRemovalCheckbox->setToolTip(sHiddenSurfaceRemoval);
 	 m_wHiddenSurfaceRemovalCheckbox->setWhatsThis(sHiddenSurfaceRemoval);
 	 m_wHiddenSurfaceRemovalCheckbox->setChecked(false);
+	 QString sRemoveScalp = tr("Remove scalp geometry from hair assets. May fix opaque scalp issues.");
+	 m_wRemoveScalpMaterialCheckbox = new QCheckBox(tr("Remove Scalp"));
+	 m_wRemoveScalpMaterialCheckbox->setToolTip(sRemoveScalp);
+	 m_wRemoveScalpMaterialCheckbox->setToolTip(sRemoveScalp);
+	 m_wRemoveScalpMaterialCheckbox->setChecked(true);
 	 wClothingOptionsLayout->addWidget(m_wBakeSingleOutfitCheckbox);
 	 wClothingOptionsLayout->addWidget(m_wHiddenSurfaceRemovalCheckbox);
-	 QLabel* wLayeredClothingRowLabel = new QLabel(tr("Layered Clothing"));
+	 wClothingOptionsLayout->addWidget(m_wRemoveScalpMaterialCheckbox);
+	 QLabel* wLayeredClothingRowLabel = new QLabel(tr("Accessories"));
 
 	 // Add GUI to layout
 	 mainLayout->insertRow(1, "Roblox Output Folder", robloxOutputFolderLayout);

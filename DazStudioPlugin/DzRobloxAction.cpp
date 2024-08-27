@@ -1404,6 +1404,7 @@ void DzRobloxAction::writeConfiguration()
 	writer.addMember("Texture Size", m_nRobloxTextureSize);
 	writer.addMember("Texture Bake Quality", m_nBlenderTextureBakeQuality);
 	writer.addMember("Hidden Surface Removal", m_bHiddenSurfaceRemoval);
+	writer.addMember("Remove Scalp Material", m_bRemoveScalp);
 
 	if (true)
 	{
@@ -1504,6 +1505,7 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 		m_bEnableBreastsGone = pRobloxDialog->m_wBreastsGoneCheckbox->isChecked();
 		m_bBakeSingleOutfit = pRobloxDialog->m_wBakeSingleOutfitCheckbox->isChecked();
 		m_bHiddenSurfaceRemoval = pRobloxDialog->m_wHiddenSurfaceRemovalCheckbox->isChecked();
+		m_bRemoveScalp = pRobloxDialog->m_wRemoveScalpMaterialCheckbox->isChecked();
 
 		// modesty overlay
 		QVariant vModestyData = pRobloxDialog->m_wModestyOverlayCombo->itemData(pRobloxDialog->m_wModestyOverlayCombo->currentIndex());

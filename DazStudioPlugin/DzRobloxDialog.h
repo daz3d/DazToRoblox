@@ -129,6 +129,7 @@ protected:
 	QComboBox* m_wEyelashReplacement;
 
 	QCheckBox* m_wHiddenSurfaceRemovalCheckbox;
+	QCheckBox* m_wRemoveScalpMaterialCheckbox;
 
 	virtual void refreshAsset() override;
 

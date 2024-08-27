@@ -125,6 +125,10 @@ def _main(argv):
         hidden_surface_removal = dtu_dict["Hidden Surface Removal"]
     else:
         hidden_surface_removal = False
+    if "Remove Scalp Material" in dtu_dict:
+        remove_scalp_material = dtu_dict["Remove Scalp Material"]
+    else:
+        remove_scalp_material = False
 
     if "Has Animation" in dtu_dict:
         bHasAnimation = dtu_dict["Has Animation"]
@@ -278,6 +282,34 @@ def _main(argv):
                 main_item.name = roblox_asset_name + "_Outfit"
             else:
                 main_item.name = roblox_asset_name
+
+    if remove_scalp_material:
+        hair_obj_list = []
+        for obj in bpy.data.objects:
+            if obj.type == 'MESH' and "StudioPresentationType" in obj:
+                if "hair" in obj["StudioPresentationType"].lower():
+                    hair_obj_list.append(obj)
+        for obj in hair_obj_list:
+            bpy.ops.object.select_all(action='DESELECT')
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            bpy.ops.object.mode_set(mode='EDIT')
+            bpy.ops.mesh.select_all(action='DESELECT')
+            bpy.ops.object.mode_set(mode='OBJECT')
+            for face in obj.data.polygons:
+                material_name = obj.material_slots[face.material_index].material.name
+                # fuzzy match scalp and skullcap
+                # exact match for "Cap"
+                if ("scalp" in material_name.lower() or 
+                    "skullcap" in material_name.lower() or 
+                    "Cap" == material_name
+                    ):
+                    print("DEBUG: SCALP REMOVER: material_name=" + material_name)
+                    for vert_index in face.vertices:
+                        obj.data.vertices[vert_index].select = True
+            bpy.ops.object.mode_set(mode='EDIT')
+            bpy.ops.mesh.delete(type='VERT')
+            bpy.ops.object.mode_set(mode='OBJECT')
 
     # convert to texture atlas
     safe_material_names_list = []
