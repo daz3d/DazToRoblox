@@ -183,12 +183,15 @@ def _main(argv):
 
     figure_list = ["genesis9.shape", "genesis9mouth.shape", "genesis9eyes.shape"]
     for obj in bpy.data.objects:
-        if obj.type == 'MESH' and (
-            "eyebrow" in obj.name.lower() or
-            "eyelash" in obj.name.lower() or
-            "tear" in obj.name.lower()
-        ) :
-            figure_list.append(obj.name.lower())
+        # if obj.type == 'MESH' and (
+        #     "eyebrow" in obj.name.lower() or
+        #     "eyelash" in obj.name.lower() or
+        #     "tear" in obj.name.lower()
+        # ) :
+        if obj.type == 'MESH' and "StudioPresentationType" in obj:
+            asset_type = obj["StudioPresentationType"]
+            if "eyebrow" in asset_type.lower() or "eyelash" in asset_type.lower() or "tear" in asset_type.lower():
+                figure_list.append(obj.name.lower())
     cage_list = []
     cage_obj_list = []
     accessories_list = []
@@ -276,6 +279,7 @@ def _main(argv):
             else:
                 main_item.name = roblox_asset_name
 
+    # convert to texture atlas
     safe_material_names_list = []
     for obj in bpy.data.objects:
         if obj.type == 'MESH'and (
