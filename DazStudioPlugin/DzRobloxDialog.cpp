@@ -122,6 +122,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 connect(m_wModestyOverlayCombo, SIGNAL(activated(int)), this, SLOT(HandleCustomModestyOverlayActivated(int)));
 	 m_wModestyOverlayRowLabel = new QLabel(tr("Modesty Overlay"));
 	 mainLayout->addRow(m_wModestyOverlayRowLabel, m_wModestyOverlayCombo);
+	 m_aRowLabels.append(m_wModestyOverlayRowLabel);
 
 	 // Add Project Folder
 	 QHBoxLayout* robloxOutputFolderLayout = new QHBoxLayout();
@@ -159,7 +160,8 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wEyelashReplacement->setToolTip(tr("Replace eyelashes with something else."));
 	 wReplacementPartsLayout->addWidget(m_wEyebrowReplacement);
 	 wReplacementPartsLayout->addWidget(m_wEyelashReplacement);
-	 QLabel* wReplacementPartsRowLabel = new QLabel(tr("Replacement Assets"));
+	 m_wReplacementPartsRowLabel = new QLabel(tr("Replacement Assets"));
+	 m_aRowLabels.append(m_wReplacementPartsRowLabel);
 
 	 // Accessory Export Options
 	 QVBoxLayout* wClothingOptionsLayout = new QVBoxLayout();
@@ -181,17 +183,20 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 wClothingOptionsLayout->addWidget(m_wBakeSingleOutfitCheckbox);
 	 wClothingOptionsLayout->addWidget(m_wHiddenSurfaceRemovalCheckbox);
 	 wClothingOptionsLayout->addWidget(m_wRemoveScalpMaterialCheckbox);
-	 QLabel* wLayeredClothingRowLabel = new QLabel(tr("Accessories"));
+	 m_wLayeredClothingRowLabel = new QLabel(tr("Accessories"));
+	 m_aRowLabels.append(m_wLayeredClothingRowLabel);
 
 	 // Add GUI to layout
 	 m_wRobloxOutputFolderRowLabel = new QLabel(tr("Roblox Output Folder"));
+	 m_aRowLabels.append(m_wRobloxOutputFolderRowLabel);
 	 mainLayout->insertRow(1, m_wRobloxOutputFolderRowLabel, robloxOutputFolderLayout);
 	 showRobloxOptions(true);
 	 this->showLodRow(false);
 	 m_wContentModerationRowLabel = new QLabel(tr("Content Moderation"));
+	 m_aRowLabels.append(m_wContentModerationRowLabel);
 	 mainLayout->addRow(m_wContentModerationRowLabel, m_wBreastsGoneCheckbox);
-	 mainLayout->addRow(wReplacementPartsRowLabel, wReplacementPartsLayout);
-	 mainLayout->addRow(wLayeredClothingRowLabel, wClothingOptionsLayout);
+	 mainLayout->addRow(m_wReplacementPartsRowLabel, wReplacementPartsLayout);
+	 mainLayout->addRow(m_wLayeredClothingRowLabel, wClothingOptionsLayout);
 
 	 // Select Blender Executable Path GUI
 	 QHBoxLayout* blenderExecutablePathLayout = new QHBoxLayout();
@@ -223,9 +228,11 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 {
 		 m_wBlenderExecutablePathRowLabel = new QLabel("Blender Executable");
 		 advancedLayout->insertRow(1, m_wBlenderExecutablePathRowLabel, blenderExecutablePathLayout);
+		 m_aRowLabels.append(m_wBlenderExecutablePathRowLabel);
 
 		 m_wIntermediateFolderRowLabel = new QLabel("Intermediate Folder");
 		 advancedLayout->addRow(m_wIntermediateFolderRowLabel, intermediateFolderLayout);
+		 m_aRowLabels.append(m_wIntermediateFolderRowLabel);
 
 		 // reposition the Open Intermediate Folder button so it aligns with the center section
 		 advancedLayout->removeWidget(m_OpenIntermediateFolderButton);
@@ -273,8 +280,12 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 
 	 // GUI Refresh
 	 m_WelcomeLabel->hide();
-	 setWindowTitle(tr("Roblox Export Options"));
 	 wHelpMenuButton->show();
+	 wHelpMenuButton->insertItem(tr("Roblox Guidelines..."), ROBLOX_HELP_ID_GUIDELINES);
+	 wHelpMenuButton->insertItem(tr("Character Specification..."), ROBLOX_HELP_ID_SPECIFICATION);
+
+	 fixRowLabelStyle();
+	 fixRowLabelWidths();
 
 }
 
@@ -430,9 +441,20 @@ void DzRobloxDialog::HandleSelectBlenderExecutablePathButton()
 {
 	// DB 2023-10-13: prepopulate with existing folder string
 	QString directoryName = "";
-	if (settings != nullptr && settings->value("BlenderExecutablePath").isNull() != true)
-	{
-		directoryName = QFileInfo(settings->value("BlenderExecutablePath").toString()).dir().dirName();
+	QString sBlenderExePath = m_wBlenderExecutablePathEdit->text();
+	directoryName = QFileInfo(sBlenderExePath).dir().path();
+	if (directoryName == "." || directoryName == "") {
+		if (settings != nullptr && settings->value("BlenderExecutablePath").isNull() != true) {
+			sBlenderExePath = settings->value("BlenderExecutablePath").toString();
+			directoryName = QFileInfo(sBlenderExePath).dir().path();
+		}
+		if (directoryName == "." || directoryName == "") {
+#ifdef WIN32
+			directoryName = "C:/Program Files/";
+#elif defined (__APPLE__)
+			directoryName = "/Applications/";
+#endif
+		}
 	}
 #ifdef WIN32
     QString sExeFilter = tr("Executable Files (*.exe)");
@@ -467,14 +489,16 @@ void DzRobloxDialog::HandleSelectBlenderExecutablePathButton()
 void DzRobloxDialog::HandleTextChanged(const QString& text)
 {
 	QObject* senderWidget = sender();
-
 	if (senderWidget == m_wBlenderExecutablePathEdit) {
-		// check if blender exe is valid
-		printf("DEBUG: check stuff here...");
-//		disableAcceptUntilBlenderValid(text);
-		disableAcceptUntilAllRequirementsValid();
+		updateBlenderExecutablePathEdit(isBlenderTextBoxValid());
 	}
-	dzApp->log("DzRoblox: DEBUG: HandleTextChanged: text = " + text);
+	if (senderWidget == m_wRobloxOutputFolderEdit) {
+		QString text = m_wRobloxOutputFolderEdit->text();
+		int pos = 0;
+		bool bIsValid = (m_dzValidatorFileExists.validate(text, pos) == QValidator::Acceptable);
+		updateRobloxOutputFolderEdit(bIsValid);
+	}
+	disableAcceptUntilAllRequirementsValid();
 }
 
 void DzRobloxDialog::HandleAssetTypeComboChange(int state)
@@ -557,21 +581,7 @@ bool DzRobloxDialog::HandleAcceptButtonValidationFeedback() {
 	{
 		QMessageBox::warning(0, tr("Blender Executable Path"), tr("Blender Executable Path must be set."), QMessageBox::Ok);
 		// Enable Advanced Settings
-		if (advancedSettingsGroupBox->isChecked() == false)
-		{
-			advancedSettingsGroupBox->setChecked(true);
-
-			foreach(QObject * child, advancedSettingsGroupBox->children())
-			{
-				QWidget* widget = qobject_cast<QWidget*>(child);
-				if (widget)
-				{
-					widget->setHidden(false);
-					QString name = widget->objectName();
-					dzApp->log("DEBUG: widget name = " + name);
-				}
-			}
-		}
+		this->showOptions();
 	}
 	else if (assetTypeCombo->itemData(assetTypeCombo->currentIndex()).toString() == "__")
 	{
@@ -730,10 +740,30 @@ void DzRobloxDialog::enableModestyOptions(bool bEnable)
 	return;
 }
 
+// overrides base method
+void DzRobloxDialog::HandleHelpMenuButton(int index)
+{
+	int id = wHelpMenuButton->getSelectionID();
+
+	switch (id) {
+
+	case ROBLOX_HELP_ID_GUIDELINES:
+		HandleRobloxGuidelinesButton();
+		break;
+
+	case ROBLOX_HELP_ID_SPECIFICATION:
+		HandleRobloxCharacterSpecification();
+		break;
+
+	default:
+		return DzBridgeDialog::HandleHelpMenuButton(index);
+	}
+
+	wHelpMenuButton->setIndeterminate();
+}
+
 void DzRobloxDialog::HandlePdfButton()
 {
-//	QString sDazAppDir = dzApp->getHomePath().replace("\\", "/");
-//	QString sPdfPath = sDazAppDir + "/docs/Plugins" + "/Daz to Blender/Daz to Blender.pdf";
 	QString sPdfPath = "https://github.com/daz3d/DazToRoblox?tab=readme-ov-file#readme";
 	QDesktopServices::openUrl(QUrl(sPdfPath));
 }
@@ -741,7 +771,7 @@ void DzRobloxDialog::HandlePdfButton()
 void DzRobloxDialog::HandleYoutubeButton()
 {
 	// Roblox Avatar Help
-	QString url = "https://create.roblox.com/docs/art/characters/specifications";
+	QString url = "https://youtu.be/2My8jE47clI?si=Nhczl-xIPUlprp7D";
 	QDesktopServices::openUrl(QUrl(url));
 }
 
@@ -750,5 +780,39 @@ void DzRobloxDialog::HandleSupportButton()
 	QString url = "https://bugs.daz3d.com/hc/en-us/requests/new";
 	QDesktopServices::openUrl(QUrl(url));
 }
+
+void DzRobloxDialog::HandleRobloxGuidelinesButton()
+{
+	QString url = "https://create.roblox.com/docs/marketplace/marketplace-policy#age-appropriate";
+	QDesktopServices::openUrl(QUrl(url));
+}
+
+void DzRobloxDialog::HandleRobloxCharacterSpecification()
+{
+	QString url = "https://create.roblox.com/docs/art/characters/specifications";
+	QDesktopServices::openUrl(QUrl(url));
+}
+
+#include "dzstyle.h"
+#include "dzstyledbutton.h"
+void DzRobloxDialog::updateBlenderExecutablePathEdit(bool isValid) {
+	if (!isValid) {
+		m_wBlenderExecutablePathButton->setHighlightStyle(true);
+	}
+	else {
+		m_wBlenderExecutablePathButton->setHighlightStyle(false);
+	}
+}
+
+void DzRobloxDialog::updateRobloxOutputFolderEdit(bool isValid)
+{
+	if (!isValid) {
+		m_wRobloxOutputFolderButton->setHighlightStyle(true);
+	}
+	else {
+		m_wRobloxOutputFolderButton->setHighlightStyle(false);
+	}
+}
+
 
 #include "moc_DzRobloxDialog.cpp"

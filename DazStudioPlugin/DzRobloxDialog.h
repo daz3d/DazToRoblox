@@ -89,39 +89,53 @@ Select a modesty layer to be overlaid on top of the unclothed Genesis skin textu
 public slots:
 	void HandleTextChanged( const QString &text);
 
+protected:
+	virtual void showEvent(QShowEvent* event) override { disableAcceptUntilAllRequirementsValid(); DzBridgeDialog::showEvent(event); }
+
 protected slots:
 	void HandleSelectIntermediateFolderButton();
 	void HandleAssetTypeComboChange(int state);
 	virtual void HandleDisabledChooseSubdivisionsButton();
 	virtual void HandleOpenIntermediateFolderButton(QString sFolderPath="");
+
+	virtual void HandleHelpMenuButton(int) override;
 	void HandlePdfButton() override;
 	void HandleYoutubeButton() override;
 	void HandleSupportButton() override;
 	void accept() override;
+#define ROBLOX_HELP_ID_SPECIFICATION 10
+#define ROBLOX_HELP_ID_GUIDELINES 11
+	void HandleRobloxGuidelinesButton();
+	void HandleRobloxCharacterSpecification();
 
 	void HandleSelectRobloxOutputFolderButton();
 	void showRobloxOptions(bool bVisible);
 	void HandleSelectBlenderExecutablePathButton();
 	bool HandleAcceptButtonValidationFeedback();
+	void updateBlenderExecutablePathEdit(bool isValid);
+	void updateRobloxOutputFolderEdit(bool isValid);
 	void HandleCustomModestyOverlayActivated(int index);
 
 	void HandleAgreeEulaCheckbox(bool checked);
 
 protected:
 	QLineEdit* intermediateFolderEdit;
-	QPushButton* intermediateFolderButton;
+	DzBridgeBrowseButton* intermediateFolderButton;
 	QComboBox* m_wModestyOverlayCombo;
 	QLabel* m_wModestyOverlayRowLabel;
 
 	QLineEdit* m_wRobloxOutputFolderEdit;
-	QPushButton* m_wRobloxOutputFolderButton;
+	DzBridgeBrowseButton* m_wRobloxOutputFolderButton;
 	QLabel* m_wRobloxOutputFolderRowLabel;
 	QLabel* m_wContentModerationRowLabel;
 	QLabel* m_wIntermediateFolderRowLabel;
 	QLabel* m_wOpenIntermediateFolderButtonRowLabel;
 
+	QLabel* m_wReplacementPartsRowLabel;
+	QLabel* m_wLayeredClothingRowLabel;
+
 	QLineEdit* m_wBlenderExecutablePathEdit;
-	QPushButton* m_wBlenderExecutablePathButton;
+	DzBridgeBrowseButton* m_wBlenderExecutablePathButton;
 	QLabel* m_wBlenderExecutablePathRowLabel;
 
 	QCheckBox* m_wBreastsGoneCheckbox;
