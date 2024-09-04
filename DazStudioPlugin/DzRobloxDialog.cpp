@@ -293,16 +293,18 @@ bool DzRobloxDialog::loadSavedSettings()
 {
 	DzBridgeDialog::loadSavedSettings();
 
+	QString directoryName = "";
 	if (!settings->value("IntermediatePath").isNull())
 	{
-		QString directoryName = settings->value("IntermediatePath").toString();
+		directoryName = settings->value("IntermediatePath").toString();
 		intermediateFolderEdit->setText(directoryName);
 	}
-	else
+	if (directoryName == "")
 	{
 		QString DefaultPath = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + QDir::separator() + "DazToRoblox";
 		intermediateFolderEdit->setText(DefaultPath);
 	}
+
 	if (!settings->value("RobloxOutputPath").isNull())
 	{
 		m_wRobloxOutputFolderEdit->setText(settings->value("RobloxOutputPath").toString());
@@ -350,14 +352,14 @@ void DzRobloxDialog::resetToDefaults()
 		assetNameEdit->setText(Selection->getLabel().remove(QRegExp("[^A-Za-z0-9_]")));
 	}
 
-	if (qobject_cast<DzSkeleton*>(Selection))
-	{
-		assetTypeCombo->setCurrentIndex(0);
-	}
-	else
-	{
-		assetTypeCombo->setCurrentIndex(1);
-	}
+	//if (qobject_cast<DzSkeleton*>(Selection))
+	//{
+	//	assetTypeCombo->setCurrentIndex(0);
+	//}
+	//else
+	//{
+	//	assetTypeCombo->setCurrentIndex(1);
+	//}
 	m_bDontSaveSettings = false;
 }
 
@@ -402,9 +404,20 @@ void DzRobloxDialog::HandleOpenIntermediateFolderButton(QString sFolderPath)
 	DzBridgeDialog::HandleOpenIntermediateFolderButton(sIntermediateFolder);
 }
 
+// override and replace base method, which modifies assetTypeCombo to incompatible state
 void DzRobloxDialog::refreshAsset()
 {
-	DzBridgeDialog::refreshAsset();
+	DzNode* Selection = dzScene->getPrimarySelection();
+
+	if (dzScene->getFilename().length() > 0)
+	{
+		QFileInfo fileInfo = QFileInfo(dzScene->getFilename());
+		assetNameEdit->setText(fileInfo.baseName().remove(QRegExp("[^A-Za-z0-9_]")));
+	}
+	else if (dzScene->getPrimarySelection())
+	{
+		assetNameEdit->setText(Selection->getLabel().remove(QRegExp("[^A-Za-z0-9_]")));
+	}
 }
 
 void DzRobloxDialog::HandleSelectRobloxOutputFolderButton()
@@ -537,24 +550,15 @@ bool DzRobloxDialog::isAssetTypeComboBoxValid()
 
 bool DzRobloxDialog::disableAcceptUntilAllRequirementsValid()
 {
-	if (dzScene->getPrimarySelection() == NULL)
-	{
-		this->setAcceptButtonEnabled(false);
-		return true;
-	}
-	// otherwise, enable accept button so we can show feedback dialog to help user
-	this->setAcceptButtonEnabled(true);
-
-	if (!isBlenderTextBoxValid() || !isAssetTypeComboBoxValid())
-	{
-//		this->setAcceptButtonEnabled(false);
-		this->setAcceptButtonText("Unable to Proceed");
-		return false;
+	if (!m_bSetupMode) {
+		if (!isBlenderTextBoxValid() || !isAssetTypeComboBoxValid())
+		{
+			this->setAcceptButtonText("Unable to Proceed");
+			return false;
+		}
 	}
 	this->setAcceptButtonText("Accept");
-//	this->setAcceptButtonEnabled(true);
 	return true;
-
 }
 
 
@@ -594,6 +598,11 @@ bool DzRobloxDialog::HandleAcceptButtonValidationFeedback() {
 
 void DzRobloxDialog::accept()
 {
+	if (m_bSetupMode) {
+		saveSettings();
+		return DzBasicDialog::reject();
+	}
+
 	bool bResult = HandleAcceptButtonValidationFeedback();
 
 	if (bResult == true)

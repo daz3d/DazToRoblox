@@ -1435,16 +1435,6 @@ void DzRobloxAction::writeConfiguration()
 		writeAllDforceInfo(m_pSelectedNode, writer);
 	}
 
-	if (m_sAssetType == "Pose")
-	{
-	   writeAllPoses(writer);
-	}
-
-	if (m_sAssetType == "Environment")
-	{
-		writeEnvironment(writer);
-	}
-
 	writer.finishObject();
 	DTUfile.close();
 
