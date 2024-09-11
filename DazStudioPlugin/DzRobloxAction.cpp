@@ -614,9 +614,6 @@ bool DzRobloxAction::createUI()
 		}
 	}
 
-	if (!m_subdivisionDialog) m_subdivisionDialog = DZ_BRIDGE_NAMESPACE::DzBridgeSubdivisionDialog::Get(m_bridgeDialog);
-	if (!m_morphSelectionDialog) m_morphSelectionDialog = DZ_BRIDGE_NAMESPACE::DzBridgeMorphSelectionDialog::Get(m_bridgeDialog);
-
 	return true;
 }
 
@@ -828,8 +825,10 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 			}
 			//		return;
 		}
-		dzScene->selectAllNodes(false);
-		dzScene->setPrimarySelection(pGenesisParent);
+		if (pOriginalSelection != pGenesisParent) {
+			dzScene->selectAllNodes(false);
+			dzScene->setPrimarySelection(pGenesisParent);
+		}
 
 		// PreConfigure Asset Type Combo, depending on pOriginalSelection
 		if (pOriginalSelection->inherits("DzFigure")) {
@@ -906,7 +905,6 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 	int dlgResult = -1;
 	if (m_nNonInteractiveMode == 0)
 	{
-		qobject_cast<DzRobloxDialog*>(m_bridgeDialog)->disableAcceptUntilAllRequirementsValid();
 		dlgResult = m_bridgeDialog->exec();
 	}
 	if (m_nNonInteractiveMode == 1 || dlgResult == QDialog::Accepted)

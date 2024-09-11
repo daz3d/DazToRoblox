@@ -75,6 +75,7 @@ Select a modesty layer to be overlaid on top of the unclothed Genesis skin textu
 	Q_INVOKABLE void resetToDefaults() override;
 	Q_INVOKABLE bool loadSavedSettings() override;
 	Q_INVOKABLE void saveSettings() override;
+	Q_INVOKABLE virtual void setDisabled(bool bDisable) override;
 
 	DzFileValidator m_dzValidatorFileExists;
 	Q_INVOKABLE bool isBlenderTextBoxValid(const QString& text="");
@@ -86,11 +87,9 @@ Select a modesty layer to be overlaid on top of the unclothed Genesis skin textu
 
 	DzBasicDialog* m_wEulaAgreementDialog;
 
-public slots:
-	void HandleTextChanged( const QString &text);
-
 protected:
 	virtual void showEvent(QShowEvent* event) override { disableAcceptUntilAllRequirementsValid(); DzBridgeDialog::showEvent(event); }
+	virtual void refreshAsset() override;
 
 protected slots:
 	void HandleSelectIntermediateFolderButton();
@@ -108,6 +107,7 @@ protected slots:
 	void HandleRobloxGuidelinesButton();
 	void HandleRobloxCharacterSpecification();
 
+	void HandleTextChanged(const QString& text);
 	void HandleSelectRobloxOutputFolderButton();
 	void showRobloxOptions(bool bVisible);
 	void HandleSelectBlenderExecutablePathButton();
@@ -147,8 +147,6 @@ protected:
 
 	QCheckBox* m_wHiddenSurfaceRemovalCheckbox;
 	QCheckBox* m_wRemoveScalpMaterialCheckbox;
-
-	virtual void refreshAsset() override;
 
 #ifdef UNITTEST_DZBRIDGE
 	friend class UnitTest_DzRobloxDialog;

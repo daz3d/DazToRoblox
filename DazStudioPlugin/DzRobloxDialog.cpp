@@ -64,8 +64,9 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 int wgtHeight = style()->pixelMetric(DZ_PM_ButtonHeight);
 	 int btnMinWidth = style()->pixelMetric(DZ_PM_ButtonMinWidth);
 
-	 // Set the dialog title
-	 setWindowTitle(tr("Roblox Export Options"));
+	 // Original window title, for potential interim hotfix releases before GUI refresh
+	 setWindowTitle(tr("Daz To Roblox Studio Exporter %1 v%2.%3").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV));
+
 	 QString sDazAppDir = dzApp->getHomePath().replace("\\", "/");
 	 QString sPdfPath = sDazAppDir + "/docs/Plugins" + "/Daz to Roblox/Daz to Roblox.pdf";
 	 QString sSetupModeString = tr("\
@@ -176,7 +177,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wHiddenSurfaceRemovalCheckbox->setWhatsThis(sHiddenSurfaceRemoval);
 	 m_wHiddenSurfaceRemovalCheckbox->setChecked(false);
 	 QString sRemoveScalp = tr("Remove scalp geometry from hair assets. May fix opaque scalp issues.");
-	 m_wRemoveScalpMaterialCheckbox = new QCheckBox(tr("Remove Scalp"));
+	 m_wRemoveScalpMaterialCheckbox = new QCheckBox(tr("Remove Hair Cap"));
 	 m_wRemoveScalpMaterialCheckbox->setToolTip(sRemoveScalp);
 	 m_wRemoveScalpMaterialCheckbox->setToolTip(sRemoveScalp);
 	 m_wRemoveScalpMaterialCheckbox->setChecked(true);
@@ -276,13 +277,20 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 // Load Settings
 	 loadSavedSettings();
 
+	 // called in base, but needs to be called in derived class for overriden method to fire
+	 if (m_bSetupMode)
+	 {
+		 setDisabled(true);
+	 }
+
 	 disableAcceptUntilAllRequirementsValid();
 
 	 // GUI Refresh
 	 m_WelcomeLabel->hide();
-	 wHelpMenuButton->show();
+	 setWindowTitle(tr("Roblox Export Options"));
 	 wHelpMenuButton->insertItem(tr("Roblox Guidelines..."), ROBLOX_HELP_ID_GUIDELINES);
 	 wHelpMenuButton->insertItem(tr("Character Specification..."), ROBLOX_HELP_ID_SPECIFICATION);
+	 wHelpMenuButton->show();
 
 	 fixRowLabelStyle();
 	 fixRowLabelWidths();
@@ -330,6 +338,20 @@ void DzRobloxDialog::saveSettings()
 	settings->setValue("BlenderExecutablePath", m_wBlenderExecutablePathEdit->text());
 	// Godot Project Path
 	settings->setValue("RobloxOutputPath", m_wRobloxOutputFolderEdit->text());
+
+}
+
+void DzRobloxDialog::setDisabled(bool bDisable)
+{
+	DzBridgeDialog::setDisabled(bDisable);
+
+	m_wModestyOverlayCombo->setDisabled(bDisable);
+	m_wBreastsGoneCheckbox->setDisabled(bDisable);
+	m_wEyebrowReplacement->setDisabled(bDisable);
+	m_wEyelashReplacement->setDisabled(bDisable);
+	m_wBakeSingleOutfitCheckbox->setDisabled(bDisable);
+	m_wHiddenSurfaceRemovalCheckbox->setDisabled(bDisable);
+	m_wRemoveScalpMaterialCheckbox->setDisabled(bDisable);
 
 }
 
@@ -730,7 +752,7 @@ void DzRobloxDialog::HandleCustomModestyOverlayActivated(int index)
 
 void DzRobloxDialog::enableModestyOptions(bool bEnable)
 {
-	m_wModestyOverlayCombo->setDisabled(!bEnable);
+	if (!m_bSetupMode) m_wModestyOverlayCombo->setDisabled(!bEnable);
 
 	if (bEnable) {
 		m_wModestyOverlayCombo->setToolTip(m_sModestyOverlayHelp);
