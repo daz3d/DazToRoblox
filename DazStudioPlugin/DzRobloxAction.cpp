@@ -1900,7 +1900,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	foreach(DzNode *listNode, m_aGeograftConversionHelpers) {
 		conversionList.append(listNode);
 	}
-	conversionList.append(parentNode->getNodeChildren(true));
+//	conversionList.append(parentNode->getNodeChildren(true));
 	foreach(QObject* listNode, conversionList)
 	{
 		DzFigure *figChild = qobject_cast<DzFigure*>(listNode);
