@@ -113,6 +113,20 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_enableExperimentalOptionsCheckBox->hide();
 	 m_wEnableExperimentalRowLabelWidget->hide();
 
+	 // set Roblox specific defaults
+//	 m_wResizeTexturesGroupBox->setDisabled(true);
+//	 m_wResizeTexturesGroupBox->hide();
+	 //
+	 m_wMaxTextureFileSizeCombo->addItem("Roblox Studio Maximum (19 MB)", 1024*19);
+	 int roblox_default_index = m_wMaxTextureFileSizeCombo->findData(1024 * 19);
+	 if (roblox_default_index != -1) m_wMaxTextureFileSizeCombo->setCurrentIndex(roblox_default_index);
+	 //
+	 roblox_default_index = m_wMaxTextureResolutionCombo->findData(1024);
+	 if (roblox_default_index != -1) m_wMaxTextureResolutionCombo->setCurrentIndex(roblox_default_index);
+	 //
+	 roblox_default_index = m_wExportTextureFileFormatCombo->findData("png+jpg");
+	 if (roblox_default_index != -1) m_wExportTextureFileFormatCombo->setCurrentIndex(roblox_default_index);
+
 	 // Modesty Overlay Options
 	 m_wModestyOverlayCombo = new QComboBox();
 	 m_wModestyOverlayCombo->addItem("Strapless bra and bikini", eModestyOverlay::StraplessBra_Bikini);
