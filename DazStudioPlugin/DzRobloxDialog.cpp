@@ -106,7 +106,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wFbxVersionRowLabelWidget->hide();
 	 showFbxDialogCheckBox->hide();
 	 m_wShowFbxRowLabelWidget->hide();
-	 enableNormalMapGenerationCheckBox->hide();
+	 m_wConvertBumpToNormalCheckBox->hide();
 	 m_wNormalMapsRowLabelWidget->hide();
 	 exportMaterialPropertyCSVCheckBox->hide();
 	 m_wExportCsvRowLabelWidget->hide();
