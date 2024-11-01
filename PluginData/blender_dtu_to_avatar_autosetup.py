@@ -355,10 +355,6 @@ def _main(argv):
     # apply using "All Transforms to Deltas"
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
-    # NEW SCALING CODE
-    bpy.context.scene.unit_settings.scale_length = 1/28
-
-    # export to fbx
     roblox_asset_name = dtu_dict["Asset Name"]
     roblox_output_path = dtu_dict["Output Folder"]
     destinationPath = roblox_output_path.replace("\\","/")
@@ -367,6 +363,16 @@ def _main(argv):
     fbx_base_name = os.path.basename(fbxPath)
     fbx_output_name = fbx_base_name.replace(".fbx", "_S1_for_avatar_autosetup.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
+
+    # select all
+    bpy.ops.object.select_all(action="SELECT")
+    # apply using "All Transforms to Deltas"
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+
+    # NEW SCALING CODE
+    bpy.context.scene.unit_settings.scale_length = 1/28
+
+    # export to fbx
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     try:
         bpy.ops.export_scene.fbx(filepath=fbx_output_file_path, 
@@ -383,6 +389,42 @@ def _main(argv):
     # save blender file to destination
     blender_output_file_path = fbx_output_file_path.replace(".fbx", ".blend")
     bpy.ops.wm.save_as_mainfile(filepath=blender_output_file_path)
+
+    # rename mesh data to object name
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            mesh_data = obj.data
+            mesh_data.name = obj.name
+    # select armature
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in bpy.data.objects:
+        if obj.type == 'ARMATURE':
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            break
+    # scale all objects by 100
+    scale_factor = 3.57
+    bpy.ops.transform.resize(value=(scale_factor, scale_factor, scale_factor))
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+
+    generate_final_glb = True
+    if generate_final_glb:
+        glb_output_file_path = fbx_output_file_path.replace(".fbx", ".glb")
+        try:
+            bpy.ops.export_scene.gltf(filepath=glb_output_file_path, export_format="GLB", 
+                                      use_visible=True,
+                                    #   use_renderable=True,
+                                      use_selection=False, 
+                                      export_animations=True,
+                                      export_bake_animation=True,
+                                    #   export_normals=False,
+                                      export_morph=True
+                                    )
+            _add_to_log("DEBUG: save completed.")
+        except Exception as e:
+            _add_to_log("ERROR: unable to save Final GLB file: " + glb_output_file_path)
+            _add_to_log("EXCEPTION: " + str(e))
+            raise e
 
     _add_to_log("DEBUG: main(): completed conversion for: " + str(fbxPath))
 
