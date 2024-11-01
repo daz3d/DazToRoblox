@@ -293,25 +293,25 @@ def _main(argv):
     if obj is not None:
         obj.name = "Genesis9_Geo"
 
-    # unparent mesh from armature
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            obj.select_set(True)
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+    # # unparent mesh from armature
+    # bpy.ops.object.select_all(action='DESELECT')
+    # for obj in bpy.data.objects:
+    #     if obj.type == 'MESH':
+    #         obj.select_set(True)
+    # bpy.context.view_layer.objects.active = bpy.data.objects[0]
+    # bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 
-    # remove armature modifiers
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            for modifier in obj.modifiers:
-                if modifier.type == 'ARMATURE':
-                    obj.modifiers.remove(modifier)
+    # # remove armature modifiers
+    # for obj in bpy.data.objects:
+    #     if obj.type == 'MESH':
+    #         for modifier in obj.modifiers:
+    #             if modifier.type == 'ARMATURE':
+    #                 obj.modifiers.remove(modifier)
 
-    # remove armature
-    for obj in bpy.data.objects:
-        if obj.type == 'ARMATURE':
-            bpy.data.objects.remove(obj)
+    # # remove armature
+    # for obj in bpy.data.objects:
+    #     if obj.type == 'ARMATURE':
+    #         bpy.data.objects.remove(obj)
 
     # prepare destination folder path
     blenderFilePath = fbxPath.replace(".fbx", ".blend")
