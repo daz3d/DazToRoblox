@@ -1,4 +1,5 @@
 """Blender Tools module
+2024-11-26 - new function to propagate armature scaling to animation keyframes
 
 Blender python module containing various tools for importing and exporting
 asset files in dtu format to blender, gltf and swapping out full res, 2K, 1K
@@ -703,7 +704,7 @@ def process_dtu(jsonPath, lowres_mode=None):
             studio_name = obj["StudioNodeName"]
             has_custom_properties = True
         except:
-            print("ERROR: process_dtu(): unable to retrieve StudioNodeLabel/StudioNodeName Custom Proeprties for object: " + obj.name)
+            _add_to_log("ERROR: process_dtu(): unable to retrieve StudioNodeLabel/StudioNodeName Custom Proeprties for object: " + obj.name)
             studio_name = obj.name.replace(".Shape", "")            
         if studio_name in obj_data_dict:
             obj_data = obj_data_dict[studio_name]
@@ -720,7 +721,7 @@ def process_dtu(jsonPath, lowres_mode=None):
                 continue
             if obj.name.lower() in ["genesis9tear", "genesis9eyes", "genesis9mouth", "genesis9"]:
                 continue
-            print("DEBUG: process_dtu(): renaming object: " + obj.name + " to " + studio_label)
+            _add_to_log("DEBUG: process_dtu(): renaming object: " + obj.name + " to " + studio_label)
             obj.name = studio_label
 
     # delete all nodes from materials so that we can rebuild them
@@ -784,3 +785,26 @@ def center_all_viewports():
                     override = {'area': area, 'region': region}
                     bpy.ops.view3d.view_all(override, center=False)
 
+# DB 2024-11-27: note, this function assumes uniform scaling of armature in x,y,z
+def propagate_scale_to_animation(armature, scale_factor):
+    if not armature.animation_data or not armature.animation_data.action:
+        _add_to_log("ERROR: propagate_scale_to_animation(): No animation data found for the armature.")
+        return
+
+    # Get the action associated with the armature
+    action = armature.animation_data.action
+
+    for fcurve in action.fcurves:
+        # Check if the FCurve is for location (x, y, z) of a bone
+        if 'location' in fcurve.data_path:
+            bone_name = fcurve.data_path.split('"')[1]
+            _add_to_log("DEBUG: propagate_scale_to_animation(): Adjusting keyframes for bone: " + str(bone_name))
+
+            # Scale the keyframe points
+            for keyframe_point in fcurve.keyframe_points:
+                original_value = keyframe_point.co[1]  # co[1] is the Y-value (keyframe value)
+                scaled_value = original_value * scale_factor
+                keyframe_point.co[1] = scaled_value
+
+            # Update the fcurve after modifications
+            fcurve.update()

@@ -372,6 +372,9 @@ def _main(argv):
     # NEW SCALING CODE
     bpy.context.scene.unit_settings.scale_length = 1/28
 
+    # copy facial animations
+    roblox_tools.copy_facs50_animations(script_dir + "/Genesis9facs50.blend", "Genesis9_Geo")
+
     # export to fbx
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     try:
@@ -380,6 +383,9 @@ def _main(argv):
                                  path_mode = "COPY",
                                  embed_textures = True,
                                  use_visible = True,
+                                 use_custom_props = True,
+                                 bake_anim_use_nla_strips = False,
+                                 bake_anim_use_all_actions = False
                                  )
         _add_to_log("DEBUG: save completed.")
     except Exception as e:
@@ -390,35 +396,61 @@ def _main(argv):
     blender_output_file_path = fbx_output_file_path.replace(".fbx", ".blend")
     bpy.ops.wm.save_as_mainfile(filepath=blender_output_file_path)
 
+    # mesh naming fix so Roblox Studio GLB importer works
     # rename mesh data to object name
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
             mesh_data = obj.data
             mesh_data.name = obj.name
+
     # select armature
     bpy.ops.object.select_all(action="DESELECT")
     for obj in bpy.data.objects:
         if obj.type == 'ARMATURE':
             obj.select_set(True)
             bpy.context.view_layer.objects.active = obj
+            armature = obj
             break
-    # scale all objects by 100
-    scale_factor = 3.57
-    bpy.ops.transform.resize(value=(scale_factor, scale_factor, scale_factor))
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-
+    if armature is None:
+        _add_to_log("ERROR: main(): armature not found, unable to perform GLB scaling.")
+    else:
+        # scale work-around because Blender GLTF exporter ignores scene scale
+        scale_factor = 3.57 # DB 2024-11-27: 3.57 is derived empirically from visual approximation of default GLB import compared to default FBX import in Roblox Studio
+        bpy.ops.transform.resize(value=(scale_factor, scale_factor, scale_factor))
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        # Apply the scale work-around to animation keyframes
+        blender_tools.propagate_scale_to_animation(armature, scale_factor)
+        # Blender GLTF exporter is hardcoded to 24 fps, so set it here so that keyframes are not lost
+        bpy.context.scene.render.fps = 24
+    
     generate_final_glb = True
     if generate_final_glb:
         glb_output_file_path = fbx_output_file_path.replace(".fbx", ".glb")
         try:
-            bpy.ops.export_scene.gltf(filepath=glb_output_file_path, export_format="GLB", 
-                                      use_visible=True,
-                                    #   use_renderable=True,
+            bpy.ops.export_scene.gltf(filepath=glb_output_file_path,
+                                      export_format="GLB", 
+                                      use_visible=False,
                                       use_selection=False, 
+                                      export_extras=True,
+                                      export_yup=True,
+                                      export_texcoords=True,
+                                      export_normals=True,
+                                      export_rest_position_armature=True,
+                                      export_skins=True,
+                                      export_influence_nb=4,
                                       export_animations=True,
-                                      export_bake_animation=True,
-                                    #   export_normals=False,
-                                      export_morph=True
+                                    #   export_animation_mode='SCENE',
+                                    #   export_animation_mode='ACTIONS',
+                                      export_animation_mode='ACTIVE_ACTIONS',
+                                      export_nla_strips_merged_animation_name='FACS',
+                                      export_current_frame=False,
+                                      export_bake_animation=False,
+                                      export_frame_range=False,
+                                      export_frame_step=1,
+                                      export_optimize_animation_size=False,
+                                      export_optimize_animation_keep_anim_armature=False,
+                                      export_optimize_animation_keep_anim_object=False,
+                                      export_morph=False,
                                     )
             _add_to_log("DEBUG: save completed.")
         except Exception as e:
