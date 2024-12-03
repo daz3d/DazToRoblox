@@ -1,5 +1,6 @@
 """Blender Tools module
 2024-11-26 - new function to propagate armature scaling to animation keyframes
+2024-12-02 - work-around for GLTF exporter: create a new 1x1 black texture for metallic input if no metallic map is found
 
 Blender python module containing various tools for importing and exporting
 asset files in dtu format to blender, gltf and swapping out full res, 2K, 1K
@@ -473,6 +474,29 @@ def process_material(mat, lowres_mode=None):
             load_cached_image_to_material(matName, "Metallic", "Color", metallicMap, metallic_weight, "Non-Color")
     else:
         bsdf_inputs["Metallic"].default_value = metallic_weight
+        if metallic_weight == 0:
+            # DB 2024-12-02, work-around for GLTF exporter
+            # Create a new 1x1 black texture
+            image_name = "black_tex.png"
+            if image_name not in bpy.data.images:
+                black_image = bpy.data.images.new(name=image_name, width=4, height=4)
+                black_image.generated_color = (0, 0, 0, 1)  # Set the pixel color to black (RGBA)
+            else:
+                black_image = bpy.data.images[image_name]
+            # save file
+            black_image.filepath = os.path.join(script_dir, image_name)
+            black_image.file_format = "PNG"
+            black_image.save()
+            # pack te image to the blend file
+            if not black_image.packed_file:
+                black_image.pack()
+            # Create a new image texture node and link it to the BSDF Metallic input
+            nodes = data.node_tree.nodes
+            node_tex = nodes.new("ShaderNodeTexImage")
+            node_tex.image = black_image
+            node_tex.image.colorspace_settings.name = "Non-Color"
+            links = data.node_tree.links
+            links.new(node_tex.outputs["Color"], bsdf_inputs["Metallic"])
 
     if (reflectivity_map != ""):
         if (not os.path.exists(reflectivity_map)):
