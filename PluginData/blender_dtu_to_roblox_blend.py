@@ -550,12 +550,8 @@ def _main(argv):
         scale_factor = float(100/28)
         bpy.ops.transform.resize(value=(scale_factor, scale_factor, scale_factor))
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-
         # Apply the scale work-around to animation keyframes
         blender_tools.propagate_scale_to_animation(armature, scale_factor)
-        # Shift keyframes by 1 for Roblox GLB compatibility
-        blender_tools.shift_animation_keyframes(armature, 1)
-
         # re-bind attachments to bones
         for obj in bpy.data.objects:
             if obj.type == 'MESH' and "_Att" in obj.name:
