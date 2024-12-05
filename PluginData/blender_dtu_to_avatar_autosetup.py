@@ -375,6 +375,39 @@ def _main(argv):
     # copy facial animations
     roblox_tools.copy_facs50_animations(script_dir + "/Genesis9facs50.blend", "Genesis9_Geo")
 
+    # mesh naming fix so Roblox Studio GLB importer works
+    # rename mesh data to object name
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            mesh_data = obj.data
+            mesh_data.name = obj.name
+
+    # save blender file to destination
+    blender_output_file_path = fbx_output_file_path.replace(".fbx", ".blend")
+    bpy.ops.wm.save_as_mainfile(filepath=blender_output_file_path)
+
+    # Reset system scale to 1 and bake scaling for better compatibility
+    bpy.context.scene.unit_settings.scale_length = 1
+
+    # select armature
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in bpy.data.objects:
+        if obj.type == 'ARMATURE':
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            armature = obj
+            break
+
+    if armature is None:
+        _add_to_log("ERROR: main(): armature not found, unable to perform GLB scaling.")
+    else:
+        # baking system scale for better compatibility
+        scale_factor = 1/28 # DB 2024-12-04, 1/28 scaling factor for metric to stud
+        bpy.ops.transform.resize(value=(scale_factor, scale_factor, scale_factor))
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        # Apply the scale work-around to animation keyframes
+        blender_tools.propagate_scale_to_animation(armature, scale_factor)
+
     # export to fbx
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     try:
@@ -392,16 +425,8 @@ def _main(argv):
         _add_to_log("ERROR: unable to save Roblox FBX file: " + fbx_output_file_path)
         _add_to_log("EXCEPTION: " + str(e))
 
-    # save blender file to destination
-    blender_output_file_path = fbx_output_file_path.replace(".fbx", ".blend")
-    bpy.ops.wm.save_as_mainfile(filepath=blender_output_file_path)
-
-    # mesh naming fix so Roblox Studio GLB importer works
-    # rename mesh data to object name
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            mesh_data = obj.data
-            mesh_data.name = obj.name
+    # Reload blender file
+    bpy.ops.wm.open_mainfile(filepath=blender_output_file_path)
 
     # select armature
     bpy.ops.object.select_all(action="DESELECT")
@@ -410,26 +435,33 @@ def _main(argv):
             obj.select_set(True)
             bpy.context.view_layer.objects.active = obj
             armature = obj
-            break
+            break    
+
     if armature is None:
         _add_to_log("ERROR: main(): armature not found, unable to perform GLB scaling.")
     else:
         # scale work-around because Blender GLTF exporter ignores scene scale
-        scale_factor = 3.57 # DB 2024-11-27: 3.57 is derived empirically from visual approximation of default GLB import compared to default FBX import in Roblox Studio
+        scale_factor = 1/28 * 100 # DB 2024-12-04, add 100x scaling for GLB
         bpy.ops.transform.resize(value=(scale_factor, scale_factor, scale_factor))
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         # Apply the scale work-around to animation keyframes
         blender_tools.propagate_scale_to_animation(armature, scale_factor)
+        # Shift keyframes by 1 for Roblox GLB compatibility
+        blender_tools.shift_animation_keyframes(armature, 1)
         # Blender GLTF exporter is hardcoded to 24 fps, so set it here so that keyframes are not lost
         bpy.context.scene.render.fps = 24
-    
+
+    # Apply all modifiers
+    for obj in bpy.data.objects:
+        blender_tools.apply_mesh_modifiers(obj)
+
     generate_final_glb = True
     if generate_final_glb:
         glb_output_file_path = fbx_output_file_path.replace(".fbx", ".glb")
         try:
             bpy.ops.export_scene.gltf(filepath=glb_output_file_path,
                                       export_format="GLB", 
-                                      use_visible=False,
+                                      use_visible=True,
                                       use_selection=False, 
                                       export_extras=True,
                                       export_yup=True,

@@ -832,3 +832,36 @@ def propagate_scale_to_animation(armature, scale_factor):
 
             # Update the fcurve after modifications
             fcurve.update()
+
+# DB 2024-12-04: animation shifting
+def shift_animation_keyframes(armature, frame_step=1):
+    # Ensure the object has animation data
+    if not armature.animation_data or not armature.animation_data.action:
+        _add_to_log("ERROR: shift_animation_keyframes(): [" + str(armature.name) + "] has no animation data.")
+        return
+    
+    action = armature.animation_data.action
+    
+    # Iterate through FCurves and move all keyframes
+    for fcurve in action.fcurves:
+        for keyframe in fcurve.keyframe_points:
+            keyframe.select_control_point = True  # Select the keyframe (optional)
+            keyframe.co[0] += frame_step  # Move keyframe by frame_step
+
+    # Update the scene to reflect changes
+    bpy.context.scene.frame_current = bpy.context.scene.frame_current  # Trigger update
+    _add_to_log("DEBUG: shift_animation_keyframes(): Shifted all keyframes of " + str(armature.name) + " by " + str(frame_step) + " frame(s).")
+
+
+# Function to apply all modifiers
+def apply_mesh_modifiers(obj):
+    if obj.type == 'MESH':
+        bpy.context.view_layer.objects.active = obj
+        
+        # Apply all modifiers except Armature
+        for modifier in obj.modifiers:
+            if modifier.type != 'ARMATURE':
+                bpy.ops.object.modifier_apply(modifier=modifier.name)
+    else:
+        _add_to_log("ERROR: apply_mesh_modifiers(): Object is not a mesh.")
+        return

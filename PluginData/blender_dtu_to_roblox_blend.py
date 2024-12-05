@@ -464,6 +464,13 @@ def _main(argv):
     if obj is not None:
         obj.hide_viewport = True
 
+    # mesh naming fix so Roblox Studio GLB importer works
+    # rename mesh data to object name
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            mesh_data = obj.data
+            mesh_data.name = obj.name
+
     # prepare destination folder paths
     roblox_asset_name = dtu_dict["Asset Name"]
     roblox_output_path = dtu_dict["Output Folder"]
@@ -473,6 +480,28 @@ def _main(argv):
     fbx_base_name = os.path.basename(fbxPath)
     fbx_output_name = fbx_base_name.replace(".fbx", "_R15_avatar.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
+    blender_output_file_path = fbx_output_file_path.replace(".fbx", ".blend")
+    glb_output_file_path = fbx_output_file_path.replace(".fbx", ".glb")
+
+    # save blender file to destination
+    bpy.ops.wm.save_as_mainfile(filepath=blender_output_file_path)
+
+    # select armature
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in bpy.data.objects:
+        if obj.type == 'ARMATURE':
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            armature = obj
+            break
+
+    if armature is None:
+        _add_to_log("ERROR: main(): armature not found, unable to perform GLB scaling.")
+    else:
+        scale_factor = float(100/28)
+        # Apply the scale work-around to animation keyframes
+        blender_tools.propagate_scale_to_animation(armature, scale_factor)
+
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     # export to fbx
     try:
@@ -490,9 +519,95 @@ def _main(argv):
         _add_to_log("ERROR: unable to save Roblox FBX file: " + fbx_output_file_path)
         _add_to_log("EXCEPTION: " + str(e))
 
-    # save blender file to destination
-    blender_output_file_path = fbx_output_file_path.replace(".fbx", ".blend")
-    bpy.ops.wm.save_as_mainfile(filepath=blender_output_file_path)
+    # Reload blender file
+    bpy.ops.wm.open_mainfile(filepath=blender_output_file_path)
+
+    # unparent all geometry from armature (inlcuding attachments)
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            bpy.ops.object.select_all(action="DESELECT")
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+
+    # select armature
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in bpy.data.objects:
+        if obj.type == 'ARMATURE':
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            armature = obj
+            break    
+
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            obj.select_set(True)
+
+    if armature is None:
+       _add_to_log("ERROR: main(): armature not found, unable to perform GLB scaling.")
+    else:
+        # scale work-around because Blender GLTF exporter ignores scene scale
+        scale_factor = float(100/28)
+        bpy.ops.transform.resize(value=(scale_factor, scale_factor, scale_factor))
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+
+        # Apply the scale work-around to animation keyframes
+        blender_tools.propagate_scale_to_animation(armature, scale_factor)
+        # Shift keyframes by 1 for Roblox GLB compatibility
+        blender_tools.shift_animation_keyframes(armature, 1)
+
+        # re-bind attachments to bones
+        for obj in bpy.data.objects:
+            if obj.type == 'MESH' and "_Att" in obj.name:
+                roblox_tools.bind_attachment_to_bone_inplace(obj)
+        for obj in bpy.data.objects:
+            if obj.type == 'MESH' and "_Att" in obj.name:
+                roblox_tools.relocalize_attachment(obj)
+
+        # Blender GLTF exporter is hardcoded to 24 fps, so set it here so that keyframes are not lost
+        bpy.context.scene.render.fps = 24
+
+    # # save debug blender file
+    # blender_debug_file_path = blender_output_file_path.replace(".blend", "_debug.blend")
+    # bpy.ops.wm.save_as_mainfile(filepath=blender_debug_file_path)
+
+    # Apply all modifiers
+    for obj in bpy.data.objects:
+        blender_tools.apply_mesh_modifiers(obj)
+
+    generate_final_glb = True
+    if generate_final_glb:
+        try:
+            bpy.ops.export_scene.gltf(filepath=glb_output_file_path,
+                                      export_format="GLB", 
+                                      use_visible=True,
+                                      use_selection=False, 
+                                      export_extras=True,
+                                      export_yup=True,
+                                      export_texcoords=True,
+                                      export_normals=True,
+                                      export_rest_position_armature=True,
+                                      export_skins=True,
+                                      export_influence_nb=4,
+                                      export_animations=True,
+                                    #   export_animation_mode='SCENE',
+                                    #   export_animation_mode='ACTIONS',
+                                      export_animation_mode='ACTIVE_ACTIONS',
+                                      export_nla_strips_merged_animation_name='FACS',
+                                      export_current_frame=False,
+                                      export_bake_animation=False,
+                                      export_frame_range=False,
+                                      export_frame_step=1,
+                                      export_optimize_animation_size=False,
+                                      export_optimize_animation_keep_anim_armature=False,
+                                      export_optimize_animation_keep_anim_object=False,
+                                      export_morph=False,
+                                    )
+            _add_to_log("DEBUG: save completed.")
+        except Exception as e:
+            _add_to_log("ERROR: unable to save Final GLB file: " + glb_output_file_path)
+            _add_to_log("EXCEPTION: " + str(e))
+            raise e
 
     _add_to_log("DEBUG: main(): completed conversion for: " + str(fbxPath))
 
