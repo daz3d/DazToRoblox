@@ -7,7 +7,7 @@
 
 #include "dzbridge.h"
 
-CPP_PLUGIN_DEFINITION("Daz To Roblox Studio Exporter (BETA)");
+CPP_PLUGIN_DEFINITION("Daz To Roblox Studio Exporter");
 
 DZ_PLUGIN_AUTHOR("Daz 3D, Inc");
 

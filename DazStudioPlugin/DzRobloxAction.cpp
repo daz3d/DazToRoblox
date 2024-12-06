@@ -574,7 +574,6 @@ DzRobloxAction::DzRobloxAction() :
 
 	m_bConvertToPng = true;
 	m_bConvertToJpg = true;
-	m_bExportAllTextures = true;
 	m_bCombineDiffuseAndAlphaMaps = true;
 	m_bGenerateNormalMaps = true;
 	m_bResizeTextures = true;
@@ -583,6 +582,8 @@ DzRobloxAction::DzRobloxAction() :
 	m_bRecompressIfFileSizeTooBig = true;
 	m_nFileSizeThresholdToInitiateRecompression = 1024 * 1024 * 19; // 2024-08-01, DB: current roblox image size upload limit of < 20MB
 
+	m_bExportAllTextures = true;
+	m_bDeferProcessingImageToolsJobs = true;
 }
 
 bool DzRobloxAction::createUI()
@@ -1386,6 +1387,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 	}
 }
 
+#include "ImageTools.h"
 void DzRobloxAction::writeConfiguration()
 {
 	QString DTUfilename = m_sDestinationPath + m_sExportFilename + ".dtu";
@@ -1432,6 +1434,9 @@ void DzRobloxAction::writeConfiguration()
 		writeAllSubdivisions(writer);
 		writeAllDforceInfo(m_pSelectedNode, writer);
 	}
+
+	m_ImageToolsJobsManager->processJobs();
+	m_ImageToolsJobsManager->clearJobs();
 
 	writer.finishObject();
 	DTUfile.close();
