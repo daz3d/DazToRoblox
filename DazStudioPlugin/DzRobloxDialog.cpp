@@ -114,11 +114,12 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wEnableExperimentalRowLabelWidget->hide();
 
 	 // set Roblox specific defaults
-//	 m_wResizeTexturesGroupBox->setDisabled(true);
-//	 m_wResizeTexturesGroupBox->hide();
+	 m_wResizeTexturesGroupBox->setDisabled(false);
+	 m_wResizeTexturesGroupBox->setChecked(true);
 	 //
-	 m_wMaxTextureFileSizeCombo->addItem("Roblox Studio Maximum (19 MB)", 1024*19);
-	 int roblox_default_index = m_wMaxTextureFileSizeCombo->findData(1024 * 19);
+#define ROBLOX_MAX_TEXTURE_SIZE 1024*19
+	 m_wMaxTextureFileSizeCombo->addItem("Roblox Studio Maximum (19 MB)", ROBLOX_MAX_TEXTURE_SIZE);
+	 int roblox_default_index = m_wMaxTextureFileSizeCombo->findData(ROBLOX_MAX_TEXTURE_SIZE);
 	 if (roblox_default_index != -1) m_wMaxTextureFileSizeCombo->setCurrentIndex(roblox_default_index);
 	 //
 	 roblox_default_index = m_wMaxTextureResolutionCombo->findData(1024);
@@ -388,14 +389,19 @@ void DzRobloxDialog::resetToDefaults()
 		assetNameEdit->setText(Selection->getLabel().remove(QRegExp("[^A-Za-z0-9_]")));
 	}
 
-	//if (qobject_cast<DzSkeleton*>(Selection))
-	//{
-	//	assetTypeCombo->setCurrentIndex(0);
-	//}
-	//else
-	//{
-	//	assetTypeCombo->setCurrentIndex(1);
-	//}
+	// set Roblox specific defaults
+	m_wResizeTexturesGroupBox->setDisabled(false);
+	m_wResizeTexturesGroupBox->setChecked(true);
+	//
+	int roblox_default_index = m_wMaxTextureFileSizeCombo->findData(ROBLOX_MAX_TEXTURE_SIZE);
+	if (roblox_default_index != -1) m_wMaxTextureFileSizeCombo->setCurrentIndex(roblox_default_index);
+	//
+	roblox_default_index = m_wMaxTextureResolutionCombo->findData(1024);
+	if (roblox_default_index != -1) m_wMaxTextureResolutionCombo->setCurrentIndex(roblox_default_index);
+	//
+	roblox_default_index = m_wExportTextureFileFormatCombo->findData("png+jpg");
+	if (roblox_default_index != -1) m_wExportTextureFileFormatCombo->setCurrentIndex(roblox_default_index);
+
 	m_bDontSaveSettings = false;
 }
 
