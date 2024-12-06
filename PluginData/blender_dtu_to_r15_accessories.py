@@ -194,7 +194,8 @@ def _main(argv):
         # ) :
         if obj.type == 'MESH' and "StudioPresentationType" in obj:
             asset_type = obj["StudioPresentationType"]
-            if "eyebrow" in asset_type.lower() or "eyelash" in asset_type.lower() or "tear" in asset_type.lower():
+            # if "eyebrow" in asset_type.lower() or "eyelash" in asset_type.lower() or "tear" in asset_type.lower():
+            if "tear" in asset_type.lower():
                 figure_list.append(obj.name.lower())
     cage_list = []
     cage_obj_list = []
