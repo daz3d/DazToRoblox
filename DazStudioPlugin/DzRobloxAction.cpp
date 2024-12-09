@@ -584,6 +584,9 @@ DzRobloxAction::DzRobloxAction() :
 
 	m_bExportAllTextures = true;
 	m_bDeferProcessingImageToolsJobs = true;
+
+	m_aKnownIntermediateFileExtensionsList += "blend";
+	m_aKnownIntermediateFileExtensionsList += "blend1";
 }
 
 bool DzRobloxAction::createUI()
@@ -941,6 +944,9 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		dir.mkpath(m_sRootFolder);
 		exportProgress->setCurrentInfo("Starting up conversion pipeline...");
 		exportProgress->step();
+
+		// Clean Intermediate Folder
+		cleanIntermediateSubFolder(m_sExportSubfolder);
 
 		// export FBX
 		bool bExportResult = exportHD(exportProgress);
