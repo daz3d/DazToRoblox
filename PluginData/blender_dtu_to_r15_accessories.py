@@ -506,6 +506,19 @@ def _main(argv):
         fbx_output_name = fbx_base_name.replace(".fbx", "_rigid_accessories.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
+ 
+     # Apply all modifiers
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH'and (
+            "_outercage" not in obj.name.lower() and
+            "_innercage" not in obj.name.lower() and
+            "_att" not in obj.name.lower()
+            ):
+            try:
+                blender_tools.apply_mesh_modifiers(obj)
+            except Exception as e:
+                _add_to_log("ERROR: unable to apply mesh modifiers: " + str(e))
+
     # export to fbx
     try:
         bpy.ops.export_scene.fbx(filepath=fbx_output_file_path, 
