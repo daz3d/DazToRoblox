@@ -54,6 +54,8 @@ QValidator::State DzFileValidator::validate(QString& input, int& pos) const {
 DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 DzBridgeDialog(parent, DAZ_BRIDGE_PLUGIN_NAME)
 {
+	this->setObjectName("DzBridge_Roblox_Dialog");
+
 	 intermediateFolderEdit = nullptr;
 	 intermediateFolderButton = nullptr;
 
@@ -314,8 +316,12 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 
 bool DzRobloxDialog::loadSavedSettings()
 {
+#define LOAD_CHECKED(name,widget) if (!settings->value(name).isNull() && widget) widget->setChecked(settings->value(name).toBool());
+#define LOAD_ITEMDATA(name,widget) if (!settings->value(name).isNull() && widget) widget->setCurrentIndex(widget->findData(settings->value(name)));
+
 	DzBridgeDialog::loadSavedSettings();
 
+	// intermediate path
 	QString directoryName = "";
 	if (!settings->value("IntermediatePath").isNull())
 	{
@@ -327,21 +333,42 @@ bool DzRobloxDialog::loadSavedSettings()
 		QString DefaultPath = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + QDir::separator() + "DazToRoblox";
 		intermediateFolderEdit->setText(DefaultPath);
 	}
-
+	// roblox output path
 	if (!settings->value("RobloxOutputPath").isNull())
 	{
 		m_wRobloxOutputFolderEdit->setText(settings->value("RobloxOutputPath").toString());
 	}
+	// blender executable path
 	if (!settings->value("BlenderExecutablePath").isNull())
 	{
 		m_wBlenderExecutablePathEdit->setText(settings->value("BlenderExecutablePath").toString());
 	}
+
+	// asset type
+	LOAD_ITEMDATA("AssetType", assetTypeCombo);
+	// modesty overlay
+	LOAD_ITEMDATA("ModestyOverlay", m_wModestyOverlayCombo);
+	// breasts gone
+	LOAD_CHECKED("BreastsGone", m_wBreastsGoneCheckbox);
+	// replace eyebrows
+	LOAD_ITEMDATA("Eyebrows", m_wEyebrowReplacement);
+	// replace eyelashes
+	LOAD_ITEMDATA("Eyelashes", m_wEyelashReplacement);
+	// merge all clothing
+	LOAD_CHECKED("MergeAllClothing", m_wBakeSingleOutfitCheckbox);
+	// remove hidden geometry
+	LOAD_CHECKED("RemoveHiddenGeometry", m_wHiddenSurfaceRemovalCheckbox);
+	// remove hair cap
+	LOAD_CHECKED("RemvoeHairCap", m_wRemoveScalpMaterialCheckbox);
 
 	return true;
 }
 
 void DzRobloxDialog::saveSettings()
 {
+#define SAVE_CHECKED(name, widget) if (widget) settings->setValue(name, widget->isChecked());
+#define SAVE_ITEMDATA(name, widget) if (widget) settings->setValue(name, widget->itemData(widget->currentIndex()));
+
 	if (settings == nullptr || m_bDontSaveSettings) return;
 
 	DzBridgeDialog::saveSettings();
@@ -351,8 +378,25 @@ void DzRobloxDialog::saveSettings()
 	settings->setValue("IntermediatePath", intermediateFolderEdit->text());
 	// Blender Executable Path
 	settings->setValue("BlenderExecutablePath", m_wBlenderExecutablePathEdit->text());
-	// Godot Project Path
+	// Roblox Output Path
 	settings->setValue("RobloxOutputPath", m_wRobloxOutputFolderEdit->text());
+
+	// asset type
+	SAVE_ITEMDATA("AssetType", assetTypeCombo);
+	// modesty overlay
+	SAVE_ITEMDATA("ModestyOverlay", m_wModestyOverlayCombo);
+	// breasts gone
+	SAVE_CHECKED("BreastsGone", m_wBreastsGoneCheckbox);
+	// replace eyebrows
+	SAVE_ITEMDATA("Eyebrows", m_wEyebrowReplacement);
+	// replace eyelashes
+	SAVE_ITEMDATA("Eyelashes", m_wEyelashReplacement);
+	// merge all clothing
+	SAVE_CHECKED("MergeAllClothing", m_wBakeSingleOutfitCheckbox);
+	// remove hidden geometry
+	SAVE_CHECKED("RemoveHiddenGeometry", m_wHiddenSurfaceRemovalCheckbox);
+	// remove hair cap
+	SAVE_CHECKED("RemvoeHairCap", m_wRemoveScalpMaterialCheckbox);
 
 }
 
@@ -622,10 +666,12 @@ bool DzRobloxDialog::HandleAcceptButtonValidationFeedback() {
 	if (m_wRobloxOutputFolderEdit->text() == "" || QDir(m_wRobloxOutputFolderEdit->text()).exists() == false)
 	{
 		QMessageBox::warning(0, tr("Roblox Output Folder"), tr("Roblox Output Folder must be set."), QMessageBox::Ok);
+		updateRobloxOutputFolderEdit(false);
 	}
 	else if (m_wBlenderExecutablePathEdit->text() == "" || QFileInfo(m_wBlenderExecutablePathEdit->text()).exists() == false)
 	{
 		QMessageBox::warning(0, tr("Blender Executable Path"), tr("Blender Executable Path must be set."), QMessageBox::Ok);
+		updateBlenderExecutablePathEdit(false);
 		// Enable Advanced Settings
 		this->showOptions();
 	}
