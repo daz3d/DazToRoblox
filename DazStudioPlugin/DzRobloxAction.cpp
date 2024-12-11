@@ -1584,8 +1584,10 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 	DzProgress* progress = new DzProgress("Running Blender Script", numTotalTicks, false, true);
 	progress->enable(true);
 	QProcess* pToolProcess = new QProcess(this);
+    dzApp->log("DEBUG: Roblox Studio Exporter: setting working dir for blender script: " + sWorkingPath);
 	pToolProcess->setWorkingDirectory(sWorkingPath);
-	pToolProcess->start(sFilePath, args);
+    dzApp->log("DEBUG: Roblox Studio Exporter: starting blender script: [" + sFilePath + "] with args: " + args.join(";"));
+    pToolProcess->start(sFilePath, args);
 	int currentTick = 0;
 	int timeoutTicks = numTotalTicks;
 	bool bUserInitiatedTermination = false;
@@ -1654,6 +1656,7 @@ Do you want to Abort the operation now?");
 		}
 		return false;
 	}
+    dzApp->log(QString("Roblox Studio Exporter: DEBUG: blender script successful, exit code = %1").arg(m_nBlenderExitCode));
 
 	return true;
 }
