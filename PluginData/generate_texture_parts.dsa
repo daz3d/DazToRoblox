@@ -58,11 +58,8 @@ function main() {
 	} else {
 		// clear the folder
 		print("DEBUG: clearing output folder: " + sMapTransferOutputFolder);
-		var aFiles = oDir.getFilesFromDir(["*.*"], true);
-		for (var i = 0; i < aFiles.length; i++) {
-			print("DEBUG: deleting " + aFiles[i]);
-			oDir.remove(aFiles[i]);
-		}
+		oDir.rmdir();
+		oDir.mkpath(sMapTransferOutputFolder);
 	}
 
 	// Check if there's a selected node and it's a figure
