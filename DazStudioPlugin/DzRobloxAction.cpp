@@ -1,8 +1,10 @@
 #define WS_SCALE_FACTOR 0.01f
 
 #define COMBINED_UVSET_STRING "Combined Head And Body"
-#define R15_POSTFIX_STRING "_R15_reminder_adjust_cage_and_attachments"
-#define S1_POSTFIX_STRING "_S1_ready_for_avatar_autosetup"
+#define R15_POSTFIX_STRING "_R15_avatar"
+#define S1_POSTFIX_STRING "_S1_for_avatar_autosetup"
+#define LAYERED_ACCESSORY_POSTFIX_STRING "_layered_accessories"
+#define RIGID_ACCESSORY_POSTFIX_STRING "_rigid_accessories"
 
 #include <QtGui/qcheckbox.h>
 #include <QtGui/QMessageBox>
@@ -1295,23 +1297,24 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		bool retCode = false;
 		if (m_sAssetType == "ALL") {
 			// R15
-//			DzProgress::setCurrentInfo("Starting Blender Processing... R15 Avatar");
 			exportProgress->setCurrentInfo("Starting Blender Processing. Generating R15 Avatar...");
 			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_R15);
 
-			// S1
-//			DzProgress::setCurrentInfo("... S1 Avatar");
-			exportProgress->setCurrentInfo("Generating S1 Avatar...");
-			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_S1);
+            if (retCode) {
+                // S1
+                exportProgress->setCurrentInfo("Generating S1 Avatar...");
+                retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_S1);
+            }
+            
+            if (retCode) {
+                // Accessories
+                exportProgress->setCurrentInfo("Generating Avatar Accessories...");
+                retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_Accessories);
+            }
 
-			// Accessories
-//			DzProgress::setCurrentInfo("... Accessories");
-			exportProgress->setCurrentInfo("Generating Avatar Accessories...");
-			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_Accessories);
-		}
+        }
 		else
 		{
-			DzProgress::setCurrentInfo("Starting Blender Processing...");
 			exportProgress->setCurrentInfo("Starting Blender Processing...");
 			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs);
 		}
@@ -1328,6 +1331,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 				QMessageBox::information(0, "Roblox Studio Exporter",
 					tr("Export from Daz Studio complete. Ready to import into Roblox Studio."), QMessageBox::Ok);
 
+                dzApp->log("DEBUG: Roblox Studio Exporter: attempting to open filesystem folder: " + m_sRobloxOutputFolderPath);
 #ifdef WIN32
 				ShellExecuteA(NULL, "open", m_sRobloxOutputFolderPath.toLocal8Bit().data(), NULL, NULL, SW_SHOWDEFAULT);
 				//// The above line does the equivalent as following lines, but has advantage of only opening 1 explorer window
@@ -1344,18 +1348,26 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 				args << "-e";
 				args << "activate";
 				args << "-e";
-                if (m_sAssetType.contains("R15")) {
+                if (m_sAssetType.contains("R15") || m_sAssetType.contains("ALL")) {
                     args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/" + m_sExportFilename + R15_POSTFIX_STRING + ".fbx" + "\"";
                 }
                 else if (m_sAssetType.contains("S1")) {
                     args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/" + m_sExportFilename + S1_POSTFIX_STRING + ".fbx" + "\"";
+                }
+                else if (m_sAssetType.contains("layered")) {
+                    args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/" + m_sExportFilename + LAYERED_ACCESSORY_POSTFIX_STRING + ".fbx" + "\"";
+                }
+                else if (m_sAssetType.contains("rigid")) {
+                    args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/" + m_sExportFilename + RIGID_ACCESSORY_POSTFIX_STRING + ".fbx" + "\"";
                 }
                 else {
                     args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/." + "\"";
                 }
 				args << "-e";
 				args << "end tell";
-				QProcess::startDetached("osascript", args);
+
+                dzApp->log("DEBUG: Roblox Studio Exporter: attempting to execute osascript: " + args.join(";"));
+                QProcess::startDetached("osascript", args);
 #endif
 			}
 			else
