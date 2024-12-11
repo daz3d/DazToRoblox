@@ -21,18 +21,18 @@ function recursiveTraverseNodes(node) {
     var dzObject = new DzObject();
     dzObject = node;
     if (dzObject && dzObject.inherits("DzBone")) {
-//    	print("DEBUG: adding bone to bonelist: " + dzObject.name)
+//    	print("DEBUG: bone_converter.dsa: adding bone to bonelist: " + dzObject.name)
         aBoneList.push(dzObject);
     }
 
-//	print("DEBUG: bonelist.length= " + aBoneList.length);
+//	print("DEBUG: bone_converter.dsa: bonelist.length= " + aBoneList.length);
     return aBoneList;
 }
 
 // Retrieves all bones of the selected figure.
 function getBones(figure) {
     var aBoneList = recursiveTraverseNodes(figure);
-    print("DEBUG: bonelist.length= " + aBoneList.length);
+//    print("DEBUG: bone_converter.dsa: bonelist.length= " + aBoneList.length);
     return aBoneList;
 }
 
@@ -42,10 +42,10 @@ function renameBones(figure, mapping) {
 
     for (var i = 0; i < aBoneList.length; i++) {
         var bone = aBoneList[i];
-        print("DEBUG: processing bone: " + bone.name);
+//        print("DEBUG: bone_converter.dsa: processing bone: " + bone.name);
         var key = bone.name;
         if (mapping.hasOwnProperty(key)) {
-        	print("DEBUG: renaming bone: " + key);
+//        	print("DEBUG: bone_converter.dsa: renaming bone: " + key + " to " + mapping[key]);
             bone.setName(mapping[key]);
             bone.setLabel(mapping[key])
         }
@@ -73,7 +73,7 @@ function deleteBone(node) {
         dbl_check = Scene.getSelectedNode(0);
         if (dbl_check == node)
         {
-            print("deleting bone: " + node.name);
+//            print("DEBUG: bone_converter.dsa: deleting bone: " + node.name);
             obj = DzJEDeleteBoneAction();
             obj.executeAction();
         }
@@ -85,7 +85,7 @@ function deleteUnmappedBones(figure, mapping) {
     var aSafeList = [];
     for (var key in mapping) {
         var val = mapping[key];
-        print("DEBUG: pushing safe bone: " + val)
+//        print("DEBUG: bone_converter.dsa: pushing safe bone: " + val)
         aSafeList.push(val);
     }
 
@@ -95,7 +95,7 @@ function deleteUnmappedBones(figure, mapping) {
         var key = bone.name;
         if (!mapping.hasOwnProperty(key) && !arrayContainsValue(aSafeList, key)) {
             var key = bone.name
-        	print("DEBUG: deleting bone: " + key);
+//        	print("DEBUG: bone_converter.dsa: deleting unmapped bone: " + key);
             // Assuming deleteBone() is the method to remove a bone from the figure
             deleteBone(bone);
         }
@@ -115,6 +115,8 @@ function main() {
 //        MessageBox.information("Please select a valid Genesis 8 or 9 figure.", "Invalid selection", "OK");
         return;
     }
+
+    print("DEBUG: bone_converter.dsa: converting bones for figure: " + selectedFigure.name);
 
     var mapping = loadMappingTable();
     renameBones(selectedFigure, mapping);
