@@ -562,6 +562,8 @@ bool DzRobloxUtils::generateBlenderBatchFile(QString batchFilePath, QString sBle
 DzRobloxAction::DzRobloxAction() :
 	DzBridgeAction(tr("Send to &Roblox..."), tr("Export the selected character for Roblox Studio."))
 {
+    this->setObjectName("DzBridge_Roblox_Action");
+    
 	m_nNonInteractiveMode = 0;
 	m_sAssetType = QString("__");
 
