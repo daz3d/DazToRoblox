@@ -1263,59 +1263,72 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		QString sScriptPath_S1 = sScriptFolderPath + "/blender_dtu_to_avatar_autosetup.py";
 		QString sScriptPath_Accessories = sScriptFolderPath + "/blender_dtu_to_r15_accessories.py";
 
-		if (m_sAssetType.contains("R15"))
-		{
-			sScriptPath = sScriptFolderPath + "/blender_dtu_to_roblox_blend.py";
-		}
-		else if (m_sAssetType.contains("S1"))
-		{
-			sScriptPath = sScriptFolderPath + "/blender_dtu_to_avatar_autosetup.py";
-		}
-		else if (m_sAssetType.contains("layered") || m_sAssetType.contains("rigid"))
-		{
-			sScriptPath = sScriptFolderPath + "/blender_dtu_to_r15_accessories.py";
-		}
-		QString sCommandArgs = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath).arg(m_sDestinationFBX);
+		QString sCommandArgs_R15 = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_R15).arg(m_sDestinationFBX);
+		QString sCommandArgs_S1 = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_S1).arg(m_sDestinationFBX);
+		QString sCommandArgs_Accessories = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_Accessories).arg(m_sDestinationFBX);
+
 #ifdef WIN32
 		QString batchFilePath = m_sDestinationPath + "/manual_blender_script.bat";
 #elif defined(__APPLE__)
 		QString batchFilePath = m_sDestinationPath + "/manual_blender_script.sh";
 #endif
-
-		QString sCommandArgs_R15 = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_R15).arg(m_sDestinationFBX);
 		QString batchFilePath_R15 = QString(batchFilePath).replace("_script.", "_script_R15_Avatar.");
-		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_R15, m_sBlenderExecutablePath, sCommandArgs_R15);
-
-		QString sCommandArgs_S1 = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_S1).arg(m_sDestinationFBX);
 		QString batchFilePath_S1 = QString(batchFilePath).replace("_script.", "_script_S1_Avatar.");
-		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_S1, m_sBlenderExecutablePath, sCommandArgs_S1);
-
-		QString sCommandArgs_Accessories = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_Accessories).arg(m_sDestinationFBX);
 		QString batchFilePath_Accessories = QString(batchFilePath).replace("_script.", "_script_Accessories.");
+
+		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_R15, m_sBlenderExecutablePath, sCommandArgs_R15);
+		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_S1, m_sBlenderExecutablePath, sCommandArgs_S1);
 		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_Accessories, m_sBlenderExecutablePath, sCommandArgs_Accessories);
+
+		QString sTaskName = tr("Starting Blender Processing...");
+		QString sTaskName_R15 = tr("Generating R15 Avatar...");
+		QString sTaskName_S1 = tr("Generating S1 Avatar...");
+		QString sTaskName_Accessories = tr("Generating Avatar Accessories...");
 
 		bool retCode = false;
 		if (m_sAssetType == "ALL") {
 			// R15
-			exportProgress->setCurrentInfo("Starting Blender Processing. Generating R15 Avatar...");
+			exportProgress->setCurrentInfo(sTaskName_R15);
 			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_R15);
+			// DB NOTES, 2024-12-11: batchFilePath is set to specific task to be used in error message if needed
+			batchFilePath = batchFilePath_R15;
 
             if (retCode) {
                 // S1
-                exportProgress->setCurrentInfo("Generating S1 Avatar...");
+                exportProgress->setCurrentInfo(sTaskName_S1);
                 retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_S1);
+				batchFilePath = batchFilePath_S1;
             }
             
             if (retCode) {
                 // Accessories
-                exportProgress->setCurrentInfo("Generating Avatar Accessories...");
+                exportProgress->setCurrentInfo(sTaskName_Accessories);
                 retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_Accessories);
+				batchFilePath = batchFilePath_Accessories;
             }
-
         }
 		else
 		{
-			exportProgress->setCurrentInfo("Starting Blender Processing...");
+			if (m_sAssetType.contains("R15"))
+			{
+				sTaskName = sTaskName_R15;
+				batchFilePath = batchFilePath_R15;
+				sScriptPath = sScriptPath_R15;
+			}
+			else if (m_sAssetType.contains("S1"))
+			{
+				sTaskName = sTaskName_S1;
+				batchFilePath = batchFilePath_S1;
+				sScriptPath = sScriptPath_S1;
+			}
+			else if (m_sAssetType.contains("layered") || m_sAssetType.contains("rigid"))
+			{
+				sTaskName = sTaskName_Accessories;
+				batchFilePath = batchFilePath_Accessories;
+				sScriptPath = sScriptPath_Accessories;
+			}
+			exportProgress->setCurrentInfo(sTaskName);
+			QString sCommandArgs = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath).arg(m_sDestinationFBX);
 			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs);
 		}
 
