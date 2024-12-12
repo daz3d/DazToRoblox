@@ -89,9 +89,9 @@ def _main(argv):
     try:
         start, stop = re.search("#([0-9]*)\.", line).span(0)
         token_id = int(line[start+1:stop-1])
-        print(f"DEBUG: token_id={token_id}")
+        _add_to_log(f"DEBUG: token_id={token_id}")
     except:
-        print(f"ERROR: unable to parse token_id from '{line}'")
+        _add_to_log(f"ERROR: unable to parse token_id from '{line}'")
         token_id = 0
 
     blender_tools.delete_all_items()
@@ -115,7 +115,7 @@ def _main(argv):
     # Loop through all objects in the scene
     cage_obj_list = []
     for obj in bpy.data.objects:
-        print(f"Processing object: {obj.name}")
+        _add_to_log(f"Processing object: {obj.name}")
         # if cage, transfer weights and parent to armature
         if obj.type == 'MESH' and "_OuterCage" in obj.name:
             cage_obj_list.append(obj)
@@ -141,7 +141,7 @@ def _main(argv):
 
     # clear all animation data
     # Iterate over all objects
-    print("DEBUG: main(): clearing animation data")
+    _add_to_log("DEBUG: main(): clearing animation data")
     for obj in bpy.data.objects:
         # Check if the object has animation data
         if obj.animation_data:
@@ -150,7 +150,7 @@ def _main(argv):
 
 
     # move root node to origin
-    print("DEBUG: main(): moving root node to origin")
+    _add_to_log("DEBUG: main(): moving root node to origin")
     move_root_node_to_origin()
 
     daz_generation = dtu_dict["Asset Id"]
@@ -177,7 +177,7 @@ def _main(argv):
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
             if obj.name == "Genesis9.Shape":
-                print("DEBUG: main(): obj.name=" + obj.name)
+                _add_to_log("DEBUG: main(): obj.name=" + obj.name)
                 main_obj = obj
                 break
     if main_obj is None:
@@ -211,18 +211,18 @@ def _main(argv):
                         # join
                         bpy.ops.object.join()
                     else:
-                        print(f"DEBUG: HD eyes duplication failed, bpy.context.object.name={bpy.context.object.name}")
+                        _add_to_log(f"DEBUG: HD eyes duplication failed, bpy.context.object.name={bpy.context.object.name}")
                         exit(-1)
                     break
         else:
-            print(f"DEBUG: HD duplication failed, bpy.context.object.name={bpy.context.object.name}")
+            _add_to_log(f"DEBUG: HD duplication failed, bpy.context.object.name={bpy.context.object.name}")
             exit(-1)
 
     # decimate mouth
     bpy.ops.object.select_all(action='DESELECT')
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and obj.name == "Genesis9Mouth.Shape":
-            print("DEBUG: main(): obj.name=" + obj.name)
+            _add_to_log("DEBUG: main(): obj.name=" + obj.name)
             obj.select_set(True)
             bpy.context.view_layer.objects.active = obj
             new_modifier = obj.modifiers.new(name="Mouth", type='DECIMATE')
@@ -238,7 +238,7 @@ def _main(argv):
     bpy.ops.object.select_all(action='DESELECT')
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and obj.name == "Genesis9Eyes.Shape":
-            print("DEBUG: main(): obj.name=" + obj.name)
+            _add_to_log("DEBUG: main(): obj.name=" + obj.name)
             obj.select_set(True)
             bpy.context.view_layer.objects.active = obj
             new_modifier = obj.modifiers.new(name="Eyes", type='DECIMATE')
@@ -266,11 +266,11 @@ def _main(argv):
         if obj.type == 'MESH':
             game_readiness_tools.remove_moisture_materials(obj)
             if "_OuterCage" in obj.name:
-                print("DEBUG: cage obj.name=" + obj.name)
+                _add_to_log("DEBUG: cage obj.name=" + obj.name)
                 cage_list.append(obj.name.lower())
                 cage_obj_list.append(obj)
             elif "_Att" in obj.name:
-                print("DEBUG: attachment obj.name=" + obj.name)
+                _add_to_log("DEBUG: attachment obj.name=" + obj.name)
                 att_list.append(obj.name.lower())
     game_readiness_tools.remove_extra_meshes(figure_list + cage_list + att_list + head_accessories_list)
     game_readiness_tools.remove_extra_materials(["body", "cage_material", "attachment_material"], head_accessories_list)
@@ -329,14 +329,14 @@ def _main(argv):
 
     # read from python data file (import vertex_indices_for_daztoroblox.py)
     for group_name in geo_group_names + decimation_group_names:
-        print("DEBUG: creating vertex group: " + group_name)
+        _add_to_log("DEBUG: creating vertex group: " + group_name)
         # evaluate group_name to python variable name
         vertex_index_buffer = globals()[group_name]
         game_readiness_tools.create_vertex_group(main_obj, group_name, vertex_index_buffer)
 
     # separate by vertex group
     for group_name in geo_group_names:
-        print("DEBUG: separating by vertex group: " + group_name)
+        _add_to_log("DEBUG: separating by vertex group: " + group_name)
         game_readiness_tools.separate_by_vertexgroup(main_obj, group_name)
 
     # add eyes and mouth to head_geo
@@ -370,10 +370,10 @@ def _main(argv):
                     game_readiness_tools.add_decimate_modifier_per_vertex_group(obj, group_name, decimate_ratio)
                 continue
             for group_name in decimation_group_names:
-                print("DEBUG: decimation check: " + obj.name.lower() + ", group_name=" + group_name.lower())
+                # _add_to_log("DEBUG: decimation check: " + obj.name.lower() + ", group_name=" + group_name.lower())
                 if obj.name.lower().replace("_geo","") in group_name.lower():
-                    print("DEBUG: decimation match: " + obj.name + ", group_name=" + group_name)
-                    print("DEBUG: adding decimate modifier for: " + obj.name + ", group_name=" + group_name)
+                    _add_to_log("DEBUG: decimation match: " + obj.name + ", group_name=" + group_name)
+                    _add_to_log("DEBUG: adding decimate modifier for: " + obj.name + ", group_name=" + group_name)
                     try:
                         decimate_ratio = decimation_lookup[group_name]
                     except:
@@ -382,7 +382,7 @@ def _main(argv):
                     break
 
     # remove missing or unused images
-    print("DEBUG: deleting missing or unused images...")
+    _add_to_log("DEBUG: deleting missing or unused images...")
     for image in bpy.data.images:
         is_missing = False
         if image.filepath:
@@ -398,11 +398,11 @@ def _main(argv):
             bpy.data.images.remove(image)
 
     # cleanup all unused and unlinked data blocks
-    print("DEBUG: main(): cleaning up unused data blocks...")
+    _add_to_log("DEBUG: main(): cleaning up unused data blocks...")
     bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
 
     # pack all images
-    print("DEBUG: main(): packing all images...")
+    _add_to_log("DEBUG: main(): packing all images...")
     bpy.ops.file.pack_all()
 
     # select all objects
@@ -584,7 +584,7 @@ def _main(argv):
                                       export_normals=True,
                                       export_rest_position_armature=True,
                                       export_skins=True,
-                                      export_influence_nb=4,
+                                    #   export_influence_nb=4,
                                       export_animations=True,
                                     #   export_animation_mode='SCENE',
                                     #   export_animation_mode='ACTIONS',
@@ -609,7 +609,7 @@ def _main(argv):
 
 
 def apply_i_pose():
-    print("DEBUG: apply_i_pose()")
+    _add_to_log("DEBUG: apply_i_pose()")
     # Object Mode
     bpy.ops.object.mode_set(mode="OBJECT")       
     #retrieve armature name
@@ -617,7 +617,7 @@ def apply_i_pose():
     for arm in bpy.data.armatures:
         if "genesis" in arm.name.lower():
             armature_name = arm.name
-            print("DEBUG: armature_name=" + armature_name)
+            _add_to_log("DEBUG: apply_i_pose(): armature_name=" + armature_name)
             break
 
     # create a list of objects with armature modifier
@@ -627,7 +627,7 @@ def apply_i_pose():
             for mod in obj.modifiers:
                 if mod.type == "ARMATURE" and mod.name == armature_name:
                     armature_modifier_list.append([obj, mod])
-    print("DEBUG: armature_modifier_list=" + str(armature_modifier_list))
+    _add_to_log("DEBUG: apply_i_pose(): armature_modifier_list=" + str(armature_modifier_list))
 
     # apply i-pose
     for obj in bpy.data.objects:
@@ -648,7 +648,7 @@ def apply_i_pose():
     bpy.ops.pose.transforms_clear()
     # set tpose values for shoulders and hips
     if "LeftUpperArm" in bpy.context.object.pose.bones:
-        _add_to_log("DEBUG: applying t-pose rotations...")
+        _add_to_log("DEBUG: apply_i_pose(): applying t-pose rotations...")
         # rotate hip "LowerTorso"
         # bpy.context.object.pose.bones["LowerTorso"].rotation_mode= "XYZ"
         # bpy.context.object.pose.bones["LowerTorso"].rotation_euler[0] = 0.17
@@ -696,31 +696,30 @@ def apply_i_pose():
     bpy.ops.object.mode_set(mode="OBJECT")
     # duplicate and apply armature modifier
     for obj, mod in armature_modifier_list:
-        _add_to_log("DEBUG: Duplicating armature modifier: " + obj.name + "." + mod.name)
-        # select object
-        _add_to_log("DEBUG: Selecting object: " + obj.name)
+        _add_to_log("DEBUG: apply_i_pose(): Duplicating armature modifier: " + obj.name + "." + mod.name)
+        # _add_to_log("DEBUG: apply_i_pose(): Selecting object: " + obj.name)
         bpy.ops.object.select_all(action="DESELECT")
         obj.select_set(True)
         bpy.context.view_layer.objects.active = obj
         num_mods = len(obj.modifiers)
-        _add_to_log("DEBUG: num_mods = " + str(num_mods))
+        _add_to_log("DEBUG: apply_i_pose(): num_mods = " + str(num_mods))
         result = bpy.ops.object.modifier_copy(modifier=mod.name)
-        _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + mod.name)
+        # _add_to_log("DEBUG: apply_i_pose(): modifier_copy(mod.name) result=" + str(result) + ", mod.name=" + mod.name)
         if len(obj.modifiers) > num_mods:
             new_mod = obj.modifiers[num_mods]
-            _add_to_log("DEBUG: Applying armature modifier: " + new_mod.name)
+            _add_to_log("DEBUG: apply_i_pose(): Applying armature modifier: " + new_mod.name)
             try:
                 result = bpy.ops.object.modifier_apply(modifier=new_mod.name)
             except Exception as e:
-                _add_to_log("ERROR: Unable to apply armature modifier: " + str(e))
-                _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + new_mod.name)
+                _add_to_log("ERROR: apply_i_pose(): Unable to apply armature modifier: " + str(e))
+                _add_to_log("DEBUG: apply_i_pose(): modifier_apply(mod.name) result=" + str(result) + ", mod.name=" + new_mod.name)
                 bpy.ops.object.modifier_remove(modifier=new_mod.name)     
                 return
-            _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + new_mod.name)
+            # _add_to_log("DEBUG: apply_i_pose(): modifier_apply(mod.name) result=" + str(result) + ", mod.name=" + new_mod.name)
         else:
-            _add_to_log("DEBUG: Unable to retrieve duplicate, applying original: " + mod.name)
+            _add_to_log("DEBUG: apply_i_pose(): Unable to retrieve duplicate, applying original: " + mod.name)
             result = bpy.ops.object.modifier_apply(modifier=mod.name)
-            _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + mod.name)
+            # _add_to_log("DEBUG: apply_i_pose(): modifier_apply(mod.name) result=" + str(result) + ", mod.name=" + mod.name)
 
     # pose mode
     bpy.ops.object.select_all(action="DESELECT")
@@ -729,7 +728,7 @@ def apply_i_pose():
     bpy.context.view_layer.objects.active = armature_obj
     bpy.ops.object.mode_set(mode="POSE")
     # apply pose as rest pose
-    _add_to_log("DEBUG: Applying pose as rest pose...")
+    _add_to_log("DEBUG: apply_i_pose(): Applying pose as rest pose...")
     bpy.ops.pose.armature_apply(selected=False)
     # Object Mode
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -737,11 +736,12 @@ def apply_i_pose():
     bpy.ops.object.select_all(action="SELECT")
 
 def move_root_node_to_origin():
-    print("DEBUG: move_root_node_to_origin(): bpy.data.objects=" + str(bpy.data.objects))
+    _add_to_log("DEBUG: move_root_node_to_origin(): bpy.data.objects=" + str(bpy.data.objects))
     # move root node to origin
     for obj in bpy.data.objects:
-        print("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
+        # _add_to_log("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
         if obj.type == 'ARMATURE':
+            _add_to_log("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
             # deselect all objects
             bpy.ops.object.select_all(action='DESELECT')
             # select armature object
@@ -752,7 +752,7 @@ def move_root_node_to_origin():
             bpy.context.object.data.bones["LowerTorso"].select = True
             bone_head_pos_y = bpy.context.object.data.bones["LowerTorso"].head.y
             bone_head_pos_z = bpy.context.object.data.bones["LowerTorso"].head.z            
-            print("DEBUG: move_root_node_to_origin(): bone_head_pos_y=" + str(bone_head_pos_y) + ", bone_head_pos_z=" + str(bone_head_pos_z))
+            _add_to_log("DEBUG: move_root_node_to_origin(): bone_head_pos_y=" + str(bone_head_pos_y) + ", bone_head_pos_z=" + str(bone_head_pos_z))
             bpy.ops.object.mode_set(mode="OBJECT")
             # select all objects in object mode
             bpy.ops.object.select_all(action='SELECT')
@@ -764,7 +764,7 @@ def move_root_node_to_origin():
             # inverse_bone_head_pos_x = -0.01 * bone_head_pos_z
             inverse_bone_head_pos_x = 0
             
-            print("DEBUG: move_root_node_to_origin(): inverse_bone_head_pos_x=" + str(inverse_bone_head_pos_x) + ", inverse_bone_head_pos_z=" + str(inverse_bone_head_pos_z))
+            _add_to_log("DEBUG: move_root_node_to_origin(): inverse_bone_head_pos_x=" + str(inverse_bone_head_pos_x) + ", inverse_bone_head_pos_z=" + str(inverse_bone_head_pos_z))
             bpy.ops.transform.translate(value=(inverse_bone_head_pos_x, 0, inverse_bone_head_pos_z))
             # apply transformation
             bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
@@ -808,7 +808,7 @@ def separate_by_materials():
                 # if "Tear" in mat.name or "moisture" in mat.name.lower() or "eyebrows" in mat.name.lower() or "eyelashes" in mat.name.lower() or "teeth" in mat.name.lower() or "mouth" in mat.name.lower():
                 if "Tear" in mat.name or "moisture" in mat.name.lower() or "eyebrows" in mat.name.lower() or "eyelashes" in mat.name.lower():
                     # remove obj
-                    print("DEBUG: Removing object " + obj.name + " with material: " + mat.name)
+                    _add_to_log("DEBUG: Removing object " + obj.name + " with material: " + mat.name)
                     # delete heirarchy of object
                     descendents = obj.children
                     bpy.ops.object.select_all(action='DESELECT')
@@ -910,7 +910,7 @@ def separate_by_materials():
                     legs_obj = obj
     
     # merge objects
-    print("DEBUG: merging objects...")
+    _add_to_log("DEBUG: merging objects...")
     bpy.ops.object.select_all(action='DESELECT')
     bpy.context.view_layer.objects.active = bpy.data.objects[0]
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -950,7 +950,7 @@ def separate_by_materials():
 
     if len(eyes_list) > 0 and head_obj is not None:
         # merge eyes
-        print("DEBUG: merging eyes...")
+        _add_to_log("DEBUG: merging eyes...")
         bpy.ops.object.select_all(action='DESELECT')
         head_obj.select_set(True)
         for obj in eyes_list:
@@ -976,7 +976,7 @@ def separate_by_materials():
 
     if len(mouth_list) > 0 and head_obj is not None:
         # merge mouth, mouth cavity, and teeth
-        print("DEBUG: merging mouth, mouth cavity, and teeth...")
+        _add_to_log("DEBUG: merging mouth, mouth cavity, and teeth...")
         bpy.ops.object.select_all(action='DESELECT')
         head_obj.select_set(True)
         for obj in mouth_list:
@@ -1007,10 +1007,10 @@ def separate_by_materials():
                 bpy.context.object.active_material_index = head_obj.material_slots.find(material_name)
                 bpy.ops.object.material_slot_remove()
 
-    print("DEBUG: done separating by materials")
+    _add_to_log("DEBUG: done separating by materials")
 
 def separate_by_loose_parts():
-    print("DEBUG: separate_by_loose_parts()")
+    _add_to_log("DEBUG: separate_by_loose_parts()")
     # separate by loose parts
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
@@ -1057,7 +1057,7 @@ def separate_by_loose_parts():
                     break
 
     # merge right_arm
-    print("DEBUG: merging right_arm...")
+    _add_to_log("DEBUG: merging right_arm...")
     bpy.ops.object.select_all(action='DESELECT')
     bpy.context.view_layer.objects.active = bpy.data.objects[0]
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -1069,7 +1069,7 @@ def separate_by_loose_parts():
         bpy.ops.object.join()
         right_arm[0].name = "RightArm_Geo"
     # merge left_arm
-    print("DEBUG: merging left_arm...")
+    _add_to_log("DEBUG: merging left_arm...")
     bpy.ops.object.select_all(action='DESELECT')
     bpy.context.view_layer.objects.active = bpy.data.objects[0]
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -1081,7 +1081,7 @@ def separate_by_loose_parts():
         bpy.ops.object.join()
         left_arm[0].name = "LeftArm_Geo"
     # merge right_leg
-    print("DEBUG: merging right_leg...")
+    _add_to_log("DEBUG: merging right_leg...")
     bpy.ops.object.select_all(action='DESELECT')
     bpy.context.view_layer.objects.active = bpy.data.objects[0]
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -1093,7 +1093,7 @@ def separate_by_loose_parts():
         bpy.ops.object.join()
         right_leg[0].name = "RightLeg_Geo"
     # merge left_leg
-    print("DEBUG: merging left_leg...")
+    _add_to_log("DEBUG: merging left_leg...")
     bpy.ops.object.select_all(action='DESELECT')
     bpy.context.view_layer.objects.active = bpy.data.objects[0]
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -1106,7 +1106,7 @@ def separate_by_loose_parts():
         left_leg[0].name = "LeftLeg_Geo"
 
     # merge head
-    print("DEBUG: merging head...")
+    _add_to_log("DEBUG: merging head...")
     bpy.ops.object.select_all(action='DESELECT')
     bpy.context.view_layer.objects.active = bpy.data.objects[0]
     bpy.ops.object.mode_set(mode="OBJECT")
@@ -1118,11 +1118,11 @@ def separate_by_loose_parts():
         bpy.ops.object.join()
         head_list[0].name = "Head_Geo"
 
-    print("DEBUG: done separating by loose parts")
+    _add_to_log("DEBUG: done separating by loose parts")
 
 
 def separate_by_bone_influence():
-    print("DEBUG: separate_by_bone_influence()")
+    _add_to_log("DEBUG: separate_by_bone_influence()")
     # separate by bone influence
     bpy.ops.object.mode_set(mode="OBJECT")
     bone_table = {
@@ -1139,7 +1139,7 @@ def separate_by_bone_influence():
             bone_list = bone_table[obj.name]
             bpy.context.view_layer.objects.active = obj
             for bone_name in bone_list:
-                print("DEBUG: beginning vertex separation for bone_name=" + bone_name)
+                _add_to_log("DEBUG: beginning vertex separation for bone_name=" + bone_name)
                 bpy.ops.object.mode_set(mode="EDIT")
                 # deselect all vertices
                 bpy.ops.mesh.select_all(action='DESELECT')
@@ -1168,10 +1168,10 @@ def separate_by_bone_influence():
                 bpy.ops.object.mode_set(mode='OBJECT')
                 # The newly created object is the active object
                 if new_obj == obj:
-                    print("ERROR: new_obj.name=" + new_obj.name + " is the same as " + obj.name)
+                    _add_to_log("ERROR: new_obj.name=" + new_obj.name + " is the same as " + obj.name)
                 else:
                     # Select the new object
-                    print("DEBUG: new_obj.name=" + new_obj.name + " renaming to " + bone_name + "_Geo ...")
+                    _add_to_log("DEBUG: new_obj.name=" + new_obj.name + " renaming to " + bone_name + "_Geo ...")
                     new_obj.name = bone_name + "_Geo"
                     # if "Hand" or "Foot" in bone_name, then set decimate modifier to 0.1
                     if "Hand" in bone_name or "Foot" in bone_name:
@@ -1179,7 +1179,7 @@ def separate_by_bone_influence():
                         decimate_modifier = None
                         for mod in new_obj.modifiers:
                             if mod.type == "DECIMATE":
-                                print("DEBUG: setting decimate ratio to 0.1 for " + new_obj.name)
+                                _add_to_log("DEBUG: setting decimate ratio to 0.1 for " + new_obj.name)
                                 # change decimate ratio to 0.1
                                 mod.ratio = 0.1
                                 break
@@ -1190,7 +1190,7 @@ def separate_by_bone_influence():
     # clean up empty objects without vertices
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and len(obj.data.vertices) == 0:
-            print("DEBUG: Removing empty object: " + obj.name)
+            _add_to_log("DEBUG: Removing empty object: " + obj.name)
             bpy.ops.object.select_all(action='DESELECT')
             obj.select_set(True)
             bpy.ops.object.delete()
@@ -1279,13 +1279,12 @@ def transfer_weights(source_mesh_name, target_mesh_name):
                 mod.name = armature_name
         
 
-    print(f"Weights transferred successfully from {source_mesh_name} to {target_mesh_name}!")
+    _add_to_log(f"Weights transferred successfully from {source_mesh_name} to {target_mesh_name}!")
 
 
 # Execute main()
 if __name__=='__main__':
-    print("Starting script...")
-    _add_to_log("Starting script... DEBUG: sys.argv=" + str(sys.argv))
+    _add_to_log("Starting script (R15)...\nDEBUG: sys.argv=" + str(sys.argv))
     _main(sys.argv[4:])
-    print("script completed.")
+    _add_to_log("Script completed.\n")
     exit(0)

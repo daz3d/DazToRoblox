@@ -85,9 +85,9 @@ def _main(argv):
     try:
         start, stop = re.search("#([0-9]*)\.", line).span(0)
         token_id = int(line[start+1:stop-1])
-        print(f"DEBUG: token_id={token_id}")
+        _add_to_log(f"DEBUG: token_id={token_id}")
     except:
-        print(f"ERROR: unable to parse token_id from '{line}'")
+        _add_to_log(f"ERROR: unable to parse token_id from '{line}'")
         token_id = 0
 
     blender_tools.delete_all_items()
@@ -119,7 +119,7 @@ def _main(argv):
 
     # clear all animation data
     # Iterate over all objects
-    print("DEBUG: main(): clearing animation data")
+    _add_to_log("DEBUG: main(): clearing animation data")
     for obj in bpy.data.objects:
         # Check if the object has animation data
         if obj.animation_data:
@@ -128,7 +128,7 @@ def _main(argv):
 
 
     # move root node to origin
-    print("DEBUG: main(): moving root node to origin")
+    _add_to_log("DEBUG: main(): moving root node to origin")
     move_root_node_to_origin()
 
     daz_generation = dtu_dict["Asset Id"]
@@ -145,7 +145,7 @@ def _main(argv):
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
             if obj.name == "Genesis9.Shape":
-                print("DEBUG: main(): obj.name=" + obj.name)
+                _add_to_log("DEBUG: main(): obj.name=" + obj.name)
                 main_obj = obj
                 break
     if main_obj is None:
@@ -157,7 +157,7 @@ def _main(argv):
     bpy.ops.object.select_all(action='DESELECT')
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and obj.name == "Genesis9Mouth.Shape":
-            print("DEBUG: main(): obj.name=" + obj.name)
+            _add_to_log("DEBUG: main(): obj.name=" + obj.name)
             obj.select_set(True)
             bpy.context.view_layer.objects.active = obj
             new_modifier = obj.modifiers.new(name="Mouth", type='DECIMATE')
@@ -173,7 +173,7 @@ def _main(argv):
     bpy.ops.object.select_all(action='DESELECT')
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and obj.name == "Genesis9Eyes.Shape":
-            print("DEBUG: main(): obj.name=" + obj.name)
+            _add_to_log("DEBUG: main(): obj.name=" + obj.name)
             obj.select_set(True)
             bpy.context.view_layer.objects.active = obj
             new_modifier = obj.modifiers.new(name="Eyes", type='DECIMATE')
@@ -194,7 +194,7 @@ def _main(argv):
 
     # read from python data file (import vertex_indices_for_daztoroblox.py)
     for group_name in geo_group_names + decimation_group_names:
-        print("DEBUG: creating vertex group: " + group_name)
+        _add_to_log("DEBUG: creating vertex group: " + group_name)
         # evaluate group_name to python variable name
         vertex_index_buffer = globals()[group_name]
         game_readiness_tools.create_vertex_group(main_obj, group_name, vertex_index_buffer)
@@ -202,7 +202,7 @@ def _main(argv):
     # # add decimation modifier
     # bpy.context.view_layer.objects.active = main_obj
     # for decimation_group_name in decimation_group_names:
-    #     print("DEBUG: main(): adding decimation modifier for group: " + decimation_group_name + " to object: " + main_obj.name)
+    #     _add_to_log("DEBUG: main(): adding decimation modifier for group: " + decimation_group_name + " to object: " + main_obj.name)
     #     new_modifier = main_obj.modifiers.new(name=decimation_group_name, type='DECIMATE')
     #     new_modifier.name = decimation_group_name
     #     new_modifier.decimate_type = 'COLLAPSE'
@@ -216,7 +216,7 @@ def _main(argv):
 
     # separate by vertex group
     for group_name in geo_group_names:
-        print("DEBUG: separating by vertex group: " + group_name)
+        _add_to_log("DEBUG: separating by vertex group: " + group_name)
         game_readiness_tools.separate_by_vertexgroup(main_obj, group_name)
 
     # add eyes and mouth to head_geo
@@ -237,7 +237,6 @@ def _main(argv):
         obj.select_set(True)
         bpy.ops.object.delete()
 
-
     # for each obj, select correct decimation group and add decimate modifier
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
@@ -251,10 +250,10 @@ def _main(argv):
                     game_readiness_tools.add_decimate_modifier_per_vertex_group(obj, group_name, decimate_ratio)
                 continue
             for group_name in decimation_group_names:
-                print("DEBUG: decimation check: " + obj.name.lower() + ", group_name=" + group_name.lower())
+                # _add_to_log("DEBUG: decimation check: " + obj.name.lower() + ", group_name=" + group_name.lower())
                 if obj.name.lower().replace("_geo","") in group_name.lower():
-                    print("DEBUG: decimation match: " + obj.name + ", group_name=" + group_name)
-                    print("DEBUG: adding decimate modifier for: " + obj.name + ", group_name=" + group_name)
+                    _add_to_log("DEBUG: decimation match: " + obj.name + ", group_name=" + group_name)
+                    _add_to_log("DEBUG: adding decimate modifier for: " + obj.name + ", group_name=" + group_name)
                     try:
                         decimate_ratio = decimation_lookup[group_name]
                     except:
@@ -265,7 +264,7 @@ def _main(argv):
     # apply all decimation modifiers
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
-            print("DEBUG: main(): applying decimation modifiers to object: " + obj.name)
+            _add_to_log("DEBUG: main(): applying decimation modifiers to object: " + obj.name)
             for modifier in obj.modifiers:
                 if modifier.type == 'DECIMATE':
                     bpy.context.view_layer.objects.active = obj
@@ -318,7 +317,7 @@ def _main(argv):
     intermediate_folder_path = os.path.dirname(fbxPath)
 
     # remove missing or unused images
-    print("DEBUG: deleting missing or unused images...")
+    _add_to_log("DEBUG: deleting missing or unused images...")
     for image in bpy.data.images:
         is_missing = False
         if image.filepath:
@@ -334,11 +333,11 @@ def _main(argv):
             bpy.data.images.remove(image)
 
     # cleanup all unused and unlinked data blocks
-    print("DEBUG: main(): cleaning up unused data blocks...")
+    _add_to_log("DEBUG: main(): cleaning up unused data blocks...")
     bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
 
     # pack all images
-    print("DEBUG: main(): packing all images...")
+    _add_to_log("DEBUG: main(): packing all images...")
     bpy.ops.file.pack_all()
 
     # select all objects
@@ -467,7 +466,7 @@ def _main(argv):
                                       export_normals=True,
                                       export_rest_position_armature=True,
                                       export_skins=True,
-                                      export_influence_nb=4,
+                                    #   export_influence_nb=4,
                                       export_animations=True,
                                     #   export_animation_mode='SCENE',
                                     #   export_animation_mode='ACTIONS',
@@ -492,11 +491,12 @@ def _main(argv):
 
 
 def move_root_node_to_origin():
-    print("DEBUG: move_root_node_to_origin(): bpy.data.objects=" + str(bpy.data.objects))
+    _add_to_log("DEBUG: move_root_node_to_origin(): bpy.data.objects=" + str(bpy.data.objects))
     # move root node to origin
     for obj in bpy.data.objects:
-        print("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
+        # _add_to_log("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
         if obj.type == 'ARMATURE':
+            _add_to_log("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
             # deselect all objects
             bpy.ops.object.select_all(action='DESELECT')
             # select armature object
@@ -507,14 +507,14 @@ def move_root_node_to_origin():
             bpy.context.object.data.bones["LowerTorso"].select = True
             bone_head_pos_y = bpy.context.object.data.bones["LowerTorso"].head.y
             bone_head_pos_z = bpy.context.object.data.bones["LowerTorso"].head.z            
-            print("DEBUG: move_root_node_to_origin(): bone_head_pos_y=" + str(bone_head_pos_y) + ", bone_head_pos_z=" + str(bone_head_pos_z))
+            # _add_to_log("DEBUG: move_root_node_to_origin(): bone_head_pos_y=" + str(bone_head_pos_y) + ", bone_head_pos_z=" + str(bone_head_pos_z))
             bpy.ops.object.mode_set(mode="OBJECT")
             # select all objects in object mode
             bpy.ops.object.select_all(action='SELECT')
             # move all objects by the inverse of bone_head_pos
             inverse_bone_head_pos_z = -0.01 * bone_head_pos_y
             inverse_bone_head_pos_x = -0.01 * bone_head_pos_z
-            print("DEBUG: move_root_node_to_origin(): inverse_bone_head_pos_x=" + str(inverse_bone_head_pos_x) + ", inverse_bone_head_pos_z=" + str(inverse_bone_head_pos_z))
+            # _add_to_log("DEBUG: move_root_node_to_origin(): inverse_bone_head_pos_x=" + str(inverse_bone_head_pos_x) + ", inverse_bone_head_pos_z=" + str(inverse_bone_head_pos_z))
             bpy.ops.transform.translate(value=(inverse_bone_head_pos_x, 0, inverse_bone_head_pos_z))
             # apply transformation
             bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
@@ -522,8 +522,7 @@ def move_root_node_to_origin():
 
 # Execute main()
 if __name__=='__main__':
-    print("Starting script...")
-    _add_to_log("Starting script... DEBUG: sys.argv=" + str(sys.argv))
+    _add_to_log("Starting script (S1)...\nDEBUG: sys.argv=" + str(sys.argv))
     _main(sys.argv[4:])
-    print("script completed.")
+    _add_to_log("Script completed.\n")
     exit(0)
