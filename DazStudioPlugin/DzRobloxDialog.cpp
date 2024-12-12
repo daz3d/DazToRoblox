@@ -348,6 +348,20 @@ bool DzRobloxDialog::loadSavedSettings()
 	LOAD_ITEMDATA("AssetType", assetTypeCombo);
 	// modesty overlay
 	LOAD_ITEMDATA("ModestyOverlay", m_wModestyOverlayCombo);
+	QString sFilePath = settings->value("ModestyOverlay").toString();
+	if (!sFilePath.isEmpty() && sFilePath != "" && sFilePath.toLower().endsWith(".png")) {
+		if (QFileInfo(sFilePath).exists()) {
+			// check if filepath itemData is already in dropdown
+			if (int nMatchingIndex = m_wModestyOverlayCombo->findData(sFilePath) != -1) {
+				m_wModestyOverlayCombo->setCurrentIndex(nMatchingIndex);
+			}
+			else {
+				QString sShortFilename = ".../" + QFileInfo(sFilePath).fileName();
+				m_wModestyOverlayCombo->addItem(sShortFilename, QVariant(sFilePath));
+				m_wModestyOverlayCombo->setCurrentIndex(m_wModestyOverlayCombo->count() - 1);
+			}
+		}
+	}
 	// breasts gone
 	LOAD_CHECKED("BreastsGone", m_wBreastsGoneCheckbox);
 	// replace eyebrows
