@@ -5,8 +5,8 @@
 var includeDir_oFILE = new DzFile( getScriptFileName() );
 var sIncludePath = includeDir_oFILE.path();
 
-var sDazTempFolder = App.getTempPath();
-var sMapTransferOutputFolder = sDazTempFolder + "/MapTransfer";
+// var sDazTempFolder = App.getTempPath();
+// var sMapTransferOutputFolder = sDazTempFolder + "/MapTransfer";
 
 var g9body_maptransfer_settings_file = sIncludePath + "/RobloxUVMapTransferSettings_G9Body.dsx";
 var g9eye_maptransfer_settings_file = sIncludePath + "/RobloxUVMapTransferSettings_G9Eyes.dsx";
@@ -49,14 +49,6 @@ function processNode(node) {
 }
 
 function main() {
-	// make output folder if does not exist
-	print("DEBUG: generate_texture_parts.dsa: sMapTransferOutputFolder == " + sMapTransferOutputFolder);
-	var oDir = new DzDir(sMapTransferOutputFolder);
-	if ( !oDir.exists() ) {
-		print("DEBUG: generate_texture_parts.dsa: creating output folder: " + sMapTransferOutputFolder);
-		oDir.mkpath(sMapTransferOutputFolder);
-	} 
-
 	// Check if there's a selected node and it's a figure
 	var childList;
 	var child;

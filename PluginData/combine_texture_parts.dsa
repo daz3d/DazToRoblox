@@ -3,7 +3,8 @@
 (function(){
 
 var sDazTempFolder = App.getTempPath();
-var sMapTransferOutputFolder = sDazTempFolder + "/MapTransfer";
+// var sMapTransferOutputFolder = sDazTempFolder + "/MapTransfer";
+var sMapTransferOutputFolder = sDazTempFolder;
 var sMapTransferInputFolder = sDazTempFolder + "/textureConvert";
 var nTextureWidth = 4096;
 var nTextureHeight = 4096;
@@ -44,7 +45,15 @@ function main() {
 	var aSpecularMapImages = [];
     var aMetallicMapImages = [];
 
-    // get list of files in the folder
+	// // make output folder if does not exist
+	// print("DEBUG: generate_texture_parts.dsa: sMapTransferOutputFolder == " + sMapTransferOutputFolder);
+	// var oOutputDir = new DzDir(sMapTransferOutputFolder);
+	// if ( !oOutputDir.exists() ) {
+	// 	print("DEBUG: generate_texture_parts.dsa: creating output folder: " + sMapTransferOutputFolder);
+	// 	oOutputDir.mkpath(sMapTransferOutputFolder);
+	// } 
+
+    // get list of files in the input folder
     var oDir = new DzDir(sMapTransferInputFolder);
     var aFiles = oDir.getFilesFromDir(["*.png"], true);
     // add detail normals first so that it is overwritten by the main normal map
