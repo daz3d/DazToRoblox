@@ -85,9 +85,9 @@ def _main(argv):
     try:
         start, stop = re.search("#([0-9]*)\.", line).span(0)
         token_id = int(line[start+1:stop-1])
-        print(f"DEBUG: token_id={token_id}")
+        _add_to_log(f"DEBUG: token_id={token_id}")
     except:
-        print(f"ERROR: unable to parse token_id from '{line}'")
+        _add_to_log(f"ERROR: unable to parse token_id from '{line}'")
         token_id = 0
 
     blender_tools.delete_all_items()
@@ -119,7 +119,7 @@ def _main(argv):
 
     # clear all animation data
     # Iterate over all objects
-    print("DEBUG: main(): clearing animation data")
+    _add_to_log("DEBUG: main(): clearing animation data")
     for obj in bpy.data.objects:
         # Check if the object has animation data
         if obj.animation_data:
@@ -128,7 +128,7 @@ def _main(argv):
 
 
     # move root node to origin
-    print("DEBUG: main(): moving root node to origin")
+    _add_to_log("DEBUG: main(): moving root node to origin")
     move_root_node_to_origin()
 
     daz_generation = dtu_dict["Asset Id"]
@@ -145,7 +145,7 @@ def _main(argv):
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
             if obj.name == "Genesis9.Shape":
-                print("DEBUG: main(): obj.name=" + obj.name)
+                _add_to_log("DEBUG: main(): obj.name=" + obj.name)
                 main_obj = obj
                 break
     if main_obj is None:
@@ -157,7 +157,7 @@ def _main(argv):
     bpy.ops.object.select_all(action='DESELECT')
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and obj.name == "Genesis9Mouth.Shape":
-            print("DEBUG: main(): obj.name=" + obj.name)
+            _add_to_log("DEBUG: main(): obj.name=" + obj.name)
             obj.select_set(True)
             bpy.context.view_layer.objects.active = obj
             new_modifier = obj.modifiers.new(name="Mouth", type='DECIMATE')
@@ -173,7 +173,7 @@ def _main(argv):
     bpy.ops.object.select_all(action='DESELECT')
     for obj in bpy.data.objects:
         if obj.type == 'MESH' and obj.name == "Genesis9Eyes.Shape":
-            print("DEBUG: main(): obj.name=" + obj.name)
+            _add_to_log("DEBUG: main(): obj.name=" + obj.name)
             obj.select_set(True)
             bpy.context.view_layer.objects.active = obj
             new_modifier = obj.modifiers.new(name="Eyes", type='DECIMATE')
@@ -194,7 +194,7 @@ def _main(argv):
 
     # read from python data file (import vertex_indices_for_daztoroblox.py)
     for group_name in geo_group_names + decimation_group_names:
-        print("DEBUG: creating vertex group: " + group_name)
+        _add_to_log("DEBUG: creating vertex group: " + group_name)
         # evaluate group_name to python variable name
         vertex_index_buffer = globals()[group_name]
         game_readiness_tools.create_vertex_group(main_obj, group_name, vertex_index_buffer)
@@ -202,7 +202,7 @@ def _main(argv):
     # # add decimation modifier
     # bpy.context.view_layer.objects.active = main_obj
     # for decimation_group_name in decimation_group_names:
-    #     print("DEBUG: main(): adding decimation modifier for group: " + decimation_group_name + " to object: " + main_obj.name)
+    #     _add_to_log("DEBUG: main(): adding decimation modifier for group: " + decimation_group_name + " to object: " + main_obj.name)
     #     new_modifier = main_obj.modifiers.new(name=decimation_group_name, type='DECIMATE')
     #     new_modifier.name = decimation_group_name
     #     new_modifier.decimate_type = 'COLLAPSE'
@@ -216,7 +216,7 @@ def _main(argv):
 
     # separate by vertex group
     for group_name in geo_group_names:
-        print("DEBUG: separating by vertex group: " + group_name)
+        _add_to_log("DEBUG: separating by vertex group: " + group_name)
         game_readiness_tools.separate_by_vertexgroup(main_obj, group_name)
 
     # add eyes and mouth to head_geo
@@ -237,7 +237,6 @@ def _main(argv):
         obj.select_set(True)
         bpy.ops.object.delete()
 
-
     # for each obj, select correct decimation group and add decimate modifier
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
@@ -251,10 +250,10 @@ def _main(argv):
                     game_readiness_tools.add_decimate_modifier_per_vertex_group(obj, group_name, decimate_ratio)
                 continue
             for group_name in decimation_group_names:
-                print("DEBUG: decimation check: " + obj.name.lower() + ", group_name=" + group_name.lower())
+                # _add_to_log("DEBUG: decimation check: " + obj.name.lower() + ", group_name=" + group_name.lower())
                 if obj.name.lower().replace("_geo","") in group_name.lower():
-                    print("DEBUG: decimation match: " + obj.name + ", group_name=" + group_name)
-                    print("DEBUG: adding decimate modifier for: " + obj.name + ", group_name=" + group_name)
+                    _add_to_log("DEBUG: decimation match: " + obj.name + ", group_name=" + group_name)
+                    _add_to_log("DEBUG: adding decimate modifier for: " + obj.name + ", group_name=" + group_name)
                     try:
                         decimate_ratio = decimation_lookup[group_name]
                     except:
@@ -265,7 +264,7 @@ def _main(argv):
     # apply all decimation modifiers
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
-            print("DEBUG: main(): applying decimation modifiers to object: " + obj.name)
+            _add_to_log("DEBUG: main(): applying decimation modifiers to object: " + obj.name)
             for modifier in obj.modifiers:
                 if modifier.type == 'DECIMATE':
                     bpy.context.view_layer.objects.active = obj
@@ -293,32 +292,32 @@ def _main(argv):
     if obj is not None:
         obj.name = "Genesis9_Geo"
 
-    # unparent mesh from armature
-    bpy.ops.object.select_all(action='DESELECT')
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            obj.select_set(True)
-    bpy.context.view_layer.objects.active = bpy.data.objects[0]
-    bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+    # # unparent mesh from armature
+    # bpy.ops.object.select_all(action='DESELECT')
+    # for obj in bpy.data.objects:
+    #     if obj.type == 'MESH':
+    #         obj.select_set(True)
+    # bpy.context.view_layer.objects.active = bpy.data.objects[0]
+    # bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 
-    # remove armature modifiers
-    for obj in bpy.data.objects:
-        if obj.type == 'MESH':
-            for modifier in obj.modifiers:
-                if modifier.type == 'ARMATURE':
-                    obj.modifiers.remove(modifier)
+    # # remove armature modifiers
+    # for obj in bpy.data.objects:
+    #     if obj.type == 'MESH':
+    #         for modifier in obj.modifiers:
+    #             if modifier.type == 'ARMATURE':
+    #                 obj.modifiers.remove(modifier)
 
-    # remove armature
-    for obj in bpy.data.objects:
-        if obj.type == 'ARMATURE':
-            bpy.data.objects.remove(obj)
+    # # remove armature
+    # for obj in bpy.data.objects:
+    #     if obj.type == 'ARMATURE':
+    #         bpy.data.objects.remove(obj)
 
     # prepare destination folder path
     blenderFilePath = fbxPath.replace(".fbx", ".blend")
     intermediate_folder_path = os.path.dirname(fbxPath)
 
     # remove missing or unused images
-    print("DEBUG: deleting missing or unused images...")
+    _add_to_log("DEBUG: deleting missing or unused images...")
     for image in bpy.data.images:
         is_missing = False
         if image.filepath:
@@ -334,11 +333,11 @@ def _main(argv):
             bpy.data.images.remove(image)
 
     # cleanup all unused and unlinked data blocks
-    print("DEBUG: main(): cleaning up unused data blocks...")
+    _add_to_log("DEBUG: main(): cleaning up unused data blocks...")
     bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
 
     # pack all images
-    print("DEBUG: main(): packing all images...")
+    _add_to_log("DEBUG: main(): packing all images...")
     bpy.ops.file.pack_all()
 
     # select all objects
@@ -355,10 +354,6 @@ def _main(argv):
     # apply using "All Transforms to Deltas"
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
-    # NEW SCALING CODE
-    bpy.context.scene.unit_settings.scale_length = 1/28
-
-    # export to fbx
     roblox_asset_name = dtu_dict["Asset Name"]
     roblox_output_path = dtu_dict["Output Folder"]
     destinationPath = roblox_output_path.replace("\\","/")
@@ -367,6 +362,52 @@ def _main(argv):
     fbx_base_name = os.path.basename(fbxPath)
     fbx_output_name = fbx_base_name.replace(".fbx", "_S1_for_avatar_autosetup.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
+
+    # select all
+    bpy.ops.object.select_all(action="SELECT")
+    # apply using "All Transforms to Deltas"
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+
+    # NEW SCALING CODE
+    bpy.context.scene.unit_settings.scale_length = 1/28
+
+    # copy facial animations
+    roblox_tools.copy_facs50_animations(script_dir + "/Genesis9facs50.blend", "Genesis9_Geo")
+
+    # mesh naming fix so Roblox Studio GLB importer works
+    # rename mesh data to object name
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            mesh_data = obj.data
+            mesh_data.name = obj.name
+
+    # save blender file to destination
+    blender_output_file_path = fbx_output_file_path.replace(".fbx", ".blend")
+    bpy.ops.wm.save_as_mainfile(filepath=blender_output_file_path)
+
+    # Reset system scale to 1 and bake scaling for better compatibility
+    bpy.context.scene.unit_settings.scale_length = 1
+
+    # select armature
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in bpy.data.objects:
+        if obj.type == 'ARMATURE':
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            armature = obj
+            break
+
+    if armature is None:
+        _add_to_log("ERROR: main(): armature not found, unable to perform GLB scaling.")
+    else:
+        # baking system scale for better compatibility
+        scale_factor = 1/28 # DB 2024-12-04, 1/28 scaling factor for metric to stud
+        bpy.ops.transform.resize(value=(scale_factor, scale_factor, scale_factor))
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        # Apply the scale work-around to animation keyframes
+        blender_tools.propagate_scale_to_animation(armature, scale_factor)
+
+    # export to fbx
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     try:
         bpy.ops.export_scene.fbx(filepath=fbx_output_file_path, 
@@ -374,25 +415,88 @@ def _main(argv):
                                  path_mode = "COPY",
                                  embed_textures = True,
                                  use_visible = True,
+                                 use_custom_props = True,
+                                 bake_anim_use_nla_strips = False,
+                                 bake_anim_use_all_actions = False
                                  )
         _add_to_log("DEBUG: save completed.")
     except Exception as e:
         _add_to_log("ERROR: unable to save Roblox FBX file: " + fbx_output_file_path)
         _add_to_log("EXCEPTION: " + str(e))
 
-    # save blender file to destination
-    blender_output_file_path = fbx_output_file_path.replace(".fbx", ".blend")
-    bpy.ops.wm.save_as_mainfile(filepath=blender_output_file_path)
+    # Reload blender file
+    bpy.ops.wm.open_mainfile(filepath=blender_output_file_path)
+
+    # select armature
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in bpy.data.objects:
+        if obj.type == 'ARMATURE':
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+            armature = obj
+            break    
+
+    if armature is None:
+        _add_to_log("ERROR: main(): armature not found, unable to perform GLB scaling.")
+    else:
+        # scale work-around because Blender GLTF exporter ignores scene scale
+        scale_factor = 1/28 * 100 # DB 2024-12-04, add 100x scaling for GLB
+        bpy.ops.transform.resize(value=(scale_factor, scale_factor, scale_factor))
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        # Apply the scale work-around to animation keyframes
+        blender_tools.propagate_scale_to_animation(armature, scale_factor)
+        # Blender GLTF exporter is hardcoded to 24 fps, so set it here so that keyframes are not lost
+        bpy.context.scene.render.fps = 24
+
+    # Apply all modifiers
+    for obj in bpy.data.objects:
+        blender_tools.apply_mesh_modifiers(obj)
+
+    generate_final_glb = True
+    if generate_final_glb:
+        glb_output_file_path = fbx_output_file_path.replace(".fbx", ".glb")
+        try:
+            bpy.ops.export_scene.gltf(filepath=glb_output_file_path,
+                                      export_format="GLB", 
+                                      use_visible=True,
+                                      use_selection=False, 
+                                      export_extras=True,
+                                      export_yup=True,
+                                      export_texcoords=True,
+                                      export_normals=True,
+                                      export_rest_position_armature=True,
+                                      export_skins=True,
+                                    #   export_influence_nb=4,
+                                      export_animations=True,
+                                    #   export_animation_mode='SCENE',
+                                    #   export_animation_mode='ACTIONS',
+                                      export_animation_mode='ACTIVE_ACTIONS',
+                                      export_nla_strips_merged_animation_name='FACS',
+                                      export_current_frame=False,
+                                      export_bake_animation=False,
+                                      export_frame_range=False,
+                                      export_frame_step=1,
+                                      export_optimize_animation_size=False,
+                                      export_optimize_animation_keep_anim_armature=False,
+                                      export_optimize_animation_keep_anim_object=False,
+                                      export_morph=False,
+                                    )
+            _add_to_log("DEBUG: save completed.")
+        except Exception as e:
+            _add_to_log("ERROR: unable to save Final GLB file: " + glb_output_file_path)
+            _add_to_log("EXCEPTION: " + str(e))
+            raise e
 
     _add_to_log("DEBUG: main(): completed conversion for: " + str(fbxPath))
 
 
 def move_root_node_to_origin():
-    print("DEBUG: move_root_node_to_origin(): bpy.data.objects=" + str(bpy.data.objects))
+    _add_to_log("DEBUG: move_root_node_to_origin(): bpy.data.objects=" + str(bpy.data.objects))
     # move root node to origin
     for obj in bpy.data.objects:
-        print("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
+        # _add_to_log("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
         if obj.type == 'ARMATURE':
+            _add_to_log("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
             # deselect all objects
             bpy.ops.object.select_all(action='DESELECT')
             # select armature object
@@ -403,14 +507,14 @@ def move_root_node_to_origin():
             bpy.context.object.data.bones["LowerTorso"].select = True
             bone_head_pos_y = bpy.context.object.data.bones["LowerTorso"].head.y
             bone_head_pos_z = bpy.context.object.data.bones["LowerTorso"].head.z            
-            print("DEBUG: move_root_node_to_origin(): bone_head_pos_y=" + str(bone_head_pos_y) + ", bone_head_pos_z=" + str(bone_head_pos_z))
+            # _add_to_log("DEBUG: move_root_node_to_origin(): bone_head_pos_y=" + str(bone_head_pos_y) + ", bone_head_pos_z=" + str(bone_head_pos_z))
             bpy.ops.object.mode_set(mode="OBJECT")
             # select all objects in object mode
             bpy.ops.object.select_all(action='SELECT')
             # move all objects by the inverse of bone_head_pos
             inverse_bone_head_pos_z = -0.01 * bone_head_pos_y
             inverse_bone_head_pos_x = -0.01 * bone_head_pos_z
-            print("DEBUG: move_root_node_to_origin(): inverse_bone_head_pos_x=" + str(inverse_bone_head_pos_x) + ", inverse_bone_head_pos_z=" + str(inverse_bone_head_pos_z))
+            # _add_to_log("DEBUG: move_root_node_to_origin(): inverse_bone_head_pos_x=" + str(inverse_bone_head_pos_x) + ", inverse_bone_head_pos_z=" + str(inverse_bone_head_pos_z))
             bpy.ops.transform.translate(value=(inverse_bone_head_pos_x, 0, inverse_bone_head_pos_z))
             # apply transformation
             bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
@@ -418,8 +522,7 @@ def move_root_node_to_origin():
 
 # Execute main()
 if __name__=='__main__':
-    print("Starting script...")
-    _add_to_log("Starting script... DEBUG: sys.argv=" + str(sys.argv))
+    _add_to_log("Starting script (S1)...\nDEBUG: sys.argv=" + str(sys.argv))
     _main(sys.argv[4:])
-    print("script completed.")
+    _add_to_log("Script completed.\n")
     exit(0)

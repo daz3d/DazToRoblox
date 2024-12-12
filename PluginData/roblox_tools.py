@@ -412,7 +412,7 @@ def clone_head_to_dynamichead(armature_object):
     bpy.ops.object.mode_set(mode='OBJECT')
 
 # DB 2024-06-12: Copy generated FACS50 animations
-def copy_facs50_animations(animation_template_filename):
+def copy_facs50_animations(animation_template_filename, head_geo_name='Head_Geo'):
     armature_name = "Genesis9"
     action_name = "facs50"
 
@@ -437,7 +437,7 @@ def copy_facs50_animations(animation_template_filename):
 
 
     # set up custom properties for Head_Geo
-    head_geo_obj = bpy.data.objects['Head_Geo']
+    head_geo_obj = bpy.data.objects[head_geo_name]
     add_custom_dynamichead_properties(head_geo_obj)
 
     bpy.context.scene.frame_start = 0

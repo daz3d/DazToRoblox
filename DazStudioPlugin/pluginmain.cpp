@@ -7,7 +7,7 @@
 
 #include "dzbridge.h"
 
-CPP_PLUGIN_DEFINITION("Daz To Roblox Studio Exporter (BETA)");
+CPP_PLUGIN_DEFINITION("Daz To Roblox Studio Exporter");
 
 DZ_PLUGIN_AUTHOR("Daz 3D, Inc");
 
@@ -26,7 +26,7 @@ NEW_PLUGIN_CUSTOM_CLASS_GUID(DzRobloxDialog, 0ab8fdb4-6575-4a7c-ad4b-456a687c1c8
 //c9346f33-f576-4003-813a-fb1e63798116
 //c9346f33-f576-4003-813a-fb1e63798117
 //c9346f33-f576-4003-813a-fb1e63798118
-DZ_PLUGIN_ACTIVATION_POLICY(c9346f33-f576-4003-813a-fb1e63798119, new DzTrialDaysActivationPolicy(60));
+//DZ_PLUGIN_ACTIVATION_POLICY(c9346f33-f576-4003-813a-fb1e63798119, new DzTrialDaysActivationPolicy(60));
 //DZ_PLUGIN_REGISTRATION_PREFIX(DZRBLX, "011", "Roblox Studio Exporter");
 
 #ifdef UNITTEST_DZBRIDGE

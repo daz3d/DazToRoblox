@@ -1,8 +1,10 @@
 #define WS_SCALE_FACTOR 0.01f
 
 #define COMBINED_UVSET_STRING "Combined Head And Body"
-#define R15_POSTFIX_STRING "_R15_reminder_adjust_cage_and_attachments"
-#define S1_POSTFIX_STRING "_S1_ready_for_avatar_autosetup"
+#define R15_POSTFIX_STRING "_R15_avatar"
+#define S1_POSTFIX_STRING "_S1_for_avatar_autosetup"
+#define LAYERED_ACCESSORY_POSTFIX_STRING "_layered_accessories"
+#define RIGID_ACCESSORY_POSTFIX_STRING "_rigid_accessories"
 
 #include <QtGui/qcheckbox.h>
 #include <QtGui/QMessageBox>
@@ -560,8 +562,10 @@ bool DzRobloxUtils::generateBlenderBatchFile(QString batchFilePath, QString sBle
 }
 
 DzRobloxAction::DzRobloxAction() :
-	DzBridgeAction(tr("&Roblox Studio Exporter"), tr("Export the selected character for Roblox Studio."))
+	DzBridgeAction(tr("Send to &Roblox..."), tr("Export the selected character for Roblox Studio."))
 {
+    this->setObjectName("DzBridge_Roblox_Action");
+    
 	m_nNonInteractiveMode = 0;
 	m_sAssetType = QString("__");
 
@@ -574,7 +578,6 @@ DzRobloxAction::DzRobloxAction() :
 
 	m_bConvertToPng = true;
 	m_bConvertToJpg = true;
-	m_bExportAllTextures = true;
 	m_bCombineDiffuseAndAlphaMaps = true;
 	m_bGenerateNormalMaps = true;
 	m_bResizeTextures = true;
@@ -583,6 +586,11 @@ DzRobloxAction::DzRobloxAction() :
 	m_bRecompressIfFileSizeTooBig = true;
 	m_nFileSizeThresholdToInitiateRecompression = 1024 * 1024 * 19; // 2024-08-01, DB: current roblox image size upload limit of < 20MB
 
+	m_bExportAllTextures = true;
+	m_bDeferProcessingImageToolsJobs = true;
+
+	m_aKnownIntermediateFileExtensionsList += "blend";
+	m_aKnownIntermediateFileExtensionsList += "blend1";
 }
 
 bool DzRobloxAction::createUI()
@@ -613,9 +621,6 @@ bool DzRobloxAction::createUI()
 			robloxDialog->loadSavedSettings();
 		}
 	}
-
-	if (!m_subdivisionDialog) m_subdivisionDialog = DZ_BRIDGE_NAMESPACE::DzBridgeSubdivisionDialog::Get(m_bridgeDialog);
-	if (!m_morphSelectionDialog) m_morphSelectionDialog = DZ_BRIDGE_NAMESPACE::DzBridgeMorphSelectionDialog::Get(m_bridgeDialog);
 
 	return true;
 }
@@ -799,7 +804,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 	// If selection has hair or clothing asset, pre-configure Asset Type
 	if (dzScene->getNumSelectedNodes() != 1)
 	{
-		DzNodeList rootNodes = buildRootNodeList();
+		DzNodeList rootNodes = DzBridgeAction::BuildRootNodeList();
 		if (rootNodes.length() == 1)
 		{
 			dzScene->selectAllNodes(false);
@@ -828,8 +833,10 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 			}
 			//		return;
 		}
-		dzScene->selectAllNodes(false);
-		dzScene->setPrimarySelection(pGenesisParent);
+		if (pOriginalSelection != pGenesisParent) {
+			dzScene->selectAllNodes(false);
+			dzScene->setPrimarySelection(pGenesisParent);
+		}
 
 		// PreConfigure Asset Type Combo, depending on pOriginalSelection
 		if (pOriginalSelection->inherits("DzFigure")) {
@@ -906,7 +913,6 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 	int dlgResult = -1;
 	if (m_nNonInteractiveMode == 0)
 	{
-		qobject_cast<DzRobloxDialog*>(m_bridgeDialog)->disableAcceptUntilAllRequirementsValid();
 		dlgResult = m_bridgeDialog->exec();
 	}
 	if (m_nNonInteractiveMode == 1 || dlgResult == QDialog::Accepted)
@@ -942,6 +948,9 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		dir.mkpath(m_sRootFolder);
 		exportProgress->setCurrentInfo("Starting up conversion pipeline...");
 		exportProgress->step();
+
+		// Clean Intermediate Folder
+		cleanIntermediateSubFolder(m_sExportSubfolder);
 
 		// export FBX
 		bool bExportResult = exportHD(exportProgress);
@@ -1254,58 +1263,72 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		QString sScriptPath_S1 = sScriptFolderPath + "/blender_dtu_to_avatar_autosetup.py";
 		QString sScriptPath_Accessories = sScriptFolderPath + "/blender_dtu_to_r15_accessories.py";
 
-		if (m_sAssetType.contains("R15"))
-		{
-			sScriptPath = sScriptFolderPath + "/blender_dtu_to_roblox_blend.py";
-		}
-		else if (m_sAssetType.contains("S1"))
-		{
-			sScriptPath = sScriptFolderPath + "/blender_dtu_to_avatar_autosetup.py";
-		}
-		else if (m_sAssetType.contains("layered") || m_sAssetType.contains("rigid"))
-		{
-			sScriptPath = sScriptFolderPath + "/blender_dtu_to_r15_accessories.py";
-		}
-		QString sCommandArgs = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath).arg(m_sDestinationFBX);
+		QString sCommandArgs_R15 = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_R15).arg(m_sDestinationFBX);
+		QString sCommandArgs_S1 = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_S1).arg(m_sDestinationFBX);
+		QString sCommandArgs_Accessories = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_Accessories).arg(m_sDestinationFBX);
+
 #ifdef WIN32
 		QString batchFilePath = m_sDestinationPath + "/manual_blender_script.bat";
 #elif defined(__APPLE__)
 		QString batchFilePath = m_sDestinationPath + "/manual_blender_script.sh";
 #endif
-
-		QString sCommandArgs_R15 = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_R15).arg(m_sDestinationFBX);
 		QString batchFilePath_R15 = QString(batchFilePath).replace("_script.", "_script_R15_Avatar.");
-		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_R15, m_sBlenderExecutablePath, sCommandArgs_R15);
-
-		QString sCommandArgs_S1 = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_S1).arg(m_sDestinationFBX);
 		QString batchFilePath_S1 = QString(batchFilePath).replace("_script.", "_script_S1_Avatar.");
-		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_S1, m_sBlenderExecutablePath, sCommandArgs_S1);
-
-		QString sCommandArgs_Accessories = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath_Accessories).arg(m_sDestinationFBX);
 		QString batchFilePath_Accessories = QString(batchFilePath).replace("_script.", "_script_Accessories.");
+
+		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_R15, m_sBlenderExecutablePath, sCommandArgs_R15);
+		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_S1, m_sBlenderExecutablePath, sCommandArgs_S1);
 		DzRobloxUtils::generateBlenderBatchFile(batchFilePath_Accessories, m_sBlenderExecutablePath, sCommandArgs_Accessories);
+
+		QString sTaskName = tr("Starting Blender Processing...");
+		QString sTaskName_R15 = tr("Generating R15 Avatar...");
+		QString sTaskName_S1 = tr("Generating S1 Avatar...");
+		QString sTaskName_Accessories = tr("Generating Avatar Accessories...");
 
 		bool retCode = false;
 		if (m_sAssetType == "ALL") {
 			// R15
-//			DzProgress::setCurrentInfo("Starting Blender Processing... R15 Avatar");
-			exportProgress->setCurrentInfo("Starting Blender Processing. Generating R15 Avatar...");
+			exportProgress->setCurrentInfo(sTaskName_R15);
 			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_R15);
+			// DB NOTES, 2024-12-11: batchFilePath is set to specific task to be used in error message if needed
+			batchFilePath = batchFilePath_R15;
 
-			// S1
-//			DzProgress::setCurrentInfo("... S1 Avatar");
-			exportProgress->setCurrentInfo("Generating S1 Avatar...");
-			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_S1);
-
-			// Accessories
-//			DzProgress::setCurrentInfo("... Accessories");
-			exportProgress->setCurrentInfo("Generating Avatar Accessories...");
-			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_Accessories);
-		}
+            if (retCode) {
+                // S1
+                exportProgress->setCurrentInfo(sTaskName_S1);
+                retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_S1);
+				batchFilePath = batchFilePath_S1;
+            }
+            
+            if (retCode) {
+                // Accessories
+                exportProgress->setCurrentInfo(sTaskName_Accessories);
+                retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs_Accessories);
+				batchFilePath = batchFilePath_Accessories;
+            }
+        }
 		else
 		{
-			DzProgress::setCurrentInfo("Starting Blender Processing...");
-			exportProgress->setCurrentInfo("Starting Blender Processing...");
+			if (m_sAssetType.contains("R15"))
+			{
+				sTaskName = sTaskName_R15;
+				batchFilePath = batchFilePath_R15;
+				sScriptPath = sScriptPath_R15;
+			}
+			else if (m_sAssetType.contains("S1"))
+			{
+				sTaskName = sTaskName_S1;
+				batchFilePath = batchFilePath_S1;
+				sScriptPath = sScriptPath_S1;
+			}
+			else if (m_sAssetType.contains("layered") || m_sAssetType.contains("rigid"))
+			{
+				sTaskName = sTaskName_Accessories;
+				batchFilePath = batchFilePath_Accessories;
+				sScriptPath = sScriptPath_Accessories;
+			}
+			exportProgress->setCurrentInfo(sTaskName);
+			QString sCommandArgs = QString("--background;--log-file;%1;--python-exit-code;%2;--python;%3;%4").arg(sBlenderLogPath).arg(m_nPythonExceptionExitCode).arg(sScriptPath).arg(m_sDestinationFBX);
 			retCode = executeBlenderScripts(m_sBlenderExecutablePath, sCommandArgs);
 		}
 
@@ -1321,6 +1344,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 				QMessageBox::information(0, "Roblox Studio Exporter",
 					tr("Export from Daz Studio complete. Ready to import into Roblox Studio."), QMessageBox::Ok);
 
+                dzApp->log("DEBUG: Roblox Studio Exporter: attempting to open filesystem folder: " + m_sRobloxOutputFolderPath);
 #ifdef WIN32
 				ShellExecuteA(NULL, "open", m_sRobloxOutputFolderPath.toLocal8Bit().data(), NULL, NULL, SW_SHOWDEFAULT);
 				//// The above line does the equivalent as following lines, but has advantage of only opening 1 explorer window
@@ -1337,18 +1361,26 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 				args << "-e";
 				args << "activate";
 				args << "-e";
-                if (m_sAssetType.contains("R15")) {
+                if (m_sAssetType.contains("R15") || m_sAssetType.contains("ALL")) {
                     args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/" + m_sExportFilename + R15_POSTFIX_STRING + ".fbx" + "\"";
                 }
                 else if (m_sAssetType.contains("S1")) {
                     args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/" + m_sExportFilename + S1_POSTFIX_STRING + ".fbx" + "\"";
+                }
+                else if (m_sAssetType.contains("layered")) {
+                    args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/" + m_sExportFilename + LAYERED_ACCESSORY_POSTFIX_STRING + ".fbx" + "\"";
+                }
+                else if (m_sAssetType.contains("rigid")) {
+                    args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/" + m_sExportFilename + RIGID_ACCESSORY_POSTFIX_STRING + ".fbx" + "\"";
                 }
                 else {
                     args << "select POSIX file \"" + m_sRobloxOutputFolderPath + "/." + "\"";
                 }
 				args << "-e";
 				args << "end tell";
-				QProcess::startDetached("osascript", args);
+
+                dzApp->log("DEBUG: Roblox Studio Exporter: attempting to execute osascript: " + args.join(";"));
+                QProcess::startDetached("osascript", args);
 #endif
 			}
 			else
@@ -1388,6 +1420,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 	}
 }
 
+#include "ImageTools.h"
 void DzRobloxAction::writeConfiguration()
 {
 	QString DTUfilename = m_sDestinationPath + m_sExportFilename + ".dtu";
@@ -1435,15 +1468,8 @@ void DzRobloxAction::writeConfiguration()
 		writeAllDforceInfo(m_pSelectedNode, writer);
 	}
 
-	if (m_sAssetType == "Pose")
-	{
-	   writeAllPoses(writer);
-	}
-
-	if (m_sAssetType == "Environment")
-	{
-		writeEnvironment(writer);
-	}
+	m_ImageToolsJobsManager->processJobs();
+	m_ImageToolsJobsManager->clearJobs();
 
 	writer.finishObject();
 	DTUfile.close();
@@ -1583,8 +1609,10 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 	DzProgress* progress = new DzProgress("Running Blender Script", numTotalTicks, false, true);
 	progress->enable(true);
 	QProcess* pToolProcess = new QProcess(this);
+    dzApp->log("DEBUG: Roblox Studio Exporter: setting working dir for blender script: " + sWorkingPath);
 	pToolProcess->setWorkingDirectory(sWorkingPath);
-	pToolProcess->start(sFilePath, args);
+    dzApp->log("DEBUG: Roblox Studio Exporter: starting blender script: [" + sFilePath + "] with args: " + args.join(";"));
+    pToolProcess->start(sFilePath, args);
 	int currentTick = 0;
 	int timeoutTicks = numTotalTicks;
 	bool bUserInitiatedTermination = false;
@@ -1653,6 +1681,7 @@ Do you want to Abort the operation now?");
 		}
 		return false;
 	}
+    dzApp->log(QString("Roblox Studio Exporter: DEBUG: blender script successful, exit code = %1").arg(m_nBlenderExitCode));
 
 	return true;
 }
@@ -1912,7 +1941,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	foreach(DzNode *listNode, m_aGeograftConversionHelpers) {
 		conversionList.append(listNode);
 	}
-	conversionList.append(parentNode->getNodeChildren(true));
+//	conversionList.append(parentNode->getNodeChildren(true));
 	foreach(QObject* listNode, conversionList)
 	{
 		DzFigure *figChild = qobject_cast<DzFigure*>(listNode);

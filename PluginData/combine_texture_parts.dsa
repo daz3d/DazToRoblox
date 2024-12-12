@@ -3,7 +3,8 @@
 (function(){
 
 var sDazTempFolder = App.getTempPath();
-var sMapTransferOutputFolder = sDazTempFolder + "/MapTransfer";
+// var sMapTransferOutputFolder = sDazTempFolder + "/MapTransfer";
+var sMapTransferOutputFolder = sDazTempFolder;
 var sMapTransferInputFolder = sDazTempFolder + "/textureConvert";
 var nTextureWidth = 4096;
 var nTextureHeight = 4096;
@@ -19,14 +20,14 @@ function combineImages(aImageList) {
     var width=nTextureWidth, height=nTextureHeight;
     var format = 5;
     var oImageA = new Image(width, height, format);
-    //print("DEBUG: creating empty image: width = " + oImageA.width + ", height = " + oImageA.height + ", format=" + oImageA.format);
+    //print("DEBUG: combine_texture_parts.dsa: creating empty image: width = " + oImageA.width + ", height = " + oImageA.height + ", format=" + oImageA.format);
     var blank = Color(0, 0, 0, 0);
     oImageA.fill(blank);
     for (var i = 0; i < aImageList.length; i++) {
         var oImageB = new Image();
         if (oImageB.load(aImageList[i])) {
-	        print("Component Image:" + aImageList[i]);
-		    print("DEBUG: width = " + oImageB.width + ", height = " + oImageB.height + ", format=" + oImageB.format);
+	        print("DEBUG: combine_texture_parts.dsa: Component Image:" + aImageList[i]);
+//		    print("DEBUG: combine_texture_parts.dsa: width = " + oImageB.width + ", height = " + oImageB.height + ", format=" + oImageB.format);
 		    if (oImageA.size != oImageB.size) {
 		    	oImageB = oImageB.smoothScale(oImageA.size);
 		    }
@@ -44,9 +45,17 @@ function main() {
 	var aSpecularMapImages = [];
     var aMetallicMapImages = [];
 
-    // get list of files in the folder
-    oDir = new DzDir(sMapTransferInputFolder);
-    aFiles = oDir.getFilesFromDir(["*.png"], true);
+	// // make output folder if does not exist
+	// print("DEBUG: generate_texture_parts.dsa: sMapTransferOutputFolder == " + sMapTransferOutputFolder);
+	// var oOutputDir = new DzDir(sMapTransferOutputFolder);
+	// if ( !oOutputDir.exists() ) {
+	// 	print("DEBUG: generate_texture_parts.dsa: creating output folder: " + sMapTransferOutputFolder);
+	// 	oOutputDir.mkpath(sMapTransferOutputFolder);
+	// } 
+
+    // get list of files in the input folder
+    var oDir = new DzDir(sMapTransferInputFolder);
+    var aFiles = oDir.getFilesFromDir(["*.png"], true);
     // add detail normals first so that it is overwritten by the main normal map
     for (var i = 0; i < aFiles.length; i++) {
         if (aFiles[i].search("Normal Map") > 0 && aFiles[i].search("Detail") > 0) {
@@ -71,8 +80,8 @@ function main() {
     
     // diffuse color
     if (aDiffuseColorImages.length > 0) {
-        var sOutputFilename = sMapTransferOutputFolder + "/combined diffuse test.png";
-        print("DEBUG: output = " + sOutputFilename);
+        var sOutputFilename = sMapTransferOutputFolder + "/combined diffuse texture.png";
+        print("DEBUG: combine_texture_parts.dsa: output = " + sOutputFilename);
         var oCombinedImage = combineImages(aDiffuseColorImages);
         oCombinedImage.save(sOutputFilename);
         oCombinedImage.deleteLater();    
@@ -80,8 +89,8 @@ function main() {
 
     // normal
     if (aNormalMapImages.length > 0) {
-        var sOutputFilename = sMapTransferOutputFolder + "/combined normal test.png";
-        print("DEBUG: output = " + sOutputFilename);
+        var sOutputFilename = sMapTransferOutputFolder + "/combined normal texture.png";
+        print("DEBUG: combine_texture_parts.dsa: output = " + sOutputFilename);
         var oCombinedImage = combineImages(aNormalMapImages);
         oCombinedImage.save(sOutputFilename);
         oCombinedImage.deleteLater();
@@ -89,8 +98,8 @@ function main() {
     
     // specular
     if (aSpecularMapImages.length > 0) {
-        var sOutputFilename = sMapTransferOutputFolder + "/combined specular test.png";
-        print("DEBUG: output = " + sOutputFilename);
+        var sOutputFilename = sMapTransferOutputFolder + "/combined specular texture.png";
+        print("DEBUG: combine_texture_parts.dsa: output = " + sOutputFilename);
         var oCombinedImage = combineImages(aSpecularMapImages);
         oCombinedImage.save(sOutputFilename);
         oCombinedImage.deleteLater();
@@ -98,14 +107,14 @@ function main() {
 
     // metallic
     if (aMetallicMapImages.length > 0) {
-        var sOutputFilename = sMapTransferOutputFolder + "/combined metallic test.png";
-        print("DEBUG: output = " + sOutputFilename);
+        var sOutputFilename = sMapTransferOutputFolder + "/combined metallic texture.png";
+        print("DEBUG: combine_texture_parts.dsa: output = " + sOutputFilename);
         var oCombinedImage = combineImages(aMetallicMapImages);
         oCombinedImage.save(sOutputFilename);
         oCombinedImage.deleteLater();
     }
 
-	print("done");
+	print("combine_texture_parts.dsa: done");
 }
 
 main();

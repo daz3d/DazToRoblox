@@ -75,6 +75,7 @@ Select a modesty layer to be overlaid on top of the unclothed Genesis skin textu
 	Q_INVOKABLE void resetToDefaults() override;
 	Q_INVOKABLE bool loadSavedSettings() override;
 	Q_INVOKABLE void saveSettings() override;
+	Q_INVOKABLE virtual void setDisabled(bool bDisable) override;
 
 	DzFileValidator m_dzValidatorFileExists;
 	Q_INVOKABLE bool isBlenderTextBoxValid(const QString& text="");
@@ -86,40 +87,56 @@ Select a modesty layer to be overlaid on top of the unclothed Genesis skin textu
 
 	DzBasicDialog* m_wEulaAgreementDialog;
 
-public slots:
-	void HandleTextChanged( const QString &text);
+protected:
+	virtual void showEvent(QShowEvent* event) override { disableAcceptUntilAllRequirementsValid(); DzBridgeDialog::showEvent(event); }
+	virtual void refreshAsset() override;
 
 protected slots:
 	void HandleSelectIntermediateFolderButton();
 	void HandleAssetTypeComboChange(int state);
-
 	virtual void HandleDisabledChooseSubdivisionsButton();
 	virtual void HandleOpenIntermediateFolderButton(QString sFolderPath="");
 
+	virtual void HandleHelpMenuButton(int) override;
+	void HandlePdfButton() override;
+	void HandleYoutubeButton() override;
+	void HandleSupportButton() override;
+	void accept() override;
+#define ROBLOX_HELP_ID_SPECIFICATION 10
+#define ROBLOX_HELP_ID_GUIDELINES 11
+	void HandleRobloxGuidelinesButton();
+	void HandleRobloxCharacterSpecification();
+
+	void HandleTextChanged(const QString& text);
 	void HandleSelectRobloxOutputFolderButton();
 	void showRobloxOptions(bool bVisible);
-
 	void HandleSelectBlenderExecutablePathButton();
 	bool HandleAcceptButtonValidationFeedback();
+	void updateBlenderExecutablePathEdit(bool isValid);
+	void updateRobloxOutputFolderEdit(bool isValid);
 	void HandleCustomModestyOverlayActivated(int index);
 
 	void HandleAgreeEulaCheckbox(bool checked);
 
-	void accept() override;
-
 protected:
 	QLineEdit* intermediateFolderEdit;
-	QPushButton* intermediateFolderButton;
+	DzBridgeBrowseButton* intermediateFolderButton;
 	QComboBox* m_wModestyOverlayCombo;
 	QLabel* m_wModestyOverlayRowLabel;
 
 	QLineEdit* m_wRobloxOutputFolderEdit;
-	QPushButton* m_wRobloxOutputFolderButton;
-	QWidget* m_wGodotProjectFolderRowLabelWidget;
+	DzBridgeBrowseButton* m_wRobloxOutputFolderButton;
+	QLabel* m_wRobloxOutputFolderRowLabel;
+	QLabel* m_wContentModerationRowLabel;
+	QLabel* m_wIntermediateFolderRowLabel;
+	QLabel* m_wOpenIntermediateFolderButtonRowLabel;
+
+	QLabel* m_wReplacementPartsRowLabel;
+	QLabel* m_wLayeredClothingRowLabel;
 
 	QLineEdit* m_wBlenderExecutablePathEdit;
-	QPushButton* m_wBlenderExecutablePathButton;
-	QWidget* m_wBlenderExecutablePathRowLabelWdiget;
+	DzBridgeBrowseButton* m_wBlenderExecutablePathButton;
+	QLabel* m_wBlenderExecutablePathRowLabel;
 
 	QCheckBox* m_wBreastsGoneCheckbox;
 	QCheckBox* m_wBakeSingleOutfitCheckbox;
@@ -130,8 +147,6 @@ protected:
 
 	QCheckBox* m_wHiddenSurfaceRemovalCheckbox;
 	QCheckBox* m_wRemoveScalpMaterialCheckbox;
-
-	virtual void refreshAsset() override;
 
 #ifdef UNITTEST_DZBRIDGE
 	friend class UnitTest_DzRobloxDialog;

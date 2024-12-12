@@ -54,6 +54,8 @@ QValidator::State DzFileValidator::validate(QString& input, int& pos) const {
 DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 DzBridgeDialog(parent, DAZ_BRIDGE_PLUGIN_NAME)
 {
+	this->setObjectName("DzBridge_Roblox_Dialog");
+
 	 intermediateFolderEdit = nullptr;
 	 intermediateFolderButton = nullptr;
 
@@ -64,8 +66,9 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 int wgtHeight = style()->pixelMetric(DZ_PM_ButtonHeight);
 	 int btnMinWidth = style()->pixelMetric(DZ_PM_ButtonMinWidth);
 
-	 // Set the dialog title
+	 // Original window title, for potential interim hotfix releases before GUI refresh
 	 setWindowTitle(tr("Daz To Roblox Studio Exporter %1 v%2.%3").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV));
+
 	 QString sDazAppDir = dzApp->getHomePath().replace("\\", "/");
 	 QString sPdfPath = sDazAppDir + "/docs/Plugins" + "/Daz to Roblox/Daz to Roblox.pdf";
 	 QString sSetupModeString = tr("\
@@ -105,12 +108,27 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wFbxVersionRowLabelWidget->hide();
 	 showFbxDialogCheckBox->hide();
 	 m_wShowFbxRowLabelWidget->hide();
-	 enableNormalMapGenerationCheckBox->hide();
+	 m_wConvertBumpToNormalCheckBox->hide();
 	 m_wNormalMapsRowLabelWidget->hide();
 	 exportMaterialPropertyCSVCheckBox->hide();
 	 m_wExportCsvRowLabelWidget->hide();
 	 m_enableExperimentalOptionsCheckBox->hide();
 	 m_wEnableExperimentalRowLabelWidget->hide();
+
+	 // set Roblox specific defaults
+	 m_wResizeTexturesGroupBox->setDisabled(false);
+	 m_wResizeTexturesGroupBox->setChecked(true);
+	 //
+#define ROBLOX_MAX_TEXTURE_SIZE 1024*19
+	 m_wMaxTextureFileSizeCombo->addItem("Roblox Studio Maximum (19 MB)", ROBLOX_MAX_TEXTURE_SIZE);
+	 int roblox_default_index = m_wMaxTextureFileSizeCombo->findData(ROBLOX_MAX_TEXTURE_SIZE);
+	 if (roblox_default_index != -1) m_wMaxTextureFileSizeCombo->setCurrentIndex(roblox_default_index);
+	 //
+	 roblox_default_index = m_wMaxTextureResolutionCombo->findData(1024);
+	 if (roblox_default_index != -1) m_wMaxTextureResolutionCombo->setCurrentIndex(roblox_default_index);
+	 //
+	 roblox_default_index = m_wExportTextureFileFormatCombo->findData("png+jpg");
+	 if (roblox_default_index != -1) m_wExportTextureFileFormatCombo->setCurrentIndex(roblox_default_index);
 
 	 // Modesty Overlay Options
 	 m_wModestyOverlayCombo = new QComboBox();
@@ -122,12 +140,15 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 connect(m_wModestyOverlayCombo, SIGNAL(activated(int)), this, SLOT(HandleCustomModestyOverlayActivated(int)));
 	 m_wModestyOverlayRowLabel = new QLabel(tr("Modesty Overlay"));
 	 mainLayout->addRow(m_wModestyOverlayRowLabel, m_wModestyOverlayCombo);
+	 m_aRowLabels.append(m_wModestyOverlayRowLabel);
 
 	 // Add Project Folder
 	 QHBoxLayout* robloxOutputFolderLayout = new QHBoxLayout();
+	 robloxOutputFolderLayout->setSpacing(0);
 	 m_wRobloxOutputFolderEdit = new QLineEdit(this);
 	 m_wRobloxOutputFolderEdit->setValidator(&m_dzValidatorFileExists);
-	 m_wRobloxOutputFolderButton = new QPushButton("...", this);
+	 //m_wRobloxOutputFolderButton = new QPushButton("...", this);
+	 m_wRobloxOutputFolderButton = new DzBridgeBrowseButton(this);
 	 robloxOutputFolderLayout->addWidget(m_wRobloxOutputFolderEdit);
 	 robloxOutputFolderLayout->addWidget(m_wRobloxOutputFolderButton);
 	 connect(m_wRobloxOutputFolderButton, SIGNAL(released()), this, SLOT(HandleSelectRobloxOutputFolderButton()));
@@ -157,7 +178,8 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wEyelashReplacement->setToolTip(tr("Replace eyelashes with something else."));
 	 wReplacementPartsLayout->addWidget(m_wEyebrowReplacement);
 	 wReplacementPartsLayout->addWidget(m_wEyelashReplacement);
-	 QLabel* wReplacementPartsRowLabel = new QLabel(tr("Replacement Assets"));
+	 m_wReplacementPartsRowLabel = new QLabel(tr("Replacement Assets"));
+	 m_aRowLabels.append(m_wReplacementPartsRowLabel);
 
 	 // Accessory Export Options
 	 QVBoxLayout* wClothingOptionsLayout = new QVBoxLayout();
@@ -172,30 +194,35 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wHiddenSurfaceRemovalCheckbox->setWhatsThis(sHiddenSurfaceRemoval);
 	 m_wHiddenSurfaceRemovalCheckbox->setChecked(false);
 	 QString sRemoveScalp = tr("Remove scalp geometry from hair assets. May fix opaque scalp issues.");
-	 m_wRemoveScalpMaterialCheckbox = new QCheckBox(tr("Remove Scalp"));
+	 m_wRemoveScalpMaterialCheckbox = new QCheckBox(tr("Remove Hair Cap"));
 	 m_wRemoveScalpMaterialCheckbox->setToolTip(sRemoveScalp);
 	 m_wRemoveScalpMaterialCheckbox->setToolTip(sRemoveScalp);
 	 m_wRemoveScalpMaterialCheckbox->setChecked(true);
 	 wClothingOptionsLayout->addWidget(m_wBakeSingleOutfitCheckbox);
 	 wClothingOptionsLayout->addWidget(m_wHiddenSurfaceRemovalCheckbox);
 	 wClothingOptionsLayout->addWidget(m_wRemoveScalpMaterialCheckbox);
-	 QLabel* wLayeredClothingRowLabel = new QLabel(tr("Accessories"));
+	 m_wLayeredClothingRowLabel = new QLabel(tr("Accessories"));
+	 m_aRowLabels.append(m_wLayeredClothingRowLabel);
 
 	 // Add GUI to layout
-	 mainLayout->insertRow(1, "Roblox Output Folder", robloxOutputFolderLayout);
-	 m_wGodotProjectFolderRowLabelWidget = mainLayout->itemAt(1, QFormLayout::LabelRole)->widget();
+	 m_wRobloxOutputFolderRowLabel = new QLabel(tr("Roblox Output Folder"));
+	 m_aRowLabels.append(m_wRobloxOutputFolderRowLabel);
+	 mainLayout->insertRow(1, m_wRobloxOutputFolderRowLabel, robloxOutputFolderLayout);
 	 showRobloxOptions(true);
 	 this->showLodRow(false);
-	 QLabel* wContentModerationRowLabel = new QLabel(tr("Content Moderation"));
-	 mainLayout->addRow(wContentModerationRowLabel, m_wBreastsGoneCheckbox);
-	 mainLayout->addRow(wReplacementPartsRowLabel, wReplacementPartsLayout);
-	 mainLayout->addRow(wLayeredClothingRowLabel, wClothingOptionsLayout);
+	 m_wContentModerationRowLabel = new QLabel(tr("Content Moderation"));
+	 m_aRowLabels.append(m_wContentModerationRowLabel);
+	 mainLayout->addRow(m_wContentModerationRowLabel, m_wBreastsGoneCheckbox);
+	 mainLayout->addRow(m_wReplacementPartsRowLabel, wReplacementPartsLayout);
+	 mainLayout->addRow(m_wLayeredClothingRowLabel, wClothingOptionsLayout);
 
 	 // Select Blender Executable Path GUI
 	 QHBoxLayout* blenderExecutablePathLayout = new QHBoxLayout();
+	 blenderExecutablePathLayout->setSpacing(0);
 	 m_wBlenderExecutablePathEdit = new QLineEdit(this);
 	 m_wBlenderExecutablePathEdit->setValidator(&m_dzValidatorFileExists);
-	 m_wBlenderExecutablePathButton = new QPushButton("...", this);
+	 //m_wBlenderExecutablePathButton = new QPushButton("...", this);
+	 m_wBlenderExecutablePathButton = new DzBridgeBrowseButton(this);
 	 blenderExecutablePathLayout->addWidget(m_wBlenderExecutablePathEdit);
 	 blenderExecutablePathLayout->addWidget(m_wBlenderExecutablePathButton);
 	 connect(m_wBlenderExecutablePathButton, SIGNAL(released()), this, SLOT(HandleSelectBlenderExecutablePathButton()));
@@ -204,24 +231,32 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 
 	 // Intermediate Folder
 	 QHBoxLayout* intermediateFolderLayout = new QHBoxLayout();
+	 intermediateFolderLayout->setSpacing(0);
 	 intermediateFolderEdit = new QLineEdit(this);
 	 intermediateFolderEdit->setValidator(&m_dzValidatorFileExists);
-	 intermediateFolderButton = new QPushButton("...", this);
+	 //intermediateFolderButton = new QPushButton("...", this);
+	 intermediateFolderButton = new DzBridgeBrowseButton(this);
 	 intermediateFolderLayout->addWidget(intermediateFolderEdit);
 	 intermediateFolderLayout->addWidget(intermediateFolderButton);
 	 connect(intermediateFolderButton, SIGNAL(released()), this, SLOT(HandleSelectIntermediateFolderButton()));
 	 connect(intermediateFolderEdit, SIGNAL(textChanged(const QString&)), this, SLOT(HandleTextChanged(const QString&)));
 
 	 //  Add Intermediate Folder to Advanced Settings container as a new row with specific headers
-	 QFormLayout* advancedLayout = qobject_cast<QFormLayout*>(advancedWidget->layout());
 	 if (advancedLayout)
 	 {
-		 advancedLayout->insertRow(1, "Blender Executable", blenderExecutablePathLayout);
+		 m_wBlenderExecutablePathRowLabel = new QLabel("Blender Executable");
+		 advancedLayout->insertRow(1, m_wBlenderExecutablePathRowLabel, blenderExecutablePathLayout);
+		 m_aRowLabels.append(m_wBlenderExecutablePathRowLabel);
 
-		 advancedLayout->addRow("Intermediate Folder", intermediateFolderLayout);
+		 m_wIntermediateFolderRowLabel = new QLabel("Intermediate Folder");
+		 advancedLayout->addRow(m_wIntermediateFolderRowLabel, intermediateFolderLayout);
+		 m_aRowLabels.append(m_wIntermediateFolderRowLabel);
+
 		 // reposition the Open Intermediate Folder button so it aligns with the center section
 		 advancedLayout->removeWidget(m_OpenIntermediateFolderButton);
-		 advancedLayout->addRow("", m_OpenIntermediateFolderButton);
+		 m_wOpenIntermediateFolderButtonRowLabel = new QLabel("");
+		 advancedLayout->addRow(m_wOpenIntermediateFolderButtonRowLabel, m_OpenIntermediateFolderButton);
+
 	 }
 
 	 // Disable Experimental Options Checkbox
@@ -233,8 +268,6 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 setBridgeVersionStringAndLabel(sVersionString);
 
 	 //// Configure Target Plugin Installer
-	 //renameTargetPluginInstaller("Godot Plugin Installer");
-	 //m_TargetSoftwareVersionCombo->clear();
 	 showTargetPluginInstaller(false);
 
 	 // Make the dialog fit its contents, with a minimum width, and lock it down
@@ -261,38 +294,81 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 // Load Settings
 	 loadSavedSettings();
 
+	 // called in base, but needs to be called in derived class for overriden method to fire
+	 if (m_bSetupMode)
+	 {
+		 setDisabled(true);
+	 }
+
 	 disableAcceptUntilAllRequirementsValid();
+
+	 // GUI Refresh
+	 m_WelcomeLabel->hide();
+	 setWindowTitle(tr("Roblox Export Options"));
+	 wHelpMenuButton->insertItem(tr("Roblox Guidelines..."), ROBLOX_HELP_ID_GUIDELINES);
+	 wHelpMenuButton->insertItem(tr("Character Specification..."), ROBLOX_HELP_ID_SPECIFICATION);
+	 wHelpMenuButton->show();
+
+	 fixRowLabelStyle();
+	 fixRowLabelWidths();
 
 }
 
 bool DzRobloxDialog::loadSavedSettings()
 {
+#define LOAD_CHECKED(name,widget) if (!settings->value(name).isNull() && widget) widget->setChecked(settings->value(name).toBool());
+#define LOAD_ITEMDATA(name,widget) if (!settings->value(name).isNull() && widget) widget->setCurrentIndex(widget->findData(settings->value(name)));
+
 	DzBridgeDialog::loadSavedSettings();
 
+	// intermediate path
+	QString directoryName = "";
 	if (!settings->value("IntermediatePath").isNull())
 	{
-		QString directoryName = settings->value("IntermediatePath").toString();
+		directoryName = settings->value("IntermediatePath").toString();
 		intermediateFolderEdit->setText(directoryName);
 	}
-	else
+	if (directoryName == "")
 	{
 		QString DefaultPath = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation) + QDir::separator() + "DazToRoblox";
 		intermediateFolderEdit->setText(DefaultPath);
 	}
+	// roblox output path
 	if (!settings->value("RobloxOutputPath").isNull())
 	{
 		m_wRobloxOutputFolderEdit->setText(settings->value("RobloxOutputPath").toString());
 	}
+	// blender executable path
 	if (!settings->value("BlenderExecutablePath").isNull())
 	{
 		m_wBlenderExecutablePathEdit->setText(settings->value("BlenderExecutablePath").toString());
 	}
+
+	// asset type
+	LOAD_ITEMDATA("AssetType", assetTypeCombo);
+	// modesty overlay
+	LOAD_ITEMDATA("ModestyOverlay", m_wModestyOverlayCombo);
+	// breasts gone
+	LOAD_CHECKED("BreastsGone", m_wBreastsGoneCheckbox);
+	// replace eyebrows
+	LOAD_ITEMDATA("Eyebrows", m_wEyebrowReplacement);
+	// replace eyelashes
+	LOAD_ITEMDATA("Eyelashes", m_wEyelashReplacement);
+	// merge all clothing
+	LOAD_CHECKED("MergeAllClothing", m_wBakeSingleOutfitCheckbox);
+	// remove hidden geometry
+	LOAD_CHECKED("RemoveHiddenGeometry", m_wHiddenSurfaceRemovalCheckbox);
+	// remove hair cap
+	LOAD_CHECKED("RemvoeHairCap", m_wRemoveScalpMaterialCheckbox);
 
 	return true;
 }
 
 void DzRobloxDialog::saveSettings()
 {
+#define SAVE_CHECKED(name, widget) if (widget) settings->setValue(name, widget->isChecked());
+#define SAVE_ITEMDATA(name, widget) if (widget) settings->setValue(name, widget->itemData(widget->currentIndex()));
+
 	if (settings == nullptr || m_bDontSaveSettings) return;
 
 	DzBridgeDialog::saveSettings();
@@ -302,8 +378,39 @@ void DzRobloxDialog::saveSettings()
 	settings->setValue("IntermediatePath", intermediateFolderEdit->text());
 	// Blender Executable Path
 	settings->setValue("BlenderExecutablePath", m_wBlenderExecutablePathEdit->text());
-	// Godot Project Path
+	// Roblox Output Path
 	settings->setValue("RobloxOutputPath", m_wRobloxOutputFolderEdit->text());
+
+	// asset type
+	SAVE_ITEMDATA("AssetType", assetTypeCombo);
+	// modesty overlay
+	SAVE_ITEMDATA("ModestyOverlay", m_wModestyOverlayCombo);
+	// breasts gone
+	SAVE_CHECKED("BreastsGone", m_wBreastsGoneCheckbox);
+	// replace eyebrows
+	SAVE_ITEMDATA("Eyebrows", m_wEyebrowReplacement);
+	// replace eyelashes
+	SAVE_ITEMDATA("Eyelashes", m_wEyelashReplacement);
+	// merge all clothing
+	SAVE_CHECKED("MergeAllClothing", m_wBakeSingleOutfitCheckbox);
+	// remove hidden geometry
+	SAVE_CHECKED("RemoveHiddenGeometry", m_wHiddenSurfaceRemovalCheckbox);
+	// remove hair cap
+	SAVE_CHECKED("RemvoeHairCap", m_wRemoveScalpMaterialCheckbox);
+
+}
+
+void DzRobloxDialog::setDisabled(bool bDisable)
+{
+	DzBridgeDialog::setDisabled(bDisable);
+
+	m_wModestyOverlayCombo->setDisabled(bDisable);
+	m_wBreastsGoneCheckbox->setDisabled(bDisable);
+	m_wEyebrowReplacement->setDisabled(bDisable);
+	m_wEyelashReplacement->setDisabled(bDisable);
+	m_wBakeSingleOutfitCheckbox->setDisabled(bDisable);
+	m_wHiddenSurfaceRemovalCheckbox->setDisabled(bDisable);
+	m_wRemoveScalpMaterialCheckbox->setDisabled(bDisable);
 
 }
 
@@ -326,14 +433,19 @@ void DzRobloxDialog::resetToDefaults()
 		assetNameEdit->setText(Selection->getLabel().remove(QRegExp("[^A-Za-z0-9_]")));
 	}
 
-	if (qobject_cast<DzSkeleton*>(Selection))
-	{
-		assetTypeCombo->setCurrentIndex(0);
-	}
-	else
-	{
-		assetTypeCombo->setCurrentIndex(1);
-	}
+	// set Roblox specific defaults
+	m_wResizeTexturesGroupBox->setDisabled(false);
+	m_wResizeTexturesGroupBox->setChecked(true);
+	//
+	int roblox_default_index = m_wMaxTextureFileSizeCombo->findData(ROBLOX_MAX_TEXTURE_SIZE);
+	if (roblox_default_index != -1) m_wMaxTextureFileSizeCombo->setCurrentIndex(roblox_default_index);
+	//
+	roblox_default_index = m_wMaxTextureResolutionCombo->findData(1024);
+	if (roblox_default_index != -1) m_wMaxTextureResolutionCombo->setCurrentIndex(roblox_default_index);
+	//
+	roblox_default_index = m_wExportTextureFileFormatCombo->findData("png+jpg");
+	if (roblox_default_index != -1) m_wExportTextureFileFormatCombo->setCurrentIndex(roblox_default_index);
+
 	m_bDontSaveSettings = false;
 }
 
@@ -378,9 +490,20 @@ void DzRobloxDialog::HandleOpenIntermediateFolderButton(QString sFolderPath)
 	DzBridgeDialog::HandleOpenIntermediateFolderButton(sIntermediateFolder);
 }
 
+// override and replace base method, which modifies assetTypeCombo to incompatible state
 void DzRobloxDialog::refreshAsset()
 {
-	DzBridgeDialog::refreshAsset();
+	DzNode* Selection = dzScene->getPrimarySelection();
+
+	if (dzScene->getFilename().length() > 0)
+	{
+		QFileInfo fileInfo = QFileInfo(dzScene->getFilename());
+		assetNameEdit->setText(fileInfo.baseName().remove(QRegExp("[^A-Za-z0-9_]")));
+	}
+	else if (dzScene->getPrimarySelection())
+	{
+		assetNameEdit->setText(Selection->getLabel().remove(QRegExp("[^A-Za-z0-9_]")));
+	}
 }
 
 void DzRobloxDialog::HandleSelectRobloxOutputFolderButton()
@@ -410,16 +533,27 @@ void DzRobloxDialog::showRobloxOptions(bool bVisible)
 {
 	m_wRobloxOutputFolderEdit->setVisible(bVisible);
 	m_wRobloxOutputFolderButton->setVisible(bVisible);
-	m_wGodotProjectFolderRowLabelWidget->setVisible(bVisible);
+	m_wRobloxOutputFolderRowLabel->setVisible(bVisible);
 }
 
 void DzRobloxDialog::HandleSelectBlenderExecutablePathButton()
 {
 	// DB 2023-10-13: prepopulate with existing folder string
 	QString directoryName = "";
-	if (settings != nullptr && settings->value("BlenderExecutablePath").isNull() != true)
-	{
-		directoryName = QFileInfo(settings->value("BlenderExecutablePath").toString()).dir().dirName();
+	QString sBlenderExePath = m_wBlenderExecutablePathEdit->text();
+	directoryName = QFileInfo(sBlenderExePath).dir().path();
+	if (directoryName == "." || directoryName == "") {
+		if (settings != nullptr && settings->value("BlenderExecutablePath").isNull() != true) {
+			sBlenderExePath = settings->value("BlenderExecutablePath").toString();
+			directoryName = QFileInfo(sBlenderExePath).dir().path();
+		}
+		if (directoryName == "." || directoryName == "") {
+#ifdef WIN32
+			directoryName = "C:/Program Files/";
+#elif defined (__APPLE__)
+			directoryName = "/Applications/";
+#endif
+		}
 	}
 #ifdef WIN32
     QString sExeFilter = tr("Executable Files (*.exe)");
@@ -454,14 +588,16 @@ void DzRobloxDialog::HandleSelectBlenderExecutablePathButton()
 void DzRobloxDialog::HandleTextChanged(const QString& text)
 {
 	QObject* senderWidget = sender();
-
 	if (senderWidget == m_wBlenderExecutablePathEdit) {
-		// check if blender exe is valid
-		printf("DEBUG: check stuff here...");
-//		disableAcceptUntilBlenderValid(text);
-		disableAcceptUntilAllRequirementsValid();
+		updateBlenderExecutablePathEdit(isBlenderTextBoxValid());
 	}
-	dzApp->log("DzRoblox: DEBUG: HandleTextChanged: text = " + text);
+	if (senderWidget == m_wRobloxOutputFolderEdit) {
+		QString text = m_wRobloxOutputFolderEdit->text();
+		int pos = 0;
+		bool bIsValid = (m_dzValidatorFileExists.validate(text, pos) == QValidator::Acceptable);
+		updateRobloxOutputFolderEdit(bIsValid);
+	}
+	disableAcceptUntilAllRequirementsValid();
 }
 
 void DzRobloxDialog::HandleAssetTypeComboChange(int state)
@@ -500,24 +636,15 @@ bool DzRobloxDialog::isAssetTypeComboBoxValid()
 
 bool DzRobloxDialog::disableAcceptUntilAllRequirementsValid()
 {
-	if (dzScene->getPrimarySelection() == NULL)
-	{
-		this->setAcceptButtonEnabled(false);
-		return true;
-	}
-	// otherwise, enable accept button so we can show feedback dialog to help user
-	this->setAcceptButtonEnabled(true);
-
-	if (!isBlenderTextBoxValid() || !isAssetTypeComboBoxValid())
-	{
-//		this->setAcceptButtonEnabled(false);
-		this->setAcceptButtonText("Unable to Proceed");
-		return false;
+	if (!m_bSetupMode) {
+		if (!isBlenderTextBoxValid() || !isAssetTypeComboBoxValid())
+		{
+			this->setAcceptButtonText("Unable to Proceed");
+			return false;
+		}
 	}
 	this->setAcceptButtonText("Accept");
-//	this->setAcceptButtonEnabled(true);
 	return true;
-
 }
 
 
@@ -539,26 +666,14 @@ bool DzRobloxDialog::HandleAcceptButtonValidationFeedback() {
 	if (m_wRobloxOutputFolderEdit->text() == "" || QDir(m_wRobloxOutputFolderEdit->text()).exists() == false)
 	{
 		QMessageBox::warning(0, tr("Roblox Output Folder"), tr("Roblox Output Folder must be set."), QMessageBox::Ok);
+		updateRobloxOutputFolderEdit(false);
 	}
 	else if (m_wBlenderExecutablePathEdit->text() == "" || QFileInfo(m_wBlenderExecutablePathEdit->text()).exists() == false)
 	{
 		QMessageBox::warning(0, tr("Blender Executable Path"), tr("Blender Executable Path must be set."), QMessageBox::Ok);
+		updateBlenderExecutablePathEdit(false);
 		// Enable Advanced Settings
-		if (advancedSettingsGroupBox->isChecked() == false)
-		{
-			advancedSettingsGroupBox->setChecked(true);
-
-			foreach(QObject * child, advancedSettingsGroupBox->children())
-			{
-				QWidget* widget = qobject_cast<QWidget*>(child);
-				if (widget)
-				{
-					widget->setHidden(false);
-					QString name = widget->objectName();
-					dzApp->log("DEBUG: widget name = " + name);
-				}
-			}
-		}
+		this->showOptions();
 	}
 	else if (assetTypeCombo->itemData(assetTypeCombo->currentIndex()).toString() == "__")
 	{
@@ -571,6 +686,11 @@ bool DzRobloxDialog::HandleAcceptButtonValidationFeedback() {
 
 void DzRobloxDialog::accept()
 {
+	if (m_bSetupMode) {
+		saveSettings();
+		return DzBasicDialog::reject();
+	}
+
 	bool bResult = HandleAcceptButtonValidationFeedback();
 
 	if (bResult == true)
@@ -698,7 +818,7 @@ void DzRobloxDialog::HandleCustomModestyOverlayActivated(int index)
 
 void DzRobloxDialog::enableModestyOptions(bool bEnable)
 {
-	m_wModestyOverlayCombo->setDisabled(!bEnable);
+	if (!m_bSetupMode) m_wModestyOverlayCombo->setDisabled(!bEnable);
 
 	if (bEnable) {
 		m_wModestyOverlayCombo->setToolTip(m_sModestyOverlayHelp);
@@ -716,5 +836,80 @@ void DzRobloxDialog::enableModestyOptions(bool bEnable)
 
 	return;
 }
+
+// overrides base method
+void DzRobloxDialog::HandleHelpMenuButton(int index)
+{
+	int id = wHelpMenuButton->getSelectionID();
+
+	switch (id) {
+
+	case ROBLOX_HELP_ID_GUIDELINES:
+		HandleRobloxGuidelinesButton();
+		break;
+
+	case ROBLOX_HELP_ID_SPECIFICATION:
+		HandleRobloxCharacterSpecification();
+		break;
+
+	default:
+		return DzBridgeDialog::HandleHelpMenuButton(index);
+	}
+
+	wHelpMenuButton->setIndeterminate();
+}
+
+void DzRobloxDialog::HandlePdfButton()
+{
+	QString sPdfPath = "https://github.com/daz3d/DazToRoblox?tab=readme-ov-file#readme";
+	QDesktopServices::openUrl(QUrl(sPdfPath));
+}
+
+void DzRobloxDialog::HandleYoutubeButton()
+{
+	// Roblox Avatar Help
+	QString url = "https://youtu.be/2My8jE47clI?si=Nhczl-xIPUlprp7D";
+	QDesktopServices::openUrl(QUrl(url));
+}
+
+void DzRobloxDialog::HandleSupportButton()
+{
+	QString url = "https://bugs.daz3d.com/hc/en-us/requests/new";
+	QDesktopServices::openUrl(QUrl(url));
+}
+
+void DzRobloxDialog::HandleRobloxGuidelinesButton()
+{
+	QString url = "https://create.roblox.com/docs/marketplace/marketplace-policy#age-appropriate";
+	QDesktopServices::openUrl(QUrl(url));
+}
+
+void DzRobloxDialog::HandleRobloxCharacterSpecification()
+{
+	QString url = "https://create.roblox.com/docs/art/characters/specifications";
+	QDesktopServices::openUrl(QUrl(url));
+}
+
+#include "dzstyle.h"
+#include "dzstyledbutton.h"
+void DzRobloxDialog::updateBlenderExecutablePathEdit(bool isValid) {
+	if (!isValid) {
+		m_wBlenderExecutablePathButton->setHighlightStyle(true);
+	}
+	else {
+		m_wBlenderExecutablePathButton->setHighlightStyle(false);
+	}
+}
+
+void DzRobloxDialog::updateRobloxOutputFolderEdit(bool isValid)
+{
+	if (!isValid) {
+		m_wRobloxOutputFolderButton->setHighlightStyle(true);
+	}
+	else {
+		m_wRobloxOutputFolderButton->setHighlightStyle(false);
+	}
+}
+
 
 #include "moc_DzRobloxDialog.cpp"

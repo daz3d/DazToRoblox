@@ -1,4 +1,6 @@
 """Blender Tools module
+2024-11-26 - new function to propagate armature scaling to animation keyframes
+2024-12-02 - work-around for GLTF exporter: create a new 1x1 black texture for metallic input if no metallic map is found
 
 Blender python module containing various tools for importing and exporting
 asset files in dtu format to blender, gltf and swapping out full res, 2K, 1K
@@ -472,6 +474,29 @@ def process_material(mat, lowres_mode=None):
             load_cached_image_to_material(matName, "Metallic", "Color", metallicMap, metallic_weight, "Non-Color")
     else:
         bsdf_inputs["Metallic"].default_value = metallic_weight
+        if metallic_weight == 0:
+            # DB 2024-12-02, work-around for GLTF exporter
+            # Create a new 1x1 black texture
+            image_name = "black_tex.png"
+            if image_name not in bpy.data.images:
+                black_image = bpy.data.images.new(name=image_name, width=4, height=4)
+                black_image.generated_color = (0, 0, 0, 1)  # Set the pixel color to black (RGBA)
+            else:
+                black_image = bpy.data.images[image_name]
+            # save file
+            black_image.filepath = os.path.join(script_dir, image_name)
+            black_image.file_format = "PNG"
+            black_image.save()
+            # pack te image to the blend file
+            if not black_image.packed_file:
+                black_image.pack()
+            # Create a new image texture node and link it to the BSDF Metallic input
+            nodes = data.node_tree.nodes
+            node_tex = nodes.new("ShaderNodeTexImage")
+            node_tex.image = black_image
+            node_tex.image.colorspace_settings.name = "Non-Color"
+            links = data.node_tree.links
+            links.new(node_tex.outputs["Color"], bsdf_inputs["Metallic"])
 
     if (reflectivity_map != ""):
         if (not os.path.exists(reflectivity_map)):
@@ -703,7 +728,7 @@ def process_dtu(jsonPath, lowres_mode=None):
             studio_name = obj["StudioNodeName"]
             has_custom_properties = True
         except:
-            print("ERROR: process_dtu(): unable to retrieve StudioNodeLabel/StudioNodeName Custom Proeprties for object: " + obj.name)
+            _add_to_log("ERROR: process_dtu(): unable to retrieve StudioNodeLabel/StudioNodeName Custom Proeprties for object: " + obj.name)
             studio_name = obj.name.replace(".Shape", "")            
         if studio_name in obj_data_dict:
             obj_data = obj_data_dict[studio_name]
@@ -720,7 +745,7 @@ def process_dtu(jsonPath, lowres_mode=None):
                 continue
             if obj.name.lower() in ["genesis9tear", "genesis9eyes", "genesis9mouth", "genesis9"]:
                 continue
-            print("DEBUG: process_dtu(): renaming object: " + obj.name + " to " + studio_label)
+            _add_to_log("DEBUG: process_dtu(): renaming object: " + obj.name + " to " + studio_label)
             obj.name = studio_label
 
     # delete all nodes from materials so that we can rebuild them
@@ -784,3 +809,59 @@ def center_all_viewports():
                     override = {'area': area, 'region': region}
                     bpy.ops.view3d.view_all(override, center=False)
 
+# DB 2024-11-27: note, this function assumes uniform scaling of armature in x,y,z
+def propagate_scale_to_animation(armature, scale_factor):
+    if not armature.animation_data or not armature.animation_data.action:
+        _add_to_log("ERROR: propagate_scale_to_animation(): No animation data found for the armature.")
+        return
+
+    # Get the action associated with the armature
+    action = armature.animation_data.action
+
+    for fcurve in action.fcurves:
+        # Check if the FCurve is for location (x, y, z) of a bone
+        if 'location' in fcurve.data_path:
+            bone_name = fcurve.data_path.split('"')[1]
+            _add_to_log("DEBUG: propagate_scale_to_animation(): Adjusting keyframes for bone: " + str(bone_name))
+
+            # Scale the keyframe points
+            for keyframe_point in fcurve.keyframe_points:
+                original_value = keyframe_point.co[1]  # co[1] is the Y-value (keyframe value)
+                scaled_value = original_value * scale_factor
+                keyframe_point.co[1] = scaled_value
+
+            # Update the fcurve after modifications
+            fcurve.update()
+
+# DB 2024-12-04: animation shifting
+def shift_animation_keyframes(armature, frame_step=1):
+    # Ensure the object has animation data
+    if not armature.animation_data or not armature.animation_data.action:
+        _add_to_log("ERROR: shift_animation_keyframes(): [" + str(armature.name) + "] has no animation data.")
+        return
+    
+    action = armature.animation_data.action
+    
+    # Iterate through FCurves and move all keyframes
+    for fcurve in action.fcurves:
+        for keyframe in fcurve.keyframe_points:
+            keyframe.select_control_point = True  # Select the keyframe (optional)
+            keyframe.co[0] += frame_step  # Move keyframe by frame_step
+
+    # Update the scene to reflect changes
+    bpy.context.scene.frame_current = bpy.context.scene.frame_current  # Trigger update
+    _add_to_log("DEBUG: shift_animation_keyframes(): Shifted all keyframes of " + str(armature.name) + " by " + str(frame_step) + " frame(s).")
+
+
+# Function to apply all modifiers
+def apply_mesh_modifiers(obj):
+    if obj.type == 'MESH':
+        bpy.context.view_layer.objects.active = obj
+        
+        # Apply all modifiers except Armature
+        for modifier in obj.modifiers:
+            if modifier.type != 'ARMATURE':
+                bpy.ops.object.modifier_apply(modifier=modifier.name)
+    else:
+        _add_to_log("ERROR: apply_mesh_modifiers(): Object is not a mesh.")
+        return

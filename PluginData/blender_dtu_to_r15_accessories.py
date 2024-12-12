@@ -18,7 +18,7 @@ EXAMPLE:
 do_experimental_remove_materials = True
 
 
-logFilename = "blender_dtu_to_roblox_R15.log"
+logFilename = "blender_dtu_to_roblox_accessories.log"
 
 ## Do not modify below
 def _print_usage():
@@ -69,9 +69,9 @@ def _main(argv):
     try:
         start, stop = re.search("#([0-9]*)\.", line).span(0)
         token_id = int(line[start+1:stop-1])
-        print(f"DEBUG: token_id={token_id}")
+        _add_to_log(f"DEBUG: token_id={token_id}")
     except:
-        print(f"ERROR: unable to parse token_id from '{line}'")
+        _add_to_log(f"ERROR: unable to parse token_id from '{line}'")
         token_id = 0
 
     blender_tools.delete_all_items()
@@ -138,7 +138,7 @@ def _main(argv):
 
     # clear all animation data
     # Iterate over all objects
-    print("DEBUG: main(): clearing animation data")
+    _add_to_log("DEBUG: main(): clearing animation data")
     for obj in bpy.data.objects:
         # Check if the object has animation data
         if obj.animation_data:
@@ -146,7 +146,7 @@ def _main(argv):
             obj.animation_data_clear()        
 
     # move root node to origin
-    print("DEBUG: main(): moving root node to origin")
+    _add_to_log("DEBUG: main(): moving root node to origin")
     move_root_node_to_origin()
 
     daz_generation = dtu_dict["Asset Id"]
@@ -155,7 +155,7 @@ def _main(argv):
     for obj in bpy.data.objects:
         if obj.type == 'MESH':
             if obj.name == "Genesis9.Shape":
-                print("DEBUG: main(): obj.name=" + obj.name)
+                _add_to_log("DEBUG: main(): obj.name=" + obj.name)
                 main_obj = obj
                 break
     if main_obj is None:
@@ -174,7 +174,7 @@ def _main(argv):
         # roblox_tools.duplicate_cage("Template_InnerCage")
         cage_template = bpy.data.objects.get("Template_InnerCage")
         if cage_template is None:
-            print("DEBUG: main(): making inner cage template")
+            _add_to_log("DEBUG: main(): making inner cage template")
             cage_template = roblox_tools.make_inner_cage("Genesis9.Shape")
             if cage_template is not None:
                 cage_template.name = "Template_InnerCage"
@@ -194,7 +194,8 @@ def _main(argv):
         # ) :
         if obj.type == 'MESH' and "StudioPresentationType" in obj:
             asset_type = obj["StudioPresentationType"]
-            if "eyebrow" in asset_type.lower() or "eyelash" in asset_type.lower() or "tear" in asset_type.lower():
+            # if "eyebrow" in asset_type.lower() or "eyelash" in asset_type.lower() or "tear" in asset_type.lower():
+            if "tear" in asset_type.lower():
                 figure_list.append(obj.name.lower())
     cage_list = []
     cage_obj_list = []
@@ -205,7 +206,7 @@ def _main(argv):
             if obj.name.lower() in figure_list:
                 delete_list.append(obj)
             elif "_OuterCage" in obj.name or "_InnerCage" in obj.name:
-                print("DEBUG: cage obj.name=" + obj.name)
+                _add_to_log("DEBUG: cage obj.name=" + obj.name)
                 cage_list.append(obj.name.lower())
                 cage_obj_list.append(obj)
                 obj.hide_render = True
@@ -248,7 +249,7 @@ def _main(argv):
 
     # delete objects
     for obj in delete_list:
-        print("DEBUG: deleting obj.name=" + obj.name)
+        _add_to_log("DEBUG: deleting obj.name=" + obj.name)
         bpy.ops.object.select_all(action='DESELECT')
         obj.select_set(True)
         bpy.ops.object.delete()
@@ -304,7 +305,7 @@ def _main(argv):
                     "skullcap" in material_name.lower() or 
                     "Cap" == material_name
                     ):
-                    print("DEBUG: SCALP REMOVER: material_name=" + material_name)
+                    _add_to_log("DEBUG: SCALP REMOVER: material_name=" + material_name)
                     for vert_index in face.vertices:
                         obj.data.vertices[vert_index].select = True
             bpy.ops.object.mode_set(mode='EDIT')
@@ -342,7 +343,7 @@ def _main(argv):
                                                 continue
             if len(image_list) <= 1:
                 continue
-            print("DEBUG: running texture atlas for obj: " + obj.name + ", num materials: " + str(num_materials) + ", images: " + str(image_list))
+            _add_to_log("DEBUG: running texture atlas for obj: " + obj.name + ", num materials: " + str(num_materials) + ", images: " + str(image_list))
             atlas, atlas_material, _ = game_readiness_tools.convert_to_atlas(obj, intermediate_folder_path, roblox_texture_size, texture_bake_quality)
             safe_material_names_list.append(atlas_material.name.lower())
 
@@ -384,7 +385,7 @@ def _main(argv):
             best_mat.name = mat_name
             safe_material_names_list.append(best_mat.name.lower())
     if len(safe_material_names_list) > 0:
-        print("DEBUG: safe_material_names_list=" + str(safe_material_names_list))
+        _add_to_log("DEBUG: safe_material_names_list=" + str(safe_material_names_list))
         game_readiness_tools.remove_extra_materials(safe_material_names_list + ["cage_material", "attachment_material"])
 
     if "layered" in roblox_asset_type or "ALL" in roblox_asset_type:
@@ -433,7 +434,7 @@ def _main(argv):
 
 
     # remove missing or unused images
-    print("DEBUG: deleting missing or unused images...")
+    _add_to_log("DEBUG: deleting missing or unused images...")
     for image in bpy.data.images:
         is_missing = False
         if image.filepath:
@@ -449,11 +450,11 @@ def _main(argv):
             bpy.data.images.remove(image)
 
     # cleanup all unused and unlinked data blocks
-    print("DEBUG: main(): cleaning up unused data blocks...")
+    _add_to_log("DEBUG: main(): cleaning up unused data blocks...")
     bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
 
     # pack all images
-    print("DEBUG: main(): packing all images...")
+    _add_to_log("DEBUG: main(): packing all images...")
     bpy.ops.file.pack_all()
 
     # select all objects
@@ -505,6 +506,19 @@ def _main(argv):
         fbx_output_name = fbx_base_name.replace(".fbx", "_rigid_accessories.fbx")
     fbx_output_file_path = os.path.join(destinationPath, fbx_output_name).replace("\\","/")
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
+ 
+     # Apply all modifiers
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH'and (
+            "_outercage" not in obj.name.lower() and
+            "_innercage" not in obj.name.lower() and
+            "_att" not in obj.name.lower()
+            ):
+            try:
+                blender_tools.apply_mesh_modifiers(obj)
+            except Exception as e:
+                _add_to_log("ERROR: unable to apply mesh modifiers: " + str(e))
+
     # export to fbx
     try:
         bpy.ops.export_scene.fbx(filepath=fbx_output_file_path, 
@@ -529,136 +543,11 @@ def _main(argv):
     _add_to_log("DEBUG: main(): completed conversion for: " + str(fbxPath))
 
 
-def apply_i_pose():
-    print("DEBUG: apply_i_pose()")
-    # Object Mode
-    bpy.ops.object.mode_set(mode="OBJECT")       
-    #retrieve armature name
-    armature_name = bpy.data.armatures[0].name
-    for arm in bpy.data.armatures:
-        if "genesis" in arm.name.lower():
-            armature_name = arm.name
-            print("DEBUG: armature_name=" + armature_name)
-            break
-
-    # create a list of objects with armature modifier
-    armature_modifier_list = []
-    for obj in bpy.context.scene.objects:
-        if obj.type == "MESH":
-            for mod in obj.modifiers:
-                if mod.type == "ARMATURE" and mod.name == armature_name:
-                    armature_modifier_list.append([obj, mod])
-    print("DEBUG: armature_modifier_list=" + str(armature_modifier_list))
-
-    # apply i-pose
-    for obj in bpy.data.objects:
-        if obj.type == 'ARMATURE':
-            bpy.context.view_layer.objects.active = obj
-            bpy.ops.object.mode_set(mode="POSE")
-            bpy.ops.pose.select_all(action='SELECT')
-            bpy.ops.pose.rot_clear()
-            bpy.ops.object.mode_set(mode="OBJECT")
-
-    # select all objects
-    bpy.ops.object.select_all(action="SELECT")
-    # switch to pose mode
-    bpy.ops.object.mode_set(mode="POSE")
-    # go to frame 0
-    bpy.context.scene.frame_set(0)
-    # clear all pose transforms
-    bpy.ops.pose.transforms_clear()
-    # set tpose values for shoulders and hips
-    if "LeftUpperArm" in bpy.context.object.pose.bones:
-        _add_to_log("DEBUG: applying t-pose rotations...")
-        # rotate hip "LowerTorso"
-        # bpy.context.object.pose.bones["LowerTorso"].rotation_mode= "XYZ"
-        # bpy.context.object.pose.bones["LowerTorso"].rotation_euler[0] = 0.17
-        # UpperTorso
-        # bpy.context.object.pose.bones["UpperTorso"].rotation_mode= "XYZ"
-        # bpy.context.object.pose.bones["UpperTorso"].rotation_euler[0] = -0.17
-        # rotate left shoulder 50 degrees along global y
-        bpy.context.object.pose.bones["LeftUpperArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["LeftUpperArm"].rotation_euler[2] = -0.6
-        bpy.context.object.pose.bones["RightUpperArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["RightUpperArm"].rotation_euler[2] = 0.6
-        # elbows
-        bpy.context.object.pose.bones["LeftLowerArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["LeftLowerArm"].rotation_euler[0] = 0.115
-        bpy.context.object.pose.bones["LeftLowerArm"].rotation_euler[1] = 0.079
-        bpy.context.object.pose.bones["RightLowerArm"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["RightLowerArm"].rotation_euler[0] = 0.115
-        bpy.context.object.pose.bones["RightLowerArm"].rotation_euler[1] = -0.079
-        # wrists
-        bpy.context.object.pose.bones["LeftHand"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["LeftHand"].rotation_euler[0] = -0.122
-        bpy.context.object.pose.bones["LeftHand"].rotation_euler[1] = -0.084
-        bpy.context.object.pose.bones["RightHand"].rotation_mode= "XYZ"
-        bpy.context.object.pose.bones["RightHand"].rotation_euler[0] = -0.122
-        bpy.context.object.pose.bones["RightHand"].rotation_euler[1] = 0.084
-        # L and R hips to 5 degrees
-        bpy.context.object.pose.bones["LeftUpperLeg"].rotation_mode= "XYZ"
-        # bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[0] = -0.17
-        bpy.context.object.pose.bones["LeftUpperLeg"].rotation_euler[2] = -0.026
-        bpy.context.object.pose.bones["RightUpperLeg"].rotation_mode= "XYZ"
-        # bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[0] = -0.17
-        bpy.context.object.pose.bones["RightUpperLeg"].rotation_euler[2] = 0.026
-
-
-    # if shapes are present in mesh, then return without baking t-pose since blender can not apply armature modifier
-    for obj, mod in armature_modifier_list:
-        if obj.data.shape_keys is not None:
-            _add_to_log("DEBUG: shape keys found, skipping t-pose bake for G8/G9...")
-            return
-
-    # Object Mode
-    bpy.ops.object.mode_set(mode="OBJECT")
-    # duplicate and apply armature modifier
-    for obj, mod in armature_modifier_list:
-        _add_to_log("DEBUG: Duplicating armature modifier: " + obj.name + "." + mod.name)
-        # select object
-        _add_to_log("DEBUG: Selecting object: " + obj.name)
-        bpy.ops.object.select_all(action="DESELECT")
-        obj.select_set(True)
-        bpy.context.view_layer.objects.active = obj
-        num_mods = len(obj.modifiers)
-        _add_to_log("DEBUG: num_mods = " + str(num_mods))
-        result = bpy.ops.object.modifier_copy(modifier=mod.name)
-        _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + mod.name)
-        if len(obj.modifiers) > num_mods:
-            new_mod = obj.modifiers[num_mods]
-            _add_to_log("DEBUG: Applying armature modifier: " + new_mod.name)
-            try:
-                result = bpy.ops.object.modifier_apply(modifier=new_mod.name)
-            except Exception as e:
-                _add_to_log("ERROR: Unable to apply armature modifier: " + str(e))
-                _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + new_mod.name)
-                bpy.ops.object.modifier_remove(modifier=new_mod.name)     
-                return
-            _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + new_mod.name)
-        else:
-            _add_to_log("DEBUG: Unable to retrieve duplicate, applying original: " + mod.name)
-            result = bpy.ops.object.modifier_apply(modifier=mod.name)
-            _add_to_log("DEBUG: result=" + str(result) + ", mod.name=" + mod.name)
-
-    # pose mode
-    bpy.ops.object.select_all(action="DESELECT")
-    armature_obj = bpy.data.objects.get(armature_name)
-    armature_obj.select_set(True)
-    bpy.context.view_layer.objects.active = armature_obj
-    bpy.ops.object.mode_set(mode="POSE")
-    # apply pose as rest pose
-    _add_to_log("DEBUG: Applying pose as rest pose...")
-    bpy.ops.pose.armature_apply(selected=False)
-    # Object Mode
-    bpy.ops.object.mode_set(mode="OBJECT")
-    # select all before returning
-    bpy.ops.object.select_all(action="SELECT")
-
 def move_root_node_to_origin():
-    print("DEBUG: move_root_node_to_origin(): bpy.data.objects=" + str(bpy.data.objects))
+    _add_to_log("DEBUG: move_root_node_to_origin(): bpy.data.objects=" + str(bpy.data.objects))
     # move root node to origin
     for obj in bpy.data.objects:
-        # print("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
+        # _add_to_log("DEBUG: move_root_node_to_origin(): obj.name=" + obj.name + ", obj.type=" + obj.type)
         if obj.type == 'ARMATURE':
             # deselect all objects
             bpy.ops.object.select_all(action='DESELECT')
@@ -670,7 +559,7 @@ def move_root_node_to_origin():
             bpy.context.object.data.bones["LowerTorso"].select = True
             bone_head_pos_y = bpy.context.object.data.bones["LowerTorso"].head.y
             bone_head_pos_z = bpy.context.object.data.bones["LowerTorso"].head.z            
-            # print("DEBUG: move_root_node_to_origin(): bone_head_pos_y=" + str(bone_head_pos_y) + ", bone_head_pos_z=" + str(bone_head_pos_z))
+            # _add_to_log("DEBUG: move_root_node_to_origin(): bone_head_pos_y=" + str(bone_head_pos_y) + ", bone_head_pos_z=" + str(bone_head_pos_z))
             bpy.ops.object.mode_set(mode="OBJECT")
             # select all objects in object mode
             bpy.ops.object.select_all(action='SELECT')
@@ -682,7 +571,7 @@ def move_root_node_to_origin():
             # inverse_bone_head_pos_x = -0.01 * bone_head_pos_z
             inverse_bone_head_pos_x = 0
             
-            # print("DEBUG: move_root_node_to_origin(): inverse_bone_head_pos_x=" + str(inverse_bone_head_pos_x) + ", inverse_bone_head_pos_z=" + str(inverse_bone_head_pos_z))
+            # _add_to_log("DEBUG: move_root_node_to_origin(): inverse_bone_head_pos_x=" + str(inverse_bone_head_pos_x) + ", inverse_bone_head_pos_z=" + str(inverse_bone_head_pos_z))
             bpy.ops.transform.translate(value=(inverse_bone_head_pos_x, 0, inverse_bone_head_pos_z))
             # apply transformation
             bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
@@ -709,8 +598,7 @@ def find_layer_collection(collection, layer_collection = None):
 
 # Execute main()
 if __name__=='__main__':
-    print("Starting script...")
-    _add_to_log("Starting script... DEBUG: sys.argv=" + str(sys.argv))
+    _add_to_log("Starting script (accessories)...\nDEBUG: sys.argv=" + str(sys.argv))
     _main(sys.argv[4:])
-    print("script completed.")
+    _add_to_log("Script completed.\n")
     exit(0)
