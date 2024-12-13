@@ -1618,7 +1618,22 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 	int currentTick = 0;
 	int timeoutTicks = numTotalTicks;
 	bool bUserInitiatedTermination = false;
+#ifdef __APPLE__
+	while (pToolProcess->state() != QProcess::NotRunning) {
+		int iMilliSecondsPerTick = (int) fMilliSecondsPerTick;
+		struct timespec ts = { iMilliSecondsPerTick / 1000, (iMilliSecondsPerTick % 1000) * 1000 * 1000 };
+		nanosleep(&ts, NULL);
+#else
 	while (pToolProcess->waitForFinished(fMilliSecondsPerTick) == false) {
+#endif
+		QApplication::processEvents();
+		while (pToolProcess->canReadLine()) {
+			QByteArray qa = pToolProcess->readLine();
+			QString sProcessOutput = qa.data();
+			sProcessOutput = sProcessOutput.replace("\n", "");
+			dzApp->log("BLENDER: " + sProcessOutput);
+			progress->setCurrentInfo("BLENDER: " + sProcessOutput);
+		}
 		// if timeout reached, then terminate process
 		if (currentTick++ > timeoutTicks) {
 			if (!bUserInitiatedTermination) 
@@ -1639,6 +1654,7 @@ Do you want to Abort the operation now?");
 				}
 				else 
 				{
+					dzApp->log("DEBUG: executeBlenderScripts(): User initiated termination...");
 					bUserInitiatedTermination = true;
 				}
 			}
@@ -1646,10 +1662,13 @@ Do you want to Abort the operation now?");
 			{
 				if (currentTick - timeoutTicks < 5)
 				{
+					QString mesg = QString("DEBUG: currentTick = %1, timeoutTicks = %2, terminating...").arg(currentTick).arg(timeoutTicks);
+					dzApp->log( mesg );
 					pToolProcess->terminate();
 				}
 				else
 				{
+					dzApp->log("DEBUG: Sending Kill Signal to Blender Process...");
 					pToolProcess->kill();
 				}
 			}
@@ -1657,30 +1676,37 @@ Do you want to Abort the operation now?");
 		if (pToolProcess->state() == QProcess::Running)
 		{
 			progress->step();
-            while (pToolProcess->canReadLine()) {
-                QByteArray qa = pToolProcess->readLine();
-                QString sProcessOutput = qa.data();
-                sProcessOutput = sProcessOutput.replace("\n", "");
-                dzApp->log("BLENDER: " + sProcessOutput);
-                progress->setCurrentInfo("BLENDER: " + sProcessOutput);
-            }
 		}
-		else
+		else if (pToolProcess->state() == QProcess::NotRunning)
 		{
+			dzApp->log("DEBUG: QProcess State is now NotRunning, stopping monitor....");
 			break;
 		}
+        else {
+			QString mesg = "DEBUG: QProcess State Changed to: " + QString(pToolProcess->state());
+			dzApp->log( mesg );
+			progress->setCurrentInfo( mesg );
+        }
 	}
-    while (pToolProcess->canReadLine()) {
-        QByteArray qa = pToolProcess->readLine();
-        QString sProcessOutput = qa.data();
-        sProcessOutput = sProcessOutput.replace("\n", "");
-        dzApp->log("BLENDER: " + sProcessOutput);
-        progress->setCurrentInfo("BLENDER: " + sProcessOutput);
+	// dzApp->log("DEBUG: flushing Blender output buffer...");
+	while (pToolProcess->canReadLine()) {
+		QByteArray qa = pToolProcess->readLine();
+		QString sProcessOutput = qa.data();
+		sProcessOutput = sProcessOutput.replace("\n", "");
+		// dzApp->log("BLENDER: " + sProcessOutput);
+		progress->setCurrentInfo("BLENDER: " + sProcessOutput);
     }
-    progress->setCurrentInfo("Blender Script Completed.");
+	progress->setCurrentInfo("Blender Process Completed.");
 	progress->finish();
 	delete progress;
 	m_nBlenderExitCode = pToolProcess->exitCode();
+	QProcess::ExitStatus qExitStatus = pToolProcess->exitStatus();
+	if (qExitStatus == QProcess::CrashExit) {
+		if (m_nBlenderExitCode == 0) {
+			dzApp->log("Roblox Studio Exporter: ERROR: Blender process Crashed but exit code is 0, manually setting to -1...");
+			m_nBlenderExitCode = -1;
+		}
+	}
 #ifdef __APPLE__
     if (m_nBlenderExitCode != 0 && m_nBlenderExitCode != 120)
 #else
