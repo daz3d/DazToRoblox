@@ -1611,6 +1611,8 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 	QProcess* pToolProcess = new QProcess(this);
     dzApp->log("DEBUG: Roblox Studio Exporter: setting working dir for blender script: " + sWorkingPath);
 	pToolProcess->setWorkingDirectory(sWorkingPath);
+    pToolProcess->setProcessChannelMode(QProcess::MergedChannels);
+    pToolProcess->setReadChannel(QProcess::StandardOutput);
     dzApp->log("DEBUG: Roblox Studio Exporter: starting blender script: [" + sFilePath + "] with args: " + args.join(";"));
     pToolProcess->start(sFilePath, args);
 	int currentTick = 0;
@@ -1655,12 +1657,26 @@ Do you want to Abort the operation now?");
 		if (pToolProcess->state() == QProcess::Running)
 		{
 			progress->step();
+            while (pToolProcess->canReadLine()) {
+                QByteArray qa = pToolProcess->readLine();
+                QString sProcessOutput = qa.data();
+                sProcessOutput = sProcessOutput.replace("\n", "");
+                dzApp->log("BLENDER: " + sProcessOutput);
+                progress->setCurrentInfo("BLENDER: " + sProcessOutput);
+            }
 		}
 		else
 		{
 			break;
 		}
 	}
+    while (pToolProcess->canReadLine()) {
+        QByteArray qa = pToolProcess->readLine();
+        QString sProcessOutput = qa.data();
+        sProcessOutput = sProcessOutput.replace("\n", "");
+        dzApp->log("BLENDER: " + sProcessOutput);
+        progress->setCurrentInfo("BLENDER: " + sProcessOutput);
+    }
     progress->setCurrentInfo("Blender Script Completed.");
 	progress->finish();
 	delete progress;
