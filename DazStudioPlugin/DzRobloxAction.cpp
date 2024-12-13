@@ -1631,7 +1631,7 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 			QByteArray qa = pToolProcess->readLine();
 			QString sProcessOutput = qa.data();
 			sProcessOutput = sProcessOutput.replace("\n", "");
-			dzApp->log("BLENDER: " + sProcessOutput);
+			//dzApp->log("BLENDER: " + sProcessOutput);
 			progress->setCurrentInfo("BLENDER: " + sProcessOutput);
 		}
 		// if timeout reached, then terminate process
