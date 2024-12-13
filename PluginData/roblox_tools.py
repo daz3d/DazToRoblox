@@ -346,7 +346,7 @@ def relocalize_attachment(obj):
     parent_bone_name = obj.parent_bone
     if parent_bone_name is None:
         return
-    print("DEBUG: parent_bone = " + parent_bone_name)
+    # print("DEBUG: parent_bone = " + parent_bone_name)
     parent_bone_matrix = obj.parent.pose.bones[parent_bone_name].matrix
     parent_bone_translation, parent_bone_rotation, parent_bone_scale = parent_bone_matrix.decompose()
     # Decompose the matrix
@@ -376,7 +376,7 @@ def bake_transform_to_vertices(obj, transform_matrix):
     # if offset is not matrix, return
     if not isinstance(transform_matrix, Matrix):
         return   
-    print("DEBUG: baking offset to vertices for: " + obj.name)
+    # print("DEBUG: baking offset to vertices for: " + obj.name)
 
     # iterate through all vertices and multiply by offset matrix
     vertices = obj.data.vertices

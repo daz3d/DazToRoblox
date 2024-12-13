@@ -822,7 +822,7 @@ def propagate_scale_to_animation(armature, scale_factor):
         # Check if the FCurve is for location (x, y, z) of a bone
         if 'location' in fcurve.data_path:
             bone_name = fcurve.data_path.split('"')[1]
-            _add_to_log("DEBUG: propagate_scale_to_animation(): Adjusting keyframes for bone: " + str(bone_name))
+            # _add_to_log("DEBUG: propagate_scale_to_animation(): Adjusting keyframes for bone: " + str(bone_name))
 
             # Scale the keyframe points
             for keyframe_point in fcurve.keyframe_points:
@@ -850,7 +850,7 @@ def shift_animation_keyframes(armature, frame_step=1):
 
     # Update the scene to reflect changes
     bpy.context.scene.frame_current = bpy.context.scene.frame_current  # Trigger update
-    _add_to_log("DEBUG: shift_animation_keyframes(): Shifted all keyframes of " + str(armature.name) + " by " + str(frame_step) + " frame(s).")
+    # _add_to_log("DEBUG: shift_animation_keyframes(): Shifted all keyframes of " + str(armature.name) + " by " + str(frame_step) + " frame(s).")
 
 
 # Function to apply all modifiers
