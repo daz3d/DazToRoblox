@@ -60,6 +60,7 @@
 #include "OpenFBXInterface.h"
 #include "FbxTools.h"
 #include "MvcTools.h"
+#include "ImageTools.h"
 
 
 DzNode* DzRobloxUtils::FindRootNode(DzNode* pNode) {
@@ -946,8 +947,18 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		//Create Daz3D folder if it doesn't exist
 		QDir dir;
 		dir.mkpath(m_sRootFolder);
-		exportProgress->setCurrentInfo("Starting up conversion pipeline...");
 		exportProgress->step();
+
+		DzError dzErrorResult = doPromptableObjectBaking();
+		if (result != DZ_NO_ERROR) {
+			exportProgress->finish();
+			exportProgress->cancel();
+			m_nExecuteActionResult = dzErrorResult;
+			return;
+		}
+		exportProgress->step();
+
+		exportProgress->setCurrentInfo("Starting up conversion pipeline...");
 
 		// Clean Intermediate Folder
 		cleanIntermediateSubFolder(m_sExportSubfolder);
@@ -1420,7 +1431,6 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 	}
 }
 
-#include "ImageTools.h"
 void DzRobloxAction::writeConfiguration()
 {
 	QString DTUfilename = m_sDestinationPath + m_sExportFilename + ".dtu";
