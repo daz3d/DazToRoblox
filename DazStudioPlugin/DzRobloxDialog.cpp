@@ -132,12 +132,13 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 //
 	 roblox_default_index = m_wBakeInstancesComboBox->findData("always");
 	 if (roblox_default_index != -1) m_wBakeInstancesComboBox->setCurrentIndex(roblox_default_index);
-	 //
 	 roblox_default_index = m_wBakeCustomPivotsComboBox->findData("always");
 	 if (roblox_default_index != -1) m_wBakeCustomPivotsComboBox->setCurrentIndex(roblox_default_index);
-	 //
 	 roblox_default_index = m_wBakeRigidFollowNodesComboBox->findData("always");
 	 if (roblox_default_index != -1) m_wBakeRigidFollowNodesComboBox->setCurrentIndex(roblox_default_index);
+	 m_wObjectBakingGroupBox->setChecked(false);
+	 m_wObjectBakingGroupBox->setDisabled(true);
+	 m_wObjectBakingGroupBox->setVisible(false);
 
 	 // Modesty Overlay Options
 	 m_wModestyOverlayCombo = new QComboBox();
@@ -383,6 +384,14 @@ bool DzRobloxDialog::loadSavedSettings()
 	LOAD_CHECKED("RemoveHiddenGeometry", m_wHiddenSurfaceRemovalCheckbox);
 	// remove hair cap
 	LOAD_CHECKED("RemvoeHairCap", m_wRemoveScalpMaterialCheckbox);
+
+	// ROBLOX specific overrides
+	int roblox_default_index = m_wBakeInstancesComboBox->findData("always");
+	if (roblox_default_index != -1) m_wBakeInstancesComboBox->setCurrentIndex(roblox_default_index);
+	roblox_default_index = m_wBakeCustomPivotsComboBox->findData("always");
+	if (roblox_default_index != -1) m_wBakeCustomPivotsComboBox->setCurrentIndex(roblox_default_index);
+	roblox_default_index = m_wBakeRigidFollowNodesComboBox->findData("always");
+	if (roblox_default_index != -1) m_wBakeRigidFollowNodesComboBox->setCurrentIndex(roblox_default_index);
 
 	return true;
 }

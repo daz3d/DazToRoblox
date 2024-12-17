@@ -949,13 +949,11 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		dir.mkpath(m_sRootFolder);
 		exportProgress->step();
 
-		DzError dzErrorResult = doPromptableObjectBaking();
-		if (result != DZ_NO_ERROR) {
-			exportProgress->finish();
-			exportProgress->cancel();
-			m_nExecuteActionResult = dzErrorResult;
-			return;
-		}
+		QScopedPointer<DzScript> Script(new DzScript());
+		BakeInstances(Script);
+		BakePivots(Script);
+		BakeRigidFollowNodes(Script);
+		Script->deleteLater();
 		exportProgress->step();
 
 		exportProgress->setCurrentInfo("Starting up conversion pipeline...");
@@ -1530,6 +1528,11 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 	{
 		return false;
 	}
+
+	// Roblox specific overrides
+	m_eBakeInstancesMode = DZ_BRIDGE_NAMESPACE::EBakeMode::AlwaysBake;
+	m_eBakePivotPointsMode = DZ_BRIDGE_NAMESPACE::EBakeMode::AlwaysBake;
+	m_eBakeRigidFollowNodesMode = DZ_BRIDGE_NAMESPACE::EBakeMode::AlwaysBake;
 
 	DzRobloxDialog* pRobloxDialog = qobject_cast<DzRobloxDialog*>(BridgeDialog);
 
