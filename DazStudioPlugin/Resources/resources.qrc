@@ -1,7 +1,12 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
+    <qresource prefix="/DazBridge">
+        <file alias="bake_all_pivots_nogui.dsa">Scripts/bake_all_pivots_nogui.dsa</file>
+        <file alias="bake_all_instances_nogui.dsa">Scripts/bake_all_instances_nogui.dsa</file>
+        <file alias="bake_rfn_nogui.dsa">Scripts/bake_rfn_nogui.dsa</file>
+    </qresource>
     <qresource prefix="/DazBridgeRoblox">
-      <file alias="plugindata.zip">plugindata.zip</file>
+        <file alias="plugindata.zip">plugindata.zip</file>
         <file alias="icon">Images/Daz to Roblox.png</file>
         <file alias="banner.png">Images/banner.png</file>
     </qresource>

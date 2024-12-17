@@ -1993,11 +1993,14 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	foreach(DzNode *listNode, m_aGeograftConversionHelpers) {
 		conversionList.append(listNode);
 	}
-//	conversionList.append(parentNode->getNodeChildren(true));
+	conversionList.append(parentNode->getNodeChildren(true));
+	QObjectList doneList;
 	foreach(QObject* listNode, conversionList)
 	{
 		DzFigure *figChild = qobject_cast<DzFigure*>(listNode);
+		if (doneList.contains(figChild)) continue;
 		if (figChild) {
+			doneList.append(figChild);
 			QString sChildName = figChild->getName();
 			QString sChildLabel = figChild->getLabel();
 			dzApp->debug(QString("DzRoblox: DEBUG: converting skeleton for: %1 [%2]").arg(sChildLabel).arg(sChildName));
@@ -2011,6 +2014,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 			figChild->setFollowTarget(pFollowTarget);
 		}
 	}
+	doneList.clear();
 
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);

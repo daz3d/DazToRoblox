@@ -129,6 +129,15 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 //
 	 roblox_default_index = m_wExportTextureFileFormatCombo->findData("png+jpg");
 	 if (roblox_default_index != -1) m_wExportTextureFileFormatCombo->setCurrentIndex(roblox_default_index);
+	 //
+	 roblox_default_index = m_wBakeInstancesComboBox->findData("always");
+	 if (roblox_default_index != -1) m_wBakeInstancesComboBox->setCurrentIndex(roblox_default_index);
+	 //
+	 roblox_default_index = m_wBakeCustomPivotsComboBox->findData("always");
+	 if (roblox_default_index != -1) m_wBakeCustomPivotsComboBox->setCurrentIndex(roblox_default_index);
+	 //
+	 roblox_default_index = m_wBakeRigidFollowNodesComboBox->findData("always");
+	 if (roblox_default_index != -1) m_wBakeRigidFollowNodesComboBox->setCurrentIndex(roblox_default_index);
 
 	 // Modesty Overlay Options
 	 m_wModestyOverlayCombo = new QComboBox();
@@ -459,6 +468,15 @@ void DzRobloxDialog::resetToDefaults()
 	//
 	roblox_default_index = m_wExportTextureFileFormatCombo->findData("png+jpg");
 	if (roblox_default_index != -1) m_wExportTextureFileFormatCombo->setCurrentIndex(roblox_default_index);
+	//
+	roblox_default_index = m_wBakeInstancesComboBox->findData("always");
+	if (roblox_default_index != -1) m_wBakeInstancesComboBox->setCurrentIndex(roblox_default_index);
+	//
+	roblox_default_index = m_wBakeCustomPivotsComboBox->findData("always");
+	if (roblox_default_index != -1) m_wBakeCustomPivotsComboBox->setCurrentIndex(roblox_default_index);
+	//
+	roblox_default_index = m_wBakeRigidFollowNodesComboBox->findData("always");
+	if (roblox_default_index != -1) m_wBakeRigidFollowNodesComboBox->setCurrentIndex(roblox_default_index);
 
 	m_bDontSaveSettings = false;
 }
