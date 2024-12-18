@@ -1,6 +1,7 @@
 """Blender Tools module
 2024-11-26 - new function to propagate armature scaling to animation keyframes
 2024-12-02 - work-around for GLTF exporter: create a new 1x1 black texture for metallic input if no metallic map is found
+2024-12-17 - disabled MISSING_METALLIC_TEX_WORKAROUND to decrease moderation rejection
 
 Blender python module containing various tools for importing and exporting
 asset files in dtu format to blender, gltf and swapping out full res, 2K, 1K
@@ -16,6 +17,8 @@ from pathlib import Path
 script_dir = str(Path( __file__ ).parent.absolute())
 
 logFilename = "blender_tools.log"
+
+MISSING_METALLIC_TEX_WORKAROUND = False
 
 ## Do not modify below
 import sys, json, os
@@ -474,7 +477,7 @@ def process_material(mat, lowres_mode=None):
             load_cached_image_to_material(matName, "Metallic", "Color", metallicMap, metallic_weight, "Non-Color")
     else:
         bsdf_inputs["Metallic"].default_value = metallic_weight
-        if metallic_weight == 0:
+        if MISSING_METALLIC_TEX_WORKAROUND and metallic_weight == 0:
             # DB 2024-12-02, work-around for GLTF exporter
             # Create a new 1x1 black texture
             image_name = "black_tex.png"
