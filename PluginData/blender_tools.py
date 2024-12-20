@@ -18,7 +18,7 @@ script_dir = str(Path( __file__ ).parent.absolute())
 
 logFilename = "blender_tools.log"
 
-MISSING_METALLIC_TEX_WORKAROUND = False
+MISSING_METALLIC_TEX_WORKAROUND = True
 
 ## Do not modify below
 import sys, json, os
