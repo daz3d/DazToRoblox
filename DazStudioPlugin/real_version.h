@@ -1,10 +1,10 @@
 #pragma once
 
-#define PRODUCT_VERSION_STRING	"2024 version 1.35"
-#define VER_MAJOR	2024
+#define PRODUCT_VERSION_STRING	"2025 version 1.36"
+#define VER_MAJOR	2025
 #define VER_MINOR	1
-#define VER_REV		35
-#define VER_BUILD	425
+#define VER_REV		36
+#define VER_BUILD	426
 
 #define TOSTRING(x) #x
 #define VERSION_STRING	TOSTRING(VER_MAJOR) "." TOSTRING(VER_MINOR) "." TOSTRING(VER_REV) "." TOSTRING(VER_BUILD)
