@@ -146,6 +146,7 @@ protected:
 	int m_nReplaceEyelashes = 0;
 	bool m_bHiddenSurfaceRemoval = false;
 	bool m_bRemoveScalp = false;
+	bool m_bForceGpu = false;
 
 	friend class DzRobloxUtils;
 

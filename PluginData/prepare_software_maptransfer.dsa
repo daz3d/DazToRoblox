@@ -1,0 +1,43 @@
+// DAZ Studio version 4.23.0.1 filetype DAZ Script
+
+(function(){
+	// Prepare Software MapTransfer
+	// Prepares modern Daz Studio material texture images to be compatible with 3Delight renderer used by the Software MapTransfer fallback pathway.
+	// This preparation is facilitated by renderering a 1x1 pixel 3Delight image into memory.
+
+	options = DzRenderOptions();
+	options.imageSize = Size(1,1);
+	var oViewportMgr = MainWindow.getViewportMgr()
+	var oViewport = oViewportMgr.getActiveViewport();
+	var o3DViewport = oViewport.get3DViewport();
+	var oTimeRange = new DzTimeRange( options.startTime, options.endTime );
+	var oHandler = new DzImageRenderHandler( Size(1,1), oTimeRange.start, "" );
+	var oCamera = o3DViewport.getCamera();
+	
+	renderMgr = App.getRenderMgr();
+	activeRenderer = renderMgr.getActiveRenderer();
+	nSoftwareIndex = -1;
+	for (i=0; i < renderMgr.getNumRenderers(); i++)
+	{
+	    renderer = renderMgr.getRenderer(i);
+	    rendererName = renderer.getName();
+	    if (rendererName == "3Delight")
+	    {
+	        nSoftwareIndex = i;
+	    }
+	}
+	if (nSoftwareIndex == -1) {
+		App.warning("CRITICAL ERROR: pepare_software_maptransfer.dsa: Unable to find 3Delight Renderer, failing.");
+		return false;
+	}
+	softwareRender = renderMgr.getRenderer(nSoftwareIndex);
+	renderMgr.setActiveRenderer(softwareRender);
+	softwareRender.render( oHandler, oCamera, options );
+	while (renderMgr.isRendering()) {
+	    sleep(100);
+	}
+	renderMgr.setActiveRenderer(activeRenderer);
+	App.log("DEBUG: pepare_software_maptransfer.dsa: Script completed successfully.");
+	return true;
+	
+})();

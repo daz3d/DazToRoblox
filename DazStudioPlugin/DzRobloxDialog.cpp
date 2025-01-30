@@ -206,7 +206,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 QString sRemoveScalp = tr("Remove scalp geometry from hair assets. May fix opaque scalp issues.");
 	 m_wRemoveScalpMaterialCheckbox = new QCheckBox(tr("Remove Hair Cap"));
 	 m_wRemoveScalpMaterialCheckbox->setToolTip(sRemoveScalp);
-	 m_wRemoveScalpMaterialCheckbox->setToolTip(sRemoveScalp);
+	 m_wRemoveScalpMaterialCheckbox->setWhatsThis(sRemoveScalp);
 	 m_wRemoveScalpMaterialCheckbox->setChecked(true);
 	 wClothingOptionsLayout->addWidget(m_wBakeSingleOutfitCheckbox);
 	 wClothingOptionsLayout->addWidget(m_wHiddenSurfaceRemovalCheckbox);
@@ -227,6 +227,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 mainLayout->addRow(m_wLayeredClothingRowLabel, wClothingOptionsLayout);
 
 	 // Select Blender Executable Path GUI
+	 m_wBlenderExecutablePathRowLabel = new QLabel("Blender Executable");
 	 QHBoxLayout* blenderExecutablePathLayout = new QHBoxLayout();
 	 blenderExecutablePathLayout->setSpacing(0);
 	 m_wBlenderExecutablePathEdit = new QLineEdit(this);
@@ -238,8 +239,8 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 connect(m_wBlenderExecutablePathButton, SIGNAL(released()), this, SLOT(HandleSelectBlenderExecutablePathButton()));
 	 connect(m_wBlenderExecutablePathEdit, SIGNAL(textChanged(const QString&)), this, SLOT(HandleTextChanged(const QString&)));
 
-
 	 // Intermediate Folder
+	 m_wIntermediateFolderRowLabel = new QLabel("Intermediate Folder");
 	 QHBoxLayout* intermediateFolderLayout = new QHBoxLayout();
 	 intermediateFolderLayout->setSpacing(0);
 	 intermediateFolderEdit = new QLineEdit(this);
@@ -251,14 +252,26 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 connect(intermediateFolderButton, SIGNAL(released()), this, SLOT(HandleSelectIntermediateFolderButton()));
 	 connect(intermediateFolderEdit, SIGNAL(textChanged(const QString&)), this, SLOT(HandleTextChanged(const QString&)));
 
+	 // Force GPU Pathway
+	 m_wForceGpuRowLabel = new QLabel(tr("GPU Acceleration"));
+	 QHBoxLayout* useGpuLayout = new QHBoxLayout();
+	 useGpuLayout->setSpacing(0);
+	 m_wForceGpuCheckbox = new QCheckBox(tr("Force GPU pathway"));
+	 m_wForceGpuCheckbox->setChecked(false);
+	 QString sUseGpuHelpString = tr("Force GPU pathway will disable compatibility tasks to speed up converison times, but may cause black textures or other artifacts.");
+	 m_wForceGpuCheckbox->setToolTip(sUseGpuHelpString);
+	 m_wForceGpuCheckbox->setWhatsThis(sUseGpuHelpString);
+	 useGpuLayout->addWidget(m_wForceGpuCheckbox);
+
 	 //  Add Intermediate Folder to Advanced Settings container as a new row with specific headers
 	 if (advancedLayout)
 	 {
-		 m_wBlenderExecutablePathRowLabel = new QLabel("Blender Executable");
+		 advancedLayout->insertRow(1, m_wForceGpuRowLabel, useGpuLayout);
+		 m_aRowLabels.append(m_wForceGpuRowLabel);
+
 		 advancedLayout->insertRow(1, m_wBlenderExecutablePathRowLabel, blenderExecutablePathLayout);
 		 m_aRowLabels.append(m_wBlenderExecutablePathRowLabel);
-
-		 m_wIntermediateFolderRowLabel = new QLabel("Intermediate Folder");
+		 
 		 advancedLayout->addRow(m_wIntermediateFolderRowLabel, intermediateFolderLayout);
 		 m_aRowLabels.append(m_wIntermediateFolderRowLabel);
 
@@ -267,6 +280,15 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 		 m_wOpenIntermediateFolderButtonRowLabel = new QLabel("");
 		 advancedLayout->addRow(m_wOpenIntermediateFolderButtonRowLabel, m_OpenIntermediateFolderButton);
 
+	 }
+	 else {
+		 // if not available, add to mainLayout
+		 mainLayout->insertRow(2, m_wBlenderExecutablePathRowLabel, blenderExecutablePathLayout);
+		 mainLayout->addRow(m_wForceGpuRowLabel, useGpuLayout);
+		 mainLayout->addRow(m_wIntermediateFolderRowLabel, intermediateFolderLayout);
+		 m_aRowLabels.append(m_wForceGpuRowLabel);
+		 m_aRowLabels.append(m_wBlenderExecutablePathRowLabel);
+		 m_aRowLabels.append(m_wIntermediateFolderRowLabel);
 	 }
 
 	 // Disable Experimental Options Checkbox
@@ -354,6 +376,8 @@ bool DzRobloxDialog::loadSavedSettings()
 		m_wBlenderExecutablePathEdit->setText(settings->value("BlenderExecutablePath").toString());
 	}
 
+	// gpu acceleration
+	LOAD_CHECKED("ForceGpu", m_wForceGpuCheckbox);
 	// asset type
 	LOAD_ITEMDATA("AssetType", assetTypeCombo);
 	// modesty overlay
@@ -383,7 +407,7 @@ bool DzRobloxDialog::loadSavedSettings()
 	// remove hidden geometry
 	LOAD_CHECKED("RemoveHiddenGeometry", m_wHiddenSurfaceRemovalCheckbox);
 	// remove hair cap
-	LOAD_CHECKED("RemvoeHairCap", m_wRemoveScalpMaterialCheckbox);
+	LOAD_CHECKED("RemoveHairCap", m_wRemoveScalpMaterialCheckbox);
 
 	// ROBLOX specific overrides
 	int roblox_default_index = m_wBakeInstancesComboBox->findData("always");
@@ -413,6 +437,8 @@ void DzRobloxDialog::saveSettings()
 	// Roblox Output Path
 	settings->setValue("RobloxOutputPath", m_wRobloxOutputFolderEdit->text());
 
+	// gpu acceleration
+	SAVE_CHECKED("ForceGpu", m_wForceGpuCheckbox);
 	// asset type
 	SAVE_ITEMDATA("AssetType", assetTypeCombo);
 	// modesty overlay
@@ -428,7 +454,7 @@ void DzRobloxDialog::saveSettings()
 	// remove hidden geometry
 	SAVE_CHECKED("RemoveHiddenGeometry", m_wHiddenSurfaceRemovalCheckbox);
 	// remove hair cap
-	SAVE_CHECKED("RemvoeHairCap", m_wRemoveScalpMaterialCheckbox);
+	SAVE_CHECKED("RemoveHairCap", m_wRemoveScalpMaterialCheckbox);
 
 }
 

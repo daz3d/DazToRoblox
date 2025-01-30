@@ -8,6 +8,7 @@
    <AspectConstrain>1</AspectConstrain>
    <ImageSize SizeX="4096" SizeY="4096"/>
    <AspectRatio HeightRatio="1" WidthRatio="1"/>
+   <HardwareCutOffSize>0</HardwareCutOffSize>
    <BleedFactor>0.01</BleedFactor>
    <ForceResize>0</ForceResize>
    <ConvertByProperty>1</ConvertByProperty>

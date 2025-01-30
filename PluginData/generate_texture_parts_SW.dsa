@@ -1,0 +1,143 @@
+// DAZ Studio version 4.22.0.15 filetype DAZ Script
+
+(function(){
+
+var includeDir_oFILE = new DzFile( getScriptFileName() );
+var sIncludePath = includeDir_oFILE.path();
+
+// var sDazTempFolder = App.getTempPath();
+// var sMapTransferOutputFolder = sDazTempFolder + "/MapTransfer";
+
+var g9body_maptransfer_settings_file = sIncludePath + "/RobloxUVMapTransferSettings_G9Body_SW.dsx";
+var g9eye_maptransfer_settings_file = sIncludePath + "/RobloxUVMapTransferSettings_G9Eyes_SW.dsx";
+var g9mouth_maptransfer_settings_file = sIncludePath + "/RobloxUVMapTransferSettings_G9Mouth_SW.dsx";
+
+// Step 1: Instantiate a MapTransfer object
+var mapTransfer = App.getTextureConvertorMgr();
+
+var numRenderers = mapTransfer.getNumRenderers();
+var nSoftwareIndex = -1;
+for (var i=0; i < numRenderers; i++)
+{
+	renderer = mapTransfer.getRenderer(i);
+	rendererName = renderer.getName();
+	if (rendererName == "3Delight")
+	{
+		nSoftwareIndex = i;
+	}
+}
+if (nSoftwareIndex != -1) {
+    softwareRender = mapTransfer.getRenderer(nSoftwareIndex);
+	mapTransfer.setActiveRenderer(softwareRender);
+
+    options = DzRenderOptions();
+    options.imageSize = Size(1,1);
+    var oViewportMgr = MainWindow.getViewportMgr()
+    var oViewport = oViewportMgr.getActiveViewport();
+	var o3DViewport = oViewport.get3DViewport();
+    var oTimeRange = new DzTimeRange( options.startTime, options.endTime );
+    var oHandler = new DzImageRenderHandler( Size(1,1), oTimeRange.start, "" );
+    var oCamera = o3DViewport.getCamera();
+
+    renderMgr = App.getRenderMgr();
+    activeRenderer = renderMgr.getActiveRenderer();
+	nSoftwareIndex = -1;
+	for (i=0; i < renderMgr.getNumRenderers(); i++)
+	{
+		renderer = renderMgr.getRenderer(i);
+		rendererName = renderer.getName();
+		if (rendererName == "3Delight")
+		{
+			nSoftwareIndex = i;
+		}
+	}
+	softwareRender = renderMgr.getRenderer(nSoftwareIndex);
+    renderMgr.setActiveRenderer(softwareRender);
+    softwareRender.render( oHandler, oCamera, options );
+    while (renderMgr.isRendering()) {
+		sleep(100);
+    }
+    renderMgr.setActiveRenderer(activeRenderer);
+
+} else {
+    App.log("ERROR: generate_texture_parts.dsa: Software renderer not found.");
+}
+
+function processNode(node) {
+	Scene.selectAllNodes(false);
+	Scene.setPrimarySelection(node);
+
+	var result = false;
+//    print("DEBUG: generate_texture_parts.dsa: node object name == " + node.name);
+	// Step 2: Load a settings file
+	if (node.name == "Genesis9") {
+		mapTransfer.loadConfiguration(g9body_maptransfer_settings_file);
+		// var options = mapTransfer.getTextureConvertorOptions();
+		// options.convertImgPath = sMapTransferOutputFolder;
+
+		// Perform the conversion operation
+	    result = mapTransfer.doConversion();
+		if (!result) {
+			sErrorMessage = "ERROR: generate_texture_parts_SW.dsa: Map Transfer failed on: " + node.name + ", aborting";
+			throw sErrorMessage;
+		}
+	}
+	else if (node.name == "Genesis9Eyes") {
+		mapTransfer.loadConfiguration(g9eye_maptransfer_settings_file);
+		// var options = mapTransfer.getTextureConvertorOptions();
+		// options.convertImgPath = sMapTransferOutputFolder;
+
+		// Perform the conversion operation
+	    result = mapTransfer.doConversion();
+		if (!result) {
+			sErrorMessage = "ERROR: generate_texture_parts_SW.dsa: Map Transfer failed on: " + node.name + ", aborting";
+			throw sErrorMessage;
+		}
+	}
+	else if (node.name == "Genesis9Mouth") {
+		mapTransfer.loadConfiguration(g9mouth_maptransfer_settings_file);
+		// var options = mapTransfer.getTextureConvertorOptions();
+		// options.convertImgPath = sMapTransferOutputFolder;
+
+		// Perform the conversion operation
+		result = mapTransfer.doConversion();
+		if (!result) {
+			sErrorMessage = "ERROR: generate_texture_parts_SW.dsa: Map Transfer failed on: " + node.name + ", aborting";
+			throw sErrorMessage;
+		}
+	}
+
+	return result;
+}
+
+function main() {
+	// Check if there's a selected node and it's a figure
+	var childList;
+	var child;
+	var i = 0;
+	var selectedNode = Scene.getPrimarySelection();
+	if (selectedNode && selectedNode.inherits("DzFigure")) {
+		processNode(selectedNode);
+		childList = selectedNode.getNodeChildren(true);
+		for (i = 0; i < childList.length; i++) {
+			child = childList[i];
+			if (child.inherits("DzFigure")) {
+				processNode(child);
+			}
+
+		}
+	    print("generate_texture_parts_SW.dsa: Map transfer operation executed on the selected figure: " + selectedNode.name);
+	    // reset primary selection
+		Scene.selectAllNodes(false);
+	    Scene.setPrimarySelection(selectedNode);
+	} else {
+	    print("generate_texture_parts_SW.dsa: Please select a figure to apply the map transfer operation.");
+	}	
+	
+	return "SUCCESS";
+}
+
+var return_value = main();
+return return_value;
+
+})();

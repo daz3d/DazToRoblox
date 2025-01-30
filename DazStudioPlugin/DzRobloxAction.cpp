@@ -556,7 +556,7 @@ bool DzRobloxUtils::generateBlenderBatchFile(QString batchFilePath, QString sBle
 		batchFileOut.close();
 	}
 	else {
-		dzApp->log("ERROR: DazToRoblox: generateBlenderBatchFile(): Unable to open batch filr for writing: " + batchFilePath);
+		dzApp->warning("ERROR: DazToRoblox: generateBlenderBatchFile(): Unable to open batch filr for writing: " + batchFilePath);
 	}
 
 	return true;
@@ -1342,8 +1342,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 		}
 
         exportProgress->setCurrentInfo("Roblox Studio Exporter: Export Phase Completed.");
-		// DB 2021-10-11: Progress Bar
-		exportProgress->finish();
+		exportProgress->update(50);
 
 		// DB 2021-09-02: messagebox "Export Complete"
 		if (m_nNonInteractiveMode == 0)
@@ -1425,6 +1424,9 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 			}
 
 		}
+
+		// DB 2021-10-11: Progress Bar
+		exportProgress->finish();
 
 	}
 }
@@ -1545,6 +1547,7 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 		m_bBakeSingleOutfit = pRobloxDialog->m_wBakeSingleOutfitCheckbox->isChecked();
 		m_bHiddenSurfaceRemoval = pRobloxDialog->m_wHiddenSurfaceRemovalCheckbox->isChecked();
 		m_bRemoveScalp = pRobloxDialog->m_wRemoveScalpMaterialCheckbox->isChecked();
+		m_bForceGpu = pRobloxDialog->m_wForceGpuCheckbox->isChecked();
 
 		// modesty overlay
 		QVariant vModestyData = pRobloxDialog->m_wModestyOverlayCombo->itemData(pRobloxDialog->m_wModestyOverlayCombo->currentIndex());
@@ -1939,7 +1942,9 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 
 	QString sRobloxBoneConverter = "bone_converter.dsa";
 	QString sApplyModestyOverlay = "apply_modesty_overlay_aArgs.dsa";
-	QString sGenerateCombinedTextures = "generate_texture_parts.dsa";
+	QString sPrepareSoftwareMaptransfer = "prepare_software_maptransfer.dsa";
+	QString sGenerateCombinedTextures_HW = "generate_texture_parts.dsa";
+	QString sGenerateCombinedTextures_SW = "generate_texture_parts_sw.dsa";
 	QString sCombineTextureMaps = "combine_texture_parts.dsa";
 	QString sAssignCombinedTextures = "assign_combined_textures.dsa";
 	QString sBakeHandsAndFeetPose = "bake_hands_and_feet_nogui.dsa";
@@ -2166,8 +2171,28 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
 
-	robloxPreProcessProgress.setCurrentInfo("Generating combined texture parts...");
+	if (m_bForceGpu == false) {
+		robloxPreProcessProgress.setCurrentInfo("Preparing texture atlas generation...");
+		robloxPreProcessProgress.step();
+		// Prepare Images for Software Fallback Mode (aka Optimizing Images)
+		sScriptFilename = sPluginFolder + "/" + sPrepareSoftwareMaptransfer;
+		if (QFileInfo(sScriptFilename).exists() == false) {
+			sScriptFilename = dzApp->getTempPath() + "/" + sPrepareSoftwareMaptransfer;
+		}
+		Script.reset(new DzScript());
+		Script->loadFromFile(sScriptFilename);
+		Script->execute();
+	}
+	// start with UseHW enabled by default, then override based on actual system capabilities
+	bool bUseHW = true;
+	int nMaxHwTextureSize = dzOGL->getMaxTextureSize();
+	if (nMaxHwTextureSize < 1024 * 8) {
+		bUseHW = false;
+	}
+	robloxPreProcessProgress.setCurrentInfo("Generating texture atlas parts...");
 	robloxPreProcessProgress.step();
+	QString sGenerateCombinedTextures;
+	sGenerateCombinedTextures = (bUseHW) ? sGenerateCombinedTextures_HW : sGenerateCombinedTextures_SW;
 	sScriptFilename = sPluginFolder + "/" + sGenerateCombinedTextures;
 	if (QFileInfo(sScriptFilename).exists() == false) {
 		sScriptFilename = dzApp->getTempPath() + "/" + sGenerateCombinedTextures;
@@ -2175,11 +2200,27 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
     Script.reset(new DzScript());
 	Script->loadFromFile(sScriptFilename);
 	Script->execute();
+	bool bScriptResult = Script->getLastStatus();
+	QString sReturnValue = Script->result().toString();
+	if ( (sReturnValue != "SUCCESS" || bScriptResult == false )
+		&& bUseHW == true )
+	{
+		// fallback to software mode
+		dzApp->warning("ERROR: DzRobloxAction.cpp: sGenerateCombinedTextures Script failed, retrying in software mode...");
+		sGenerateCombinedTextures = sGenerateCombinedTextures_SW;
+		sScriptFilename = sPluginFolder + "/" + sGenerateCombinedTextures;
+		if (QFileInfo(sScriptFilename).exists() == false) {
+			sScriptFilename = dzApp->getTempPath() + "/" + sGenerateCombinedTextures;
+		}
+		Script.reset(new DzScript());
+		Script->loadFromFile(sScriptFilename);
+		Script->execute();
+	}
 
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
 
-	robloxPreProcessProgress.setCurrentInfo("Merging combined texture parts...");
+	robloxPreProcessProgress.setCurrentInfo("Merging texture atlas parts...");
 	robloxPreProcessProgress.step();
 	sScriptFilename = sPluginFolder + "/" + sCombineTextureMaps;
 	if (QFileInfo(sScriptFilename).exists() == false) {
@@ -2192,7 +2233,7 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
 
-	robloxPreProcessProgress.setCurrentInfo("Applying combined texture...");
+	robloxPreProcessProgress.setCurrentInfo("Applying texture atlas...");
 	robloxPreProcessProgress.step();
 	sScriptFilename = sPluginFolder + "/" + sAssignCombinedTextures;
 	if (QFileInfo(sScriptFilename).exists() == false) {

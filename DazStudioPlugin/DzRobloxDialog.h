@@ -148,6 +148,9 @@ protected:
 	QCheckBox* m_wHiddenSurfaceRemovalCheckbox;
 	QCheckBox* m_wRemoveScalpMaterialCheckbox;
 
+	QLabel* m_wForceGpuRowLabel;
+	QCheckBox* m_wForceGpuCheckbox;
+
 #ifdef UNITTEST_DZBRIDGE
 	friend class UnitTest_DzRobloxDialog;
 #endif

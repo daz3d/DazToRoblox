@@ -19,6 +19,7 @@ function processNode(node) {
 	Scene.selectAllNodes(false);
 	Scene.setPrimarySelection(node);
 
+	var result = false;
 //    print("DEBUG: generate_texture_parts.dsa: node object name == " + node.name);
 	// Step 2: Load a settings file
 	if (node.name == "Genesis9") {
@@ -27,7 +28,11 @@ function processNode(node) {
 		// options.convertImgPath = sMapTransferOutputFolder;
 
 		// Perform the conversion operation
-	    mapTransfer.doConversion();
+		result = mapTransfer.doConversion();
+		if (!result) {
+			sErrorMessage = "ERROR: generate_texture_parts.dsa: Map Transfer failed on: " + node.name + ", aborting";
+			throw sErrorMessage;
+		}	
 	}
 	else if (node.name == "Genesis9Eyes") {
 		mapTransfer.loadConfiguration(g9eye_maptransfer_settings_file);
@@ -35,7 +40,11 @@ function processNode(node) {
 		// options.convertImgPath = sMapTransferOutputFolder;
 
 		// Perform the conversion operation
-	    mapTransfer.doConversion();
+		result = mapTransfer.doConversion();
+		if (!result) {
+			sErrorMessage = "ERROR: generate_texture_parts.dsa: Map Transfer failed on: " + node.name + ", aborting";
+			throw sErrorMessage;
+		}
 	}
 	else if (node.name == "Genesis9Mouth") {
 		mapTransfer.loadConfiguration(g9mouth_maptransfer_settings_file);
@@ -43,9 +52,14 @@ function processNode(node) {
 		// options.convertImgPath = sMapTransferOutputFolder;
 
 		// Perform the conversion operation
-		mapTransfer.doConversion();
+		result = mapTransfer.doConversion();
+		if (!result) {
+			sErrorMessage = "ERROR: generate_texture_parts.dsa: Map Transfer failed on: " + node.name + ", aborting";
+			throw sErrorMessage;
+		}	
 	}
 
+	return result;
 }
 
 function main() {
@@ -70,10 +84,12 @@ function main() {
 	    Scene.setPrimarySelection(selectedNode);
 	} else {
 	    print("generate_texture_parts.dsa: Please select a figure to apply the map transfer operation.");
-	}	
-	
+	}
+
+	return "SUCCESS";
 }
 
-main();
+var return_value = main();
+return return_value;
 
 })();
