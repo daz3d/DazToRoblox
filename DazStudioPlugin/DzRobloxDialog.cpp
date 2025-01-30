@@ -119,7 +119,6 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 m_wResizeTexturesGroupBox->setDisabled(false);
 	 m_wResizeTexturesGroupBox->setChecked(true);
 	 //
-#define ROBLOX_MAX_TEXTURE_SIZE 1024*19
 	 m_wMaxTextureFileSizeCombo->addItem("Roblox Studio Maximum (19 MB)", ROBLOX_MAX_TEXTURE_SIZE);
 	 int roblox_default_index = m_wMaxTextureFileSizeCombo->findData(ROBLOX_MAX_TEXTURE_SIZE);
 	 if (roblox_default_index != -1) m_wMaxTextureFileSizeCombo->setCurrentIndex(roblox_default_index);

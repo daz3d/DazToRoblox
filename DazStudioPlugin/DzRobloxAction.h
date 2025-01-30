@@ -7,6 +7,8 @@
 #include <DzBridgeAction.h>
 #include "DzRobloxDialog.h"
 
+#define ROBLOX_MAX_TEXTURE_SIZE 1024*19
+
 class UnitTest_DzRobloxAction;
 
 #include "dzbridge.h"

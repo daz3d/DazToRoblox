@@ -1525,6 +1525,7 @@ QString DzRobloxAction::readGuiRootFolder()
 
 bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 {
+
 	bool bResult = DzBridgeAction::readGui(BridgeDialog);
 	if (!bResult)
 	{
@@ -1535,6 +1536,19 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 	m_eBakeInstancesMode = DZ_BRIDGE_NAMESPACE::EBakeMode::AlwaysBake;
 	m_eBakePivotPointsMode = DZ_BRIDGE_NAMESPACE::EBakeMode::AlwaysBake;
 	m_eBakeRigidFollowNodesMode = DZ_BRIDGE_NAMESPACE::EBakeMode::AlwaysBake;
+
+	bool bEnableTextureResizing = BridgeDialog->getResizeTextures();
+	if (isInteractiveMode() && bEnableTextureResizing == false)
+	{
+		// Override Default Texture Resizing with Roblox Specific Behaviors
+		m_nFileSizeThresholdToInitiateRecompression = ROBLOX_MAX_TEXTURE_SIZE * 1024;
+		m_bRecompressIfFileSizeTooBig = true;
+		m_qTargetTextureSize = QSize(1024, 1024);
+		m_bResizeTextures = true;
+		m_bConvertToJpg = true;
+		m_bConvertToPng = true;
+		m_bForceReEncoding = true;
+	}
 
 	DzRobloxDialog* pRobloxDialog = qobject_cast<DzRobloxDialog*>(BridgeDialog);
 
