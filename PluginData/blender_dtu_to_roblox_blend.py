@@ -496,11 +496,11 @@ def _main(argv):
             break
 
     if armature is None:
-        _add_to_log("ERROR: main(): armature not found, unable to perform GLB scaling.")
+        _add_to_log("ERROR: main(): armature not found, unable to bake scaling.")
     else:
         scale_factor = float(100/28)
-        # Apply the scale work-around to animation keyframes
-        blender_tools.propagate_scale_to_animation(armature, scale_factor)
+        # # Apply the scale work-around to animation keyframes
+        # blender_tools.propagate_scale_to_animation(armature, scale_factor)
 
     _add_to_log("DEBUG: saving Roblox FBX file to destination: " + fbx_output_file_path)
     # export to fbx
