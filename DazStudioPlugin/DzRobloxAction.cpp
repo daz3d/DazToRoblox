@@ -1605,12 +1605,29 @@ bool DzRobloxAction::readGui(DZ_BRIDGE_NAMESPACE::DzBridgeDialog* BridgeDialog)
 		return false;
 	}
 
+	// Sanity check to make sure UV Set is installed
+	QString sUvSetRelativePath = "/data/Daz 3D/Genesis 9/Base/UV Sets/Daz 3D/Combined Head and Body UV/CombinedHeadAndBody.dsf";
+	DzContentMgr* pContentMgr = dzApp->getContentMgr();
+	QString sAbsolutePath = pContentMgr->getAbsolutePath(sUvSetRelativePath, true);
+	if (sAbsolutePath.isEmpty())
+	{
+		// NOTIFY USER about missing Starter Essentials and Abort
+		QString sErrorString;
+		sErrorString += QString("Export is unable to proceed because required UV Set files are not installed.  ");
+		sErrorString += QString("Make sure you have the required Daz to Roblox Studio Starter Essentials package installed.");
+		sErrorString += QString("\n\nPress Abort to stop the export now.");
+		auto result = QMessageBox::critical(0, "Roblox Studio Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Abort);
+		dzApp->log("Roblox Studio Exporter: ERROR: required UV Set files are not installed.  Aborting export operation...");
+		return false;
+	}
+
 	// if BreastsGone enabled, check if morph exists
 	if (m_bEnableBreastsGone)
 	{
 		auto result = m_AvailableMorphsTable.find("body_bs_BreastsGone");
-		if (result == m_AvailableMorphsTable.end())
+		if (result == m_AvailableMorphsTable.end() && isInteractiveMode())
 		{
+			dzApp->log("Roblox Studio Exporter: WARNING: body_bs_BreastsGone shape is not installed.  Breasts Gone option will not function.");
 			// NOTIFY USER THAT BreastsGone morph not found/notinstalled
 			QString sErrorString;
 			sErrorString += QString("The Breasts Gone Morph was not found.  ");
