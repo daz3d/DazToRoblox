@@ -934,7 +934,8 @@ void DzRobloxDialog::HandlePdfButton()
 void DzRobloxDialog::HandleYoutubeButton()
 {
 	// Roblox Avatar Help
-	QString url = "https://youtu.be/2My8jE47clI?si=Nhczl-xIPUlprp7D";
+//	QString url = "https://youtu.be/2My8jE47clI?si=Nhczl-xIPUlprp7D"; // What are Custom Characters? Roblox Sketch Series 
+	QString url = "https://www.youtube.com/playlist?list=PLF3LSR7D48MeY3tzVo419FX3kBifsSTdD"; // Daz to Roblox Exporter Playlist
 	QDesktopServices::openUrl(QUrl(url));
 }
 
