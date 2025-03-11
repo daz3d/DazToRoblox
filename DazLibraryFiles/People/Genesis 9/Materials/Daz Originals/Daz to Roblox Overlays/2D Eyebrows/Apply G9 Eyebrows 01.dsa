@@ -1,0 +1,141 @@
+// DAZ Studio version 4.22.0.15 filetype DAZ Script
+// combine_head_diffuse_with_overlays.dsa
+
+(function() {
+    var includeDir_oFILE = new DzFile( getScriptFileName() );
+    var sIncludePath = includeDir_oFILE.path();
+    
+    // overlay textures with alpha channels
+    // var overlayTexture1 = sIncludePath + "/g9 eyebrows thin.png";
+    // var overlayTexture1 = sIncludePath + "/g9 eyebrows thick.png";
+    //var overlayTexture1 = sIncludePath + "/v9 eyebrows thin.png";
+    var overlayTexture1 = sIncludePath + "/v9 eyebrows thick.png";
+    
+    // var overlayTexture2 = sIncludePath + "/g9 eyeliner thin.png";
+    //var overlayTexture2 = sIncludePath + "/g9 eyeliner thick.png";
+
+    // default 4096x4096 texture resolution
+    var nTextureWidth = 4096;
+    var nTextureHeight = 4096;
+
+    // SubFunction to replace diffuse map with layered texture
+    function replaceColorPropertyWithLayeredTexture(material, colorProperty, overlayImagePath) {
+        if (!overlayImagePath || overlayImagePath == "") {
+    //        print("replaceColorPropertyWithLayeredTexture(): No overlay image path found.");
+            return;
+        }
+
+        var fiOverlayImage = new DzFileInfo(overlayImagePath);
+        if ( fiOverlayImage.exists() == false ) {
+            App.log("replaceColorPropertyWithLayeredTexture(): ERROR: Overlay image does not exist: " + overlayImagePath);
+            fiOverlayImage.deleteLater();
+            return;
+        }
+        fiOverlayImage.deleteLater();
+
+        // Get the current texture map
+        var currentTextureMap = colorProperty.getMapValue();
+        if (!currentTextureMap) {
+    //        print("replaceColorPropertyWithLayeredTexture(): No current texture map found.");
+            return;
+        }
+
+        var materialName = material.name;
+        var layeredTextureName = "Layered " + colorProperty.name + " for " + materialName;
+
+        // Create a new layered texture
+        var oImageMgr = App.getImageMgr();
+        var layeredTexture = oImageMgr.createLayeredTexture(layeredTextureName);
+        layeredTexture.size = new Size( 4096, 4096 );
+        
+        if (currentTextureMap.inherits("DzLayeredTexture")) {
+            // Deep copy existing Layered Texture to new Layered Texture
+            layeredTexture.copyFrom(currentTextureMap);
+        }
+        else
+        {
+            // Add the original texture map as the base layer
+            var baseLayer = layeredTexture.createLayer("Base Layer");
+            baseLayer.imageFile = currentTextureMap.getFilename();			
+        }
+
+        // Add the overlay image as a new layer
+        var overlayLayer = layeredTexture.createLayer("Overlay Layer");
+        overlayLayer.imageFile = overlayImagePath;
+
+        // Assign the new layered texture to the material's diffuse color property
+        colorProperty.setMap(layeredTexture);
+
+        // NECESSARY FOR SCRIPT TO WORK ATOMICLY
+        // getPreviewPixmap is called to force Texture Baking to file
+        layeredTexture.getPreviewPixmap(1,1);
+        
+    }
+
+    function main() {
+        var sOutputFilename = null;
+
+        var oNode = Scene.getPrimarySelection();
+        if (!oNode || !oNode.inherits("DzFigure")) {
+            print("No figure selected or selected node is not a DzFigure.");
+            return;
+        }
+
+        var oFigure = oNode;
+
+        var oObject = oFigure.getObject();
+        if (!oObject) {
+            print("Selected figure has no object.");
+            return;
+        }
+
+        var oShape = oObject.getCurrentShape();
+        if (!oShape) {
+            print("Selected figure has no shape.");
+            return;
+        }
+
+        // Find "Head" material
+        var headMaterial = null;
+        for (var i = 0; i < oShape.getNumMaterials(); i++) {
+            var mat = oShape.getMaterial(i);
+            if (mat && mat.getName() == "Head") {
+                headMaterial = mat;
+                break;
+            }
+        }
+
+        if (!headMaterial) {
+            print("No 'Head' material found on this figure.");
+            return;
+        }
+
+        // Get the Diffuse Color property
+        var diffuseProp = headMaterial.findProperty("Diffuse Color");
+        if (!diffuseProp) {
+            print("Head material has no Diffuse Color image property.");
+            return;
+        }
+
+        var originalMapFilename = "";
+        var originalMap = diffuseProp.getMapValue();
+        if (!originalMap) {
+    //        print("No original diffuse texture map found. Using a blank base.");
+            print("ERROR: no original diffuse texture map found. Exiting.");
+            return;
+        } else {
+            originalMap.getPreviewPixmap(1, 1);
+            originalMapFilename = originalMap.getFilename();
+            print("Original diffuse texture map: " + originalMapFilename);
+        }
+
+        replaceColorPropertyWithLayeredTexture(headMaterial, diffuseProp, overlayTexture1);
+
+        print("New diffuse overlay applied to 'Head' material: " + overlayTexture1);
+        print("Script completed.");
+
+    }
+
+    main();
+
+})();

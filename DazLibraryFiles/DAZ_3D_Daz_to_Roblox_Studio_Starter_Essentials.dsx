@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentDBInstall VERSION="1.0">
+ <Products>
+  <Product VALUE="Daz to Roblox Studio Starter Essentials">
+   <StoreID VALUE="DAZ 3D"/>
+   <GlobalID VALUE="049264ff-4371-4778-a1b7-af25e9b85819"/>
+   <Assets>
+    <Asset VALUE="People/Genesis 9/Materials/Daz Originals/Daz to Roblox Overlays/2D Eyebrows/Apply G9 Eyebrows 01.dsa">
+     <ContentType VALUE="Preset/Materials/MDL"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyebrow Overlays"/>
+     </Categories>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Materials/Daz Originals/Daz to Roblox Overlays/2D Eyebrows/Apply G9 Eyebrows 02.dsa">
+     <ContentType VALUE="Preset/Materials/MDL"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyebrow Overlays"/>
+     </Categories>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Materials/Daz Originals/Daz to Roblox Overlays/2D Eyebrows/Apply G9 Eyebrows 03.dsa">
+     <ContentType VALUE="Preset/Materials/MDL"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyebrow Overlays"/>
+     </Categories>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Materials/Daz Originals/Daz to Roblox Overlays/2D Eyebrows/Apply G9 Eyebrows 04.dsa">
+     <ContentType VALUE="Preset/Materials/MDL"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyebrow Overlays"/>
+     </Categories>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Materials/Daz Originals/Daz to Roblox Overlays/2D Eyelashes-Eyeliner/Apply G9 Eyeliner 01.dsa">
+     <ContentType VALUE="Preset/Materials/MDL"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyelash Overlays"/>
+     </Categories>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Materials/Daz Originals/Daz to Roblox Overlays/2D Eyelashes-Eyeliner/Apply G9 Eyeliner 02.dsa">
+     <ContentType VALUE="Preset/Materials/MDL"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyelash Overlays"/>
+     </Categories>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Materials/Daz Originals/Daz to Roblox Overlays/Sportsbra and Tanktop/Apply G9 Grey Sportsbra and Shorts.dsa">
+     <ContentType VALUE="Preset/Materials/MDL"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Modesty Overlays"/>
+     </Categories>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Materials/Daz Originals/Daz to Roblox Overlays/Strap and Strapless Bikini/Apply G9 Grey Strapless Bikini.dsa">
+     <ContentType VALUE="Preset/Materials/MDL"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Modesty Overlays"/>
+     </Categories>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Materials/Daz Originals/Daz to Roblox Overlays/Sportsbra and Tanktop/Apply G9 Grey Tanktop and Shorts.dsa">
+     <ContentType VALUE="Preset/Materials/MDL"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Modesty Overlays"/>
+     </Categories>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Materials/Daz Originals/Daz to Roblox Overlays/Strap and Strapless Bikini/Apply G9 White Strap Bikini.dsa">
+     <ContentType VALUE="Preset/Materials/MDL"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Modesty Overlays"/>
+     </Categories>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Materials/Daz Originals/Daz to Roblox Overlays/Strap and Strapless Bikini/Apply G9 White Strapless Bikini.dsa">
+     <ContentType VALUE="Preset/Materials/MDL"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Modesty Overlays"/>
+     </Categories>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Genesis 9 for Roblox 01.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Genesis 9 for Roblox 02.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Genesis 9 for Roblox 03.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Genesis 9 for Roblox 04.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Genesis 9 for Roblox 05.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Genesis 9 for Roblox 06.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+   </Assets>
+   <SupportAssets VALUE="/Runtime/Support/DAZ_3D_Daz_to_Roblox_Studio_Starter_Essentials.dsx"/>
+   <ObjectCompatibilities>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+   </ObjectCompatibilities>
+  </Product>
+ </Products>
+</ContentDBInstall>

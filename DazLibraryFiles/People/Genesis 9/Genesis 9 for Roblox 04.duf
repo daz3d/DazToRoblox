@@ -1,0 +1,6080 @@
+{
+	"file_version" : "0.6.1.0",
+	"asset_info" : {
+		"id" : "/Presets/Characters/Genesis%209%20for%20Roblox%2004.duf",
+		"type" : "character",
+		"contributor" : {
+			"author" : "Daz 3D",
+			"email" : "",
+			"website" : ""
+		},
+		"revision" : "1.0",
+		"modified" : "2025-03-11T12:22:01Z"
+	},
+	"image_library" : [
+		{
+			"id" : "G9Feminine01_Nails_D_1005.jpg-3",
+			"name" : "G9Feminine01_Nails_D_1005.jpg",
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_D_1005.jpg",
+					"label" : "G9Feminine01_Nails_D_1005.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Nails_SSS_1005.jpg-3",
+			"name" : "G9Feminine01_Nails_SSS_1005.jpg",
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_SSS_1005.jpg",
+					"label" : "G9Feminine01_Nails_SSS_1005.jpg"
+				}
+			]
+		},
+		{
+			"id" : "Skin_SLW.jpg-9",
+			"name" : "Skin_SLW.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_SLW.jpg",
+					"label" : "Skin_SLW.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Nails_R_1005.jpg-3",
+			"name" : "G9Feminine01_Nails_R_1005.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_R_1005.jpg",
+					"label" : "G9Feminine01_Nails_R_1005.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Nails_SO_1005.jpg-3",
+			"name" : "G9Feminine01_Nails_SO_1005.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_SO_1005.jpg",
+					"label" : "G9Feminine01_Nails_SO_1005.jpg"
+				}
+			]
+		},
+		{
+			"id" : "Genesis9_Nails_NM_1005.jpg-3",
+			"name" : "Genesis9_Nails_NM_1005.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Nails_NM_1005.jpg",
+					"label" : "Genesis9_Nails_NM_1005.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Legs_D_1003.jpg-1",
+			"name" : "G9Feminine01_Legs_D_1003.jpg",
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Legs_D_1003.jpg",
+					"label" : "G9Feminine01_Legs_D_1003.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Legs_SSS_1003.jpg-1",
+			"name" : "G9Feminine01_Legs_SSS_1003.jpg",
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Legs_SSS_1003.jpg",
+					"label" : "G9Feminine01_Legs_SSS_1003.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Legs_R_1003.jpg-1",
+			"name" : "G9Feminine01_Legs_R_1003.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Legs_R_1003.jpg",
+					"label" : "G9Feminine01_Legs_R_1003.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Legs_SO_1003.jpg-1",
+			"name" : "G9Feminine01_Legs_SO_1003.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Legs_SO_1003.jpg",
+					"label" : "G9Feminine01_Legs_SO_1003.jpg"
+				}
+			]
+		},
+		{
+			"id" : "Genesis9_Legs_NM_1003.jpg-1",
+			"name" : "Genesis9_Legs_NM_1003.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Legs_NM_1003.jpg",
+					"label" : "Genesis9_Legs_NM_1003.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Head_D_1001.jpg-1",
+			"name" : "G9Feminine01_Head_D_1001.jpg",
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_D_1001.jpg",
+					"label" : "G9Feminine01_Head_D_1001.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Head_SSS_1001.jpg-3",
+			"name" : "G9Feminine01_Head_SSS_1001.jpg",
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_SSS_1001.jpg",
+					"label" : "G9Feminine01_Head_SSS_1001.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Head_R_1001.jpg-3",
+			"name" : "G9Feminine01_Head_R_1001.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_R_1001.jpg",
+					"label" : "G9Feminine01_Head_R_1001.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Head_SO_1001.jpg-3",
+			"name" : "G9Feminine01_Head_SO_1001.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_SO_1001.jpg",
+					"label" : "G9Feminine01_Head_SO_1001.jpg"
+				}
+			]
+		},
+		{
+			"id" : "Genesis9_Head_NM_1001.jpg-3",
+			"name" : "Genesis9_Head_NM_1001.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Head_NM_1001.jpg",
+					"label" : "Genesis9_Head_NM_1001.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Arms_D_1004.jpg-1",
+			"name" : "G9Feminine01_Arms_D_1004.jpg",
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Arms_D_1004.jpg",
+					"label" : "G9Feminine01_Arms_D_1004.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Arms_SSS_1004.jpg-1",
+			"name" : "G9Feminine01_Arms_SSS_1004.jpg",
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Arms_SSS_1004.jpg",
+					"label" : "G9Feminine01_Arms_SSS_1004.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Arms_R_1004.jpg-1",
+			"name" : "G9Feminine01_Arms_R_1004.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Arms_R_1004.jpg",
+					"label" : "G9Feminine01_Arms_R_1004.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Arms_SO_1004.jpg-1",
+			"name" : "G9Feminine01_Arms_SO_1004.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Arms_SO_1004.jpg",
+					"label" : "G9Feminine01_Arms_SO_1004.jpg"
+				}
+			]
+		},
+		{
+			"id" : "Genesis9_Arms_NM_1004.jpg-1",
+			"name" : "Genesis9_Arms_NM_1004.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Arms_NM_1004.jpg",
+					"label" : "Genesis9_Arms_NM_1004.jpg"
+				}
+			]
+		},
+		{
+			"id" : "Layered Diffuse Color for Head-1",
+			"name" : "Layered Diffuse Color for Head",
+			"map_size" : [ 4096, 4096 ],
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_D_1001.jpg",
+					"label" : "Base Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				},
+				{
+					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/2d%20eyebrows/v9%20eyebrows%20thin.png",
+					"label" : "Overlay Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				},
+				{
+					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/2d%20eyelashes-eyeliner/g9%20eyeliner%20thick.png",
+					"label" : "Overlay Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				}
+			]
+		},
+		{
+			"id" : "Layered Diffuse Color for Body-1",
+			"name" : "Layered Diffuse Color for Body",
+			"map_size" : [ 4096, 4096 ],
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Body_D_1002.jpg",
+					"label" : "Base Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				},
+				{
+					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/strap%20and%20strapless%20bikini/grey_strapless_torso_modesty_overlay_d.png",
+					"label" : "Overlay Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				}
+			]
+		},
+		{
+			"id" : "Layered Translucency Color for Body-1",
+			"name" : "Layered Translucency Color for Body",
+			"map_size" : [ 4096, 4096 ],
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Body_SSS_1002.jpg",
+					"label" : "Base Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				},
+				{
+					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/strap%20and%20strapless%20bikini/grey_strapless_torso_modesty_overlay_d.png",
+					"label" : "Overlay Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				}
+			]
+		},
+		{
+			"id" : "Layered Dual Lobe Specular Weight for Body-1",
+			"name" : "Layered Dual Lobe Specular Weight for Body",
+			"map_size" : [ 4096, 4096 ],
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_SLW.jpg",
+					"label" : "Base Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				},
+				{
+					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/strap%20and%20strapless%20bikini/grey_strapless_torso_modesty_overlay_r.png",
+					"label" : "Overlay Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				}
+			]
+		},
+		{
+			"id" : "Layered Specular Lobe 1 Roughness for Body-1",
+			"name" : "Layered Specular Lobe 1 Roughness for Body",
+			"map_size" : [ 4096, 4096 ],
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Body_R_1002.jpg",
+					"label" : "Base Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				},
+				{
+					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/strap%20and%20strapless%20bikini/grey_strapless_torso_modesty_overlay_r.png",
+					"label" : "Overlay Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine01_Body_SO_1002.jpg-1",
+			"name" : "G9Feminine01_Body_SO_1002.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Body_SO_1002.jpg",
+					"label" : "G9Feminine01_Body_SO_1002.jpg"
+				}
+			]
+		},
+		{
+			"id" : "Layered Detail Normal Map for Body-1",
+			"name" : "Layered Detail Normal Map for Body",
+			"map_size" : [ 4096, 4096 ],
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_BodyF_NM_1002.jpg",
+					"label" : "Base Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				},
+				{
+					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/strap%20and%20strapless%20bikini/grey_strapless_torso_modesty_overlay_n.png",
+					"label" : "Overlay Layer",
+					"active" : true,
+					"color" : [ 1, 1, 1 ],
+					"transparency" : 1,
+					"invert" : false,
+					"rotation" : 0,
+					"xmirror" : false,
+					"ymirror" : false,
+					"xscale" : 1,
+					"yscale" : 1,
+					"xoffset" : 0,
+					"yoffset" : 0,
+					"operation" : "blend_source_over"
+				}
+			]
+		}
+	],
+	"scene" : {
+		"nodes" : [
+			{
+				"id" : "Genesis9",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#Genesis9",
+				"name" : "Genesis9",
+				"label" : "Genesis 9",
+				"geometries" : [
+					{
+						"id" : "Genesis9-1",
+						"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#Genesis9-1",
+						"name" : "Genesis9",
+						"label" : "shape",
+						"type" : "subdivision_surface",
+						"current_subdivision_level" : 1,
+						"edge_interpolation_mode" : "edges_only",
+						"subd_normal_smoothing_mode" : "smooth_all_normals",
+						"extra" : [
+							{
+								"type" : "studio_geometry_channels",
+								"channels" : [
+									{
+										"channel" : {
+											"id" : "SubDRenderLevel",
+											"type" : "int",
+											"current_value" : 2
+										}
+									}
+								]
+							}
+						]
+					}
+				],
+				"preview" : {
+					"type" : "figure",
+					"oriented_box" : {
+						"min" : [ -63.24, -0.094, -13.15 ],
+						"max" : [ 63.241, 170.019, 14.524 ]
+					},
+					"center_point" : [ 0, 0, 0 ],
+					"end_point" : [ 0, 103.876, 0 ],
+					"rotation_order" : "YXZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "hip",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#hip",
+				"name" : "hip",
+				"label" : "Hip",
+				"parent" : "#Genesis9",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 0, 97.13693, 0.4865389 ],
+					"end_point" : [ 0, 80.91573, 0.2278784 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "pelvis",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#pelvis",
+				"name" : "pelvis",
+				"label" : "Pelvis",
+				"parent" : "#hip",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -16.962, -18.91, -12.773 ],
+						"max" : [ 16.963, 0.956, 10.565 ]
+					},
+					"center_point" : [ 0, 98.98357, -0.28 ],
+					"end_point" : [ 0, 80.03773, -0.28 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_thigh",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_thigh",
+				"name" : "l_thigh",
+				"label" : "Left Thigh",
+				"parent" : "#pelvis",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -7.498, -42.031, -12.525 ],
+						"max" : [ 9.796, -1.129, 9.946 ]
+					},
+					"center_point" : [ 7.641659, 88.67098, -0.3762165 ],
+					"end_point" : [ 9.341069, 48.19873, -1.780917 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_shin",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_shin",
+				"name" : "l_shin",
+				"label" : "Left Shin",
+				"parent" : "#l_thigh",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -5.012, -41.978, -8.048 ],
+						"max" : [ 6.763, -0.071, 5.405 ]
+					},
+					"center_point" : [ 9.341069, 48.194, -1.780917 ],
+					"end_point" : [ 10.88737, 6.44482, -4.660287 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_foot",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_foot",
+				"name" : "l_foot",
+				"label" : "Left Foot",
+				"parent" : "#l_shin",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -4.2, -6.914, -3.698 ],
+						"max" : [ 4.23, 3.585, 13.225 ]
+					},
+					"center_point" : [ 11.00601, 6.449799, -4.647938 ],
+					"end_point" : [ 14.04698, 1.982549, 7.156263 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_toes",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_toes",
+				"name" : "l_toes",
+				"label" : "Left Toes",
+				"parent" : "#l_foot",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -4.419, -1.693, -2.559 ],
+						"max" : [ 4.184, 2.575, 5.731 ]
+					},
+					"center_point" : [ 14.37457, 1.672678, 8.251657 ],
+					"end_point" : [ 15.91773, 1.690701, 13.1018 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_bigtoe1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_bigtoe1",
+				"name" : "l_bigtoe1",
+				"label" : "Left Big Toe 1",
+				"parent" : "#l_toes",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 11.5935, 2.033142, 9.409855 ],
+					"end_point" : [ 12.3959, 1.519031, 11.93456 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_bigtoe2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_bigtoe2",
+				"name" : "l_bigtoe2",
+				"label" : "Left Big Toe 2",
+				"parent" : "#l_bigtoe1",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 12.39123, 1.530369, 11.95595 ],
+					"end_point" : [ 13.12789, 1.161149, 14.10494 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_indextoe1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_indextoe1",
+				"name" : "l_indextoe1",
+				"label" : "Left Index Toe 1",
+				"parent" : "#l_toes",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 13.67648, 2.34972, 9.269159 ],
+					"end_point" : [ 14.24191, 1.962721, 11.34639 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_indextoe2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_indextoe2",
+				"name" : "l_indextoe2",
+				"label" : "Left Index Toe 2",
+				"parent" : "#l_indextoe1",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 14.24711, 1.977404, 11.35246 ],
+					"end_point" : [ 14.72532, 1.182104, 13.3787 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_midtoe1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_midtoe1",
+				"name" : "l_midtoe1",
+				"label" : "Left Mid Toe 1",
+				"parent" : "#l_toes",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 15.04916, 2.34873, 9.024999 ],
+					"end_point" : [ 15.44943, 1.914397, 10.80341 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_midtoe2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_midtoe2",
+				"name" : "l_midtoe2",
+				"label" : "Left Mid Toe 2",
+				"parent" : "#l_midtoe1",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 15.46031, 1.929204, 10.80843 ],
+					"end_point" : [ 15.84684, 0.9405121, 12.54538 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_ringtoe1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_ringtoe1",
+				"name" : "l_ringtoe1",
+				"label" : "Left Ring Toe 1",
+				"parent" : "#l_toes",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 16.04554, 2.004739, 8.347043 ],
+					"end_point" : [ 16.4471, 1.627218, 9.851623 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_ringtoe2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_ringtoe2",
+				"name" : "l_ringtoe2",
+				"label" : "Left Ring Toe 2",
+				"parent" : "#l_ringtoe1",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 16.43256, 1.632792, 9.85959 ],
+					"end_point" : [ 16.73773, 0.8153623, 11.32407 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_pinkytoe1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_pinkytoe1",
+				"name" : "l_pinkytoe1",
+				"label" : "Left Pinky Toe 1",
+				"parent" : "#l_toes",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 17.29335, 1.750655, 7.547207 ],
+					"end_point" : [ 17.36321, 1.454007, 8.534062 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_pinkytoe2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_pinkytoe2",
+				"name" : "l_pinkytoe2",
+				"label" : "Left Pinky Toe 2",
+				"parent" : "#l_pinkytoe1",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 17.36707, 1.45662, 8.547213 ],
+					"end_point" : [ 17.42336, 0.9193316, 9.541008 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_metatarsal",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_metatarsal",
+				"name" : "l_metatarsal",
+				"label" : "Left Metatarsal",
+				"parent" : "#l_foot",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 11.06923, 6.361489, -4.392152 ],
+					"end_point" : [ 13.73843, 3.908451, 2.217528 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_thightwist1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_thightwist1",
+				"name" : "l_thightwist1",
+				"label" : "Left Thigh Twist 1",
+				"parent" : "#l_thigh",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 8.169209, 75.60822, -0.8132355 ],
+					"end_point" : [ 8.700583, 61.92293, -2.217936 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_thightwist2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_thightwist2",
+				"name" : "l_thightwist2",
+				"label" : "Left Thigh Twist 2",
+				"parent" : "#l_thigh",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 8.73234, 61.66441, -1.279731 ],
+					"end_point" : [ 9.263715, 48.60206, -2.684431 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_thigh",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_thigh",
+				"name" : "r_thigh",
+				"label" : "Right Thigh",
+				"parent" : "#pelvis",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -9.795, -42.031, -12.525 ],
+						"max" : [ 7.499, -1.129, 9.946 ]
+					},
+					"center_point" : [ -7.641659, 88.67098, -0.3762165 ],
+					"end_point" : [ -9.341069, 48.19873, -1.780917 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_shin",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_shin",
+				"name" : "r_shin",
+				"label" : "Right Shin",
+				"parent" : "#r_thigh",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -6.762, -41.978, -8.048 ],
+						"max" : [ 5.013, -0.071, 5.405 ]
+					},
+					"center_point" : [ -9.341069, 48.194, -1.780917 ],
+					"end_point" : [ -10.88737, 6.44482, -4.660287 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_foot",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_foot",
+				"name" : "r_foot",
+				"label" : "Right Foot",
+				"parent" : "#r_shin",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -4.229, -6.914, -3.698 ],
+						"max" : [ 4.201, 3.585, 13.225 ]
+					},
+					"center_point" : [ -11.00601, 6.449799, -4.647938 ],
+					"end_point" : [ -14.04698, 1.982549, 7.156263 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_toes",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_toes",
+				"name" : "r_toes",
+				"label" : "Right Toes",
+				"parent" : "#r_foot",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -4.183, -1.693, -2.559 ],
+						"max" : [ 4.42, 2.575, 5.731 ]
+					},
+					"center_point" : [ -14.37457, 1.672678, 8.251657 ],
+					"end_point" : [ -15.91773, 1.690701, 13.1018 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_bigtoe1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_bigtoe1",
+				"name" : "r_bigtoe1",
+				"label" : "Right Big Toe 1",
+				"parent" : "#r_toes",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -11.5935, 2.033142, 9.409855 ],
+					"end_point" : [ -12.3959, 1.519031, 11.93456 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_bigtoe2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_bigtoe2",
+				"name" : "r_bigtoe2",
+				"label" : "Right Big Toe 2",
+				"parent" : "#r_bigtoe1",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -12.39123, 1.530369, 11.95595 ],
+					"end_point" : [ -13.12789, 1.161149, 14.10494 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_indextoe1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_indextoe1",
+				"name" : "r_indextoe1",
+				"label" : "Right Index Toe 1",
+				"parent" : "#r_toes",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -13.67648, 2.34972, 9.269159 ],
+					"end_point" : [ -14.24191, 1.962721, 11.34639 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_indextoe2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_indextoe2",
+				"name" : "r_indextoe2",
+				"label" : "Right Index Toe 2",
+				"parent" : "#r_indextoe1",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -14.24711, 1.977404, 11.35246 ],
+					"end_point" : [ -14.72532, 1.182104, 13.3787 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_midtoe1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_midtoe1",
+				"name" : "r_midtoe1",
+				"label" : "Right Mid Toe 1",
+				"parent" : "#r_toes",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -15.04916, 2.34873, 9.024999 ],
+					"end_point" : [ -15.44943, 1.914397, 10.80341 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_midtoe2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_midtoe2",
+				"name" : "r_midtoe2",
+				"label" : "Right Mid Toe 2",
+				"parent" : "#r_midtoe1",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -15.46031, 1.929204, 10.80843 ],
+					"end_point" : [ -15.84684, 0.9405121, 12.54538 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_ringtoe1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_ringtoe1",
+				"name" : "r_ringtoe1",
+				"label" : "Right Ring Toe 1",
+				"parent" : "#r_toes",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -16.04554, 2.004739, 8.347043 ],
+					"end_point" : [ -16.4471, 1.627218, 9.851623 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_ringtoe2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_ringtoe2",
+				"name" : "r_ringtoe2",
+				"label" : "Right Ring Toe 2",
+				"parent" : "#r_ringtoe1",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -16.43256, 1.632792, 9.85959 ],
+					"end_point" : [ -16.73773, 0.8153623, 11.32407 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_pinkytoe1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_pinkytoe1",
+				"name" : "r_pinkytoe1",
+				"label" : "Right Pinky Toe 1",
+				"parent" : "#r_toes",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -17.29335, 1.750655, 7.547207 ],
+					"end_point" : [ -17.36321, 1.454007, 8.534062 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_pinkytoe2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_pinkytoe2",
+				"name" : "r_pinkytoe2",
+				"label" : "Right Pinky Toe 2",
+				"parent" : "#r_pinkytoe1",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -17.36707, 1.45662, 8.547213 ],
+					"end_point" : [ -17.42336, 0.9193316, 9.541008 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_metatarsal",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_metatarsal",
+				"name" : "r_metatarsal",
+				"label" : "Right Metatarsal",
+				"parent" : "#r_foot",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -11.06923, 6.361489, -4.392152 ],
+					"end_point" : [ -13.73843, 3.908451, 2.217528 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_thightwist1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_thightwist1",
+				"name" : "r_thightwist1",
+				"label" : "Right Thigh Twist 1",
+				"parent" : "#r_thigh",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -8.169209, 75.60822, -0.8132355 ],
+					"end_point" : [ -8.700583, 61.92293, -2.217936 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_thightwist2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_thightwist2",
+				"name" : "r_thightwist2",
+				"label" : "Right Thigh Twist 2",
+				"parent" : "#r_thigh",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -8.73234, 61.66441, -1.279731 ],
+					"end_point" : [ -9.263715, 48.60206, -2.684431 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "spine1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#spine1",
+				"name" : "spine1",
+				"label" : "Spine 1",
+				"parent" : "#hip",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -14.578, -2.448, -9.099 ],
+						"max" : [ 14.579, 8.874, 11.189 ]
+					},
+					"center_point" : [ 0, 98.93428, -0.78 ],
+					"end_point" : [ 0, 106.7338, -0.78 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "spine2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#spine2",
+				"name" : "spine2",
+				"label" : "Spine 2",
+				"parent" : "#spine1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -14.098, 0.248, -9.776 ],
+						"max" : [ 14.099, 11.982, 11.786 ]
+					},
+					"center_point" : [ 0, 106.8228, -1.1 ],
+					"end_point" : [ 0, 113.8823, -1.1 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "spine3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#spine3",
+				"name" : "spine3",
+				"label" : "Spine 3",
+				"parent" : "#spine2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -15.904, 1.326, -10.622 ],
+						"max" : [ 15.905, 15.085, 12.894 ]
+					},
+					"center_point" : [ 0, 114.326, -2.26 ],
+					"end_point" : [ 0, 126.799, -2.26 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "spine4",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#spine4",
+				"name" : "spine4",
+				"label" : "Spine 4",
+				"parent" : "#spine3",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -16.682, -2.42, -9.618 ],
+						"max" : [ 16.683, 17.857, 12.689 ]
+					},
+					"center_point" : [ 0, 126.8099, -3.490854 ],
+					"end_point" : [ 0, 140.1547, -3.539177 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_shoulder",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_shoulder",
+				"name" : "l_shoulder",
+				"label" : "Left Shoulder",
+				"parent" : "#spine4",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 8.476, -10.197, -7.21 ],
+						"max" : [ 21.931, 6.301, 7.382 ]
+					},
+					"center_point" : [ 3.453005, 135.4719, -3.618245 ],
+					"end_point" : [ 13.92389, 137.1705, -4.290051 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_upperarm",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_upperarm",
+				"name" : "l_upperarm",
+				"label" : "Left Upper Arm",
+				"parent" : "#l_shoulder",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 7.906, -4.593, -5.326 ],
+						"max" : [ 24.904, 4.968, 4.733 ]
+					},
+					"center_point" : [ 16.18354, 134.7332, -4.429407 ],
+					"end_point" : [ 32.98565, 116.6306, -3.892825 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_forearm",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_forearm",
+				"name" : "l_forearm",
+				"label" : "Left Forearm",
+				"parent" : "#l_upperarm",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -0.811, -4.737, -3.989 ],
+						"max" : [ 24.395, 4.255, 3.908 ]
+					},
+					"center_point" : [ 32.99138, 116.5617, -3.892825 ],
+					"end_point" : [ 51.20491, 100.1143, 2.21129 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_hand",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_hand",
+				"name" : "l_hand",
+				"label" : "Left Hand",
+				"parent" : "#l_forearm",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -2.177, -2.89, -4.885 ],
+						"max" : [ 9.871, 2.313, 3.458 ]
+					},
+					"center_point" : [ 51.5422, 99.77531, 2.306175 ],
+					"end_point" : [ 58.22221, 93.72066, 4.533167 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_hand_anchor",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_hand_anchor",
+				"name" : "l_hand_anchor",
+				"label" : "Left Hand Anchor",
+				"parent" : "#l_hand",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 54.13, 93.1, 2.82 ],
+					"end_point" : [ 54.13, 93.1, 13.54 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_thumb1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_thumb1",
+				"name" : "l_thumb1",
+				"label" : "Left Thumb 1",
+				"parent" : "#l_hand",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -0.47, -2.087, -2.827 ],
+						"max" : [ 4.545, 2.129, 2.196 ]
+					},
+					"center_point" : [ 51.73973, 97.88778, 4.081041 ],
+					"end_point" : [ 52.6237, 95.71559, 7.392737 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_thumb2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_thumb2",
+				"name" : "l_thumb2",
+				"label" : "Left Thumb 2",
+				"parent" : "#l_thumb1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -0.39, -1.236, -1.522 ],
+						"max" : [ 2.801, 1.229, 1.161 ]
+					},
+					"center_point" : [ 52.61329, 95.74154, 7.414405 ],
+					"end_point" : [ 53.45586, 93.43546, 8.963758 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_thumb3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_thumb3",
+				"name" : "l_thumb3",
+				"label" : "Left Thumb 3",
+				"parent" : "#l_thumb2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -0.362, -1.099, -1.141 ],
+						"max" : [ 2.889, 1.004, 0.849 ]
+					},
+					"center_point" : [ 53.46592, 93.42902, 8.969496 ],
+					"end_point" : [ 54.38219, 91.57084, 10.8697 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_indexmetacarpal",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_indexmetacarpal",
+				"name" : "l_indexmetacarpal",
+				"label" : "Left Index Metacarpal",
+				"parent" : "#l_hand",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 51.86363, 99.46383, 3.581812 ],
+					"end_point" : [ 56.718, 94.01292, 5.688928 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_index1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_index1",
+				"name" : "l_index1",
+				"label" : "Left Index 1",
+				"parent" : "#l_indexmetacarpal",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 1.123, -0.978, -0.907 ],
+						"max" : [ 3.943, 1.029, 1.038 ]
+					},
+					"center_point" : [ 56.718, 94.01292, 5.772514 ],
+					"end_point" : [ 59.16088, 91.10889, 6.312558 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_index2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_index2",
+				"name" : "l_index2",
+				"label" : "Left Index 2",
+				"parent" : "#l_index1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 0.039, -0.805, -0.825 ],
+						"max" : [ 2.174, 0.848, 0.869 ]
+					},
+					"center_point" : [ 59.16088, 91.10889, 6.312558 ],
+					"end_point" : [ 60.38429, 89.4748, 6.530908 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_index3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_index3",
+				"name" : "l_index3",
+				"label" : "Left Index 3",
+				"parent" : "#l_index2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 0.044, -0.727, -0.771 ],
+						"max" : [ 2.128, 0.654, 0.754 ]
+					},
+					"center_point" : [ 60.38429, 89.4748, 6.530908 ],
+					"end_point" : [ 61.64143, 87.74789, 6.745937 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_midmetacarpal",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_midmetacarpal",
+				"name" : "l_midmetacarpal",
+				"label" : "Left Mid Metacarpal",
+				"parent" : "#l_hand",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 52.11245, 99.32809, 2.72631 ],
+					"end_point" : [ 57.17793, 93.80786, 3.768446 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_mid1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_mid1",
+				"name" : "l_mid1",
+				"label" : "Left Mid 1",
+				"parent" : "#l_midmetacarpal",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 1.105, -1.19, -0.922 ],
+						"max" : [ 4.603, 0.972, 1.021 ]
+					},
+					"center_point" : [ 57.20964, 93.82899, 3.699607 ],
+					"end_point" : [ 59.90823, 90.60169, 4.013227 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_mid2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_mid2",
+				"name" : "l_mid2",
+				"label" : "Left Mid 2",
+				"parent" : "#l_mid1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 0.248, -0.955, -0.848 ],
+						"max" : [ 2.805, 0.743, 0.907 ]
+					},
+					"center_point" : [ 60.06554, 90.70678, 4.01144 ],
+					"end_point" : [ 61.61742, 88.58809, 4.218563 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_mid3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_mid3",
+				"name" : "l_mid3",
+				"label" : "Left Mid 3",
+				"parent" : "#l_mid2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 0.069, -0.825, -0.795 ],
+						"max" : [ 2.143, 0.6, 0.775 ]
+					},
+					"center_point" : [ 61.62453, 88.60079, 4.223068 ],
+					"end_point" : [ 63.01681, 86.93623, 4.34799 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_ringmetacarpal",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_ringmetacarpal",
+				"name" : "l_ringmetacarpal",
+				"label" : "Left Ring Metacarpal",
+				"parent" : "#l_hand",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 52.23601, 99.32024, 1.724918 ],
+					"end_point" : [ 56.70725, 93.92575, 1.86414 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_ring1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_ring1",
+				"name" : "l_ring1",
+				"label" : "Left Ring 1",
+				"parent" : "#l_ringmetacarpal",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 1.314, -1.121, -0.94 ],
+						"max" : [ 4.329, 0.904, 0.822 ]
+					},
+					"center_point" : [ 56.84558, 94.08215, 1.862033 ],
+					"end_point" : [ 59.41015, 91.02351, 1.797828 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_ring2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_ring2",
+				"name" : "l_ring2",
+				"label" : "Left Ring 2",
+				"parent" : "#l_ring1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 0.294, -0.817, -0.802 ],
+						"max" : [ 2.431, 0.728, 0.796 ]
+					},
+					"center_point" : [ 59.41015, 91.02351, 1.797828 ],
+					"end_point" : [ 60.75898, 89.32338, 1.771685 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_ring3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_ring3",
+				"name" : "l_ring3",
+				"label" : "Left Ring 3",
+				"parent" : "#l_ring2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 0.198, -0.759, -0.737 ],
+						"max" : [ 2.255, 0.562, 0.746 ]
+					},
+					"center_point" : [ 60.75898, 89.32338, 1.771685 ],
+					"end_point" : [ 62.09539, 87.64376, 1.771011 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_pinkymetacarpal",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_pinkymetacarpal",
+				"name" : "l_pinkymetacarpal",
+				"label" : "Left Pinky Metacarpal",
+				"parent" : "#l_hand",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 52.29771, 99.34055, 0.7633598 ],
+					"end_point" : [ 56.01666, 94.15636, 0.02853709 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_pinky1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_pinky1",
+				"name" : "l_pinky1",
+				"label" : "Left Pinky 1",
+				"parent" : "#l_pinkymetacarpal",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 0.893, -0.841, -0.67 ],
+						"max" : [ 2.867, 0.755, 0.811 ]
+					},
+					"center_point" : [ 56.06196, 94.05953, -0.05054218 ],
+					"end_point" : [ 57.85732, 91.94183, -0.2586501 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_pinky2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_pinky2",
+				"name" : "l_pinky2",
+				"label" : "Left Pinky 2",
+				"parent" : "#l_pinky1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 0.029, -0.681, -0.682 ],
+						"max" : [ 1.8, 0.657, 0.706 ]
+					},
+					"center_point" : [ 57.85732, 91.94183, -0.2586501 ],
+					"end_point" : [ 58.93575, 90.65423, -0.3841059 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_pinky3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_pinky3",
+				"name" : "l_pinky3",
+				"label" : "Left Pinky 3",
+				"parent" : "#l_pinky2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ 0.059, -0.601, -0.668 ],
+						"max" : [ 1.856, 0.474, 0.622 ]
+					},
+					"center_point" : [ 58.93737, 90.65428, -0.4098669 ],
+					"end_point" : [ 60.04364, 89.25378, -0.5733197 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_forearmtwist1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_forearmtwist1",
+				"name" : "l_forearmtwist1",
+				"label" : "Left Forearm Twist 1",
+				"parent" : "#l_forearm",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 37.22469, 112.7291, -2.47711 ],
+					"end_point" : [ 44.50814, 106.183, 0.8696346 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_forearmtwist2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_forearmtwist2",
+				"name" : "l_forearmtwist2",
+				"label" : "Left Forearm Twist 2",
+				"parent" : "#l_forearm",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 44.7755, 105.893, 0.04805565 ],
+					"end_point" : [ 51.46107, 99.7486, 2.277121 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_upperarmtwist1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_upperarmtwist1",
+				"name" : "l_upperarmtwist1",
+				"label" : "Left Upper Arm Twist 1",
+				"parent" : "#l_upperarm",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 19.35381, 131.2148, -4.241251 ],
+					"end_point" : [ 25.55026, 124.495, -3.707423 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_upperarmtwist2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_upperarmtwist2",
+				"name" : "l_upperarmtwist2",
+				"label" : "Left Upper Arm Twist 2",
+				"parent" : "#l_upperarm",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 25.27594, 124.8679, -4.075221 ],
+					"end_point" : [ 32.80388, 116.7613, -3.482408 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_shoulder",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_shoulder",
+				"name" : "r_shoulder",
+				"label" : "Right Shoulder",
+				"parent" : "#spine4",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -21.93, -10.197, -7.21 ],
+						"max" : [ -8.475, 6.301, 7.382 ]
+					},
+					"center_point" : [ -3.453005, 135.4719, -3.618245 ],
+					"end_point" : [ -13.92389, 137.1705, -4.290051 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_upperarm",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_upperarm",
+				"name" : "r_upperarm",
+				"label" : "Right Upper Arm",
+				"parent" : "#r_shoulder",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -24.903, -4.593, -5.326 ],
+						"max" : [ -7.905, 4.968, 4.733 ]
+					},
+					"center_point" : [ -16.18354, 134.7332, -4.429407 ],
+					"end_point" : [ -32.98565, 116.6306, -3.892825 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_forearm",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_forearm",
+				"name" : "r_forearm",
+				"label" : "Right Forearm",
+				"parent" : "#r_upperarm",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -24.394, -4.737, -3.989 ],
+						"max" : [ 0.812, 4.255, 3.908 ]
+					},
+					"center_point" : [ -32.99138, 116.5617, -3.892825 ],
+					"end_point" : [ -51.20491, 100.1143, 2.21129 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_hand",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_hand",
+				"name" : "r_hand",
+				"label" : "Right Hand",
+				"parent" : "#r_forearm",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -9.87, -2.89, -4.885 ],
+						"max" : [ 2.178, 2.313, 3.458 ]
+					},
+					"center_point" : [ -51.5422, 99.77531, 2.306175 ],
+					"end_point" : [ -58.22221, 93.72066, 4.533167 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_hand_anchor",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_hand_anchor",
+				"name" : "r_hand_anchor",
+				"label" : "Right Hand Anchor",
+				"parent" : "#r_hand",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -54.13, 93.1, 2.82 ],
+					"end_point" : [ -54.13, 93.1, 13.54 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_thumb1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_thumb1",
+				"name" : "r_thumb1",
+				"label" : "Right Thumb 1",
+				"parent" : "#r_hand",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -4.544, -2.087, -2.639 ],
+						"max" : [ 0.471, 2.129, 2.196 ]
+					},
+					"center_point" : [ -51.73973, 97.88778, 4.081041 ],
+					"end_point" : [ -52.6237, 95.71559, 7.392737 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_thumb2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_thumb2",
+				"name" : "r_thumb2",
+				"label" : "Right Thumb 2",
+				"parent" : "#r_thumb1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -2.8, -1.236, -1.522 ],
+						"max" : [ 0.391, 1.229, 1.161 ]
+					},
+					"center_point" : [ -52.61329, 95.74154, 7.414405 ],
+					"end_point" : [ -53.45586, 93.43546, 8.963758 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_thumb3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_thumb3",
+				"name" : "r_thumb3",
+				"label" : "Right Thumb 3",
+				"parent" : "#r_thumb2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -2.888, -1.099, -1.141 ],
+						"max" : [ 0.363, 1.004, 0.849 ]
+					},
+					"center_point" : [ -53.46592, 93.42902, 8.969496 ],
+					"end_point" : [ -54.38219, 91.57084, 10.8697 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_indexmetacarpal",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_indexmetacarpal",
+				"name" : "r_indexmetacarpal",
+				"label" : "Right Index Metacarpal",
+				"parent" : "#r_hand",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -51.86363, 99.46383, 3.581812 ],
+					"end_point" : [ -56.718, 94.01292, 5.688928 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_index1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_index1",
+				"name" : "r_index1",
+				"label" : "Right Index 1",
+				"parent" : "#r_indexmetacarpal",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -3.942, -0.978, -0.907 ],
+						"max" : [ -1.122, 1.029, 1.038 ]
+					},
+					"center_point" : [ -56.718, 94.01292, 5.772514 ],
+					"end_point" : [ -59.16088, 91.10889, 6.312558 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_index2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_index2",
+				"name" : "r_index2",
+				"label" : "Right Index 2",
+				"parent" : "#r_index1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -2.173, -0.805, -0.825 ],
+						"max" : [ -0.038, 0.848, 0.869 ]
+					},
+					"center_point" : [ -59.16088, 91.10889, 6.312558 ],
+					"end_point" : [ -60.38429, 89.4748, 6.530908 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_index3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_index3",
+				"name" : "r_index3",
+				"label" : "Right Index 3",
+				"parent" : "#r_index2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -2.127, -0.727, -0.771 ],
+						"max" : [ -0.043, 0.654, 0.754 ]
+					},
+					"center_point" : [ -60.38429, 89.4748, 6.530908 ],
+					"end_point" : [ -61.64143, 87.74789, 6.745937 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_midmetacarpal",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_midmetacarpal",
+				"name" : "r_midmetacarpal",
+				"label" : "Right Mid Metacarpal",
+				"parent" : "#r_hand",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -52.11245, 99.32809, 2.72631 ],
+					"end_point" : [ -57.17793, 93.80786, 3.768446 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_mid1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_mid1",
+				"name" : "r_mid1",
+				"label" : "Right Mid 1",
+				"parent" : "#r_midmetacarpal",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -4.602, -1.19, -0.922 ],
+						"max" : [ -1.104, 0.972, 1.021 ]
+					},
+					"center_point" : [ -57.20964, 93.82899, 3.699607 ],
+					"end_point" : [ -59.90823, 90.60169, 4.013227 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_mid2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_mid2",
+				"name" : "r_mid2",
+				"label" : "Right Mid 2",
+				"parent" : "#r_mid1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -2.804, -0.955, -0.848 ],
+						"max" : [ -0.247, 0.743, 0.907 ]
+					},
+					"center_point" : [ -60.06554, 90.70678, 4.01144 ],
+					"end_point" : [ -61.61742, 88.58809, 4.218563 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_mid3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_mid3",
+				"name" : "r_mid3",
+				"label" : "Right Mid 3",
+				"parent" : "#r_mid2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -2.142, -0.825, -0.795 ],
+						"max" : [ -0.068, 0.6, 0.775 ]
+					},
+					"center_point" : [ -61.62453, 88.60079, 4.223068 ],
+					"end_point" : [ -63.01681, 86.93623, 4.34799 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_ringmetacarpal",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_ringmetacarpal",
+				"name" : "r_ringmetacarpal",
+				"label" : "Right Ring Metacarpal",
+				"parent" : "#r_hand",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -52.23601, 99.32024, 1.724918 ],
+					"end_point" : [ -56.70725, 93.92575, 1.86414 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_ring1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_ring1",
+				"name" : "r_ring1",
+				"label" : "Right Ring 1",
+				"parent" : "#r_ringmetacarpal",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -4.328, -1.121, -0.94 ],
+						"max" : [ -1.313, 0.904, 0.95 ]
+					},
+					"center_point" : [ -56.84558, 94.08215, 1.862033 ],
+					"end_point" : [ -59.41015, 91.02351, 1.797828 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_ring2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_ring2",
+				"name" : "r_ring2",
+				"label" : "Right Ring 2",
+				"parent" : "#r_ring1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -2.43, -0.817, -0.802 ],
+						"max" : [ -0.293, 0.728, 0.796 ]
+					},
+					"center_point" : [ -59.41015, 91.02351, 1.797828 ],
+					"end_point" : [ -60.75898, 89.32338, 1.771685 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_ring3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_ring3",
+				"name" : "r_ring3",
+				"label" : "Right Ring 3",
+				"parent" : "#r_ring2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -2.254, -0.759, -0.737 ],
+						"max" : [ -0.197, 0.562, 0.746 ]
+					},
+					"center_point" : [ -60.75898, 89.32338, 1.771685 ],
+					"end_point" : [ -62.09539, 87.64376, 1.771011 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_pinkymetacarpal",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_pinkymetacarpal",
+				"name" : "r_pinkymetacarpal",
+				"label" : "Right Pinky Metacarpal",
+				"parent" : "#r_hand",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -52.29771, 99.34055, 0.7633598 ],
+					"end_point" : [ -56.01666, 94.15636, 0.02853709 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_pinky1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_pinky1",
+				"name" : "r_pinky1",
+				"label" : "Right Pinky 1",
+				"parent" : "#r_pinkymetacarpal",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -2.866, -0.841, -0.67 ],
+						"max" : [ -0.892, 0.755, 0.811 ]
+					},
+					"center_point" : [ -56.06196, 94.05953, -0.05054218 ],
+					"end_point" : [ -57.85732, 91.94183, -0.2586501 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_pinky2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_pinky2",
+				"name" : "r_pinky2",
+				"label" : "Right Pinky 2",
+				"parent" : "#r_pinky1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -1.799, -0.681, -0.682 ],
+						"max" : [ -0.028, 0.657, 0.706 ]
+					},
+					"center_point" : [ -57.85732, 91.94183, -0.2586501 ],
+					"end_point" : [ -58.93575, 90.65423, -0.3841059 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_pinky3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_pinky3",
+				"name" : "r_pinky3",
+				"label" : "Right Pinky 3",
+				"parent" : "#r_pinky2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -1.855, -0.601, -0.668 ],
+						"max" : [ -0.058, 0.474, 0.622 ]
+					},
+					"center_point" : [ -58.93737, 90.65428, -0.4098669 ],
+					"end_point" : [ -60.04364, 89.25378, -0.5733197 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_forearmtwist1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_forearmtwist1",
+				"name" : "r_forearmtwist1",
+				"label" : "Right Forearm Twist 1",
+				"parent" : "#r_forearm",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -37.22469, 112.7291, -2.47711 ],
+					"end_point" : [ -44.50814, 106.183, 0.8696346 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_forearmtwist2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_forearmtwist2",
+				"name" : "r_forearmtwist2",
+				"label" : "Right Forearm Twist 2",
+				"parent" : "#r_forearm",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -44.7755, 105.893, 0.04805565 ],
+					"end_point" : [ -51.46107, 99.7486, 2.277121 ],
+					"rotation_order" : "XZY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_upperarmtwist1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_upperarmtwist1",
+				"name" : "r_upperarmtwist1",
+				"label" : "Right Upper Arm Twist 1",
+				"parent" : "#r_upperarm",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -19.35381, 131.2148, -4.241251 ],
+					"end_point" : [ -25.55026, 124.495, -3.707423 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_upperarmtwist2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_upperarmtwist2",
+				"name" : "r_upperarmtwist2",
+				"label" : "Right Upper Arm Twist 2",
+				"parent" : "#r_upperarm",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -25.27594, 124.8679, -4.075221 ],
+					"end_point" : [ -32.80388, 116.7613, -3.482408 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "neck1",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#neck1",
+				"name" : "neck1",
+				"label" : "Neck 1",
+				"parent" : "#spine4",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -7.05, 0.033, -5.928 ],
+						"max" : [ 7.051, 6.646, 5.859 ]
+					},
+					"center_point" : [ 0, 140.6757, -3.001803 ],
+					"end_point" : [ 0, 146.7849, -1.866513 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "neck2",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#neck2",
+				"name" : "neck2",
+				"label" : "Neck 2",
+				"parent" : "#neck1",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -5.755, -2.27, -6.68 ],
+						"max" : [ 5.756, 6.495, 4.923 ]
+					},
+					"center_point" : [ 0, 146.7392, -0.6898642 ],
+					"end_point" : [ 0, 153.2976, -0.3309681 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "head",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#head",
+				"name" : "head",
+				"label" : "Head",
+				"parent" : "#neck2",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -8.833, -6.154, -8.617 ],
+						"max" : [ 8.834, 16.676, 12.398 ]
+					},
+					"center_point" : [ 0, 153.3122, -0.606104 ],
+					"end_point" : [ 0, 156.5085, -0.5429561 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "upperteeth",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#upperteeth",
+				"name" : "upperteeth",
+				"label" : "Upper Teeth",
+				"parent" : "#head",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -0.097, -0.097, 0 ],
+						"max" : [ 0.098, 0.098, 0.982 ]
+					},
+					"center_point" : [ 0, 153.3114, 7.004025 ],
+					"end_point" : [ 0, 153.2904, 7.985456 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "lowerjaw",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#lowerjaw",
+				"name" : "lowerjaw",
+				"label" : "Lower Jaw",
+				"parent" : "#head",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -0.676, -0.676, 0 ],
+						"max" : [ 0.677, 0.677, 6.772 ]
+					},
+					"center_point" : [ 0, 154.5, 1.99 ],
+					"end_point" : [ 0, 152.0001, 8.284117 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "lowerteeth",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#lowerteeth",
+				"name" : "lowerteeth",
+				"label" : "Lower Teeth",
+				"parent" : "#lowerjaw",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 0, 152.3038, 6.817326 ],
+					"end_point" : [ 0, 152.0776, 7.794807 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "lowerfacerig",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#lowerfacerig",
+				"name" : "lowerfacerig",
+				"label" : "Lower Face Rig",
+				"parent" : "#lowerjaw",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 0, 154.858, 1.253153 ],
+					"end_point" : [ 0.6285715, 151.8241, 8.176306 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_lipcorner",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_lipcorner",
+				"name" : "l_lipcorner",
+				"label" : "Left Lip Corner",
+				"parent" : "#lowerfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 2.947195, 152.5046, 8.107924 ],
+					"end_point" : [ 3.092831, 152.3982, 9.083015 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_liplower",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_liplower",
+				"name" : "l_liplower",
+				"label" : "Left Lip Lower",
+				"parent" : "#lowerfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 1.482253, 151.9977, 8.960783 ],
+					"end_point" : [ 1.448815, 152.0254, 9.843428 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "liplowermiddle",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#liplowermiddle",
+				"name" : "liplowermiddle",
+				"label" : "Lip Lower Middle",
+				"parent" : "#lowerfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 0, 151.6209, 9.487647 ],
+					"end_point" : [ 0, 151.6403, 10.47348 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_liplower",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_liplower",
+				"name" : "r_liplower",
+				"label" : "Right Lip Lower",
+				"parent" : "#lowerfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -1.482253, 151.9977, 8.960783 ],
+					"end_point" : [ -1.448815, 152.0254, 9.843428 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_lipcorner",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_lipcorner",
+				"name" : "r_lipcorner",
+				"label" : "Right Lip Corner",
+				"parent" : "#lowerfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -2.947195, 152.5046, 8.107924 ],
+					"end_point" : [ -3.092831, 152.3982, 9.083015 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_cheeklower",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_cheeklower",
+				"name" : "l_cheeklower",
+				"label" : "Left Cheek Lower",
+				"parent" : "#lowerfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 4.4, 152.86, 5.317883 ],
+					"end_point" : [ 4.4, 152.86, 6.333743 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_cheeklower",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_cheeklower",
+				"name" : "r_cheeklower",
+				"label" : "Right Cheek Lower",
+				"parent" : "#lowerfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -4.4, 152.86, 5.317883 ],
+					"end_point" : [ -4.4, 152.86, 6.333743 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "chin",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#chin",
+				"name" : "chin",
+				"label" : "Chin",
+				"parent" : "#lowerfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 0, 149.283, 8.291198 ],
+					"end_point" : [ 0, 149.2835, 9.429443 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "upperfacerig",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#upperfacerig",
+				"name" : "upperfacerig",
+				"label" : "Upper Face Rig",
+				"parent" : "#head",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 0, 153.3122, -0.606104 ],
+					"end_point" : [ 0, 156.5085, -0.5429561 ],
+					"rotation_order" : "YZX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_browinner",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_browinner",
+				"name" : "l_browinner",
+				"label" : "Left Brow Inner",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 2.01087, 161.0445, 9.132657 ],
+					"end_point" : [ 2.015477, 161.0236, 9.982869 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_browouter",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_browouter",
+				"name" : "l_browouter",
+				"label" : "Left Brow Outer",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 4.181125, 161.0122, 8.2 ],
+					"end_point" : [ 4.196427, 160.9988, 9.2 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_browinner",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_browinner",
+				"name" : "r_browinner",
+				"label" : "Right Brow Inner",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -2.01087, 161.0445, 9.132657 ],
+					"end_point" : [ -2.015477, 161.0236, 9.982869 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_browouter",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_browouter",
+				"name" : "r_browouter",
+				"label" : "Right Brow Outer",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -4.181125, 161.0122, 8.2 ],
+					"end_point" : [ -4.196427, 160.9988, 9.2 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "centerbrow",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#centerbrow",
+				"name" : "centerbrow",
+				"label" : "Center Brow",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 0, 160.7691, 9.759774 ],
+					"end_point" : [ 0, 160.7405, 10.58748 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_eyelidupper",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_eyelidupper",
+				"name" : "l_eyelidupper",
+				"label" : "Left Eyelid Upper",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 2.975697, 159.1098, 7.375 ],
+					"end_point" : [ 3.091923, 159.5258, 8.664841 ],
+					"rotation_order" : "ZXY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_eyelidlower",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_eyelidlower",
+				"name" : "l_eyelidlower",
+				"label" : "Left Eyelid Lower",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 2.975282, 159.0754, 7.375 ],
+					"end_point" : [ 3.105216, 158.4916, 8.550056 ],
+					"rotation_order" : "ZXY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_eyelidupper",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_eyelidupper",
+				"name" : "r_eyelidupper",
+				"label" : "Right Eyelid Upper",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -2.975697, 159.1098, 7.375 ],
+					"end_point" : [ -3.091923, 159.5258, 8.664841 ],
+					"rotation_order" : "ZXY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_eyelidlower",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_eyelidlower",
+				"name" : "r_eyelidlower",
+				"label" : "Right Eyelid Lower",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -2.975282, 159.0754, 7.375 ],
+					"end_point" : [ -3.105216, 158.4916, 8.550056 ],
+					"rotation_order" : "ZXY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_squint",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_squint",
+				"name" : "l_squint",
+				"label" : "Left Squint",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 2.555154, 157.937, 8.283267 ],
+					"end_point" : [ 2.538804, 157.8803, 9.110342 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_squint",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_squint",
+				"name" : "r_squint",
+				"label" : "Right Squint",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -2.555154, 157.937, 8.283267 ],
+					"end_point" : [ -2.538804, 157.8803, 9.110342 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_cheek",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_cheek",
+				"name" : "l_cheek",
+				"label" : "Left Cheek",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 5.022102, 156.374, 7.582802 ],
+					"end_point" : [ 5.038218, 156.3375, 8.533567 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_cheek",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_cheek",
+				"name" : "r_cheek",
+				"label" : "Right Cheek",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -5.022102, 156.374, 7.582802 ],
+					"end_point" : [ -5.038218, 156.3375, 8.533567 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_nostril",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_nostril",
+				"name" : "l_nostril",
+				"label" : "Left Nostril",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 1.068105, 155.5498, 9.963777 ],
+					"end_point" : [ 1.068805, 155.3753, 11.02586 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_nostril",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_nostril",
+				"name" : "r_nostril",
+				"label" : "Right Nostril",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -1.068105, 155.5498, 9.963777 ],
+					"end_point" : [ -1.068805, 155.3753, 11.02586 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "lipuppermiddle",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#lipuppermiddle",
+				"name" : "lipuppermiddle",
+				"label" : "Lip Upper Middle",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 0, 153, 9.837261 ],
+					"end_point" : [ 0, 153, 10.81051 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_lipupper",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_lipupper",
+				"name" : "l_lipupper",
+				"label" : "Left Lip Upper",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 1.483754, 152.7938, 9.242611 ],
+					"end_point" : [ 1.493824, 152.7297, 10.05184 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_lipupper",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_lipupper",
+				"name" : "r_lipupper",
+				"label" : "Right Lip Upper",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -1.483754, 152.7938, 9.242611 ],
+					"end_point" : [ -1.493824, 152.7297, 10.05184 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_infraorbital",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_infraorbital",
+				"name" : "l_infraorbital",
+				"label" : "Left Infraorbital",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 2.15, 156.7889, 7.582802 ],
+					"end_point" : [ 2.15, 156.791, 8.533567 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_infraorbital",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_infraorbital",
+				"name" : "r_infraorbital",
+				"label" : "Right Infraorbital",
+				"parent" : "#upperfacerig",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -2.15, 156.7889, 7.582802 ],
+					"end_point" : [ -2.15, 156.791, 8.533567 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_eye",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_eye",
+				"name" : "l_eye",
+				"label" : "Left Eye",
+				"parent" : "#head",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -0.13, -0.13, 0 ],
+						"max" : [ 0.131, 0.131, 1.307 ]
+					},
+					"center_point" : [ 2.975328, 159.0924, 7.375 ],
+					"end_point" : [ 2.974549, 159.0923, 8.681953 ],
+					"rotation_order" : "ZXY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_eye",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_eye",
+				"name" : "r_eye",
+				"label" : "Right Eye",
+				"parent" : "#head",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -0.13, -0.13, 0 ],
+						"max" : [ 0.131, 0.131, 1.307 ]
+					},
+					"center_point" : [ -2.975328, 159.0924, 7.375 ],
+					"end_point" : [ -2.974549, 159.0923, 8.681953 ],
+					"rotation_order" : "ZXY"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_ear",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_ear",
+				"name" : "l_ear",
+				"label" : "Left Ear",
+				"parent" : "#head",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ 6.547009, 157.2569, -0.218674 ],
+					"end_point" : [ 8.369321, 157.0146, -3.055866 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_ear",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_ear",
+				"name" : "r_ear",
+				"label" : "Right Ear",
+				"parent" : "#head",
+				"preview" : {
+					"type" : "bone",
+					"center_point" : [ -6.547009, 157.2569, -0.218674 ],
+					"end_point" : [ -8.369321, 157.0146, -3.055866 ],
+					"rotation_order" : "XYZ"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "l_pectoral",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#l_pectoral",
+				"name" : "l_pectoral",
+				"label" : "Left Pectoral",
+				"parent" : "#spine3",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -5.304, -6.176, 7.357 ],
+						"max" : [ 7.197, 2.963, 10.555 ]
+					},
+					"center_point" : [ 4.867468, 125.2558, 0.3168433 ],
+					"end_point" : [ 8.856342, 126.8258, 9.253346 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			},
+			{
+				"id" : "r_pectoral",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#r_pectoral",
+				"name" : "r_pectoral",
+				"label" : "Right Pectoral",
+				"parent" : "#spine3",
+				"preview" : {
+					"type" : "bone",
+					"oriented_box" : {
+						"min" : [ -7.196, -6.176, 7.357 ],
+						"max" : [ 5.305, 2.963, 10.555 ]
+					},
+					"center_point" : [ -4.867468, 125.2558, 0.3168433 ],
+					"end_point" : [ -8.856342, 126.8258, 9.253346 ],
+					"rotation_order" : "ZYX"
+				},
+				"extra" : [
+					{
+						"type" : "studio_node_channels",
+						"version" : 4
+					}
+				]
+			}
+		],
+		"modifiers" : [
+			{
+				"id" : "body_bs_Navel_HD3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Morphs/Daz%203D/Base/body_bs_Navel_HD3.dsf#body_bs_Navel_HD3",
+				"parent" : "#Genesis9",
+				"channel" : {
+					"id" : "value",
+					"type" : "float",
+					"name" : "Value",
+					"value" : 1,
+					"current_value" : 1
+				}
+			},
+			{
+				"id" : "head_bs_MouthRealism_HD3",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Morphs/Daz%203D/Base/head_bs_MouthRealism_HD3.dsf#head_bs_MouthRealism_HD3",
+				"parent" : "#Genesis9",
+				"channel" : {
+					"id" : "value",
+					"type" : "float",
+					"name" : "Value",
+					"value" : 1,
+					"current_value" : 1
+				}
+			},
+			{
+				"id" : "SkinBinding",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Genesis9.dsf#SkinBinding",
+				"parent" : "#Genesis9"
+			},
+			{
+				"id" : "facs_ctrl_EyeRestingFocalPoint",
+				"url" : "/data/Daz%203D/Genesis%209/Base/Morphs/Daz%203D/FACS/facs_ctrl_EyeRestingFocalPoint.dsf#facs_ctrl_EyeRestingFocalPoint",
+				"parent" : "#Genesis9",
+				"channel" : {
+					"id" : "value",
+					"type" : "float",
+					"name" : "facs_ctrl_EyeRestingFocalPoint",
+					"value" : 1,
+					"current_value" : 1
+				}
+			}
+		],
+		"materials" : [
+			{
+				"id" : "Fingernails",
+				"url" : "/data/Daz%203D/Built-in%20Content/Daz%20Iray%20PBRSkin/PBRSkin.dsf#PBRSkin",
+				"geometry" : "#Genesis9-1",
+				"groups" : [ "Fingernails" ],
+				"diffuse" : {
+					"channel" : {
+						"id" : "diffuse",
+						"type" : "float_color",
+						"name" : "Diffuse Color",
+						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
+						"current_value" : [ 1, 1, 1 ],
+						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_D_1005.jpg"
+					},
+					"group" : "/Base/Diffuse/Reflection"
+				},
+				"uv_set" : "/data/Daz%203D/Genesis%209/Base/UV%20Sets/Daz%203D/Base/Base%20Multi%20UDIM.dsf#Base%20Multi%20UDIM",
+				"extra" : [
+					{
+						"type" : "studio/material/daz_brick"
+					},
+					{
+						"type" : "studio_material_channels",
+						"channels" : [
+							{
+								"channel" : {
+									"id" : "Metallic Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Diffuse Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Weight",
+									"type" : "float",
+									"current_value" : 0.85,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Color",
+									"type" : "float_color",
+									"current_value" : [ 1, 1, 1 ],
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_SSS_1005.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_SLW.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Reflectivity",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 1 Roughness",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_R_1005.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 2 Roughness Mult",
+									"type" : "float",
+									"current_value" : 0.55,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Ratio",
+									"type" : "float",
+									"current_value" : 0.15,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Base Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Occlusion Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Ambient Occlusion Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_SO_1005.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Horizontal Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Vertical Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Nails_NM_1005.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Specular Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Weight",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Reflectivity",
+									"type" : "float",
+									"current_value" : 0.5,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Roughness",
+									"type" : "float",
+									"current_value" : 0.6721311,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Bump Weight",
+									"type" : "float",
+									"current_value" : 0.5018727
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Size",
+									"type" : "float",
+									"current_value" : 0.001
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Density",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Displacement Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Minimum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Maximum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmission Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Color",
+									"type" : "float_color",
+									"current_value" : [ 0.9764706, 0.4823529, 0.3529412 ]
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Measurement Distance",
+									"type" : "float",
+									"current_value" : 0.1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Sub Surface Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "SSS Direction",
+									"type" : "float",
+									"current_value" : -0.7
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"id" : "Toenails",
+				"url" : "/data/Daz%203D/Built-in%20Content/Daz%20Iray%20PBRSkin/PBRSkin.dsf#PBRSkin",
+				"geometry" : "#Genesis9-1",
+				"groups" : [ "Toenails" ],
+				"diffuse" : {
+					"channel" : {
+						"id" : "diffuse",
+						"type" : "float_color",
+						"name" : "Diffuse Color",
+						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
+						"current_value" : [ 1, 1, 1 ],
+						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_D_1005.jpg"
+					},
+					"group" : "/Base/Diffuse/Reflection"
+				},
+				"uv_set" : "/data/Daz%203D/Genesis%209/Base/UV%20Sets/Daz%203D/Base/Base%20Multi%20UDIM.dsf#Base%20Multi%20UDIM",
+				"extra" : [
+					{
+						"type" : "studio/material/daz_brick"
+					},
+					{
+						"type" : "studio_material_channels",
+						"channels" : [
+							{
+								"channel" : {
+									"id" : "Metallic Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Diffuse Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Weight",
+									"type" : "float",
+									"current_value" : 0.85,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Color",
+									"type" : "float_color",
+									"current_value" : [ 1, 1, 1 ],
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_SSS_1005.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_SLW.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Reflectivity",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 1 Roughness",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_R_1005.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 2 Roughness Mult",
+									"type" : "float",
+									"current_value" : 0.55,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Ratio",
+									"type" : "float",
+									"current_value" : 0.15,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Base Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Occlusion Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Ambient Occlusion Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Nails_SO_1005.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Horizontal Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Vertical Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Nails_NM_1005.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Specular Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Weight",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Reflectivity",
+									"type" : "float",
+									"current_value" : 0.5,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Roughness",
+									"type" : "float",
+									"current_value" : 0.6721311,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Bump Weight",
+									"type" : "float",
+									"current_value" : 0.5018727
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Size",
+									"type" : "float",
+									"current_value" : 0.001
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Density",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Displacement Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Minimum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Maximum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmission Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Color",
+									"type" : "float_color",
+									"current_value" : [ 0.9764706, 0.4823529, 0.3529412 ]
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Measurement Distance",
+									"type" : "float",
+									"current_value" : 0.1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Sub Surface Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "SSS Direction",
+									"type" : "float",
+									"current_value" : -0.7
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"id" : "Legs",
+				"url" : "/data/Daz%203D/Built-in%20Content/Daz%20Iray%20PBRSkin/PBRSkin.dsf#PBRSkin",
+				"geometry" : "#Genesis9-1",
+				"groups" : [ "Legs" ],
+				"diffuse" : {
+					"channel" : {
+						"id" : "diffuse",
+						"type" : "float_color",
+						"name" : "Diffuse Color",
+						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
+						"current_value" : [ 1, 1, 1 ],
+						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Legs_D_1003.jpg"
+					},
+					"group" : "/Base/Diffuse/Reflection"
+				},
+				"uv_set" : "/data/Daz%203D/Genesis%209/Base/UV%20Sets/Daz%203D/Base/Base%20Multi%20UDIM.dsf#Base%20Multi%20UDIM",
+				"extra" : [
+					{
+						"type" : "studio/material/daz_brick"
+					},
+					{
+						"type" : "studio_material_channels",
+						"channels" : [
+							{
+								"channel" : {
+									"id" : "Metallic Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Diffuse Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Weight",
+									"type" : "float",
+									"current_value" : 0.85,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Color",
+									"type" : "float_color",
+									"current_value" : [ 1, 1, 1 ],
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Legs_SSS_1003.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_SLW.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Reflectivity",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 1 Roughness",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Legs_R_1003.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 2 Roughness Mult",
+									"type" : "float",
+									"current_value" : 0.55,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Ratio",
+									"type" : "float",
+									"current_value" : 0.15,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Base Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Occlusion Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Ambient Occlusion Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Legs_SO_1003.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Horizontal Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Vertical Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Legs_NM_1003.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Specular Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Weight",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Reflectivity",
+									"type" : "float",
+									"current_value" : 0.5,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Roughness",
+									"type" : "float",
+									"current_value" : 0.6721311,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Bump Weight",
+									"type" : "float",
+									"current_value" : 0.5018727
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Size",
+									"type" : "float",
+									"current_value" : 0.001
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Density",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Displacement Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Minimum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Maximum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmission Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Color",
+									"type" : "float_color",
+									"current_value" : [ 0.9764706, 0.4823529, 0.3529412 ]
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Measurement Distance",
+									"type" : "float",
+									"current_value" : 0.1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Sub Surface Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "SSS Direction",
+									"type" : "float",
+									"current_value" : -0.7
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"id" : "Mouth Cavity",
+				"url" : "/data/Daz%203D/Built-in%20Content/Daz%20Iray%20PBRSkin/PBRSkin.dsf#PBRSkin",
+				"geometry" : "#Genesis9-1",
+				"groups" : [ "Mouth Cavity" ],
+				"diffuse" : {
+					"channel" : {
+						"id" : "diffuse",
+						"type" : "float_color",
+						"name" : "Diffuse Color",
+						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
+						"current_value" : [ 1, 1, 1 ],
+						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_D_1001.jpg"
+					},
+					"group" : "/Base/Diffuse/Reflection"
+				},
+				"uv_set" : "/data/Daz%203D/Genesis%209/Base/UV%20Sets/Daz%203D/Base/Base%20Multi%20UDIM.dsf#Base%20Multi%20UDIM",
+				"extra" : [
+					{
+						"type" : "studio/material/daz_brick"
+					},
+					{
+						"type" : "studio_material_channels",
+						"channels" : [
+							{
+								"channel" : {
+									"id" : "Metallic Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Diffuse Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Weight",
+									"type" : "float",
+									"current_value" : 0.85,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Color",
+									"type" : "float_color",
+									"current_value" : [ 1, 1, 1 ],
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_SSS_1001.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Weight",
+									"type" : "float",
+									"current_value" : 0.6,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Reflectivity",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 1 Roughness",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_R_1001.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 2 Roughness Mult",
+									"type" : "float",
+									"current_value" : 0.55,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Ratio",
+									"type" : "float",
+									"current_value" : 0.15,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Base Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Occlusion Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Ambient Occlusion Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_SO_1001.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Horizontal Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Vertical Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Head_NM_1001.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Specular Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Weight",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Reflectivity",
+									"type" : "float",
+									"current_value" : 0.5,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Roughness",
+									"type" : "float",
+									"current_value" : 0.6721311,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Bump Weight",
+									"type" : "float",
+									"current_value" : 0.5018727
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Size",
+									"type" : "float",
+									"current_value" : 0.001
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Density",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Displacement Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Minimum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Maximum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmission Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Color",
+									"type" : "float_color",
+									"current_value" : [ 0.9764706, 0.4823529, 0.3529412 ]
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Measurement Distance",
+									"type" : "float",
+									"current_value" : 0.1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Sub Surface Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "SSS Direction",
+									"type" : "float",
+									"current_value" : -0.7
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"id" : "Arms",
+				"url" : "/data/Daz%203D/Built-in%20Content/Daz%20Iray%20PBRSkin/PBRSkin.dsf#PBRSkin",
+				"geometry" : "#Genesis9-1",
+				"groups" : [ "Arms" ],
+				"diffuse" : {
+					"channel" : {
+						"id" : "diffuse",
+						"type" : "float_color",
+						"name" : "Diffuse Color",
+						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
+						"current_value" : [ 1, 1, 1 ],
+						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Arms_D_1004.jpg"
+					},
+					"group" : "/Base/Diffuse/Reflection"
+				},
+				"uv_set" : "/data/Daz%203D/Genesis%209/Base/UV%20Sets/Daz%203D/Base/Base%20Multi%20UDIM.dsf#Base%20Multi%20UDIM",
+				"extra" : [
+					{
+						"type" : "studio/material/daz_brick"
+					},
+					{
+						"type" : "studio_material_channels",
+						"channels" : [
+							{
+								"channel" : {
+									"id" : "Metallic Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Diffuse Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Weight",
+									"type" : "float",
+									"current_value" : 0.85,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Color",
+									"type" : "float_color",
+									"current_value" : [ 1, 1, 1 ],
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Arms_SSS_1004.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_SLW.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Reflectivity",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 1 Roughness",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Arms_R_1004.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 2 Roughness Mult",
+									"type" : "float",
+									"current_value" : 0.55,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Ratio",
+									"type" : "float",
+									"current_value" : 0.15,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Base Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Occlusion Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Ambient Occlusion Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Arms_SO_1004.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Horizontal Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Vertical Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Arms_NM_1004.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Specular Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Weight",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Reflectivity",
+									"type" : "float",
+									"current_value" : 0.5,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Roughness",
+									"type" : "float",
+									"current_value" : 0.6721311,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Bump Weight",
+									"type" : "float",
+									"current_value" : 0.5018727
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Size",
+									"type" : "float",
+									"current_value" : 0.001
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Density",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Displacement Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Minimum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Maximum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmission Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Color",
+									"type" : "float_color",
+									"current_value" : [ 0.9764706, 0.4823529, 0.3529412 ]
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Measurement Distance",
+									"type" : "float",
+									"current_value" : 0.1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Sub Surface Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "SSS Direction",
+									"type" : "float",
+									"current_value" : -0.7
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"id" : "Head",
+				"url" : "/data/Daz%203D/Built-in%20Content/Daz%20Iray%20PBRSkin/PBRSkin.dsf#PBRSkin",
+				"geometry" : "#Genesis9-1",
+				"groups" : [ "Head" ],
+				"diffuse" : {
+					"channel" : {
+						"id" : "diffuse",
+						"type" : "float_color",
+						"name" : "Diffuse Color",
+						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
+						"current_value" : [ 1, 1, 1 ],
+						"image" : "#Layered%20Diffuse%20Color%20for%20Head-1"
+					},
+					"group" : "/Base/Diffuse/Reflection"
+				},
+				"uv_set" : "/data/Daz%203D/Genesis%209/Base/UV%20Sets/Daz%203D/Base/Base%20Multi%20UDIM.dsf#Base%20Multi%20UDIM",
+				"extra" : [
+					{
+						"type" : "studio/material/daz_brick"
+					},
+					{
+						"type" : "studio_material_channels",
+						"channels" : [
+							{
+								"channel" : {
+									"id" : "Metallic Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Diffuse Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Weight",
+									"type" : "float",
+									"current_value" : 0.85,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Color",
+									"type" : "float_color",
+									"current_value" : [ 1, 1, 1 ],
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_SSS_1001.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_SLW.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Reflectivity",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 1 Roughness",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_R_1001.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 2 Roughness Mult",
+									"type" : "float",
+									"current_value" : 0.55,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Ratio",
+									"type" : "float",
+									"current_value" : 0.15,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Base Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Roughness Mult",
+									"type" : "float",
+									"current_value" : 2,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Occlusion Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Ambient Occlusion Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Head_SO_1001.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Horizontal Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Vertical Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Head_NM_1001.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Specular Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Weight",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Reflectivity",
+									"type" : "float",
+									"current_value" : 0.5,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Roughness",
+									"type" : "float",
+									"current_value" : 0.6721311,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Bump Weight",
+									"type" : "float",
+									"current_value" : 0.5018727
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Size",
+									"type" : "float",
+									"current_value" : 0.001
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Density",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Displacement Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Minimum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Maximum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmission Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Color",
+									"type" : "float_color",
+									"current_value" : [ 0.9764706, 0.4823529, 0.3529412 ]
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Measurement Distance",
+									"type" : "float",
+									"current_value" : 0.1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Sub Surface Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "SSS Direction",
+									"type" : "float",
+									"current_value" : -0.7
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"id" : "Body",
+				"url" : "/data/Daz%203D/Built-in%20Content/Daz%20Iray%20PBRSkin/PBRSkin.dsf#PBRSkin",
+				"geometry" : "#Genesis9-1",
+				"groups" : [ "Body" ],
+				"diffuse" : {
+					"channel" : {
+						"id" : "diffuse",
+						"type" : "float_color",
+						"name" : "Diffuse Color",
+						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
+						"current_value" : [ 1, 1, 1 ],
+						"image" : "#Layered%20Diffuse%20Color%20for%20Body-1"
+					},
+					"group" : "/Base/Diffuse/Reflection"
+				},
+				"uv_set" : "/data/Daz%203D/Genesis%209/Base/UV%20Sets/Daz%203D/Base/Base%20Multi%20UDIM.dsf#Base%20Multi%20UDIM",
+				"extra" : [
+					{
+						"type" : "studio/material/daz_brick"
+					},
+					{
+						"type" : "studio_material_channels",
+						"channels" : [
+							{
+								"channel" : {
+									"id" : "Metallic Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Diffuse Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Weight",
+									"type" : "float",
+									"current_value" : 0.85,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Translucency Color",
+									"type" : "float_color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : "#Layered%20Translucency%20Color%20for%20Body-1"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : "#Layered%20Dual%20Lobe%20Specular%20Weight%20for%20Body-1"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Reflectivity",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 1 Roughness",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : "#Layered%20Specular%20Lobe%201%20Roughness%20for%20Body-1"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Lobe 2 Roughness Mult",
+									"type" : "float",
+									"current_value" : 0.55,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Dual Lobe Specular Ratio",
+									"type" : "float",
+									"current_value" : 0.15,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Bump Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Base Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Makeup Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Specular Occlusion Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Ambient Occlusion Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_01/G9Feminine01_Body_SO_1002.jpg"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Weight",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Horizontal Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Vertical Tiles",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Normal Map",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : "#Layered%20Detail%20Normal%20Map%20for%20Body-1"
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Detail Specular Roughness Mult",
+									"type" : "float",
+									"current_value" : 1,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Weight",
+									"type" : "float",
+									"current_value" : 0.25,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Reflectivity",
+									"type" : "float",
+									"current_value" : 0.5,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Roughness",
+									"type" : "float",
+									"current_value" : 0.6721311,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Bump Weight",
+									"type" : "float",
+									"current_value" : 0.5018727
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Weight",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Color",
+									"type" : "color",
+									"current_value" : [ 1, 1, 1 ],
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Roughness",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Size",
+									"type" : "float",
+									"current_value" : 0.001
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Metallic Flakes Density",
+									"type" : "float",
+									"current_value" : 1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Displacement Strength",
+									"type" : "float",
+									"current_value" : 0,
+									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Minimum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Maximum Displacement",
+									"type" : "float",
+									"current_value" : 0
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmission Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Color",
+									"type" : "float_color",
+									"current_value" : [ 0.9764706, 0.4823529, 0.3529412 ]
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Transmitted Measurement Distance",
+									"type" : "float",
+									"current_value" : 0.1
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Sub Surface Enable",
+									"type" : "bool",
+									"current_value" : true
+								}
+							},
+							{
+								"channel" : {
+									"id" : "SSS Direction",
+									"type" : "float",
+									"current_value" : -0.7
+								}
+							}
+						]
+					}
+				]
+			}
+		],
+		"extra" : [
+			{
+				"type" : "scene_post_load_script",
+				"name" : "Genesis9PostLoad{b512feec-b55c-47a5-ab45-e8d2093615c5}",
+				"script" : "data/Daz 3D/Genesis 9/Base/Tools/Utilities/Character Addon Loader.dse",
+				"settings" : {
+					"PostLoadAddons" : {
+						"type" : "settings",
+						"value" : {
+							"Follower/Attachment/Head/Face/Tears" : {
+								"type" : "settings",
+								"value" : {
+									"AssetName" : "Genesis9Tear",
+									"AssetFile" : "data/Daz 3D/Genesis 9/Genesis 9 Tear/Tools/Script Loads/Genesis 9 Tear.duf",
+									"Presets" : {
+										"type" : "settings",
+										"value" : {
+											"Mat" : {
+												"type" : "settings",
+												"value" : {
+													"PresetFile" : "data/Daz 3D/Genesis 9/Genesis 9 Tear/Tools/Script Loads/Genesis 9 Tear MAT.duf",
+													"SelectAddon" : false
+												}
+											}
+										}
+									}
+								}
+							},
+							"Follower/Attachment/Head/Face/Eyes" : {
+								"type" : "settings",
+								"value" : {
+									"AssetName" : "Genesis9Eyes",
+									"AssetFile" : "data/Daz 3D/Genesis 9/Genesis 9 Eyes/Tools/Script Loads/Genesis 9 Eyes.duf",
+									"Presets" : {
+										"type" : "settings",
+										"value" : {
+											"Mat" : {
+												"type" : "settings",
+												"value" : {
+													"PresetFile" : "data/Daz 3D/Genesis 9/Genesis 9 Eyes/Tools/Script Loads/Genesis 9 Eyes MAT.duf",
+													"SelectAddon" : false
+												}
+											}
+										}
+									}
+								}
+							},
+							"Follower/Attachment/Head/Face/Mouth" : {
+								"type" : "settings",
+								"value" : {
+									"AssetName" : "Genesis9Mouth",
+									"AssetFile" : "data/Daz 3D/Genesis 9/Genesis 9 Mouth/Tools/Script Loads/Genesis 9 Mouth.duf",
+									"Presets" : {
+										"type" : "settings",
+										"value" : {
+											"Mat" : {
+												"type" : "settings",
+												"value" : {
+													"PresetFile" : "data/Daz 3D/Genesis 9/Genesis 9 Mouth/Tools/Script Loads/Genesis 9 Mouth MAT.duf",
+													"SelectAddon" : false
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"FigureInstanceID" : "#Genesis9",
+					"RunOnce" : true
+				}
+			}
+		]
+	}
+}
