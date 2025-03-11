@@ -2084,7 +2084,8 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	}
 
 	/// TEXTURE OPERATIONS (MODESTY OVERLAY, UV CONVERSION, ETC)
-	if (!sApplyModestyOverlay.isEmpty())
+	if (!sApplyModestyOverlay.isEmpty() &&
+		(m_nModestyOverlay != eModestyOverlay::UseCurrentTextures) )
 	{
 		robloxPreProcessProgress.setCurrentInfo("Applying modesty layer...");
 		robloxPreProcessProgress.step();

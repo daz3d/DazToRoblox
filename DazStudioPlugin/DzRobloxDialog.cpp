@@ -141,10 +141,11 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 
 	 // Modesty Overlay Options
 	 m_wModestyOverlayCombo = new QComboBox();
-	 m_wModestyOverlayCombo->addItem("Strapless bra and bikini", eModestyOverlay::StraplessBra_Bikini);
-	 m_wModestyOverlayCombo->addItem("Sports bra and shorts", eModestyOverlay::SportsBra_Shorts);
-	 m_wModestyOverlayCombo->addItem("Tank top and shorts", eModestyOverlay::TankTop_Shorts);
-	 m_wModestyOverlayCombo->addItem("Custom modesty overlay...", eModestyOverlay::CustomModestyOverlay);
+	 m_wModestyOverlayCombo->addItem(tr("Strapless bra and bikini"), eModestyOverlay::StraplessBra_Bikini);
+	 m_wModestyOverlayCombo->addItem(tr("Sports bra and shorts"), eModestyOverlay::SportsBra_Shorts);
+	 m_wModestyOverlayCombo->addItem(tr("Tank top and shorts"), eModestyOverlay::TankTop_Shorts);
+	 m_wModestyOverlayCombo->addItem(tr("Use current textures"), eModestyOverlay::UseCurrentTextures);
+	 m_wModestyOverlayCombo->addItem(tr("Custom modesty overlay..."), eModestyOverlay::CustomModestyOverlay);
 	 m_wModestyOverlayCombo->setCurrentIndex(0);
 	 connect(m_wModestyOverlayCombo, SIGNAL(activated(int)), this, SLOT(HandleCustomModestyOverlayActivated(int)));
 	 m_wModestyOverlayRowLabel = new QLabel(tr("Modesty Overlay"));
@@ -878,6 +879,11 @@ void DzRobloxDialog::HandleCustomModestyOverlayActivated(int index)
 				m_wModestyOverlayCombo->addItem(sShortFilename, QVariant(sFilePath));
 				m_wModestyOverlayCombo->setCurrentIndex(m_wModestyOverlayCombo->count()-1);
 			}
+		}
+		else 
+		{
+			// gracefully fail
+			dzApp->log("DzRoblox: ERROR: HandleCustomModestyOverlayActivated(): sFilePath does not exist: " + sFilePath);
 		}
 	}
 }
