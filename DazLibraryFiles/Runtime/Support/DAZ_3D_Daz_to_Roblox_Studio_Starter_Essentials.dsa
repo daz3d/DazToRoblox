@@ -1,0 +1,11 @@
+// DAZ Studio version 0.0.0.0 filetype DAZ Script
+
+if( App.version >= 67109158 ) //4.0.0.294
+{
+	var oFile = new DzFile( getScriptFileName() );
+	var oAssetMgr = App.getAssetMgr();
+	if( oAssetMgr )
+	{
+		oAssetMgr.queueDBMetaFile( oFile.baseName() );
+	}
+}
