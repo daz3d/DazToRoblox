@@ -37,7 +37,7 @@
 /*****************************
 Local definitions
 *****************************/
-#define DAZ_BRIDGE_PLUGIN_NAME "Daz To Roblox Studio Exporter"
+#define DAZ_BRIDGE_PLUGIN_NAME "Daz to Roblox Studio Exporter"
 
 #include "dzbridge.h"
 
@@ -67,7 +67,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 int btnMinWidth = style()->pixelMetric(DZ_PM_ButtonMinWidth);
 
 	 // Original window title, for potential interim hotfix releases before GUI refresh
-	 setWindowTitle(tr("Daz To Roblox Studio Exporter %1 v%2.%3").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV));
+	 setWindowTitle(tr("Daz to Roblox Studio Exporter %1 v%2.%3").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV));
 
 	 QString sDazAppDir = dzApp->getHomePath().replace("\\", "/");
 	 QString sPdfPath = sDazAppDir + "/docs/Plugins" + "/Daz to Roblox/Daz to Roblox.pdf";
@@ -339,6 +339,7 @@ DzRobloxDialog::DzRobloxDialog(QWidget* parent) :
 	 setWindowTitle(tr("Roblox Export Options"));
 	 wHelpMenuButton->insertItem(tr("Roblox Guidelines..."), ROBLOX_HELP_ID_GUIDELINES);
 	 wHelpMenuButton->insertItem(tr("Character Specification..."), ROBLOX_HELP_ID_SPECIFICATION);
+	 wHelpMenuButton->insertItem(tr("Daz to Roblox Terms..."), ROBLOX_HELP_ID_TERMS);
 	 wHelpMenuButton->show();
 
 	 fixRowLabelStyle();
@@ -775,13 +776,13 @@ void DzRobloxDialog::accept()
 #include "qdatetime.h"
 #include "dzauthor.h"
 
-bool DzRobloxDialog::showDisclaimer()
+bool DzRobloxDialog::showDisclaimer(bool bForceShow)
 {
+#define RENEW_EULA_DURATION 30 // days
 
 	QString sSettingsUsername = settings->value("EulaAgreement_Username", "").toString();
 	QString sSettingsPluginVersion = settings->value("EulaAgreement_PluginVersion", "").toString();
 	QDateTime oSettingsCurrentDateTime = settings->value("EulaAgreement_Date", QDateTime::currentDateTime()).toDateTime();
-
 
 	QString sUsername = QString::fromLocal8Bit(qgetenv("USER"));
 	if (sUsername == "") {
@@ -790,20 +791,26 @@ bool DzRobloxDialog::showDisclaimer()
 	QString sPluginVersion = QString("%1.%2.%3.%4").arg(PLUGIN_MAJOR).arg(PLUGIN_MINOR).arg(PLUGIN_REV).arg(PLUGIN_BUILD);
 	QDateTime oCurrentDateTime = QDateTime::currentDateTime();
 
-	int nDaysPassed = oSettingsCurrentDateTime.daysTo(oCurrentDateTime);
-
-	bool bAlreadyAgreed = false;
-	if ( sUsername == sSettingsUsername && sSettingsPluginVersion == sPluginVersion )
+	if (bForceShow == false) 
 	{
-		bAlreadyAgreed = true;
-		if (nDaysPassed > 365) {
-			bAlreadyAgreed = false;
+		int nDaysPassed = oSettingsCurrentDateTime.daysTo(oCurrentDateTime);
+
+		bool bAlreadyAgreed = false;
+		if (sUsername == sSettingsUsername && sSettingsPluginVersion == sPluginVersion)
+		{
+			bAlreadyAgreed = true;
+			if (nDaysPassed > RENEW_EULA_DURATION) {
+				bAlreadyAgreed = false;
+			}
 		}
+
+		if (bAlreadyAgreed) {
+			return true;
+		}
+
 	}
 
-	if (bAlreadyAgreed) {
-		return true;
-	}
+	HandleDazToRobloxTerms();
 
 	QString content = DAZTOROBLOX_EULA;
 
@@ -811,7 +818,7 @@ bool DzRobloxDialog::showDisclaimer()
 	wContent->setText(content);
 	wContent->setOpenExternalLinks(true);
 
-	QString sWindowTitle = tr("Daz To Roblox Studio Terms");
+	QString sWindowTitle = tr("Daz to Roblox Studio Terms");
 	m_wEulaAgreementDialog = new DzBasicDialog(NULL, sWindowTitle);
 	QCheckBox* wAgreeCheckbox = new QCheckBox(tr("I agree to the Daz to Roblox Studio Terms."));
 	wAgreeCheckbox->setChecked(false);
@@ -924,6 +931,10 @@ void DzRobloxDialog::HandleHelpMenuButton(int index)
 		HandleRobloxCharacterSpecification();
 		break;
 
+	case ROBLOX_HELP_ID_TERMS:
+		HandleDazToRobloxTerms();
+		break;
+
 	default:
 		return DzBridgeDialog::HandleHelpMenuButton(index);
 	}
@@ -960,6 +971,12 @@ void DzRobloxDialog::HandleRobloxGuidelinesButton()
 void DzRobloxDialog::HandleRobloxCharacterSpecification()
 {
 	QString url = "https://create.roblox.com/docs/art/characters/specifications";
+	QDesktopServices::openUrl(QUrl(url));
+}
+
+void DzRobloxDialog::HandleDazToRobloxTerms()
+{
+	QString url = "https://www.daz3d.com/roblox-terms";
 	QDesktopServices::openUrl(QUrl(url));
 }
 

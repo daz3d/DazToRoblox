@@ -83,7 +83,7 @@ Select a modesty layer to be overlaid on top of the unclothed Genesis skin textu
 	Q_INVOKABLE bool isAssetTypeComboBoxValid();
 	Q_INVOKABLE bool disableAcceptUntilAllRequirementsValid();
 
-	Q_INVOKABLE bool showDisclaimer();
+	Q_INVOKABLE bool showDisclaimer(bool bForceShow=false);
 	Q_INVOKABLE void enableModestyOptions(bool bEnable);
 
 	DzBasicDialog* m_wEulaAgreementDialog;
@@ -105,8 +105,10 @@ protected slots:
 	void accept() override;
 #define ROBLOX_HELP_ID_SPECIFICATION 10
 #define ROBLOX_HELP_ID_GUIDELINES 11
+#define ROBLOX_HELP_ID_TERMS 12
 	void HandleRobloxGuidelinesButton();
 	void HandleRobloxCharacterSpecification();
+	void HandleDazToRobloxTerms();
 
 	void HandleTextChanged(const QString& text);
 	void HandleSelectRobloxOutputFolderButton();

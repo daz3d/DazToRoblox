@@ -1677,7 +1677,7 @@ bool DzRobloxAction::executeBlenderScripts(QString sFilePath, QString sCommandli
 		while (pToolProcess->canReadLine()) {
 			QByteArray qa = pToolProcess->readLine();
 			QString sProcessOutput = qa.data();
-			sProcessOutput = sProcessOutput.replace("\n", "");
+			sProcessOutput = sProcessOutput.replace("\n","").replace("\r","");
 			//dzApp->log("BLENDER: " + sProcessOutput);
 			progress->setCurrentInfo("BLENDER: " + sProcessOutput);
 		}
@@ -1690,7 +1690,7 @@ The current Blender operation is taking a long time.\n\
 Do you want to Ignore this time-out and wait a little longer, or \n\
 Do you want to Abort the operation now?");
 				int result = QMessageBox::critical(0, 
-					tr("Daz To Roblox: Blender Timout Error"), 
+					tr("Daz to Roblox: Blender Timout Error"), 
 					sTimeoutText, 
 					QMessageBox::Ignore, 
 					QMessageBox::Abort);
@@ -1739,7 +1739,7 @@ Do you want to Abort the operation now?");
 	while (pToolProcess->canReadLine()) {
 		QByteArray qa = pToolProcess->readLine();
 		QString sProcessOutput = qa.data();
-		sProcessOutput = sProcessOutput.replace("\n", "");
+		sProcessOutput = sProcessOutput.replace("\n","").replace("\r","");
 		// dzApp->log("BLENDER: " + sProcessOutput);
 		progress->setCurrentInfo("BLENDER: " + sProcessOutput);
     }
@@ -2492,27 +2492,37 @@ bool DzRobloxAction::copyMaterialsToGeograft(DzNode* pGeograftNode, DzNode* pBas
 // DO NOT USE UNLESS DzRobloxDialog is not part of pipeline.  Otherwise, use the prefered DzRobloxDialog::showDisclaimer() instead.
 bool DzRobloxAction::showDisclaimer()
 {
-	QString content = DAZTOROBLOX_EULA;
+	DzRobloxDialog* pRobloxDialog = qobject_cast<DzRobloxDialog*>(getBridgeDialog());
 
-	QTextBrowser* wContent = new QTextBrowser();
-	wContent->setText(content);
-	wContent->setOpenExternalLinks(true);
+	if (pRobloxDialog)
+	{
+		return pRobloxDialog->showDisclaimer(true);
+	}
+	else
+	{
+		QString content = DAZTOROBLOX_EULA;
 
-	QString sWindowTitle = "Daz To Roblox Studio Terms";
-	DzBasicDialog* wDialog = new DzBasicDialog(NULL, sWindowTitle);
-	wDialog->setWindowTitle(sWindowTitle);
-	wDialog->setMinimumWidth(500);
-	wDialog->setMinimumHeight(450);
-	QGridLayout* layout = new QGridLayout(wDialog);
-	layout->addWidget(wContent);
-	wDialog->addLayout(layout);
+		QTextBrowser* wContent = new QTextBrowser();
+		wContent->setText(content);
+		wContent->setOpenExternalLinks(true);
 
-	wDialog->setAcceptButtonText(tr("Accept Terms"));
+		QString sWindowTitle = "Daz to Roblox Studio Terms";
+		DzBasicDialog* wDialog = new DzBasicDialog(NULL, sWindowTitle);
+		wDialog->setWindowTitle(sWindowTitle);
+		wDialog->setMinimumWidth(500);
+		wDialog->setMinimumHeight(450);
+		QGridLayout* layout = new QGridLayout(wDialog);
+		layout->addWidget(wContent);
+		wDialog->addLayout(layout);
 
-	int result = wDialog->exec();
+		wDialog->setAcceptButtonText(tr("Accept Terms"));
+		wDialog->setCancelButtonText(tr("Decline"));
 
-	if (result == QDialog::DialogCode::Rejected || result != QDialog::DialogCode::Accepted) {
-		return false;
+		int result = wDialog->exec();
+
+		if (result == QDialog::DialogCode::Rejected || result != QDialog::DialogCode::Accepted) {
+			return false;
+		}
 	}
 
 	return true;
