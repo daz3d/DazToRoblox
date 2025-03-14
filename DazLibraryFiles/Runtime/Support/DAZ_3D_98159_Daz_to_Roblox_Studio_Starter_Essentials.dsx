@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentDBInstall VERSION="1.0">
+ <Products>
+  <Product VALUE="Daz to Roblox Studio Starter Essentials">
+   <StoreID VALUE="DAZ 3D"/>
+   <GlobalID VALUE="e5c1508e-2cf9-46be-95cc-4e42d77a16b2"/>
+   <ProductToken VALUE="98159"/>
+   <Artists>
+    <Artist VALUE="Daz Originals"/>
+   </Artists>
+   <Assets>
+    <Asset VALUE="People/Genesis 9/Characters/Genesis 9 for Roblox 01.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Genesis 9 for Roblox 02.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Genesis 9 for Roblox 03.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Genesis 9 for Roblox 04.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Genesis 9 for Roblox 05.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Genesis 9 for Roblox 06.duf">
+     <ContentType VALUE="Actor/Character"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Figures/People"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <CompatibilityBase VALUE="/Genesis 9/Base"/>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 01.dsa">
+     <ContentType VALUE="Script"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyebrow Overlays"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 02.dsa">
+     <ContentType VALUE="Script"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyebrow Overlays"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 03.dsa">
+     <ContentType VALUE="Script"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyebrow Overlays"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 04.dsa">
+     <ContentType VALUE="Script"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyebrow Overlays"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyelashes-Eyeliner/Roblox Apply G9 Eyeliner 01.dsa">
+     <ContentType VALUE="Script/Utility"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyelash Overlays"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyelashes-Eyeliner/Roblox Apply G9 Eyeliner 02.dsa">
+     <ContentType VALUE="Script/Utility"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Eyelash Overlays"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/Roblox Apply G9 Grey Sportsbra and Shorts.dsa">
+     <ContentType VALUE="Script/Utility"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Modesty Overlays"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/Roblox Apply G9 Grey Strapless Bikini.dsa">
+     <ContentType VALUE="Script/Utility"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Modesty Overlays"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/Roblox Apply G9 Grey Tanktop and Shorts.dsa">
+     <ContentType VALUE="Script/Utility"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Modesty Overlays"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/Roblox Apply G9 White Strap Bikini.dsa">
+     <ContentType VALUE="Script/Utility"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Modesty Overlays"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/Roblox Apply G9 White Strapless Bikini.dsa">
+     <ContentType VALUE="Script/Utility"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials/Modesty Overlays"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
+   </Assets>
+   <SupportAssets VALUE="/Runtime/Support/DAZ_3D_98159_Daz_to_Roblox_Studio_Starter_Essentials.dsx">
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 01.dsa.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 01.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 02.dsa.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 02.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 03.dsa.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 03.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 04.dsa.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/Roblox Apply G9 Eyebrows 04.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/g9 eyebrows thick.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/g9 eyebrows thin.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/v9 eyebrows thick.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyebrows/v9 eyebrows thin.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyelashes-Eyeliner/Roblox Apply G9 Eyeliner 01.dsa.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyelashes-Eyeliner/Roblox Apply G9 Eyeliner 01.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyelashes-Eyeliner/Roblox Apply G9 Eyeliner 02.dsa.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyelashes-Eyeliner/Roblox Apply G9 Eyeliner 02.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyelashes-Eyeliner/g9 eyeliner thick.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/2D Eyelashes-Eyeliner/g9 eyeliner thin.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/Roblox Apply G9 Grey Sportsbra and Shorts.dsa.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/Roblox Apply G9 Grey Sportsbra and Shorts.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/Roblox Apply G9 Grey Tanktop and Shorts.dsa.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/Roblox Apply G9 Grey Tanktop and Shorts.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_shorts_legs_modesty_overlay_d.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_shorts_legs_modesty_overlay_m.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_shorts_legs_modesty_overlay_n.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_shorts_legs_modesty_overlay_r.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_sportsbra_torso_modesty_overlay_d.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_sportsbra_torso_modesty_overlay_m.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_sportsbra_torso_modesty_overlay_n.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_sportsbra_torso_modesty_overlay_r.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_tanktop_head_modesty_overlay_d.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_tanktop_head_modesty_overlay_m.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_tanktop_head_modesty_overlay_n.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_tanktop_head_modesty_overlay_r.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_tanktop_torso_modesty_overlay_d.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_tanktop_torso_modesty_overlay_m.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_tanktop_torso_modesty_overlay_n.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Sportsbra and Tanktop/g9_tanktop_torso_modesty_overlay_r.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/Roblox Apply G9 Grey Strapless Bikini.dsa.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/Roblox Apply G9 Grey Strapless Bikini.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/Roblox Apply G9 White Strap Bikini.dsa.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/Roblox Apply G9 White Strap Bikini.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/Roblox Apply G9 White Strapless Bikini.dsa.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/Roblox Apply G9 White Strapless Bikini.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/grey_strapless_torso_modesty_overlay_d.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/grey_strapless_torso_modesty_overlay_m.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/grey_strapless_torso_modesty_overlay_n.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/grey_strapless_torso_modesty_overlay_r.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strap_bikini_head_modesty_overlay_d.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strap_bikini_head_modesty_overlay_m.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strap_bikini_head_modesty_overlay_n.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strap_bikini_head_modesty_overlay_r.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strap_bikini_torso_modesty_overlay_d.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strap_bikini_torso_modesty_overlay_m.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strap_bikini_torso_modesty_overlay_n.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strap_bikini_torso_modesty_overlay_r.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strapless_torso_modesty_overlay_d.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strapless_torso_modesty_overlay_m.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strapless_torso_modesty_overlay_n.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Strap and Strapless Bikini/white_strapless_torso_modesty_overlay_r.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 01.duf.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 01.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 02.duf.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 02.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 03.duf.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 03.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 04.duf.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 04.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 05.duf.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 05.tip.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 06.duf.png"/>
+    <SupportAsset VALUE="/People/Genesis 9/Characters/Genesis 9 for Roblox 06.tip.png"/>
+    <SupportAsset VALUE="/Runtime/Support/DAZ_3D_98159_Daz_to_Roblox_Studio_Starter_Essentials.dsa"/>
+    <SupportAsset VALUE="/Runtime/Support/DAZ_3D_98159_Daz_to_Roblox_Studio_Starter_Essentials.dsx"/>
+    <SupportAsset VALUE="/Runtime/Support/DAZ_3D_98159_Daz_to_Roblox_Studio_Starter_Essentials.jpg"/>
+    <SupportAsset VALUE="/data/Daz 3D/Genesis 9/Base/UV Sets/Daz 3D/Combined Head and Body UV/CombinedHeadAndBody.dsf"/>
+    <SupportAsset VALUE="/data/Daz 3D/Genesis 9/Genesis 9 Eyes/UV Sets/Daz 3D/Combined Head and Body UV/CombinedHeadAndBody.dsf"/>
+    <SupportAsset VALUE="/data/Daz 3D/Genesis 9/Genesis 9 Mouth/UV Sets/Daz 3D/Combined Head and Body UV/CombinedHeadAndBody.dsf"/>
+   </SupportAssets>
+   <ObjectCompatibilities>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+    <ObjectCompatibility VALUE="/data/DAZ%203D/Genesis%209/Base/Genesis9.dsf#Genesis9" REF="/Genesis 9/Base"/>
+   </ObjectCompatibilities>
+  </Product>
+ </Products>
+</ContentDBInstall>

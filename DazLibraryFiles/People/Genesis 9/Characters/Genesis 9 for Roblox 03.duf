@@ -1,7 +1,7 @@
 {
 	"file_version" : "0.6.1.0",
 	"asset_info" : {
-		"id" : "/Presets/Characters/Genesis%209%20for%20Roblox%201.duf",
+		"id" : "/Presets/Characters/Genesis%209%20for%20Roblox%2003.duf",
 		"type" : "character",
 		"contributor" : {
 			"author" : "Daz 3D",
@@ -9,99 +9,33 @@
 			"website" : ""
 		},
 		"revision" : "1.0",
-		"modified" : "2025-03-11T11:53:25Z"
+		"modified" : "2025-03-11T11:59:36Z"
 	},
 	"image_library" : [
 		{
-			"id" : "G9Feminine03_Nails_D_1005.jpg-3",
-			"name" : "G9Feminine03_Nails_D_1005.jpg",
+			"id" : "G9Feminine02_Nails_D_1005.jpg-3",
+			"name" : "G9Feminine02_Nails_D_1005.jpg",
 			"map_gamma" : 0,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_D_1005.jpg",
-					"label" : "G9Feminine03_Nails_D_1005.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_D_1005.jpg",
+					"label" : "G9Feminine02_Nails_D_1005.jpg"
 				}
 			]
 		},
 		{
-			"id" : "G9Feminine03_Nails_SSS_1005.jpg-3",
-			"name" : "G9Feminine03_Nails_SSS_1005.jpg",
+			"id" : "G9Feminine02_Nails_SSS_1005.jpg-3",
+			"name" : "G9Feminine02_Nails_SSS_1005.jpg",
 			"map_gamma" : 0,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_SSS_1005.jpg",
-					"label" : "G9Feminine03_Nails_SSS_1005.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_SSS_1005.jpg",
+					"label" : "G9Feminine02_Nails_SSS_1005.jpg"
 				}
 			]
 		},
 		{
-			"id" : "G9Feminine03_Nails_SLW_1005.jpg-3",
-			"name" : "G9Feminine03_Nails_SLW_1005.jpg",
-			"map_gamma" : 1,
-			"map" : [
-				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_SLW_1005.jpg",
-					"label" : "G9Feminine03_Nails_SLW_1005.jpg"
-				}
-			]
-		},
-		{
-			"id" : "G9Feminine03_Nails_R_1005.jpg-3",
-			"name" : "G9Feminine03_Nails_R_1005.jpg",
-			"map_gamma" : 1,
-			"map" : [
-				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_R_1005.jpg",
-					"label" : "G9Feminine03_Nails_R_1005.jpg"
-				}
-			]
-		},
-		{
-			"id" : "G9Feminine03_Nails_SO_1005.jpg-3",
-			"name" : "G9Feminine03_Nails_SO_1005.jpg",
-			"map_gamma" : 1,
-			"map" : [
-				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_SO_1005.jpg",
-					"label" : "G9Feminine03_Nails_SO_1005.jpg"
-				}
-			]
-		},
-		{
-			"id" : "Genesis9_Nails_NM_1005.jpg-3",
-			"name" : "Genesis9_Nails_NM_1005.jpg",
-			"map_gamma" : 1,
-			"map" : [
-				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Nails_NM_1005.jpg",
-					"label" : "Genesis9_Nails_NM_1005.jpg"
-				}
-			]
-		},
-		{
-			"id" : "G9Feminine03_Legs_D_1003.jpg-1",
-			"name" : "G9Feminine03_Legs_D_1003.jpg",
-			"map_gamma" : 0,
-			"map" : [
-				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Legs_D_1003.jpg",
-					"label" : "G9Feminine03_Legs_D_1003.jpg"
-				}
-			]
-		},
-		{
-			"id" : "G9Feminine03_Legs_SSS_1003.jpg-1",
-			"name" : "G9Feminine03_Legs_SSS_1003.jpg",
-			"map_gamma" : 0,
-			"map" : [
-				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Legs_SSS_1003.jpg",
-					"label" : "G9Feminine03_Legs_SSS_1003.jpg"
-				}
-			]
-		},
-		{
-			"id" : "Skin_SLW.jpg-3",
+			"id" : "Skin_SLW.jpg-11",
 			"name" : "Skin_SLW.jpg",
 			"map_gamma" : 1,
 			"map" : [
@@ -112,156 +46,189 @@
 			]
 		},
 		{
-			"id" : "G9Feminine03_Legs_R_1003.jpg-1",
-			"name" : "G9Feminine03_Legs_R_1003.jpg",
+			"id" : "G9Feminine02_Nails_R_1005.jpg-3",
+			"name" : "G9Feminine02_Nails_R_1005.jpg",
 			"map_gamma" : 1,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Legs_R_1003.jpg",
-					"label" : "G9Feminine03_Legs_R_1003.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_R_1005.jpg",
+					"label" : "G9Feminine02_Nails_R_1005.jpg"
 				}
 			]
 		},
 		{
-			"id" : "G9Feminine03_Legs_SO_1003.jpg-1",
-			"name" : "G9Feminine03_Legs_SO_1003.jpg",
+			"id" : "G9Feminine02_Nails_SO_1005.jpg-3",
+			"name" : "G9Feminine02_Nails_SO_1005.jpg",
 			"map_gamma" : 1,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Legs_SO_1003.jpg",
-					"label" : "G9Feminine03_Legs_SO_1003.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_SO_1005.jpg",
+					"label" : "G9Feminine02_Nails_SO_1005.jpg"
 				}
 			]
 		},
 		{
-			"id" : "Genesis9_Legs_NM_1003.jpg-1",
-			"name" : "Genesis9_Legs_NM_1003.jpg",
-			"map_gamma" : 1,
-			"map" : [
-				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Legs_NM_1003.jpg",
-					"label" : "Genesis9_Legs_NM_1003.jpg"
-				}
-			]
-		},
-		{
-			"id" : "G9Feminine03_Head_D_1001.jpg-1",
-			"name" : "G9Feminine03_Head_D_1001.jpg",
+			"id" : "G9Feminine02_Legs_D_1003.jpg-1",
+			"name" : "G9Feminine02_Legs_D_1003.jpg",
 			"map_gamma" : 0,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_D_1001.jpg",
-					"label" : "G9Feminine03_Head_D_1001.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Legs_D_1003.jpg",
+					"label" : "G9Feminine02_Legs_D_1003.jpg"
 				}
 			]
 		},
 		{
-			"id" : "G9Feminine03_Head_SSS_1001.jpg-3",
-			"name" : "G9Feminine03_Head_SSS_1001.jpg",
+			"id" : "G9Feminine02_Legs_SSS_1003.jpg-1",
+			"name" : "G9Feminine02_Legs_SSS_1003.jpg",
 			"map_gamma" : 0,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_SSS_1001.jpg",
-					"label" : "G9Feminine03_Head_SSS_1001.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Legs_SSS_1003.jpg",
+					"label" : "G9Feminine02_Legs_SSS_1003.jpg"
 				}
 			]
 		},
 		{
-			"id" : "G9Feminine03_Head_SLW_1001.jpg-3",
-			"name" : "G9Feminine03_Head_SLW_1001.jpg",
+			"id" : "G9Feminine02_Legs_R_1003.jpg-1",
+			"name" : "G9Feminine02_Legs_R_1003.jpg",
 			"map_gamma" : 1,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_SLW_1001.jpg",
-					"label" : "G9Feminine03_Head_SLW_1001.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Legs_R_1003.jpg",
+					"label" : "G9Feminine02_Legs_R_1003.jpg"
 				}
 			]
 		},
 		{
-			"id" : "G9Feminine03_Head_R_1001.jpg-3",
-			"name" : "G9Feminine03_Head_R_1001.jpg",
+			"id" : "G9Feminine02_Legs_SO_1003.jpg-1",
+			"name" : "G9Feminine02_Legs_SO_1003.jpg",
 			"map_gamma" : 1,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_R_1001.jpg",
-					"label" : "G9Feminine03_Head_R_1001.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Legs_SO_1003.jpg",
+					"label" : "G9Feminine02_Legs_SO_1003.jpg"
 				}
 			]
 		},
 		{
-			"id" : "G9Feminine03_Head_SO_1001.jpg-3",
-			"name" : "G9Feminine03_Head_SO_1001.jpg",
+			"id" : "G9Feminine02_Legs_NM_1003.jpg-1",
+			"name" : "G9Feminine02_Legs_NM_1003.jpg",
 			"map_gamma" : 1,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_SO_1001.jpg",
-					"label" : "G9Feminine03_Head_SO_1001.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Legs_NM_1003.jpg",
+					"label" : "G9Feminine02_Legs_NM_1003.jpg"
 				}
 			]
 		},
 		{
-			"id" : "Genesis9_Head_NM_1001.jpg-3",
-			"name" : "Genesis9_Head_NM_1001.jpg",
-			"map_gamma" : 1,
-			"map" : [
-				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Head_NM_1001.jpg",
-					"label" : "Genesis9_Head_NM_1001.jpg"
-				}
-			]
-		},
-		{
-			"id" : "G9Feminine03_Arms_D_1004.jpg-1",
-			"name" : "G9Feminine03_Arms_D_1004.jpg",
+			"id" : "G9Feminine02_Head_D_1001.jpg-1",
+			"name" : "G9Feminine02_Head_D_1001.jpg",
 			"map_gamma" : 0,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Arms_D_1004.jpg",
-					"label" : "G9Feminine03_Arms_D_1004.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_D_1001.jpg",
+					"label" : "G9Feminine02_Head_D_1001.jpg"
 				}
 			]
 		},
 		{
-			"id" : "G9Feminine03_Arms_SSS_1004.jpg-1",
-			"name" : "G9Feminine03_Arms_SSS_1004.jpg",
+			"id" : "G9Feminine02_Head_SSS_1001.jpg-3",
+			"name" : "G9Feminine02_Head_SSS_1001.jpg",
 			"map_gamma" : 0,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Arms_SSS_1004.jpg",
-					"label" : "G9Feminine03_Arms_SSS_1004.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_SSS_1001.jpg",
+					"label" : "G9Feminine02_Head_SSS_1001.jpg"
 				}
 			]
 		},
 		{
-			"id" : "G9Feminine03_Arms_R_1004.jpg-1",
-			"name" : "G9Feminine03_Arms_R_1004.jpg",
+			"id" : "G9Feminine02_Head_R_1001.jpg-3",
+			"name" : "G9Feminine02_Head_R_1001.jpg",
 			"map_gamma" : 1,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Arms_R_1004.jpg",
-					"label" : "G9Feminine03_Arms_R_1004.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_R_1001.jpg",
+					"label" : "G9Feminine02_Head_R_1001.jpg"
 				}
 			]
 		},
 		{
-			"id" : "G9Feminine03_Arms_SO_1004.jpg-1",
-			"name" : "G9Feminine03_Arms_SO_1004.jpg",
+			"id" : "G9Feminine02_Head_SO_1001.jpg-3",
+			"name" : "G9Feminine02_Head_SO_1001.jpg",
 			"map_gamma" : 1,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Arms_SO_1004.jpg",
-					"label" : "G9Feminine03_Arms_SO_1004.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_SO_1001.jpg",
+					"label" : "G9Feminine02_Head_SO_1001.jpg"
 				}
 			]
 		},
 		{
-			"id" : "Genesis9_Arms_NM_1004.jpg-1",
-			"name" : "Genesis9_Arms_NM_1004.jpg",
+			"id" : "G9Feminine02_Head_NM_1001.jpg-3",
+			"name" : "G9Feminine02_Head_NM_1001.jpg",
 			"map_gamma" : 1,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Arms_NM_1004.jpg",
-					"label" : "Genesis9_Arms_NM_1004.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_NM_1001.jpg",
+					"label" : "G9Feminine02_Head_NM_1001.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine02_Arms_D_1004.jpg-1",
+			"name" : "G9Feminine02_Arms_D_1004.jpg",
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Arms_D_1004.jpg",
+					"label" : "G9Feminine02_Arms_D_1004.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine02_Arms_SSS_1004.jpg-1",
+			"name" : "G9Feminine02_Arms_SSS_1004.jpg",
+			"map_gamma" : 0,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Arms_SSS_1004.jpg",
+					"label" : "G9Feminine02_Arms_SSS_1004.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine02_Arms_R_1004.jpg-1",
+			"name" : "G9Feminine02_Arms_R_1004.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Arms_R_1004.jpg",
+					"label" : "G9Feminine02_Arms_R_1004.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine02_Arms_SO_1004.jpg-1",
+			"name" : "G9Feminine02_Arms_SO_1004.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Arms_SO_1004.jpg",
+					"label" : "G9Feminine02_Arms_SO_1004.jpg"
+				}
+			]
+		},
+		{
+			"id" : "G9Feminine02_Arms_NM_1004.jpg-1",
+			"name" : "G9Feminine02_Arms_NM_1004.jpg",
+			"map_gamma" : 1,
+			"map" : [
+				{
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Arms_NM_1004.jpg",
+					"label" : "G9Feminine02_Arms_NM_1004.jpg"
 				}
 			]
 		},
@@ -272,7 +239,7 @@
 			"map_gamma" : 0,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_D_1001.jpg",
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_D_1001.jpg",
 					"label" : "Base Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -288,7 +255,7 @@
 					"operation" : "blend_source_over"
 				},
 				{
-					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/2d%20eyelashes-eyeliner/g9%20eyeliner%20thick.png",
+					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/2d%20eyebrows/v9%20eyebrows%20thin.png",
 					"label" : "Overlay Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -304,7 +271,7 @@
 					"operation" : "blend_source_over"
 				},
 				{
-					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/2d%20eyebrows/v9%20eyebrows%20thick.png",
+					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/2d%20eyelashes-eyeliner/g9%20eyeliner%20thick.png",
 					"label" : "Overlay Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -328,7 +295,7 @@
 			"map_gamma" : 0,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Body_D_1002.jpg",
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Body_D_1002.jpg",
 					"label" : "Base Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -344,7 +311,7 @@
 					"operation" : "blend_source_over"
 				},
 				{
-					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/strap%20and%20strapless%20bikini/white_strapless_torso_modesty_overlay_d.png",
+					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/strap%20and%20strapless%20bikini/grey_strapless_torso_modesty_overlay_d.png",
 					"label" : "Overlay Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -368,7 +335,7 @@
 			"map_gamma" : 0,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Body_SSS_1002.jpg",
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Body_SSS_1002.jpg",
 					"label" : "Base Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -384,7 +351,7 @@
 					"operation" : "blend_source_over"
 				},
 				{
-					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/strap%20and%20strapless%20bikini/white_strapless_torso_modesty_overlay_d.png",
+					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/strap%20and%20strapless%20bikini/grey_strapless_torso_modesty_overlay_d.png",
 					"label" : "Overlay Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -424,7 +391,7 @@
 					"operation" : "blend_source_over"
 				},
 				{
-					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/strap%20and%20strapless%20bikini/white_strapless_torso_modesty_overlay_r.png",
+					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/strap%20and%20strapless%20bikini/grey_strapless_torso_modesty_overlay_r.png",
 					"label" : "Overlay Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -448,7 +415,7 @@
 			"map_gamma" : 0,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Body_R_1002.jpg",
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Body_R_1002.jpg",
 					"label" : "Base Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -464,7 +431,7 @@
 					"operation" : "blend_source_over"
 				},
 				{
-					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/strap%20and%20strapless%20bikini/white_strapless_torso_modesty_overlay_r.png",
+					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/strap%20and%20strapless%20bikini/grey_strapless_torso_modesty_overlay_r.png",
 					"label" : "Overlay Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -482,13 +449,13 @@
 			]
 		},
 		{
-			"id" : "G9Feminine03_Body_SO_1002.jpg-1",
-			"name" : "G9Feminine03_Body_SO_1002.jpg",
+			"id" : "G9Feminine02_Body_SO_1002.jpg-1",
+			"name" : "G9Feminine02_Body_SO_1002.jpg",
 			"map_gamma" : 1,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Body_SO_1002.jpg",
-					"label" : "G9Feminine03_Body_SO_1002.jpg"
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Body_SO_1002.jpg",
+					"label" : "G9Feminine02_Body_SO_1002.jpg"
 				}
 			]
 		},
@@ -499,7 +466,7 @@
 			"map_gamma" : 0,
 			"map" : [
 				{
-					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_BodyF_NM_1002.jpg",
+					"url" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Body_NM_1002.jpg",
 					"label" : "Base Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -515,7 +482,7 @@
 					"operation" : "blend_source_over"
 				},
 				{
-					"url" : "/people/genesis%209/materials/daz%20originals/daz%20to%20roblox%20overlays/strap%20and%20strapless%20bikini/white_strapless_torso_modesty_overlay_n.png",
+					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/strap%20and%20strapless%20bikini/grey_strapless_torso_modesty_overlay_n.png",
 					"label" : "Overlay Layer",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
@@ -3502,7 +3469,7 @@
 						"name" : "Diffuse Color",
 						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
 						"current_value" : [ 1, 1, 1 ],
-						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_D_1005.jpg"
+						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_D_1005.jpg"
 					},
 					"group" : "/Base/Diffuse/Reflection"
 				},
@@ -3550,7 +3517,7 @@
 									"id" : "Translucency Color",
 									"type" : "float_color",
 									"current_value" : [ 1, 1, 1 ],
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_SSS_1005.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_SSS_1005.jpg"
 								}
 							},
 							{
@@ -3565,7 +3532,7 @@
 									"id" : "Dual Lobe Specular Weight",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_SLW_1005.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_SLW.jpg"
 								}
 							},
 							{
@@ -3581,7 +3548,7 @@
 									"id" : "Specular Lobe 1 Roughness",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_R_1005.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_R_1005.jpg"
 								}
 							},
 							{
@@ -3659,36 +3626,15 @@
 									"id" : "Ambient Occlusion Weight",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_SO_1005.jpg"
-								}
-							},
-							{
-								"channel" : {
-									"id" : "Detail Enable",
-									"type" : "bool",
-									"current_value" : true
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_SO_1005.jpg"
 								}
 							},
 							{
 								"channel" : {
 									"id" : "Detail Weight",
 									"type" : "float",
-									"current_value" : 1,
+									"current_value" : 0.6,
 									"image" : null
-								}
-							},
-							{
-								"channel" : {
-									"id" : "Detail Horizontal Tiles",
-									"type" : "float",
-									"current_value" : 1
-								}
-							},
-							{
-								"channel" : {
-									"id" : "Detail Vertical Tiles",
-									"type" : "float",
-									"current_value" : 1
 								}
 							},
 							{
@@ -3696,7 +3642,7 @@
 									"id" : "Detail Normal Map",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Nails_NM_1005.jpg"
+									"image" : null
 								}
 							},
 							{
@@ -3705,6 +3651,13 @@
 									"type" : "float",
 									"current_value" : 1,
 									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
 								}
 							},
 							{
@@ -3843,7 +3796,7 @@
 						"name" : "Diffuse Color",
 						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
 						"current_value" : [ 1, 1, 1 ],
-						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_D_1005.jpg"
+						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_D_1005.jpg"
 					},
 					"group" : "/Base/Diffuse/Reflection"
 				},
@@ -3891,7 +3844,7 @@
 									"id" : "Translucency Color",
 									"type" : "float_color",
 									"current_value" : [ 1, 1, 1 ],
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_SSS_1005.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_SSS_1005.jpg"
 								}
 							},
 							{
@@ -3906,7 +3859,7 @@
 									"id" : "Dual Lobe Specular Weight",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_SLW_1005.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_SLW.jpg"
 								}
 							},
 							{
@@ -3922,7 +3875,7 @@
 									"id" : "Specular Lobe 1 Roughness",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_R_1005.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_R_1005.jpg"
 								}
 							},
 							{
@@ -4000,36 +3953,15 @@
 									"id" : "Ambient Occlusion Weight",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Nails_SO_1005.jpg"
-								}
-							},
-							{
-								"channel" : {
-									"id" : "Detail Enable",
-									"type" : "bool",
-									"current_value" : true
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Nails_SO_1005.jpg"
 								}
 							},
 							{
 								"channel" : {
 									"id" : "Detail Weight",
 									"type" : "float",
-									"current_value" : 1,
+									"current_value" : 0.6,
 									"image" : null
-								}
-							},
-							{
-								"channel" : {
-									"id" : "Detail Horizontal Tiles",
-									"type" : "float",
-									"current_value" : 1
-								}
-							},
-							{
-								"channel" : {
-									"id" : "Detail Vertical Tiles",
-									"type" : "float",
-									"current_value" : 1
 								}
 							},
 							{
@@ -4037,7 +3969,7 @@
 									"id" : "Detail Normal Map",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Nails_NM_1005.jpg"
+									"image" : null
 								}
 							},
 							{
@@ -4046,6 +3978,13 @@
 									"type" : "float",
 									"current_value" : 1,
 									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
 								}
 							},
 							{
@@ -4184,7 +4123,7 @@
 						"name" : "Diffuse Color",
 						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
 						"current_value" : [ 1, 1, 1 ],
-						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Legs_D_1003.jpg"
+						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Legs_D_1003.jpg"
 					},
 					"group" : "/Base/Diffuse/Reflection"
 				},
@@ -4232,7 +4171,7 @@
 									"id" : "Translucency Color",
 									"type" : "float_color",
 									"current_value" : [ 1, 1, 1 ],
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Legs_SSS_1003.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Legs_SSS_1003.jpg"
 								}
 							},
 							{
@@ -4263,7 +4202,7 @@
 									"id" : "Specular Lobe 1 Roughness",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Legs_R_1003.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Legs_R_1003.jpg"
 								}
 							},
 							{
@@ -4341,7 +4280,7 @@
 									"id" : "Ambient Occlusion Weight",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Legs_SO_1003.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Legs_SO_1003.jpg"
 								}
 							},
 							{
@@ -4378,7 +4317,7 @@
 									"id" : "Detail Normal Map",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Legs_NM_1003.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Legs_NM_1003.jpg"
 								}
 							},
 							{
@@ -4387,6 +4326,13 @@
 									"type" : "float",
 									"current_value" : 1,
 									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
 								}
 							},
 							{
@@ -4525,7 +4471,7 @@
 						"name" : "Diffuse Color",
 						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
 						"current_value" : [ 1, 1, 1 ],
-						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_D_1001.jpg"
+						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_D_1001.jpg"
 					},
 					"group" : "/Base/Diffuse/Reflection"
 				},
@@ -4573,7 +4519,7 @@
 									"id" : "Translucency Color",
 									"type" : "float_color",
 									"current_value" : [ 1, 1, 1 ],
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_SSS_1001.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_SSS_1001.jpg"
 								}
 							},
 							{
@@ -4587,8 +4533,8 @@
 								"channel" : {
 									"id" : "Dual Lobe Specular Weight",
 									"type" : "float",
-									"current_value" : 0.6,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_SLW_1001.jpg"
+									"current_value" : 1,
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_SLW.jpg"
 								}
 							},
 							{
@@ -4604,7 +4550,7 @@
 									"id" : "Specular Lobe 1 Roughness",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_R_1001.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_R_1001.jpg"
 								}
 							},
 							{
@@ -4682,7 +4628,7 @@
 									"id" : "Ambient Occlusion Weight",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_SO_1001.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_SO_1001.jpg"
 								}
 							},
 							{
@@ -4719,7 +4665,7 @@
 									"id" : "Detail Normal Map",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Head_NM_1001.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_NM_1001.jpg"
 								}
 							},
 							{
@@ -4728,6 +4674,13 @@
 									"type" : "float",
 									"current_value" : 1,
 									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
 								}
 							},
 							{
@@ -4866,7 +4819,7 @@
 						"name" : "Diffuse Color",
 						"value" : [ 0.7529414, 0.7529414, 0.7529414 ],
 						"current_value" : [ 1, 1, 1 ],
-						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Arms_D_1004.jpg"
+						"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Arms_D_1004.jpg"
 					},
 					"group" : "/Base/Diffuse/Reflection"
 				},
@@ -4914,7 +4867,7 @@
 									"id" : "Translucency Color",
 									"type" : "float_color",
 									"current_value" : [ 1, 1, 1 ],
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Arms_SSS_1004.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Arms_SSS_1004.jpg"
 								}
 							},
 							{
@@ -4945,7 +4898,7 @@
 									"id" : "Specular Lobe 1 Roughness",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Arms_R_1004.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Arms_R_1004.jpg"
 								}
 							},
 							{
@@ -5023,7 +4976,7 @@
 									"id" : "Ambient Occlusion Weight",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Arms_SO_1004.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Arms_SO_1004.jpg"
 								}
 							},
 							{
@@ -5060,7 +5013,7 @@
 									"id" : "Detail Normal Map",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Arms_NM_1004.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Arms_NM_1004.jpg"
 								}
 							},
 							{
@@ -5069,6 +5022,13 @@
 									"type" : "float",
 									"current_value" : 1,
 									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
 								}
 							},
 							{
@@ -5255,7 +5215,7 @@
 									"id" : "Translucency Color",
 									"type" : "float_color",
 									"current_value" : [ 1, 1, 1 ],
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_SSS_1001.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_SSS_1001.jpg"
 								}
 							},
 							{
@@ -5270,7 +5230,7 @@
 									"id" : "Dual Lobe Specular Weight",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_SLW_1001.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_SLW.jpg"
 								}
 							},
 							{
@@ -5286,7 +5246,7 @@
 									"id" : "Specular Lobe 1 Roughness",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_R_1001.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_R_1001.jpg"
 								}
 							},
 							{
@@ -5364,7 +5324,7 @@
 									"id" : "Ambient Occlusion Weight",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Head_SO_1001.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_SO_1001.jpg"
 								}
 							},
 							{
@@ -5401,7 +5361,7 @@
 									"id" : "Detail Normal Map",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Skin_Details/Genesis9_Head_NM_1001.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Head_NM_1001.jpg"
 								}
 							},
 							{
@@ -5410,6 +5370,13 @@
 									"type" : "float",
 									"current_value" : 1,
 									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
 								}
 							},
 							{
@@ -5705,7 +5672,7 @@
 									"id" : "Ambient Occlusion Weight",
 									"type" : "float",
 									"current_value" : 1,
-									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_03/G9Feminine03_Body_SO_1002.jpg"
+									"image_file" : "/Runtime/Textures/DAZ/Characters/Genesis9/Base/Feminine_02/G9Feminine02_Body_SO_1002.jpg"
 								}
 							},
 							{
@@ -5751,6 +5718,13 @@
 									"type" : "float",
 									"current_value" : 1,
 									"image" : null
+								}
+							},
+							{
+								"channel" : {
+									"id" : "Top Coat Enable",
+									"type" : "bool",
+									"current_value" : true
 								}
 							},
 							{
@@ -5881,7 +5855,7 @@
 		"extra" : [
 			{
 				"type" : "scene_post_load_script",
-				"name" : "Genesis9PostLoad{bee31eef-9b31-423b-a66b-60181f5781c7}",
+				"name" : "Genesis9PostLoad{13945049-c978-4832-9759-08b6a2e5871a}",
 				"script" : "data/Daz 3D/Genesis 9/Base/Tools/Utilities/Character Addon Loader.dse",
 				"settings" : {
 					"PostLoadAddons" : {
