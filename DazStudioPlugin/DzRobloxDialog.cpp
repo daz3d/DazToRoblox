@@ -802,6 +802,7 @@ bool DzRobloxDialog::HandleModestyOverlayValidationFeedback()
 
 	if (bOverlayTextureFound == false && bUseCurrentTextures)
 	{
+		dzApp->log("DazToRoblox: WARNING: No overlay texture detected over body.");
 		// GUI warning to user to cancel or continue
 		QString sErrorString;
 		sErrorString += tr("WARNING: An overlay texture was not detected over the body.\n\n");
@@ -956,10 +957,19 @@ void DzRobloxDialog::HandleCustomModestyOverlayActivated(int index)
 				m_wModestyOverlayCombo->setCurrentIndex(m_wModestyOverlayCombo->count()-1);
 			}
 		}
-		else 
+		else
 		{
-			// gracefully fail
-			dzApp->log("DzRoblox: ERROR: HandleCustomModestyOverlayActivated(): sFilePath does not exist: " + sFilePath);
+			// Reset GUI ComboBox Setting to default choice
+			m_wModestyOverlayCombo->setCurrentIndex(0);
+			if (sFilePath.isEmpty() == false)
+			{
+				// gracefully fail
+				dzApp->log("DzRoblox: ERROR: HandleCustomModestyOverlayActivated(): sFilePath does not exist: " + sFilePath);
+				// GUI warning to user to cancel or continue
+				QString sErrorString;
+				sErrorString += tr("ERROR: No texture file found. Please select a valid modesty overlay texture file.");
+				QMessageBox::critical(0, "Roblox Studio Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Abort);
+			}
 		}
 	}
 }
