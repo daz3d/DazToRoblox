@@ -1,0 +1,270 @@
+/**********************************************************************
+ 
+	This script is provided as part of the Daz Script Documentation. The
+	contents of this script, and\or any portion thereof, may only be used
+	in accordance with the following license:
+ 
+	Creative Commons Attribution 3.0 Unported (CC BY 3.0)
+	- http://creativecommons.org/licenses/by/3.0
+ 
+	To contact Daz 3D or for more information about Daz Script visit the
+	Daz 3D website:
+ 
+	- http://www.daz3d.com
+ 
+**********************************************************************/
+// DAZ Studio version 4.22.0.15 filetype DAZ Script
+
+// Define an anonymous function;
+// serves as our main loop
+// limits the scop of variables
+(function( aArgs ){
+    /********************************************************************************************************/
+    // Global Variables, Arrays contianing file paths to overlay images
+    // index into the array is the overlay index: 0=Body, 1=Legs, 2=Head
+    var g_aDiffuseOverlayImageFilePaths = [
+        "",
+        "",
+        "",
+    ];
+    var g_aNormalOverlayImageFilePaths = [
+        "",
+        "",
+        "",
+    ];
+    var g_aRoughnessOverlayImageFilePaths = [
+        "",
+        "",
+        "",
+    ];
+    var g_aMetallicOverlayImageFilePaths = [
+        "",
+        "",
+        "",
+    ];
+    
+    /********************************************************************************************************/
+    // bool: process the arguments passed to the script, popuplate the global variable arrays with the file paths
+    function processArguments() {
+    //    App.log("apply_modesty_overlay_aArgs.dsa: Sanity Checking...");
+        if (!aArgs || Array.isArray(aArgs) == false) {
+            App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Arguments are not an array.");
+            return false;
+        }
+        // Sanity Checks
+        if (aArgs.length != 4) {
+            App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Invalid Number of Arguments, expected 4, got " + aArgs.length );
+            return false;
+        }
+        for ( var i = 0, nArgs = aArgs.length; i < nArgs; i += 1 ){
+            var aSubArray = aArgs[i];
+            if ( !Array.isArray(aSubArray) ) {
+                App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Argument " + i + " is not an array.");
+                return false;
+            }
+            if ( aSubArray.length != 3 ) {
+                App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Argument " + i + " does not have enough elements, expected 3, got " + aSubArray.length );
+                return false;
+            }
+            for (var j = 0; j < aSubArray.length; j++) {
+                if (typeof aSubArray[j] !== "string") {
+                    App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Argument " + i + " element " + j + " is not a string.");
+                    return false;
+                }
+            }
+        }
+
+        // Iterate over the arguments passed to the script
+        for( var i = 0, nArgs = aArgs.length; i < nArgs; i += 1 ){
+            var aSubArray = aArgs[i];
+            for (var j = 0; j < aSubArray.length; j++) {
+                switch (i) {
+                    case 0:
+                        g_aDiffuseOverlayImageFilePaths[j] = aSubArray[j];
+                        break;
+                    case 1:
+                        g_aNormalOverlayImageFilePaths[j] = aSubArray[j];
+                        break;
+                    case 2:
+                        g_aRoughnessOverlayImageFilePaths[j] = aSubArray[j];
+                        break;
+                    case 3:
+                        g_aMetallicOverlayImageFilePaths[j] = aSubArray[j];
+                        break;
+                    default:
+                        App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Invalid Argument Index: " + i + "; results may be unpredictable.");
+                        break;
+                }
+            }
+        }
+
+        return true;
+    };
+
+    /********************************************************************************************************/
+    // void: Replace color property with layered texture containing (original texture map + overlay image)
+    function replaceColorPropertyWithLayeredTexture(oMaterial, oColorProperty, sOverlayImageFilePath) {
+        if (!sOverlayImageFilePath || sOverlayImageFilePath == "") {
+    //        App.log("INFO: apply_modesty_overlay_aArgs.dsa: No overlay image path found.");
+            return;
+        }
+
+        var oOverlayImageFileInfo = new DzFileInfo(sOverlayImageFilePath);
+        if ( oOverlayImageFileInfo.exists() == false ) {
+            App.log("apply_modesty_overlay_aArgs.dsa: ERROR: Overlay image does not exist: " + sOverlayImageFilePath);
+            oOverlayImageFileInfo.deleteLater();
+            return;
+        }
+        oOverlayImageFileInfo.deleteLater();
+
+        // Get the current texture map
+        var oCurrentTextureMap = oColorProperty.getMapValue();
+        if (!oCurrentTextureMap) {
+    //        App.log("INFO: apply_modesty_overlay_aArgs.dsa: No current texture map found.");
+            return;
+        }
+
+        var sMaterialName = oMaterial.name;
+        var sLayeredTextureName = "Layered " + oColorProperty.name + " for " + sMaterialName;
+
+        // Create a new layered texture
+        var oImageMgr = App.getImageMgr();
+        var oLayeredTexture = oImageMgr.createLayeredTexture(sLayeredTextureName);
+        oLayeredTexture.size = new Size( 4096, 4096 );
+        
+        if (oCurrentTextureMap.inherits("DzLayeredTexture")) {
+            // Deep copy existing Layered Texture to new Layered Texture
+            oLayeredTexture.copyFrom(oCurrentTextureMap);
+        }
+        else
+        {
+            // Add the original texture map as the base layer
+            var oBaseLayer = oLayeredTexture.createLayer("Base Layer");
+            oBaseLayer.imageFile = oCurrentTextureMap.getFilename();			
+        }
+
+        // Add the overlay image as a new layer
+        var oOverlayLayer = oLayeredTexture.createLayer("Overlay Layer");
+        oOverlayLayer.imageFile = sOverlayImageFilePath;
+
+        // Assign the new layered texture to the material's diffuse color property
+        oColorProperty.setMap(oLayeredTexture);
+
+        // NECESSARY FOR SCRIPT TO WORK ATOMICLY
+        // getPreviewPixmap is called to force Texture Baking to file
+        oLayeredTexture.getPreviewPixmap(1,1);
+        
+    }
+
+    /********************************************************************************************************/
+    // void: replace various color property maps with layered textures, nOverlayIndex: 0=Body, 1=Legs, 2=Head
+    function replaceMaterialWithLayeredTextures(oMaterial, nOverlayIndex) {
+        if (!oMaterial) {
+            App.log("apply_modesty_overlay_aArgs.dsa: Material is not valid.");
+            return;
+        }
+
+        // Access the "Diffuse Color" property of the material
+        var oDiffuseColorProperty = oMaterial.findProperty("Diffuse Color");
+        if (!oDiffuseColorProperty) {
+            App.log("INFO: apply_modesty_overlay_aArgs.dsa: Material does not have a 'Diffuse Color' property.");
+        } else {
+            replaceColorPropertyWithLayeredTexture(oMaterial, oDiffuseColorProperty, g_aDiffuseOverlayImageFilePaths[nOverlayIndex]);
+        }
+
+        var oDiffuseColorProperty = oMaterial.findProperty("Translucency Color");
+        if (!oDiffuseColorProperty) {
+            App.log("apply_modesty_overlay_aArgs.dsa: Material does not have a 'Diffuse Color' property.");
+        } else {
+            replaceColorPropertyWithLayeredTexture(oMaterial, oDiffuseColorProperty, g_aDiffuseOverlayImageFilePaths[nOverlayIndex]);
+        }
+
+        var oNormalMapProperty = oMaterial.findProperty("Normal Map");
+        if (!oNormalMapProperty) {
+            App.log("apply_modesty_overlay_aArgs.dsa: Material does not have a 'Normal Map' property.");
+        } else {
+            replaceColorPropertyWithLayeredTexture(oMaterial, oNormalMapProperty, g_aNormalOverlayImageFilePaths[nOverlayIndex]);
+        }
+
+        var oNormalMapProperty = oMaterial.findProperty("Detail Normal Map");
+        if (!oNormalMapProperty) {
+            App.log("apply_modesty_overlay_aArgs.dsa: Material does not have a 'Normal Map' property.");
+        } else {
+            replaceColorPropertyWithLayeredTexture(oMaterial, oNormalMapProperty, g_aNormalOverlayImageFilePaths[nOverlayIndex]);
+        }
+
+        var oRoughnessMapProperty = oMaterial.findProperty("Specular Lobe 1 Roughness");
+        if (!oRoughnessMapProperty) {
+            oRoughnessMapProperty = oMaterial.findProperty("Glossy Roughness");
+        }
+        if (oRoughnessMapProperty) {
+            replaceColorPropertyWithLayeredTexture(oMaterial, oRoughnessMapProperty, g_aRoughnessOverlayImageFilePaths[nOverlayIndex]);
+        }
+
+        var oSpecularMapProperty = oMaterial.findProperty("Dual Lobe Specular Weight");
+        if (!oSpecularMapProperty || !oSpecularMapProperty.getMapValue()) {
+            oSpecularMapProperty = oMaterial.findProperty("Dual Lobe Specular Reflectivity");
+            if (!oSpecularMapProperty || !oSpecularMapProperty.getMapValue()) {
+                oSpecularMapProperty = oMaterial.findProperty("Glossy Reflectivity");
+            }
+        }
+        if (oSpecularMapProperty && oSpecularMapProperty.getMapValue()) {
+            App.log("DEBUG: apply_modesty_overlay_aArgs.dsa: applying specular overlay...");
+            replaceColorPropertyWithLayeredTexture(oMaterial, oSpecularMapProperty, g_aRoughnessOverlayImageFilePaths[nOverlayIndex]);
+        }
+
+        var oMetallicMapProperty = oMaterial.findProperty("Metallic Weight");
+        if (oMetallicMapProperty && oMetallicMapProperty.getMapValue()) {
+            App.log("DEBUG: apply_modesty_overlay_aArgs.dsa: applying metallic overlay...");
+            replaceColorPropertyWithLayeredTexture(oMaterial, oMetallicMapProperty, g_aMetallicOverlayImageFilePaths[nOverlayIndex]);
+        }
+
+        App.log("apply_modesty_overlay_aArgs.dsa: Replaced texture map with layered texture for material: " + oMaterial.name);
+    }
+
+    /********************************************************************************************************/
+    // void: Main function
+    function main() {
+        if (!processArguments()) {
+            App.log("apply_modesty_overlay_aArgs.dsa: Failed to process arguments, aborting script.");
+            return;
+        }
+
+        var oSelectedNode = Scene.getPrimarySelection();
+        if (oSelectedNode) {
+    //        App.log("apply_modesty_overlay_aArgs.dsa: DEBUG: Selected Node: " + oSelectedNode.name);
+            var oSelectedNodeObject = oSelectedNode.getObject();
+            
+            if (oSelectedNodeObject) {
+                var oSelectedNodeShape = oSelectedNodeObject.getCurrentShape();
+                var nMaterialCount = oSelectedNodeShape.getNumMaterials();
+    //            App.log("apply_modesty_overlay_aArgs.dsa: DEBUG: Number of Materials: " + nMaterialCount);
+                
+                for (var i = 0; i < nMaterialCount; i++) {
+                    var oMaterial = oSelectedNodeShape.getMaterial(i);
+    //                App.log("DEBUG: apply_modesty_overlay_aArgs.dsa: DEBUG: Material " + (i + 1) + ": " + material.name);
+                    if (oMaterial.name == "Body") {
+                        // Process selected ColorMaps of each body material
+                        replaceMaterialWithLayeredTextures(oMaterial, 0); // 0=Body, 1=Legs, 2=Head
+                    }
+                    else if (oMaterial.name == "Legs") {
+                        replaceMaterialWithLayeredTextures(oMaterial, 1);
+                    }
+                    else if (oMaterial.name == "Head") {
+                        replaceMaterialWithLayeredTextures(oMaterial, 2);
+                    }
+                }
+            } else {
+                App.log("apply_modesty_overlay_aArgs.dsa: INFO: The selected node is not a figure or prop with materials, aborting script.");
+                return;
+            }
+        } else {
+            App.log("apply_modesty_overlay_aArgs.dsa: INFO: No node is currently selected, aborting script.");
+            return;
+        }
+    }
+
+    main();
+
+// Finalize the function and invoke
+})( getArguments() );

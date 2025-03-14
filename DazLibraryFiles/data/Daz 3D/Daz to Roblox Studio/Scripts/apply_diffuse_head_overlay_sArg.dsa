@@ -1,0 +1,164 @@
+/**********************************************************************
+ 
+	This script is provided as part of the Daz Script Documentation. The
+	contents of this script, and\or any portion thereof, may only be used
+	in accordance with the following license:
+ 
+	Creative Commons Attribution 3.0 Unported (CC BY 3.0)
+	- http://creativecommons.org/licenses/by/3.0
+ 
+	To contact Daz 3D or for more information about Daz Script visit the
+	Daz 3D website:
+ 
+	- http://www.daz3d.com
+ 
+**********************************************************************/
+// DAZ Studio version 4.22.0.15 filetype DAZ Script
+
+(function( aArgs ){
+    var g_sOverlayTextureFilePath = "";
+
+    /********************************************************************************************************/
+    // bool: process the arguments passed to the script
+    function processArguments() {
+    //    App.log("apply_diffuse_overlay_sArg.dsa: Sanity Checking...");
+        if (!aArgs || Array.isArray(aArgs) == false) {
+            App.log("apply_diffuse_overlay_sArg.dsa, processArguments(): CRITCIAL ERROR: Arguments are not an array, aborting script.");
+            return false;
+        }
+        // Sanity Checks
+        if (aArgs.length != 1) {
+            App.log("apply_diffuse_overlay_sArg.dsa, processArguments(): CRITCIAL ERROR: Invalid Number of Arguments, expected 1, got " + aArgs.length + ", aborting script.");
+            return false;
+        }
+        var sFilePath = aArgs[0];
+        if (!sFilePath || sFilePath == "") {
+            App.log("apply_diffuse_overlay_sArg.dsa, processArguments(): CRITCIAL ERROR: Invalid Argument Value, aborting script.");
+            return false;
+        }
+        g_sOverlayTextureFilePath = sFilePath;
+
+        return true;
+    };
+    
+    /********************************************************************************************************/
+    // Replace color property with layered texture containing (original texture map + overlay image)
+    function replaceColorPropertyWithLayeredTexture(oMaterial, oColorProperty, sOverlayImageFilePath) {
+        if (!sOverlayImageFilePath || sOverlayImageFilePath == "") {
+    //        App.log("INFO: apply_diffuse_overlay_sArg.dsa: No overlay image path found.");
+            return;
+        }
+
+        var oOverlayImageFileInfo = new DzFileInfo(sOverlayImageFilePath);
+        if ( oOverlayImageFileInfo.exists() == false ) {
+            App.log("apply_diffuse_overlay_sArg.dsa: ERROR: Overlay image does not exist: " + sOverlayImageFilePath);
+            oOverlayImageFileInfo.deleteLater();
+            return;
+        }
+        oOverlayImageFileInfo.deleteLater();
+
+        // Get the current texture map
+        var oCurrentTextureMap = oColorProperty.getMapValue();
+        if (!oCurrentTextureMap) {
+    //        App.log("INFO: apply_diffuse_overlay_sArg.dsa: No current texture map found.");
+            return;
+        }
+
+        var sMaterialName = oMaterial.name;
+        var sLayeredTextureName = "Layered " + oColorProperty.name + " for " + sMaterialName;
+
+        // Create a new layered texture
+        var oImageMgr = App.getImageMgr();
+        var oLayeredTexture = oImageMgr.createLayeredTexture(sLayeredTextureName);
+        oLayeredTexture.size = new Size( 4096, 4096 );
+        
+        if (oCurrentTextureMap.inherits("DzLayeredTexture")) {
+            // Deep copy existing Layered Texture to new Layered Texture
+            oLayeredTexture.copyFrom(oCurrentTextureMap);
+        }
+        else
+        {
+            // Add the original texture map as the base layer
+            var oBaseLayer = oLayeredTexture.createLayer("Base Layer");
+            oBaseLayer.imageFile = oCurrentTextureMap.getFilename();			
+        }
+
+        // Add the overlay image as a new layer
+        var oOverlayLayer = oLayeredTexture.createLayer("Overlay Layer");
+        oOverlayLayer.imageFile = sOverlayImageFilePath;
+
+        // Assign the new layered texture to the material's diffuse color property
+        oColorProperty.setMap(oLayeredTexture);
+
+        // NECESSARY FOR SCRIPT TO WORK ATOMICLY
+        // getPreviewPixmap is called to force Texture Baking to file
+        oLayeredTexture.getPreviewPixmap(1,1);
+        
+    }
+
+    /********************************************************************************************************/
+    // void: Main function
+    function main() {
+        if (!processArguments()) {
+            App.log("apply_diffuse_overlay_sArg.dsa: ERROR: Failed to process arguments, aborting script.");
+            return;
+        }
+
+        var oSelectedNode = Scene.getPrimarySelection();
+        if (!oSelectedNode || !oSelectedNode.inherits("DzFigure")) {
+            App.log("apply_diffuse_overlay_sArg.dsa: ERROR: No figure selected or selected node is not a DzFigure, aborting script.");
+            return;
+        }
+
+        var oSelectedNodeObject = oSelectedNode.getObject();
+        if (!oSelectedNodeObject) {
+            App.log("apply_diffuse_overlay_sArg.dsa: Selected figure has no object, aborting script.");
+            return;
+        }
+
+        var oCurrentShape = oSelectedNodeObject.getCurrentShape();
+        if (!oCurrentShape) {
+            App.log("apply_diffuse_overlay_sArg.dsa: Selected figure has no shape.");
+            return;
+        }
+
+        // Find "Head" material
+        var oHeadMaterial = null;
+        for (var i = 0; i < oCurrentShape.getNumMaterials(); i++) {
+            var oMaterial = oCurrentShape.getMaterial(i);
+            if (oMaterial && oMaterial.getName() == "Head") {
+                oHeadMaterial = oMaterial;
+                break;
+            }
+        }
+
+        if (!oHeadMaterial) {
+            App.log("apply_diffuse_overlay_sArg.dsa: ERROR: No 'Head' material found on this figure, aborting script.");
+            return;
+        }
+
+        // Get the Diffuse Color property
+        var oDiffuseColorProperty = oHeadMaterial.findProperty("Diffuse Color");
+        if (!oDiffuseColorProperty) {
+            App.log("apply_diffuse_overlay_sArg.dsa: ERROR: Head material has no Diffuse Color image property, aborting script.");
+            return;
+        } else {
+            replaceColorPropertyWithLayeredTexture(oHeadMaterial, oDiffuseColorProperty, g_sOverlayTextureFilePath);
+        }
+
+        var oDiffuseColorProperty = oMaterial.findProperty("Translucency Color");
+        if (!oDiffuseColorProperty) {
+            App.log("apply_diffuse_overlay_sArg.dsa: Head Material does not have a 'Translucency Color' property.");
+        } else {
+            replaceColorPropertyWithLayeredTexture(oMaterial, oDiffuseColorProperty, g_sOverlayTextureFilePath);
+        }
+
+//        App.log("INFO: New diffuse overlay applied to 'Head' material: " + sOverlayTextureFilePath);
+//        App.log("INFO: Script completed.");
+
+    }
+
+    main();
+
+// Finalize the function and invoke
+})( getArguments() );
