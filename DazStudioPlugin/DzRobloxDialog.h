@@ -120,6 +120,7 @@ protected slots:
 	void HandleCustomModestyOverlayActivated(int index);
 
 	void HandleAgreeEulaCheckbox(bool checked);
+	bool HandleModestyOverlayValidationFeedback();
 
 protected:
 	QLineEdit* intermediateFolderEdit;

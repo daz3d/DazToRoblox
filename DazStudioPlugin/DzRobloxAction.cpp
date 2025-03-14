@@ -611,6 +611,7 @@ bool DzRobloxAction::createUI()
 	if (!m_bridgeDialog)
 	{
 		m_bridgeDialog = new DzRobloxDialog(mw);
+		m_bridgeDialog->setBridgeActionObject(this);
 	}
 	else
 	{
@@ -620,6 +621,7 @@ bool DzRobloxAction::createUI()
 			robloxDialog->enableModestyOptions(true);
 			robloxDialog->resetToDefaults();
 			robloxDialog->loadSavedSettings();
+			robloxDialog->setBridgeActionObject(this);
 		}
 	}
 
@@ -852,6 +854,7 @@ Do you want to switch to a compatible Tool mode now?"), QMessageBox::Yes, QMessa
 
 	}
 
+	m_pSelectedNode = dzScene->getPrimarySelection();
 
 	// if UV is not default, then issue error and return
 	// 1. get UV of selected node

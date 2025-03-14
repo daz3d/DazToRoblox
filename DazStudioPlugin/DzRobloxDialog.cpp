@@ -752,6 +752,70 @@ bool DzRobloxDialog::HandleAcceptButtonValidationFeedback() {
 
 }
 
+#include <dzobject.h>
+#include <dzshape.h>
+#include <dzcolorproperty.h>
+bool DzRobloxDialog::HandleModestyOverlayValidationFeedback()
+{
+	bool bOverlayTextureFound = false;
+
+	if (m_BridgeAction == NULL) {
+		dzApp->log("ERROR: DzRobloxDialog: m_BridgeAction is NULL. Aborting Export...");
+		return false;
+	}
+
+	if (m_BridgeAction->isInteractiveMode() == false)
+	{
+		return true;
+	}
+
+	// if modesty overlay not detected, present GUI warning
+	DzNode* pPrimarySelection = m_BridgeAction->getSelectedNode();
+	// Get "Body" Material
+	if (pPrimarySelection && pPrimarySelection->getObject())
+	{
+		DzShape* pShape = pPrimarySelection->getObject()->getCurrentShape();
+		// Get Diffuse Color Property
+		for (int i = 0; i < pShape->getNumMaterials(); i++)
+		{
+			DzMaterial* pMat = pShape->getMaterial(i);
+			if (pMat && pMat->getName() == "Body") {
+				DzColorProperty* pDiffuseColorProperty = qobject_cast<DzColorProperty*>(pMat->findProperty("Diffuse Color"));
+				if (pDiffuseColorProperty) {
+					// Check if Diffuse Color Property points to L.I.E. object
+					DzTexture* pTexture = pDiffuseColorProperty->getMapValue();
+					if (pTexture->inherits("DzLayeredTexture")) {
+						bOverlayTextureFound = true;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	bool bUseCurrentTextures = false;
+	int index = m_wModestyOverlayCombo->currentIndex();
+	QVariant vItemData = m_wModestyOverlayCombo->itemData(index);
+	if (vItemData.type() != QVariant::String && vItemData.toInt() == eModestyOverlay::UseCurrentTextures) {
+		bUseCurrentTextures = true;
+	}
+
+	if (bOverlayTextureFound == false && bUseCurrentTextures)
+	{
+		// GUI warning to user to cancel or continue
+		QString sErrorString;
+		sErrorString += tr("WARNING: An overlay texture was not detected over the body.\n\n");
+		sErrorString += tr("Do you want to continue without applying a modesty overlay? Please make sure that your character's skin texture complies with Roblox modesty layer requirements before proceeding.\n\n");
+		sErrorString += tr("Press Cancel to cancel the export now.");
+		auto result = QMessageBox::warning(0, "Roblox Studio Exporter", tr(sErrorString.toLocal8Bit()), QMessageBox::Yes | QMessageBox::Cancel);
+		if (result == QMessageBox::Cancel) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 void DzRobloxDialog::accept()
 {
 	if (m_bSetupMode) {
@@ -760,6 +824,11 @@ void DzRobloxDialog::accept()
 	}
 
 	bool bResult = HandleAcceptButtonValidationFeedback();
+
+	if (bResult == true)
+	{
+		bResult = HandleModestyOverlayValidationFeedback();
+	}
 
 	if (bResult == true)
 	{
