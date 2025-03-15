@@ -6,7 +6,7 @@
 		"contributor" : {
 			"author" : "Daz 3D",
 			"email" : "",
-			"website" : ""
+			"website" : "www.daz3d.com"
 		},
 		"revision" : "1.0",
 		"modified" : "2025-03-11T12:04:07Z"
@@ -91,7 +91,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_shorts_legs_modesty_overlay_d.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -131,7 +131,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_shorts_legs_modesty_overlay_d.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -171,7 +171,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_shorts_legs_modesty_overlay_r.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -211,7 +211,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_shorts_legs_modesty_overlay_r.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -262,7 +262,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_shorts_legs_modesty_overlay_n.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -412,7 +412,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/2d%20eyebrows/g9%20eyebrows%20thick.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Eyebrows Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -428,7 +428,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/2d%20eyelashes-eyeliner/g9%20eyeliner%20thick.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Eyelashes Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -444,7 +444,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_tanktop_head_modesty_overlay_d.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -484,7 +484,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_tanktop_head_modesty_overlay_d.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -524,7 +524,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_tanktop_head_modesty_overlay_r.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -564,7 +564,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_tanktop_head_modesty_overlay_r.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -604,7 +604,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_tanktop_head_modesty_overlay_n.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -644,7 +644,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_tanktop_torso_modesty_overlay_d.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -684,7 +684,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_tanktop_torso_modesty_overlay_d.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -724,7 +724,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_tanktop_torso_modesty_overlay_r.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -764,7 +764,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_tanktop_torso_modesty_overlay_r.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
@@ -815,7 +815,7 @@
 				},
 				{
 					"url" : "/people/genesis%209/characters/daz%20originals/daz%20to%20roblox%20studio%20starter%20essentials/materials/daz%20to%20roblox%20studio%20overlays/sportsbra%20and%20tanktop/g9_tanktop_torso_modesty_overlay_n.png",
-					"label" : "Overlay Layer",
+					"label" : "Roblox Modesty Overlay",
 					"active" : true,
 					"color" : [ 1, 1, 1 ],
 					"transparency" : 1,
