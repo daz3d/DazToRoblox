@@ -1,3 +1,4 @@
+// DAZ Studio version 4.20.0.1.88 filetype DAZ Script
 /**********************************************************************
  
 	This script is provided as part of the Daz Script Documentation. The
@@ -13,8 +14,11 @@
 	- http://www.daz3d.com
  
 **********************************************************************/
-// DAZ Studio version 4.22.0.15 filetype DAZ Script
+// Source: http://docs.daz3d.com/doku.php/public/software/dazstudio/4/referenceguide/scripting/api_reference/samples/remote_operation/sub_script/start
 
+// Define an anonymous function;
+// serves as our main loop
+// limits the scop of variables
 (function(){
     var oThisScriptFile = new DzFile( getScriptFileName() );
     var sThisScriptFilePath = oThisScriptFile.path();
@@ -111,11 +115,13 @@
 	
 	/*********************************************************************/
 	// Define the path of the script we will call; without the file extension
-	var sRelativeScriptPath = "data/Daz 3D/Daz to Roblox Studio/Scripts/apply_modesty_overlay_aArgs.dsa"
-	var sAbsoluteScriptPath = App.getContentMgr().findFile(sRelativeScriptPath);
+	var sRelativeScriptPath = "data/Daz 3D/Daz to Roblox Studio/Scripts/apply_modesty_overlay_aArgs"
+	var oThisScriptContentFolder = App.getContentMgr().findBaseDirectory( sThisScriptFilePath, true);
+	var sBasePath = oThisScriptContentFolder.fullPath;
+	var sScriptSearchPath = sBasePath + "/" + sRelativeScriptPath;
 	
 	// Execute the symmetrize script, silently
-	executeScriptWithArgs( sAbsoluteScriptPath, 
+	executeScriptWithArgs( sScriptSearchPath, 
         [ 
             g_aDiffuseOverlayImageFilePaths, 
             g_aNormalOverlayImageFilePaths, 

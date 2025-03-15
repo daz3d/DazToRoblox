@@ -1,3 +1,4 @@
+// DAZ Studio version 4.20.0.1.88 filetype DAZ Script
 /**********************************************************************
  
 	This script is provided as part of the Daz Script Documentation. The
@@ -13,12 +14,14 @@
 	- http://www.daz3d.com
  
 **********************************************************************/
-// DAZ Studio version 4.22.0.15 filetype DAZ Script
 
 // Define an anonymous function;
 // serves as our main loop
 // limits the scop of variables
 (function( aArgs ){
+    var g_sScriptName = getScriptFileName();
+    var g_sModestyOverlayLayerName = "Roblox Modesty Overlay";
+
     /********************************************************************************************************/
     // Global Variables, Arrays contianing file paths to overlay images
     // index into the array is the overlay index: 0=Body, 1=Legs, 2=Head
@@ -48,27 +51,27 @@
     function processArguments() {
     //    App.log("apply_modesty_overlay_aArgs.dsa: Sanity Checking...");
         if (!aArgs || Array.isArray(aArgs) == false) {
-            App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Arguments are not an array.");
+            App.error(g_sScriptName + ", processArguments(): CRITCIAL ERROR: Arguments are not an array.");
             return false;
         }
         // Sanity Checks
         if (aArgs.length != 4) {
-            App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Invalid Number of Arguments, expected 4, got " + aArgs.length );
+            App.error(g_sScriptName + ", processArguments(): CRITCIAL ERROR: Invalid Number of Arguments, expected 4, got " + aArgs.length );
             return false;
         }
         for ( var i = 0, nArgs = aArgs.length; i < nArgs; i += 1 ){
             var aSubArray = aArgs[i];
             if ( !Array.isArray(aSubArray) ) {
-                App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Argument " + i + " is not an array.");
+                App.error(g_sScriptName + ", processArguments(): CRITCIAL ERROR: Argument " + i + " is not an array.");
                 return false;
             }
             if ( aSubArray.length != 3 ) {
-                App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Argument " + i + " does not have enough elements, expected 3, got " + aSubArray.length );
+                App.error(g_sScriptName + ", processArguments(): CRITCIAL ERROR: Argument " + i + " does not have enough elements, expected 3, got " + aSubArray.length );
                 return false;
             }
             for (var j = 0; j < aSubArray.length; j++) {
                 if (typeof aSubArray[j] !== "string") {
-                    App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Argument " + i + " element " + j + " is not a string.");
+                    App.error(g_sScriptName + ", processArguments(): CRITCIAL ERROR: Argument " + i + " element " + j + " is not a string.");
                     return false;
                 }
             }
@@ -92,7 +95,7 @@
                         g_aMetallicOverlayImageFilePaths[j] = aSubArray[j];
                         break;
                     default:
-                        App.log("apply_modesty_overlay_aArgs.dsa, processArguments(): CRITCIAL ERROR: Invalid Argument Index: " + i + "; results may be unpredictable.");
+                        App.error(g_sScriptName + ", processArguments(): CRITCIAL ERROR: Invalid Argument Index: " + i + "; results may be unpredictable.");
                         break;
                 }
             }
@@ -102,16 +105,42 @@
     };
 
     /********************************************************************************************************/
+    // void: remove the modesty overlay layer from color property
+    function removeRobloxModestyLayer(oMaterial, oColorProperty) {
+        // Get the current texture map
+        var oCurrentTextureMap = oColorProperty.getMapValue();
+        if (!oCurrentTextureMap) {
+            // App.verbose(g_sScriptName + ", removeRobloxModestyLayer(): INFO: No current texture map found.");
+            return;
+        }
+
+        if (oCurrentTextureMap.inherits("DzLayeredTexture") == false) {
+            // App.verbose(g_sScriptName + ", removeRobloxModestyLayer(): INFO: Current texture map is not a layered texture.");
+            return;
+        }
+
+        var nOverlayLayerIndex = oCurrentTextureMap.findLayerByLabel( g_sModestyOverlayLayerName );
+        if (nOverlayLayerIndex < 0)
+        {
+            // App.verbose(g_sScriptName + ", removeRobloxModestyLayer(): INFO: Roblox Modesty Layer not found.");
+            return;
+        }
+        oCurrentTextureMap.removeLayer(nOverlayLayerIndex);
+
+    }
+
+    /********************************************************************************************************/
     // void: Replace color property with layered texture containing (original texture map + overlay image)
     function replaceColorPropertyWithLayeredTexture(oMaterial, oColorProperty, sOverlayImageFilePath) {
         if (!sOverlayImageFilePath || sOverlayImageFilePath == "") {
-    //        App.log("INFO: apply_modesty_overlay_aArgs.dsa: No overlay image path found.");
+//            App.verbose("INFO: apply_modesty_overlay_aArgs.dsa: No overlay image path found.");
+            removeRobloxModestyLayer(oMaterial, oColorProperty);
             return;
         }
 
         var oOverlayImageFileInfo = new DzFileInfo(sOverlayImageFilePath);
         if ( oOverlayImageFileInfo.exists() == false ) {
-            App.log("apply_modesty_overlay_aArgs.dsa: ERROR: Overlay image does not exist: " + sOverlayImageFilePath);
+            App.error(g_sScriptName + ", replaceColorPropertyWithLayeredTexture(): ERROR: Overlay image does not exist: " + sOverlayImageFilePath);
             oOverlayImageFileInfo.deleteLater();
             return;
         }
@@ -120,7 +149,7 @@
         // Get the current texture map
         var oCurrentTextureMap = oColorProperty.getMapValue();
         if (!oCurrentTextureMap) {
-    //        App.log("INFO: apply_modesty_overlay_aArgs.dsa: No current texture map found.");
+            App.verbose(g_sScriptName + ", replaceColorPropertyWithLayeredTexture(): INFO: No current texture map found.");
             return;
         }
 
@@ -143,8 +172,16 @@
             oBaseLayer.imageFile = oCurrentTextureMap.getFilename();			
         }
 
-        // Add the overlay image as a new layer
-        var oOverlayLayer = oLayeredTexture.createLayer("Overlay Layer");
+        // Check for existing modesty overlay layer
+        var oOverlayLayer = null;
+        var nOverlayLayerIndex = oLayeredTexture.findLayerByLabel( g_sModestyOverlayLayerName );
+        if (nOverlayLayerIndex < 0)
+        {
+            // Add the overlay image as a new layer
+            oOverlayLayer = oLayeredTexture.createLayer( g_sModestyOverlayLayerName );
+        } else {
+            oOverlayLayer = oLayeredTexture.getLayer(nOverlayLayerIndex);
+        }
         oOverlayLayer.imageFile = sOverlayImageFilePath;
 
         // Assign the new layered texture to the material's diffuse color property
@@ -160,35 +197,35 @@
     // void: replace various color property maps with layered textures, nOverlayIndex: 0=Body, 1=Legs, 2=Head
     function replaceMaterialWithLayeredTextures(oMaterial, nOverlayIndex) {
         if (!oMaterial) {
-            App.log("apply_modesty_overlay_aArgs.dsa: Material is not valid.");
+            App.error(g_sScriptName + ", replaceMaterialWithLayeredTextures(): ERROR: Material is not valid.");
             return;
         }
 
         // Access the "Diffuse Color" property of the material
         var oDiffuseColorProperty = oMaterial.findProperty("Diffuse Color");
         if (!oDiffuseColorProperty) {
-            App.log("INFO: apply_modesty_overlay_aArgs.dsa: Material does not have a 'Diffuse Color' property.");
+            App.verbose(g_sScriptName + ", replaceMaterialWithLayeredTextures(): INFO: Material does not have a 'Diffuse Color' property.");
         } else {
             replaceColorPropertyWithLayeredTexture(oMaterial, oDiffuseColorProperty, g_aDiffuseOverlayImageFilePaths[nOverlayIndex]);
         }
 
         var oDiffuseColorProperty = oMaterial.findProperty("Translucency Color");
         if (!oDiffuseColorProperty) {
-            App.log("apply_modesty_overlay_aArgs.dsa: Material does not have a 'Diffuse Color' property.");
+            App.verbose(g_sScriptName + ", replaceMaterialWithLayeredTextures(): INFO: Material does not have a 'Translucency Color' property.");
         } else {
             replaceColorPropertyWithLayeredTexture(oMaterial, oDiffuseColorProperty, g_aDiffuseOverlayImageFilePaths[nOverlayIndex]);
         }
 
         var oNormalMapProperty = oMaterial.findProperty("Normal Map");
         if (!oNormalMapProperty) {
-            App.log("apply_modesty_overlay_aArgs.dsa: Material does not have a 'Normal Map' property.");
+            App.verbose(g_sScriptName + ", replaceMaterialWithLayeredTextures(): INFO: Material does not have a 'Normal Map' property.");
         } else {
             replaceColorPropertyWithLayeredTexture(oMaterial, oNormalMapProperty, g_aNormalOverlayImageFilePaths[nOverlayIndex]);
         }
 
         var oNormalMapProperty = oMaterial.findProperty("Detail Normal Map");
         if (!oNormalMapProperty) {
-            App.log("apply_modesty_overlay_aArgs.dsa: Material does not have a 'Normal Map' property.");
+            App.verbose(g_sScriptName + ", replaceMaterialWithLayeredTextures(): INFO: Material does not have a 'Detail Normal Map' property.");
         } else {
             replaceColorPropertyWithLayeredTexture(oMaterial, oNormalMapProperty, g_aNormalOverlayImageFilePaths[nOverlayIndex]);
         }
@@ -209,24 +246,24 @@
             }
         }
         if (oSpecularMapProperty && oSpecularMapProperty.getMapValue()) {
-            App.log("DEBUG: apply_modesty_overlay_aArgs.dsa: applying specular overlay...");
+            App.verbose(g_sScriptName + ", replaceMaterialWithLayeredTextures(): INFO: applying specular overlay...");
             replaceColorPropertyWithLayeredTexture(oMaterial, oSpecularMapProperty, g_aRoughnessOverlayImageFilePaths[nOverlayIndex]);
         }
 
         var oMetallicMapProperty = oMaterial.findProperty("Metallic Weight");
         if (oMetallicMapProperty && oMetallicMapProperty.getMapValue()) {
-            App.log("DEBUG: apply_modesty_overlay_aArgs.dsa: applying metallic overlay...");
+            App.verbose(g_sScriptName + ", replaceMaterialWithLayeredTextures(): INFO: applying metallic overlay...");
             replaceColorPropertyWithLayeredTexture(oMaterial, oMetallicMapProperty, g_aMetallicOverlayImageFilePaths[nOverlayIndex]);
         }
 
-        App.log("apply_modesty_overlay_aArgs.dsa: Replaced texture map with layered texture for material: " + oMaterial.name);
+        App.verbose(g_sScriptName + ", replaceMaterialWithLayeredTextures(): INFO: Replaced texture map with layered texture for material: " + oMaterial.name);
     }
 
     /********************************************************************************************************/
     // void: Main function
     function main() {
         if (!processArguments()) {
-            App.log("apply_modesty_overlay_aArgs.dsa: Failed to process arguments, aborting script.");
+            App.log(g_sScriptName + ": Failed to process arguments, aborting script.");
             return;
         }
 
@@ -255,16 +292,18 @@
                     }
                 }
             } else {
-                App.log("apply_modesty_overlay_aArgs.dsa: INFO: The selected node is not a figure or prop with materials, aborting script.");
+                App.log(g_sScriptName + ": INFO: The selected node is not a figure or prop with materials, aborting script.");
                 return;
             }
         } else {
-            App.log("apply_modesty_overlay_aArgs.dsa: INFO: No node is currently selected, aborting script.");
+            App.log(g_sScriptName + ": INFO: No node is currently selected, aborting script.");
             return;
         }
     }
 
+    setBusyCursor();
     main();
+    clearBusyCursor();
 
 // Finalize the function and invoke
 })( getArguments() );

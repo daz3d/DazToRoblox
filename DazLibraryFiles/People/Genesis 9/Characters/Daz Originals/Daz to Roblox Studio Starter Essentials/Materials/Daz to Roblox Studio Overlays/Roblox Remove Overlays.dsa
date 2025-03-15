@@ -1,0 +1,79 @@
+// DAZ Studio version 4.20.0.1.88 filetype DAZ Script
+/**********************************************************************
+ 
+	This script is provided as part of the Daz Script Documentation. The
+	contents of this script, and\or any portion thereof, may only be used
+	in accordance with the following license:
+ 
+	Creative Commons Attribution 3.0 Unported (CC BY 3.0)
+	- http://creativecommons.org/licenses/by/3.0
+ 
+	To contact Daz 3D or for more information about Daz Script visit the
+	Daz 3D website:
+ 
+	- http://www.daz3d.com
+ 
+**********************************************************************/
+
+// Define an anonymous function;
+// serves as our main loop
+// limits the scop of variables
+(function(){
+    g_aOverlayNames = ["Roblox Modesty Overlay", "Roblox Eyebrows Overlay", "Roblox Eyelashes Overlay"];
+
+    /********************************************************************************************************/
+    // void: remove custom Roblox Overlay layer by label name
+    function removeRobloxOverlay(oColorProperty) {
+        // Get the current texture map
+        var oCurrentTextureMap = oColorProperty.getMapValue();
+        if (!oCurrentTextureMap) {
+            // App.verbose(g_sScriptName + ", removeRobloxOverlay(): INFO: No current texture map found.");
+            return;
+        }
+
+        if (oCurrentTextureMap.inherits("DzLayeredTexture") == false) {
+            // App.verbose(g_sScriptName + ", removeRobloxOverlay(): INFO: Current texture map is not a layered texture.");
+            return;
+        }
+
+        for (var i=0; i<g_aOverlayNames.length; i++) {
+            var nOverlayLayerIndex = oCurrentTextureMap.findLayerByLabel( g_aOverlayNames[i] );
+            if (nOverlayLayerIndex < 0) {
+                continue;
+            }
+            oCurrentTextureMap.removeLayer(nOverlayLayerIndex);
+        }
+
+    }
+    
+    /********************************************************************************************************/
+    // void: main entry point
+    function main() {
+        var oSelectedNode = Scene.getPrimarySelection();
+        if (oSelectedNode) {
+            var oSelectedNodeObject = oSelectedNode.getObject();
+            
+            if (oSelectedNodeObject) {
+                var oSelectedNodeShape = oSelectedNodeObject.getCurrentShape();
+                var nMaterialCount = oSelectedNodeShape.getNumMaterials();
+                
+                for (var i = 0; i < nMaterialCount; i++) {
+                    var oMaterial = oSelectedNodeShape.getMaterial(i);
+                    if (oMaterial) {
+                        for (var j = 0; j < oMaterial.getNumProperties(); j++) {
+                            var oProperty = oMaterial.getProperty(j);
+                            if (oProperty && oProperty.inherits("DzColorProperty")) {
+                                removeRobloxOverlay(oProperty);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    setBusyCursor();
+    main();
+    clearBusyCursor();
+
+})();

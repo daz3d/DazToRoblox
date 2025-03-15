@@ -1,3 +1,4 @@
+// DAZ Studio version 4.20.0.1.88 filetype DAZ Script
 /**********************************************************************
  
 	This script is provided as part of the Daz Script Documentation. The
@@ -13,20 +14,21 @@
 	- http://www.daz3d.com
  
 **********************************************************************/
-// DAZ Studio version 4.22.0.15 filetype DAZ Script
+// Source: http://docs.daz3d.com/doku.php/public/software/dazstudio/4/referenceguide/scripting/api_reference/samples/remote_operation/sub_script/start
 
+// Define an anonymous function;
+// serves as our main loop
+// limits the scop of variables
 (function() {
-    var oThisScriptFile = new DzFile( getScriptFileName() );
-    var sThisScriptFilePath = oThisScriptFile.path();
+    var g_oThisScriptFile = new DzFile( getScriptFileName() );
+    var g_sThisScriptFilePath = g_oThisScriptFile.path();
+    var g_sModestyOverlayLayerName = "Roblox Eyebrows Overlay";
     
     // overlay textures with alpha channels
-    // var sOverlayTextureFilePath = sThisScriptFilePath + "/g9 eyebrows thin.png";
-    // var sOverlayTextureFilePath = sThisScriptFilePath + "/g9 eyebrows thick.png";
-    var sOverlayTextureFilePath = sThisScriptFilePath + "/v9 eyebrows thin.png";
-    // var sOverlayTextureFilePath = sThisScriptFilePath + "/v9 eyebrows thick.png";
-    
-    // var sOverlayTextureFilePath = sThisScriptFilePath + "/g9 eyeliner thin.png";
-    //var sOverlayTextureFilePath = sThisScriptFilePath + "/g9 eyeliner thick.png";
+    // var g_sOverlayTextureFilePath = sThisScriptFilePath + "/g9 eyebrows thin.png";
+    // var g_sOverlayTextureFilePath = sThisScriptFilePath + "/g9 eyebrows thick.png";
+    var g_sOverlayTextureFilePath = g_sThisScriptFilePath + "/v9 eyebrows thin.png";
+    // var g_sOverlayTextureFilePath = sThisScriptFilePath + "/v9 eyebrows thick.png";
 
 	/*********************************************************************/
 	// void : A function that gets the path of the current script
@@ -127,9 +129,11 @@
 	
 	/*********************************************************************/
 	// Define the path of the script we will call; without the file extension
-	var sRelativeScriptPath = "data/Daz 3D/Daz to Roblox Studio/Scripts/apply_diffuse_head_overlay_sArg.dsa"
-	var sAbsoluteScriptPath = App.getContentMgr().findFile(sRelativeScriptPath);
+	var sRelativeScriptPath = "data/Daz 3D/Daz to Roblox Studio/Scripts/apply_diffuse_head_overlay_sArg"
+	var oThisScriptContentFolder = App.getContentMgr().findBaseDirectory( g_sThisScriptFilePath, true);
+	var sBasePath = oThisScriptContentFolder.fullPath;
+	var sScriptSearchPath = sBasePath + "/" + sRelativeScriptPath;
 	
 	// Execute the symmetrize script, silently
-	executeScriptWithArgs( sAbsoluteScriptPath, [ sOverlayTextureFilePath ] );
+	executeScriptWithArgs( sScriptSearchPath, [ g_sOverlayTextureFilePath, g_sModestyOverlayLayerName ] );
 })();

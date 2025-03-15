@@ -287,6 +287,22 @@
       <Userword VALUE=""/>
      </Userwords>
     </Asset>
+    <Asset VALUE="People/Genesis 9/Characters/Daz Originals/Daz to Roblox Studio Starter Essentials/Materials/Daz to Roblox Studio Overlays/Roblox Remove Overlays.dsa">
+     <ContentType VALUE="Script/Utility"/>
+     <Audience VALUE="Teens"/>
+     <Categories>
+      <Category VALUE="/Default/Materials/Iray/Daz to Roblox Studio Starter Essentials"/>
+     </Categories>
+     <Tags>
+      <Tag VALUE=""/>
+     </Tags>
+     <Compatibilities>
+      <Compatibility VALUE="/Genesis 9/Base"/>
+     </Compatibilities>
+     <Userwords>
+      <Userword VALUE=""/>
+     </Userwords>
+    </Asset>
    </Assets>
    <SupportAssets VALUE="/Runtime/Support/DAZ_3D_98159_Daz_to_Roblox_Studio_Starter_Essentials.dsx">
     <SupportAsset VALUE="/People/Genesis 9/Characters/Daz Originals.png"/>
