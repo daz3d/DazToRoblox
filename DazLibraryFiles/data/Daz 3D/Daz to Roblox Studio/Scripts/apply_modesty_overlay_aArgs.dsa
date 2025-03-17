@@ -1,4 +1,4 @@
-// DAZ Studio version 4.20.0.1.88 filetype DAZ Script
+// DAZ Studio version 4.20.1.88 filetype DAZ Script
 /**********************************************************************
  
 	This script is provided as part of the Daz Script Documentation. The
@@ -300,6 +300,9 @@
         var oSelectedNode = Scene.getPrimarySelection();
         if (oSelectedNode) {
     //        App.log("apply_modesty_overlay_aArgs.dsa: DEBUG: Selected Node: " + oSelectedNode.name);
+            if (oSelectedNode.inherits("DzBone")) {
+                oSelectedNode = oSelectedNode.getSkeleton();
+            }
             var oSelectedNodeObject = oSelectedNode.getObject();
             
             if (oSelectedNodeObject) {

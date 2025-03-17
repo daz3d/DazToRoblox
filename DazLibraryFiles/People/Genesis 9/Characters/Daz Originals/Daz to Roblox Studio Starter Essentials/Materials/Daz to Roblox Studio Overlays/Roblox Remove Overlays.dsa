@@ -1,4 +1,4 @@
-// DAZ Studio version 4.20.0.1.88 filetype DAZ Script
+// DAZ Studio version 4.20.1.88 filetype DAZ Script
 /**********************************************************************
  
 	This script is provided as part of the Daz Script Documentation. The
@@ -81,9 +81,13 @@
     function main() {
         var oSelectedNode = Scene.getPrimarySelection();
         if (oSelectedNode) {
+            if (oSelectedNode.inherits("DzBone")) {
+                oSelectedNode = oSelectedNode.getSkeleton();
+            }
             var oSelectedNodeObject = oSelectedNode.getObject();
             
             if (oSelectedNodeObject) {
+
                 var oSelectedNodeShape = oSelectedNodeObject.getCurrentShape();
                 var nMaterialCount = oSelectedNodeShape.getNumMaterials();
 

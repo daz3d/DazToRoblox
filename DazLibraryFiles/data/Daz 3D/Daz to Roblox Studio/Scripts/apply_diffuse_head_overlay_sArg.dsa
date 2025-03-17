@@ -1,4 +1,4 @@
-// DAZ Studio version 4.20.0.1.88 filetype DAZ Script
+// DAZ Studio version 4.20.1.88 filetype DAZ Script
 /**********************************************************************
  
 	This script is provided as part of the Daz Script Documentation. The
@@ -181,6 +181,10 @@
         }
 
         var oSelectedNode = Scene.getPrimarySelection();
+        if (oSelectedNode && oSelectedNode.inherits("DzBone")) {
+            oSelectedNode = oSelectedNode.getSkeleton();
+        }
+
         if (!oSelectedNode || !oSelectedNode.inherits("DzFigure")) {
             App.error(g_sScriptName + ": ERROR: No figure selected or selected node is not a DzFigure, aborting script.");
             return;

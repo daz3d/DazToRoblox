@@ -1,4 +1,4 @@
-// DAZ Studio version 4.20.0.1.88 filetype DAZ Script
+// DAZ Studio version 4.20.1.88 filetype DAZ Script
 /**********************************************************************
  
 	This script is provided as part of the Daz Script Documentation. The
@@ -105,6 +105,20 @@
 
         return true;
     };
+
+	/*********************************************************************/
+	// String : A function for retrieving a translation if one exists
+	function text( sText )
+	{
+		// If the version of the application supports qsTr()
+		if( typeof( qsTr ) != "undefined" ){
+			// Return the translated (if any) text
+			return qsTr( sText );
+		}
+ 		
+		// Return the original text
+		return sText;
+	};
 
     /********************************************************************************************************/
     // void: check UV Set
@@ -286,6 +300,9 @@
         var oSelectedNode = Scene.getPrimarySelection();
         if (oSelectedNode) {
     //        App.log("apply_modesty_overlay_aArgs.dsa: DEBUG: Selected Node: " + oSelectedNode.name);
+            if (oSelectedNode.inherits("DzBone")) {
+                oSelectedNode = oSelectedNode.getSkeleton();
+            }
             var oSelectedNodeObject = oSelectedNode.getObject();
             
             if (oSelectedNodeObject) {
@@ -302,7 +319,7 @@
                     App.error(g_sScriptName + ": ERROR: Incompatible UV Set detected, aborting script.");
                     var sButton = text( "&Abort" );
                     var sTitle = text( "Incompatible UV Set" );
-                    var sMessage = text( "Unable to apply modesty layer because the character is using an incompatible UV Set.\n\nPlease reset the character skin materials and try again.\n\n" );
+                    var sMessage = text( "Unable to apply modesty layer because the character is using an incompatible UV Set.\n\nPlease apply new skin materials to the character and try again.\n\n" );
                     MessageBox.warning( sMessage, sTitle, sButton, "" );
                     return;
                 }
