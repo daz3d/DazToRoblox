@@ -19,7 +19,37 @@
 // serves as our main loop
 // limits the scop of variables
 (function(){
-    g_aOverlayNames = ["Roblox Modesty Overlay", "Roblox Eyebrows Overlay", "Roblox Eyelashes Overlay"];
+    var g_sScriptName = getScriptFileName();
+    var g_aOverlayNames = ["Roblox Modesty Overlay", "Roblox Eyebrows Overlay", "Roblox Eyelashes Overlay"];
+    var g_sCombinedHeadAndBodyUvSetName = "Combined Head And Body";
+
+	/*********************************************************************/
+	// String : A function for retrieving a translation if one exists
+	function text( sText )
+	{
+		// If the version of the application supports qsTr()
+		if( typeof( qsTr ) != "undefined" ){
+			// Return the translated (if any) text
+			return qsTr( sText );
+		}
+ 		
+		// Return the original text
+		return sText;
+	};
+
+    /********************************************************************************************************/
+    // void: check UV Set
+    function isUvSetValid(oMaterial) {
+        var oUvSetProperty = oMaterial.findProperty("UV Set");
+        if (oUvSetProperty) {
+            var nCombinedUvSet = oUvSetProperty.findItemString(g_sCombinedHeadAndBodyUvSetName);
+            var nCurrentUvSet = oUvSetProperty.getValue();
+            if (nCurrentUvSet == nCombinedUvSet) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /********************************************************************************************************/
     // void: remove custom Roblox Overlay layer by label name
@@ -56,10 +86,24 @@
             if (oSelectedNodeObject) {
                 var oSelectedNodeShape = oSelectedNodeObject.getCurrentShape();
                 var nMaterialCount = oSelectedNodeShape.getNumMaterials();
-                
+
+                if (nMaterialCount < 1) {
+                    App.error(g_sScriptName + ": ERROR: No materials on selected object, aborting script.");
+                    return;
+                }
+
+                if (!isUvSetValid(oSelectedNodeShape.getMaterial(0))) {
+                    App.error(g_sScriptName + ": ERROR: Incompatible UV Set detected, aborting script.");
+                    var sButton = text( "&Abort" );
+                    var sTitle = text( "Incompatible UV Set" );
+                    var sMessage = text( "Unable to remove modesty layers because the character is using an incompatible UV Set.\n\nPlease apply new skin materials to the character.\n\n" );
+                    MessageBox.warning( sMessage, sTitle, sButton, "" );
+                    return;
+                }
+
                 for (var i = 0; i < nMaterialCount; i++) {
                     var oMaterial = oSelectedNodeShape.getMaterial(i);
-                    if (oMaterial) {
+                    if (oMaterial) {                
                         for (var j = 0; j < oMaterial.getNumProperties(); j++) {
                             var oProperty = oMaterial.getProperty(j);
                             if (oProperty && oProperty.inherits("DzColorProperty")) {

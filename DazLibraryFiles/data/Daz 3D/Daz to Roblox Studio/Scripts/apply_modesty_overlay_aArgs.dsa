@@ -106,6 +106,20 @@
         return true;
     };
 
+	/*********************************************************************/
+	// String : A function for retrieving a translation if one exists
+	function text( sText )
+	{
+		// If the version of the application supports qsTr()
+		if( typeof( qsTr ) != "undefined" ){
+			// Return the translated (if any) text
+			return qsTr( sText );
+		}
+ 		
+		// Return the original text
+		return sText;
+	};
+
     /********************************************************************************************************/
     // void: check UV Set
     function isUvSetValid(oMaterial) {
@@ -302,7 +316,7 @@
                     App.error(g_sScriptName + ": ERROR: Incompatible UV Set detected, aborting script.");
                     var sButton = text( "&Abort" );
                     var sTitle = text( "Incompatible UV Set" );
-                    var sMessage = text( "Unable to apply modesty layer because the character is using an incompatible UV Set.\n\nPlease reset the character skin materials and try again.\n\n" );
+                    var sMessage = text( "Unable to apply modesty layer because the character is using an incompatible UV Set.\n\nPlease apply new skin materials to the character and try again.\n\n" );
                     MessageBox.warning( sMessage, sTitle, sButton, "" );
                     return;
                 }
