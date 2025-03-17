@@ -5,7 +5,6 @@
 (function(){
 
 var sDazTempFolder = App.getTempPath();
-// var sMapTransferOutputFolder = sDazTempFolder + "/MapTransfer";
 var sMapTransferOutputFolder = sDazTempFolder;
 
 var sCombinedDiffuseColorImage = sMapTransferOutputFolder + "/combined diffuse texture.png";
@@ -30,10 +29,12 @@ function assignCombinedTextures(oNode) {
                         var oDiffuseColorProperty = oMaterial.findProperty("Diffuse Color");
                         if (oDiffuseColorProperty && DzFileInfo(sCombinedDiffuseColorImage).exists()) {
                             oDiffuseColorProperty.setMap(sCombinedDiffuseColorImage);
+                            oDiffuseColorProperty.getMapValue().refresh();
                         }
                         var oNormalMapProperty = oMaterial.findProperty("Normal Map");
                         if (oNormalMapProperty && DzFileInfo(sCombinedNormalMapImage).exists()) {
                             oNormalMapProperty.setMap(sCombinedNormalMapImage);
+                            oNormalMapProperty.getMapValue().refresh();
                         }
                         var oSpecularMapProperty = oMaterial.findProperty("Specular Lobe 1 Roughness");
                         if (oSpecularMapProperty && 
@@ -52,6 +53,7 @@ function assignCombinedTextures(oNode) {
                                 ) {
 								 print("DEBUG: assign_combined_textures.dsa: dual lobe specular weight for " + oMaterial.name);
 	                            oSpecularMapProperty.setMap(sCombinedSpecularMapImage);
+                                oSpecularMapProperty.getMapValue().refresh();
 	                        } else {
                                 oSpecularMapProperty = oMaterial.findProperty("Dual Lobe Specular Reflectivity");
                                 if (oSpecularMapProperty && 
@@ -61,12 +63,14 @@ function assignCombinedTextures(oNode) {
                                     ) {
                                      print("DEBUG: assign_combined_textures.dsa: dual lobe specular weight for " + oMaterial.name);
                                     oSpecularMapProperty.setMap(sCombinedSpecularMapImage);
+                                    oSpecularMapProperty.getMapValue().refresh();
                                 }    
                             }
                         }
                         var oMetallicMapProperty = oMaterial.findProperty("Metallic Weight");
                         if (oMetallicMapProperty && DzFileInfo(sCombinedMetallicMapImage).exists()) {
                             oMetallicMapProperty.setMap(sCombinedMetallicMapImage);
+                            oMetallicMapProperty.getMapValue().refresh();
                         }
 
                         // switch UV set to the combined texture
