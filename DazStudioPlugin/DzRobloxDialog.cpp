@@ -880,8 +880,6 @@ bool DzRobloxDialog::showDisclaimer(bool bForceShow)
 
 	}
 
-	HandleDazToRobloxTerms();
-
 	QString content = DAZTOROBLOX_EULA;
 
 	QTextBrowser* wContent = new QTextBrowser();

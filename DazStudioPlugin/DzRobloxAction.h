@@ -51,6 +51,8 @@ public:
 };
 
 #define DAZTOROBLOX_EULA tr("\
+<div align=\"center\"><font size=\"4\"><p><b>Please review the latest Daz to Roblox Studio Terms online at : </b><br> \
+<a href =\"https://www.daz3d.com/roblox-terms\"><b>https ://www.daz3d.com/roblox-terms</b></a></p></div> \
 <div><font size=\"4\"><p>By using Daz to Roblox Studio, you agree to these Daz to Roblox Studio Terms \
 (\"Supplemental Terms\") which you agree supplement your obligations under the \
 <a href=\"https://www.daz3d.com/eula/\">Daz End User License Agreement</a> (\"EULA\").</p>\
