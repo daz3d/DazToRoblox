@@ -1844,11 +1844,169 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 
 	QString tempPath = dzApp->getTempPath();
 
+	/*******************************************************************/
+	/// Prepare Script Execution System
+	/*******************************************************************/
+	//QString sPluginFolder = dzApp->getPluginsPath() + "/DazToRoblox";
+	QString sPluginFolder = tempPath;
+	QString sRobloxBoneConverter = "bone_converter.dsa";
+	QString sApplyModestyOverlay = "apply_modesty_overlay_aArgs.dsa";
+	QString sPrepareSoftwareMaptransfer = "prepare_software_maptransfer.dsa";
+	QString sGenerateCombinedTextures_HW = "generate_texture_parts.dsa";
+	QString sGenerateCombinedTextures_SW = "generate_texture_parts_sw.dsa";
+	QString sCombineTextureMaps = "combine_texture_parts.dsa";
+	QString sAssignCombinedTextures = "assign_combined_textures.dsa";
+	QString sBakeHandsAndFeetPose = "bake_hands_and_feet_nogui.dsa";
+	QString sScriptFilename = "";
+	QScopedPointer<DzScript> Script(new DzScript());
+
+
+	dzScene->selectAllNodes(false);
+	dzScene->setPrimarySelection(parentNode);
+
+	/// CHECK FOR ALTERED UV SET, IF FOUND SKIP TEXTURE OPERATIONS
+	// 2. get UV property
+	bool bSkipModestyLayerOperation = false;
+	QObjectList rawList = shape->getAllMaterials();
+	for (int i = 0; i < rawList.count(); i++) {
+		DzMaterial* mat = qobject_cast<DzMaterial*>(rawList[i]);
+		if (!mat) continue;
+		DzProperty* prop = mat->findProperty("UV Set");
+		QString debugName = prop->getName();
+		DzEnumProperty* uvset = qobject_cast<DzEnumProperty*>(prop);
+		if (uvset) {
+			int combinedUvVal = uvset->findItemString(COMBINED_UVSET_STRING);
+			int currentVal = uvset->getValue();
+			if (currentVal == combinedUvVal) {
+				dzApp->debug("WARNING: DzRobloxAction: preProcessScene(): Combined UV already set, skipping texture operations. Returning false.");
+				bSkipModestyLayerOperation = true;
+			}
+		}
+	}
+	if (m_sAssetType.contains("layered") || m_sAssetType.contains("rigid")) {
+		bSkipModestyLayerOperation = true;
+	}
+
+	/// TEXTURE OPERATIONS (MODESTY OVERLAY, UV CONVERSION, ETC)
+	if (!bSkipModestyLayerOperation &&
+		!sApplyModestyOverlay.isEmpty() &&
+		(m_nModestyOverlay != eModestyOverlay::UseCurrentTextures))
+	{
+		robloxPreProcessProgress.setCurrentInfo("Applying modesty layer...");
+		robloxPreProcessProgress.step();
+		sScriptFilename = sPluginFolder + "/" + sApplyModestyOverlay;
+		if (QFileInfo(sScriptFilename).exists() == false) {
+			sScriptFilename = dzApp->getTempPath() + "/" + sApplyModestyOverlay;
+		}
+		DzScript* ScriptWithArgs = new DzScript();
+		ScriptWithArgs->loadFromFile(sScriptFilename);
+		QVariantList aArgs;
+		QStringList slDiffuseOverlays, slNormalOverlays, slRoughnessOverlays, slMetallicOverlays;
+
+		QString sDiffuseOverlayTorso = "";
+		QString sNormalOverlayTorso = "";
+		QString sRoughnessOverlayTorso = "";
+		QString sMetallicOverlayTorso = "";
+
+		QString sDiffuseOverlayHead = "";
+		QString sNormalOverlayHead = "";
+		QString sRoughnessOverlayHead = "";
+		QString sMetallicOverlayHead = "";
+
+		QString sDiffuseOverlayLegs = "";
+		QString sNormalOverlayLegs = "";
+		QString sRoughnessOverlayLegs = "";
+		QString sMetallicOverlayLegs = "";
+
+		if (m_nModestyOverlay == eModestyOverlay::StraplessBra_Bikini)
+		{
+			sDiffuseOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_d.png";
+			sNormalOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_n.png";
+			sRoughnessOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_r.png";
+			sMetallicOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_m.png";
+		}
+
+		if (m_nModestyOverlay == eModestyOverlay::SportsBra_Shorts)
+		{
+			sDiffuseOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_d.png";
+			sNormalOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_n.png";
+			sRoughnessOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_r.png";
+			sMetallicOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_m.png";
+
+			sDiffuseOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_d.png";
+			sNormalOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_n.png";
+			sRoughnessOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_r.png";
+			sMetallicOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_m.png";
+		}
+
+		if (m_nModestyOverlay == eModestyOverlay::TankTop_Shorts)
+		{
+			sDiffuseOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_d.png";
+			sNormalOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_n.png";
+			sRoughnessOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_r.png";
+			sMetallicOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_m.png";
+
+			sDiffuseOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_d.png";
+			sNormalOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_n.png";
+			sRoughnessOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_r.png";
+			sMetallicOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_m.png";
+
+			sDiffuseOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_d.png";
+			sNormalOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_n.png";
+			sRoughnessOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_r.png";
+			sMetallicOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_m.png";
+		}
+
+		// if custom, generate template string from selected file, then generate all variants from template string 
+		if (m_nModestyOverlay == eModestyOverlay::CustomModestyOverlay)
+		{
+			// clean and generate template string
+			QString sTemplateString = m_sModestyOverlayCustomFilePath;
+			sTemplateString = sTemplateString.replace("_d.png", "", Qt::CaseInsensitive);
+			sTemplateString = sTemplateString.replace("_n.png", "", Qt::CaseInsensitive);
+			sTemplateString = sTemplateString.replace("_r.png", "", Qt::CaseInsensitive);
+			sTemplateString = sTemplateString.replace("_m.png", "", Qt::CaseInsensitive);
+			sTemplateString = sTemplateString.replace("_torso_modesty_overlay", "_*_modesty_overlay", Qt::CaseInsensitive);
+			sTemplateString = sTemplateString.replace("_legs_modesty_overlay", "_*_modesty_overlay", Qt::CaseInsensitive);
+			sTemplateString = sTemplateString.replace("_head_modesty_overlay", "_*_modesty_overlay", Qt::CaseInsensitive);
+			// generate variants from template
+			sDiffuseOverlayTorso = QString(sTemplateString).replace("_*_modesty_overlay", "_torso_modesty_overlay") + "_d.png";
+			sDiffuseOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_d.png";
+			sDiffuseOverlayHead = QString(sTemplateString).replace("_*_modesty_overlay", "_head_modesty_overlay") + "_d.png";
+
+			sNormalOverlayTorso = QString(sTemplateString).replace("_*_modesty_overlay", "_torso_modesty_overlay") + "_n.png";
+			sNormalOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_n.png";
+			sNormalOverlayHead = QString(sTemplateString).replace("_*_modesty_overlay", "_head_modesty_overlay") + "_n.png";
+
+			sRoughnessOverlayTorso = QString(sTemplateString).replace("_*_modesty_overlay", "_torso_modesty_overlay") + "_r.png";
+			sRoughnessOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_r.png";
+			sRoughnessOverlayHead = QString(sTemplateString).replace("_*_modesty_overlay", "_head_modesty_overlay") + "_r.png";
+
+			sMetallicOverlayTorso = QString(sTemplateString).replace("_*_modesty_overlay", "_torso_modesty_overlay") + "_m.png";
+			sMetallicOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_m.png";
+			sMetallicOverlayHead = QString(sTemplateString).replace("_*_modesty_overlay", "_head_modesty_overlay") + "_m.png";
+		}
+
+		slDiffuseOverlays.append(sDiffuseOverlayTorso); slDiffuseOverlays.append(sDiffuseOverlayLegs); slDiffuseOverlays.append(sDiffuseOverlayHead);
+		slNormalOverlays.append(sNormalOverlayTorso); slNormalOverlays.append(sNormalOverlayLegs); slNormalOverlays.append(sNormalOverlayHead);
+		slRoughnessOverlays.append(sRoughnessOverlayTorso); slRoughnessOverlays.append(sRoughnessOverlayLegs); slRoughnessOverlays.append(sRoughnessOverlayHead);
+		slMetallicOverlays.append(sMetallicOverlayTorso); slMetallicOverlays.append(sMetallicOverlayLegs); slMetallicOverlays.append(sMetallicOverlayHead);
+
+		aArgs.append(QVariant(slDiffuseOverlays));
+		aArgs.append(QVariant(slNormalOverlays));
+		aArgs.append(QVariant(slRoughnessOverlays));
+		aArgs.append(QVariant(slMetallicOverlays));
+		dzScene->selectAllNodes(false);
+		dzScene->setPrimarySelection(parentNode);
+		ScriptWithArgs->execute(aArgs);
+	}
+
+	dzScene->selectAllNodes(false);
+	dzScene->setPrimarySelection(parentNode);
+
 	// TODO: complepte custom eyelash/eyebrow pathway
 	//////////////// Remove incompatible nodes, replace with game-ready equivalents
 	// Remove eyebrows
-	dzScene->selectAllNodes(false);
-	dzScene->setPrimarySelection(parentNode);
 	if (m_nReplaceEyebrows == eReplacementAsset::DefaultReplacement) {
 		DzFigure* pFigureNode = qobject_cast<DzFigure*>(dzScene->getPrimarySelection());
 		if (pFigureNode && pFigureNode->getName() == "Genesis9")
@@ -1971,20 +2129,6 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 		}
 	}
 
-	//QString sPluginFolder = dzApp->getPluginsPath() + "/DazToRoblox";
-    QString sPluginFolder = tempPath;
-
-	QString sRobloxBoneConverter = "bone_converter.dsa";
-	QString sApplyModestyOverlay = "apply_modesty_overlay_aArgs.dsa";
-	QString sPrepareSoftwareMaptransfer = "prepare_software_maptransfer.dsa";
-	QString sGenerateCombinedTextures_HW = "generate_texture_parts.dsa";
-	QString sGenerateCombinedTextures_SW = "generate_texture_parts_sw.dsa";
-	QString sCombineTextureMaps = "combine_texture_parts.dsa";
-	QString sAssignCombinedTextures = "assign_combined_textures.dsa";
-	QString sBakeHandsAndFeetPose = "bake_hands_and_feet_nogui.dsa";
-	QString sScriptFilename = "";
-	QScopedPointer<DzScript> Script(new DzScript());
-
 	// APPLY HAND POSE
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
@@ -2061,143 +2205,6 @@ bool DzRobloxAction::preProcessScene(DzNode* parentNode)
 	dzScene->selectAllNodes(false);
 	dzScene->setPrimarySelection(parentNode);
 
-	/// CHECK FOR ALTERED UV SET, IF FOUND SKIP TEXTURE OPERATIONS
-	// 2. get UV property
-	QObjectList rawList = shape->getAllMaterials();
-	for (int i = 0; i < rawList.count(); i++) {
-		DzMaterial* mat = qobject_cast<DzMaterial*>(rawList[i]);
-		if (!mat) continue;
-		DzProperty* prop = mat->findProperty("UV Set");
-		QString debugName = prop->getName();
-		DzEnumProperty* uvset = qobject_cast<DzEnumProperty*>(prop);
-		if (uvset) {
-			int combinedUvVal = uvset->findItemString(COMBINED_UVSET_STRING);
-			int currentVal = uvset->getValue();
-			if (currentVal == combinedUvVal) {
-				dzApp->debug("WARNING: DzRobloxAction: preProcessScene(): Combined UV already set, skipping texture operations. Returning false.");
-				robloxPreProcessProgress.finish();
-				return false;
-			}
-		}
-	}
-
-	if (m_sAssetType.contains("layered") || m_sAssetType.contains("rigid")) {
-		robloxPreProcessProgress.finish();
-		return false;
-	}
-
-	/// TEXTURE OPERATIONS (MODESTY OVERLAY, UV CONVERSION, ETC)
-	if (!sApplyModestyOverlay.isEmpty() &&
-		(m_nModestyOverlay != eModestyOverlay::UseCurrentTextures) )
-	{
-		robloxPreProcessProgress.setCurrentInfo("Applying modesty layer...");
-		robloxPreProcessProgress.step();
-		sScriptFilename = sPluginFolder + "/" + sApplyModestyOverlay;
-		if (QFileInfo(sScriptFilename).exists() == false) {
-			sScriptFilename = dzApp->getTempPath() + "/" + sApplyModestyOverlay;
-		}
-		DzScript* ScriptWithArgs = new DzScript();
-		ScriptWithArgs->loadFromFile(sScriptFilename);
-		QVariantList aArgs;
-		QStringList slDiffuseOverlays, slNormalOverlays, slRoughnessOverlays, slMetallicOverlays;
-
-		QString sDiffuseOverlayTorso = "";
-		QString sNormalOverlayTorso = "";
-		QString sRoughnessOverlayTorso = "";
-		QString sMetallicOverlayTorso = "";
-
-		QString sDiffuseOverlayHead = "";
-		QString sNormalOverlayHead = "";
-		QString sRoughnessOverlayHead = "";
-		QString sMetallicOverlayHead = "";
-
-		QString sDiffuseOverlayLegs = "";
-		QString sNormalOverlayLegs = "";
-		QString sRoughnessOverlayLegs = "";
-		QString sMetallicOverlayLegs = "";
-
-		if (m_nModestyOverlay == eModestyOverlay::StraplessBra_Bikini)
-		{
-			sDiffuseOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_d.png";
-			sNormalOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_n.png";
-			sRoughnessOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_r.png";
-			sMetallicOverlayTorso = sPluginFolder + "/g9_straplessbra_torso_modesty_overlay_m.png";
-		}
-
-		if (m_nModestyOverlay == eModestyOverlay::SportsBra_Shorts)
-		{
-			sDiffuseOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_d.png";
-			sNormalOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_n.png";
-			sRoughnessOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_r.png";
-			sMetallicOverlayTorso = sPluginFolder + "/g9_sportsbra_torso_modesty_overlay_m.png";
-
-			sDiffuseOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_d.png";
-			sNormalOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_n.png";
-			sRoughnessOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_r.png";
-			sMetallicOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_m.png";
-		}
-		
-		if (m_nModestyOverlay == eModestyOverlay::TankTop_Shorts)
-		{
-			sDiffuseOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_d.png";
-			sNormalOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_n.png";
-			sRoughnessOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_r.png";
-			sMetallicOverlayHead = sPluginFolder + "/g9_tanktop_head_modesty_overlay_m.png";
-
-			sDiffuseOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_d.png";
-			sNormalOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_n.png";
-			sRoughnessOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_r.png";
-			sMetallicOverlayTorso = sPluginFolder + "/g9_tanktop_torso_modesty_overlay_m.png";
-
-			sDiffuseOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_d.png";
-			sNormalOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_n.png";
-			sRoughnessOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_r.png";
-			sMetallicOverlayLegs = sPluginFolder + "/g9_shorts_legs_modesty_overlay_m.png";
-		}
-
-		// if custom, generate template string from selected file, then generate all variants from template string 
-		if (m_nModestyOverlay == eModestyOverlay::CustomModestyOverlay)
-		{
-			// clean and generate template string
-			QString sTemplateString = m_sModestyOverlayCustomFilePath;
-			sTemplateString = sTemplateString.replace("_d.png", "", Qt::CaseInsensitive);
-			sTemplateString = sTemplateString.replace("_n.png", "", Qt::CaseInsensitive);
-			sTemplateString = sTemplateString.replace("_r.png", "", Qt::CaseInsensitive);
-			sTemplateString = sTemplateString.replace("_m.png", "", Qt::CaseInsensitive);
-			sTemplateString = sTemplateString.replace("_torso_modesty_overlay", "_*_modesty_overlay", Qt::CaseInsensitive);
-			sTemplateString = sTemplateString.replace("_legs_modesty_overlay", "_*_modesty_overlay", Qt::CaseInsensitive);
-			sTemplateString = sTemplateString.replace("_head_modesty_overlay", "_*_modesty_overlay", Qt::CaseInsensitive);
-			// generate variants from template
-			sDiffuseOverlayTorso = QString(sTemplateString).replace("_*_modesty_overlay", "_torso_modesty_overlay") + "_d.png";
-			sDiffuseOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_d.png";
-			sDiffuseOverlayHead = QString(sTemplateString).replace("_*_modesty_overlay", "_head_modesty_overlay") + "_d.png";
-
-			sNormalOverlayTorso = QString(sTemplateString).replace("_*_modesty_overlay", "_torso_modesty_overlay") + "_n.png";
-			sNormalOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_n.png";
-			sNormalOverlayHead = QString(sTemplateString).replace("_*_modesty_overlay", "_head_modesty_overlay") + "_n.png";
-
-			sRoughnessOverlayTorso = QString(sTemplateString).replace("_*_modesty_overlay", "_torso_modesty_overlay") + "_r.png";
-			sRoughnessOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_r.png";
-			sRoughnessOverlayHead = QString(sTemplateString).replace("_*_modesty_overlay", "_head_modesty_overlay") + "_r.png";
-
-			sMetallicOverlayTorso = QString(sTemplateString).replace("_*_modesty_overlay", "_torso_modesty_overlay") + "_m.png";
-			sMetallicOverlayLegs = QString(sTemplateString).replace("_*_modesty_overlay", "_legs_modesty_overlay") + "_m.png";
-			sMetallicOverlayHead = QString(sTemplateString).replace("_*_modesty_overlay", "_head_modesty_overlay") + "_m.png";
-		}
-
-		slDiffuseOverlays.append(sDiffuseOverlayTorso); slDiffuseOverlays.append(sDiffuseOverlayLegs); slDiffuseOverlays.append(sDiffuseOverlayHead);
-		slNormalOverlays.append(sNormalOverlayTorso); slNormalOverlays.append(sNormalOverlayLegs); slNormalOverlays.append(sNormalOverlayHead);
-		slRoughnessOverlays.append(sRoughnessOverlayTorso); slRoughnessOverlays.append(sRoughnessOverlayLegs); slRoughnessOverlays.append(sRoughnessOverlayHead);
-		slMetallicOverlays.append(sMetallicOverlayTorso); slMetallicOverlays.append(sMetallicOverlayLegs); slMetallicOverlays.append(sMetallicOverlayHead);
-
-		aArgs.append(QVariant(slDiffuseOverlays));
-		aArgs.append(QVariant(slNormalOverlays));
-		aArgs.append(QVariant(slRoughnessOverlays));
-		aArgs.append(QVariant(slMetallicOverlays));
-		dzScene->selectAllNodes(false);
-		dzScene->setPrimarySelection(parentNode);
-		ScriptWithArgs->execute(aArgs);
-	}
 	// copy modesty overlaid materials to geografts
 	foreach(auto geograft_helper, m_aGeograftConversionHelpers)
 	{

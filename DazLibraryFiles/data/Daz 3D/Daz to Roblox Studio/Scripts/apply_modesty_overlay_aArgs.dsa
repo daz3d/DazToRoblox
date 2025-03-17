@@ -14,6 +14,7 @@
 	- http://www.daz3d.com
  
 **********************************************************************/
+// version 3
 
 // Define an anonymous function;
 // serves as our main loop
@@ -21,6 +22,7 @@
 (function( aArgs ){
     var g_sScriptName = getScriptFileName();
     var g_sModestyOverlayLayerName = "Roblox Modesty Overlay";
+    var g_sCombinedHeadAndBodyUvSetName = "Combined Head And Body";
 
     /********************************************************************************************************/
     // Global Variables, Arrays contianing file paths to overlay images
@@ -103,6 +105,20 @@
 
         return true;
     };
+
+    /********************************************************************************************************/
+    // void: check UV Set
+    function isUvSetValid(oMaterial) {
+        var oUvSetProperty = oMaterial.findProperty("UV Set");
+        if (oUvSetProperty) {
+            var nCombinedUvSet = oUvSetProperty.findItemString(g_sCombinedHeadAndBodyUvSetName);
+            var nCurrentUvSet = oUvSetProperty.getValue();
+            if (nCurrentUvSet == nCombinedUvSet) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /********************************************************************************************************/
     // void: remove the modesty overlay layer from color property
@@ -276,10 +292,24 @@
                 var oSelectedNodeShape = oSelectedNodeObject.getCurrentShape();
                 var nMaterialCount = oSelectedNodeShape.getNumMaterials();
     //            App.log("apply_modesty_overlay_aArgs.dsa: DEBUG: Number of Materials: " + nMaterialCount);
-                
+
+                if (nMaterialCount < 1) {
+                    App.error(g_sScriptName + ": ERROR: No materials on selected object, aborting script.");
+                    return;
+                }
+
+                if (!isUvSetValid(oSelectedNodeShape.getMaterial(0))) {
+                    App.error(g_sScriptName + ": ERROR: Incompatible UV Set detected, aborting script.");
+                    var sButton = text( "&Abort" );
+                    var sTitle = text( "Incompatible UV Set" );
+                    var sMessage = text( "Unable to apply modesty layer because the character is using an incompatible UV Set.\n\nPlease reset the character skin materials and try again.\n\n" );
+                    MessageBox.warning( sMessage, sTitle, sButton, "" );
+                    return;
+                }
+
                 for (var i = 0; i < nMaterialCount; i++) {
-                    var oMaterial = oSelectedNodeShape.getMaterial(i);
-    //                App.log("DEBUG: apply_modesty_overlay_aArgs.dsa: DEBUG: Material " + (i + 1) + ": " + material.name);
+                    var oMaterial = oSelectedNodeShape.getMaterial(i);            
+                    // App.log("DEBUG: apply_modesty_overlay_aArgs.dsa: DEBUG: Material " + (i + 1) + ": " + material.name);
                     if (oMaterial.name == "Body") {
                         // Process selected ColorMaps of each body material
                         replaceMaterialWithLayeredTextures(oMaterial, 0); // 0=Body, 1=Legs, 2=Head
